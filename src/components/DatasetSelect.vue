@@ -13,7 +13,8 @@ const selectedFormat = ref<string>('')
 const selectedCoordSys = ref<string>('')
 
 // Filter helpers
-const onlyDistinct = <T,>(value: T, index: number, self: T[]) => self.indexOf(value) === index
+const onlyDistinct = <T,>(value: T, index: number, self: T[]) =>
+  self.indexOf(value) === index
 //const onlyAuthorized = (data: Dataset) => data.access === 1 || true // TODO: implement proper auth check
 
 // Reactive options for each dropdown,
@@ -110,8 +111,15 @@ watchEffect(() => {
   <div class="dropdowns">
     <label>
       Producer:
-      <select v-model="selectedProducer" :disabled="producerOptions.length <= 1">
-        <option v-for="producer in producerOptions" :key="producer" :value="producer">
+      <select
+        v-model="selectedProducer"
+        :disabled="producerOptions.length <= 1"
+      >
+        <option
+          v-for="producer in producerOptions"
+          :key="producer"
+          :value="producer"
+        >
           {{ producer }}
         </option>
       </select>
@@ -155,7 +163,10 @@ watchEffect(() => {
 
     <label>
       Coordinate System:
-      <select v-model="selectedCoordSys" :disabled="coordSysOptions.length <= 1">
+      <select
+        v-model="selectedCoordSys"
+        :disabled="coordSysOptions.length <= 1"
+      >
         <option v-for="cs in coordSysOptions" :key="cs" :value="cs">
           {{ cs }}
         </option>
@@ -169,12 +180,12 @@ watchEffect(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-right: 25px;
+  margin-bottom: 20px;
 }
 label {
   display: flex;
   flex-direction: column;
-}
-select:disabled {
-  opacity: 0.8;
+  color: white;
 }
 </style>
