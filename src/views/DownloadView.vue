@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import MapItem from '@/components/MapItem.vue'
 import { ref } from 'vue'
+import LocationSearchField from '@/components/LocationSearchField.vue'
 import {
   mdiButtonCursor,
   mdiCog,
@@ -13,17 +14,23 @@ import {
 } from '@mdi/js'
 
 import DatasetSelect from '@/components/DatasetSelect.vue'
+import { APP_SETTINGS } from '@/shared/constants'
 
 const currentMenuItem = ref('button')
 
 const onNavigation = (item: string) => {
   currentMenuItem.value = item
 }
+
+// Define shared map center and zoom control
+const mapCenter = ref<[number, number]>(APP_SETTINGS.MAP_DEFAULT_CENTER)
+const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
 </script>
 
 <template>
   <div class="wrapper">
     <c-side-navigation>
+      <LocationSearchField v-model:center="mapCenter" v-model:zoom="mapZoom" />
       <!--c-side-navigation-item
       :active="currentMenuItem === 'about'"
       @keyup.enter="onNavigation('about')"
@@ -116,7 +123,7 @@ const onNavigation = (item: string) => {
         </c-side-navigation-item>
       </c-side-navigation-item>
     </c-side-navigation>
-    <MapItem />
+    <MapItem v-model:center="mapCenter" v-model:zoom="mapZoom" />
   </div>
 </template>
 

@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { onMounted, provide, ref } from 'vue'
+import { onMounted, type Ref } from 'vue'
 
-import { APP_SETTINGS } from '@/shared/constants'
 import { useDatasets } from '@/composables/datasets'
-import LocationSearchField from './LocationSearchField.vue'
-import DownloadTab from './DownloadTab.vue'
 
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
@@ -19,11 +16,9 @@ const { indexLayerSource, osmSource, dataLayerSource, dataLayerMaxResolution } =
   useSources()
 const { selectedFeatures, featureSelected, dragboxEnd } = useControls()
 
-// Define and expose center and zoom control
-const mapCenter = ref<[number, number]>(APP_SETTINGS.MAP_DEFAULT_CENTER)
-const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
-provide('mapCenter', mapCenter)
-provide('mapZoom', mapZoom)
+// Shared control from parent
+const mapCenter = defineModel('center') as Ref<[number, number]>
+const mapZoom = defineModel('zoom') as Ref<number>
 
 // Fetch datasets on startup
 onMounted(async () => {
@@ -51,22 +46,6 @@ const indexStyle = (feature: FeatureLike) => {
 </script>
 
 <template>
-  <!--
-  <div class="sidebar">
-    <c-accordion :value="[]" multiple outlined>
-      <c-accordion-item heading="Select data" value="dataset" expanded="true">
-        <DatasetSelect />
-      </c-accordion-item>
-      <c-accordion-item heading="Dataset Info" value="info"> wip </c-accordion-item>
-      <c-accordion-item heading="Links" value="links"> wip </c-accordion-item>
-      <c-accordion-item heading="Downloads" value="downloads" :expanded="downloadTabExpanded">
-        <DownloadTab />
-      </c-accordion-item>
-    </c-accordion>
-  </div>
--->
-
-  <!--LocationSearchField /-->
   <Map.OlMap style="width: 100%; height: 100%">
     <Map.OlView :center="mapCenter" :zoom="mapZoom" projection="EPSG:3857" />
     <!--Layers-->
@@ -108,19 +87,4 @@ const indexStyle = (feature: FeatureLike) => {
   <div v-else>Index layer visible</div-->
 </template>
 
-<style scoped>
-/*
-.sidebar {
-  width: 500px;
-  flex-shrink: 0;
-}
-  */
-
-.map {
-  /*
-  position: fixed;
-  top: 0;
-  left: 0;
-  */
-}
-</style>
+<style scoped></style>

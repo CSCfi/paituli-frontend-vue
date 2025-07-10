@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { inject, ref, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import * as proj from 'ol/proj'
 import { URLS } from '@/shared/constants'
 
 // Inject the shared state
-const mapCenter = inject('mapCenter') as Ref<[number, number]>
-const mapZoom = inject('mapZoom') as Ref<number>
+const mapCenter = defineModel('center') as Ref<[number, number]>
+const mapZoom = defineModel('zoom') as Ref<number>
 
 const searchStr = ref('')
 
@@ -14,7 +14,10 @@ const search = async () => {
 
   try {
     const response = await fetch(
-      URLS.NOMINATIM_API.replace('!query!', encodeURIComponent(searchStr.value)),
+      URLS.NOMINATIM_API.replace(
+        '!query!',
+        encodeURIComponent(searchStr.value),
+      ),
     )
     const data = await response.json()
 
