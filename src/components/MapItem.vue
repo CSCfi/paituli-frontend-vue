@@ -31,7 +31,7 @@ onMounted(async () => {
 })
 
 const indexStyle = (feature: FeatureLike) => {
-  // Note: If we define this outside of the component file, the prop is undefined during patch
+  // Note: If we define this outside of the component file, the style prop is undefined during patch (??)
   return new Style({
     stroke: new Stroke({ color: 'rgba(0, 0, 255, 1.0)', width: 2 }),
     fill: new Fill({ color: 'rgba(0, 0, 255, 0)' }),
@@ -75,16 +75,27 @@ const indexStyle = (feature: FeatureLike) => {
     </MapControls.OlOverviewmapControl>
   </Map.OlMap>
 
-  <!-- debug stuff
-  <div v-if="isFetching">Loading datasets...</div>
-  <div v-else-if="datasets.length > 0">
-    Found {{ datasets.length }} datasets.
-    <div v-if="currentDataset">{{ currentDataset.data_id }}</div>
+  <!-- debug stuff -->
+  <div class="debug">
+    <div v-if="isFetching">Loading datasets...</div>
+    <div v-else-if="datasets.length > 0">
+      Found {{ datasets.length }} datasets
+      <div v-if="currentDataset">{{ currentDataset.data_id }}</div>
+    </div>
+    <div v-else>No datasets found.</div>
+    <div v-if="dataLayerSource">Data layer visible</div>
+    <div v-if="!indexLayerSource">Loading index layer...</div>
+    <div v-else>Index layer visible</div>
   </div>
-  <div v-else>No datasets found.</div>
-  <div v-if="dataLayerSource">Data layer visible</div>
-  <div v-if="!indexLayerSource">Loading index layer...</div>
-  <div v-else>Index layer visible</div-->
 </template>
 
-<style scoped></style>
+<style scoped>
+.debug {
+  position: fixed;
+  right: 0;
+  margin: 10px;
+  padding: 10px;
+  text-align: end;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+</style>
