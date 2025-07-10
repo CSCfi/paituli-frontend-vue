@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { onMounted, type Ref } from 'vue'
-
 import { useDatasets } from '@/composables/datasets'
-
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
-import type { FeatureLike } from 'ol/Feature'
 import { useSources } from '@/composables/sources'
 import { shiftKeyOnly } from 'ol/events/condition'
 import { useControls } from '@/composables/controls'
+import type { FeatureLike } from 'ol/Feature'
 
 const { datasets, currentDataset, fetchDatasets, isFetching, setCurrent } =
   useDatasets()
@@ -20,7 +18,7 @@ const { selectedFeatures, featureSelected, dragboxEnd } = useControls()
 const mapCenter = defineModel('center') as Ref<[number, number]>
 const mapZoom = defineModel('zoom') as Ref<number>
 
-// Fetch datasets on startup
+// Fetch datasets on load
 onMounted(async () => {
   try {
     await fetchDatasets()

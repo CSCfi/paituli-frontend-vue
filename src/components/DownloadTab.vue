@@ -36,7 +36,8 @@ watch(
     // Update checkbox states when feature selection changes
     const newStates: Record<string, boolean> = {}
     features.forEach((f) => {
-      newStates[f.get('label')] = checkboxStates.value[f.get('label')] === false ? false : true
+      newStates[f.get('label')] =
+        checkboxStates.value[f.get('label')] === false ? false : true
     })
     checkboxStates.value = newStates
   },
@@ -49,7 +50,9 @@ const downloadSize = computed(() => {
 })
 
 const canDownload = computed(() => {
-  return filePaths.value.length > 0 && downloadSize.value <= MAX_DOWNLOADABLE_SIZE
+  return (
+    filePaths.value.length > 0 && downloadSize.value <= MAX_DOWNLOADABLE_SIZE
+  )
 })
 
 function cutLicenseURL(url: string) {
@@ -60,7 +63,12 @@ function cutLicenseURL(url: string) {
 // Exposed download modal control
 const modalRef = ref()
 function openDownloadModal(zipped: boolean) {
-  modalRef.value.open(filePaths.value, fileLabels.value, 123, zipped ? 'ZIP' : 'LIST')
+  modalRef.value.open(
+    filePaths.value,
+    fileLabels.value,
+    123,
+    zipped ? 'ZIP' : 'LIST',
+  )
 }
 </script>
 
@@ -73,7 +81,7 @@ function openDownloadModal(zipped: boolean) {
 
     <div class="columns">
       <div class="documents" v-if="licenseUrl">
-        <h4>Documents</h4>
+        <p>Documents</p>
         <label>
           <input type="checkbox" v-model="licenseChecked" />
           <a :href="licenseUrl" target="_blank">License</a>
@@ -81,10 +89,17 @@ function openDownloadModal(zipped: boolean) {
       </div>
 
       <div class="files" v-if="selectedFeaturesArray.length">
-        <h4>Files</h4>
-        <div v-for="feature in selectedFeaturesArray" :key="feature.getId()" class="file-item">
+        <p>Files</p>
+        <div
+          v-for="feature in selectedFeaturesArray"
+          :key="feature.getId()"
+          class="file-item"
+        >
           <label>
-            <input type="checkbox" v-model="checkboxStates[feature.get('label')]" />
+            <input
+              type="checkbox"
+              v-model="checkboxStates[feature.get('label')]"
+            />
             {{ feature.get('label') }}
           </label>
         </div>
@@ -110,6 +125,17 @@ function openDownloadModal(zipped: boolean) {
 .documents,
 .files {
   flex: 1;
+  color: white;
+}
+
+c-button {
+  --c-button-background-color: var(--c-info-500);
+  --c-button-disabled-background-color: var(--c-primary-500);
+  --c-button-disabled-text-color: var(--c-tertiary-400);
+}
+
+a {
+  color: var(--c-secondary-300);
 }
 
 .file-item {
