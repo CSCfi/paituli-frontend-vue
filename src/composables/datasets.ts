@@ -1,6 +1,6 @@
 import { URLS } from '@/shared/constants'
 import type { Dataset } from '@/shared/types'
-import { computed, readonly, ref } from 'vue'
+import { readonly, ref } from 'vue'
 
 const datasets = ref<Dataset[]>([])
 const currentDataset = ref<Dataset | null>(null)
@@ -8,9 +8,6 @@ const currentDataset = ref<Dataset | null>(null)
 const isFetching = ref(false)
 
 const getById = (id: string) => datasets.value.find((d) => d.data_id === id) ?? null
-
-const hasFeatureInfo = computed(() => !!currentDataset.value?.data_url)
-const hasCurrent = computed(() => !!currentDataset.value)
 
 const setCurrent = (id: string) => {
   currentDataset.value = getById(id)
@@ -37,8 +34,6 @@ export function useDatasets() {
     datasets: readonly(datasets),
     currentDataset: readonly(currentDataset),
     isFetching: readonly(isFetching),
-    hasFeatureInfo,
-    hasCurrent,
     getById,
     setCurrent,
     clearCurrent,
