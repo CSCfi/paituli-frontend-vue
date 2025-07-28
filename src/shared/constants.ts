@@ -5,18 +5,30 @@ export const LAYER = {
 } as const
 
 export const URLS = {
-  NOMINATIM_API:
-    'https://nominatim.openstreetmap.org/search?q=!query!&format=json',
-  API_BASE: 'https://api.example.com/v1',
   METADATA_API: import.meta.env.VITE_METADATA_API,
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
+
+  // Location search
+  NOMINATIM_API:
+    'https://nominatim.openstreetmap.org/search?q=!query!&format=json',
+
+  // GeoServer
   WMS_PAITULI_BASE_GWC:
-    import.meta.env.VITE_GEOSERVER_BASE + '/gwc/service/wms?',
+    import.meta.env.VITE_GEOSERVER_BASE +
+    '/gwc/service/wms?',
   WFS_INDEX_MAP_LAYER:
     import.meta.env.VITE_GEOSERVER_BASE +
     '/wfs?service=WFS&version=2.0.0&request=GetFeature&srsname=epsg:3857&typeNames=' +
     LAYER.INDEX_LAYER +
-    "&cql_filter= !key! = '!value!'",
+    '&cql_filter= !key! = \'!value!\'',
+
+  // Etsin
+  ETSIN_METADATA_BASE:
+    'http://urn.fi/',
+  ETSIN_METADATA_JSON_BASE:
+    import.meta.env.VITE_ETSIN_BASE +
+    '/rest/datasets?format=json&preferred_identifier=',
+
 } as const
 
 export const APP_SETTINGS = {

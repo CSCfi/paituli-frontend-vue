@@ -2,6 +2,11 @@
 import { ref, computed, watchEffect } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 
+import InfoTab from '@/components/tabs/InfoTab.vue'
+import LinksTab from '@/components/tabs/LinksTab.vue'
+import type { Dataset } from '@/shared/types'
+import { URLS } from '@/shared/constants'
+
 const { datasets, setCurrent, clearCurrent, currentDataset } = useDatasets()
 
 // Dropdown selections
@@ -11,6 +16,9 @@ const selectedScale = ref<string>('')
 const selectedYear = ref<string>('')
 const selectedFormat = ref<string>('')
 const selectedCoordSys = ref<string>('')
+
+// Shared metadata
+const metadata = ref<any>()
 
 // Filter helpers
 const onlyDistinct = <T,>(value: T, index: number, self: T[]) =>
@@ -73,7 +81,7 @@ const coordSysOptions = computed(() =>
 
 // Cascade dropdown updates when any of them changes,
 // except for the producer which never changes automatically
-watchEffect(() => {
+watchEffect(async () => {
   if (!dataOptions.value.includes(selectedData.value)) {
     selectedData.value = dataOptions.value[0] ?? ''
   }
@@ -101,10 +109,26 @@ watchEffect(() => {
   )
   if (dataset) {
     setCurrent(dataset.data_id)
+    await fetchMetadata(dataset)
   } else {
     clearCurrent()
   }
 })
+
+async function fetchMetadata(dataset: Dataset)
+{
+  if (!dataset.meta) return
+
+  try {
+    const response = await fetch(`${URLS.ETSIN_METADATA_JSON_BASE}${dataset.meta}`)
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`)
+    metadata.value = await response.json()
+  } catch (err) {
+    alert(`Failed to parse Etsin metadata: ${(err as Error).message}`)
+  }
+}
+
+const infoModal = ref();
 
 type Tab = 'tab1' | 'tab2' | 'tab3'
 const tab = ref<Tab>('tab1')
@@ -130,6 +154,24 @@ const tab = ref<Tab>('tab1')
       </select>
     </label>
 
+    <label>
+      Scale:
+      <select v-model="selectedScale" :disabled="scaleOptions.length <= 1" >
+        <option v-for="scale in scaleOptions" :key="scale" :value="scale" >
+          {{ scale }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      Year:
+      <select v-model="selectedYear" :disabled="yearOptions.length <= 1" >
+        <option v-for="year in yearOptions" :key="year" :value="year">
+          {{ year }}
+        </option>
+      </select>
+    </label>
+
     <div v-if="!currentDataset" class="suggestion">
       <p>Please select a Producer to start browsing available datasets.</p>
     </div>
@@ -141,49 +183,18 @@ const tab = ref<Tab>('tab1')
 
         <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
         <c-tab-items slot="items">
-          <c-button ghost class="read-more">Read more</c-button>
           <c-tab-item value="tab1" class="faded">
-            This is the content for the first tab<br>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, harum pariatur deserunt obcaecati maiores cupiditate magnam! Minima omnis libero sequi consectetur nesciunt. Facilis maxime ratione molestiae expedita quis porro id?<br>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, harum pariatur deserunt obcaecati maiores cupiditate magnam! Minima omnis libero sequi consectetur nesciunt. Facilis maxime ratione molestiae expedita quis porro id?<br>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, harum pariatur deserunt obcaecati maiores cupiditate magnam! Minima omnis libero sequi consectetur nesciunt. Facilis maxime ratione molestiae expedita quis porro id?<br>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, harum pariatur deserunt obcaecati maiores cupiditate magnam! Minima omnis libero sequi consectetur nesciunt. Facilis maxime ratione molestiae expedita quis porro id?<br>
+            <InfoTab :metadata="metadata" ref="infoModal" />
           </c-tab-item>
+          <c-button ghost class="read-more" @click="infoModal?.open()">
+            Read more
+          </c-button>
 
           <c-tab-item value="tab2">
-            This is the content for the second tab<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
-            Some links<br>
+            <LinksTab :metadata="metadata" />
           </c-tab-item>
 
           <c-tab-item value="tab3">
-            <label>
-              Scale:
-              <select v-model="selectedScale" :disabled="scaleOptions.length <= 1" >
-                <option v-for="scale in scaleOptions" :key="scale" :value="scale" >
-                  {{ scale }}
-                </option>
-              </select>
-            </label>
-
-            <label>
-              Year:
-              <select v-model="selectedYear" :disabled="yearOptions.length <= 1" >
-                <option v-for="year in yearOptions" :key="year" :value="year">
-                  {{ year }}
-                </option>
-              </select>
-            </label>
 
             <label>
               Format:
@@ -213,12 +224,12 @@ const tab = ref<Tab>('tab1')
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 label {
   display: flex;
   flex-direction: column;
   color: white;
+  padding-top: 0.3rem;
 }
 c-tabs {
   --c-tab-background-color-hover: var(--c-primary-400);
@@ -227,6 +238,7 @@ c-tabs {
 }
 c-tab-item {
   height: 250px;
+  color: var(--c-primary-200);
 }
 .faded {
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
