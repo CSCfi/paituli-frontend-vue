@@ -22,7 +22,7 @@ const mapZoom = defineModel('zoom') as Ref<number>
 onMounted(async () => {
   try {
     await fetchDatasets()
-    //setCurrent('mml_korkeusmalli_25m_2000_tiff_ykj') // DEBUG: select dataset on mount
+    setCurrent('mml_korkeusmalli_25m_2000_tiff_ykj') // DEBUG: select dataset on mount
   } catch (error) {
     alert(`Failed to load datasets: ${(error as Error).message}`)
   }

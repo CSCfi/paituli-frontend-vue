@@ -8,6 +8,11 @@ export const URLS = {
   METADATA_API: import.meta.env.VITE_METADATA_API,
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
 
+  // Links tab
+  FTP_LINKS_BASE: 'ftp://ftp.funet.fi/index/geodata/',
+  HTTP_LINKS_BASE: 'http://www.nic.funet.fi/index/geodata/',
+  INFO_LINK: 'https://paituli.csc.fi/files.html',
+
   // Location search
   NOMINATIM_API:
     'https://nominatim.openstreetmap.org/search?q=!query!&format=json',
