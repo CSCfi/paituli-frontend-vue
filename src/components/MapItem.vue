@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, type Ref } from 'vue'
+import { onMounted, ref, type Ref } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
@@ -7,6 +7,10 @@ import { useSources } from '@/composables/sources'
 import { shiftKeyOnly } from 'ol/events/condition'
 import { useControls } from '@/composables/controls'
 import type { FeatureLike } from 'ol/Feature'
+
+
+import * as proj from 'ol/proj'
+import { URLS } from '@/shared/constants'
 
 const { datasets, currentDataset, fetchDatasets, isFetching, setCurrent } =
   useDatasets()
@@ -17,6 +21,7 @@ const { selectedFeatures, featureSelected, dragboxEnd } = useControls()
 // Shared control from parent
 const mapCenter = defineModel('center') as Ref<[number, number]>
 const mapZoom = defineModel('zoom') as Ref<number>
+
 
 // Fetch datasets on load
 onMounted(async () => {
@@ -40,11 +45,39 @@ const indexStyle = (feature: FeatureLike) => {
   })
 }
 
-//const downloadTabExpanded = ref(true)
+const locationSearch = async () => {
+  if (searchStr.value.trim().length === 0) return
+  try {
+    const response = await fetch(
+      URLS.NOMINATIM_API.replace( '!query!', encodeURIComponent(searchStr.value)))
+    const data = await response.json()
+
+    if (data.length > 0) {
+      const [lon, lat] = [Number(data[0].lon), Number(data[0].lat)]
+      const projected = proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857')
+
+      mapCenter.value = [projected[0], projected[1]]
+      mapZoom.value = searchStr.value.includes(',') ? 16 : 13
+    } else {
+      alert('Location or address not found. Please double check your spelling.')
+    }
+  } catch (error) {
+    console.error('Search error:', error)
+  }
+}
+const searchStr = ref('')
+
 </script>
 
 <template>
-  <Map.OlMap style="width: 100%; height: 100%">
+
+  <Map.OlMap style="width: 100%; height: 100%; position: relative;">
+
+    <div class="location-search">
+      <input v-model="searchStr" @keypress.enter="locationSearch" placeholder="Helsinki" />
+      <button @click="locationSearch">{{ 'Search' }}</button>
+    </div>
+
     <Map.OlView :center="mapCenter" :zoom="mapZoom" projection="EPSG:3857" />
     <!--Layers-->
     <Layers.OlTileLayer :source="osmSource" />
@@ -88,10 +121,16 @@ const indexStyle = (feature: FeatureLike) => {
 </template>
 
 <style scoped>
+.location-search {
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  margin: .5em 1em;
+}
 .debug {
   position: fixed;
   right: 0;
-  margin: 10px;
+  margin: 50px 10px;
   padding: 10px;
   text-align: end;
   background-color: rgba(255, 255, 255, 0.5);

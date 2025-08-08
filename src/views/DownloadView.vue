@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import MapItem from '@/components/MapItem.vue'
-import LocationSearchField from '@/components/LocationSearchField.vue'
 
 import { APP_SETTINGS } from '@/shared/constants'
 import DatasetSelect from '@/components/DatasetSelect.vue'
@@ -15,7 +14,6 @@ const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
 <template>
   <div class="wrapper">
     <c-side-navigation>
-      <LocationSearchField v-model:center="mapCenter" v-model:zoom="mapZoom" />
       <c-side-navigation-title>Dataset</c-side-navigation-title>
       <DatasetSelect />
       <c-side-navigation-title>Downloads</c-side-navigation-title>
@@ -28,6 +26,7 @@ const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
 <style scoped>
 c-side-navigation {
   padding-right: 25px;
+  width: 500px;
 }
 
 .wrapper {
