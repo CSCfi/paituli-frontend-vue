@@ -5,13 +5,25 @@ import { ref } from 'vue'
 import { useSources } from './sources'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import type { FeatureLike } from 'ol/Feature'
+import { APP_SETTINGS } from '@/shared/constants'
 
 const { indexLayerSource } = useSources()
 
+// Map zoom controls
+const mapCenter = ref<[number, number]>(APP_SETTINGS.MAP_DEFAULT_CENTER)
+const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
+
+// Map layer controls
+const backgroundVisible = ref(true)
+const muncipalitiesVisible = ref(false)
+const catchmentVisible = ref(false)
+const indexVisible = ref(true)
+const dataVisible = ref(true)
+
+// Mapsheet selection
 const selectedFeatures = new Collection<Feature>()
 selectedFeatures.on('add', (event) => {
   selectedFeaturesArray.value.push(event.element)
-  //downloadTabExpanded.value = true
 })
 
 const selectedFeaturesArray = ref<Feature[]>([])
@@ -55,6 +67,13 @@ const selectionStyle = function (feature: FeatureLike) {
 
 export function useControls() {
   return {
+    indexVisible,
+    dataVisible,
+    mapCenter,
+    mapZoom,
+    backgroundVisible,
+    muncipalitiesVisible,
+    catchmentVisible,
     featureSelected,
     dragboxEnd,
     selectStyle: selectionStyle,

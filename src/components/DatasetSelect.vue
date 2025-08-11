@@ -6,8 +6,12 @@ import InfoTab from '@/components/tabs/InfoTab.vue'
 import LinksTab from '@/components/tabs/LinksTab.vue'
 import type { Dataset } from '@/shared/types'
 import { URLS } from '@/shared/constants'
+import { useControls } from '@/composables/controls'
+import { useSources } from '@/composables/sources'
 
 const { datasets, setCurrent, clearCurrent, currentDataset } = useDatasets()
+const { indexLayerSource, dataLayerSource } = useSources();
+const controls = useControls();
 
 // Dropdown selections
 const selectedProducer = ref<string>('')
@@ -132,6 +136,7 @@ const infoModal = ref();
 
 type Tab = 'tab1' | 'tab2' | 'tab3'
 const tab = ref<Tab>('tab1')
+
 </script>
 
 <template>
@@ -213,6 +218,23 @@ const tab = ref<Tab>('tab1')
                 </option>
               </select>
             </label>
+
+            <c-switch v-model="controls.backgroundVisible.value" v-control>
+              Show background map
+            </c-switch>
+            <c-switch v-model="controls.muncipalitiesVisible.value" v-control>
+              Show muncipalities layer
+            </c-switch>
+            <c-switch v-model="controls.catchmentVisible.value" v-control>
+              Show catchment areas layer
+            </c-switch>
+            <c-switch v-model="controls.indexVisible.value" :disabled="!indexLayerSource" v-control>
+              Show index layer
+            </c-switch>
+            <c-switch v-model="controls.dataVisible.value" :disabled="!dataLayerSource" v-control>
+              Show data layer
+            </c-switch>
+
           </c-tab-item>
         </c-tab-items>
       </c-tabs>
@@ -237,8 +259,20 @@ c-tabs {
   --c-tabs-indicator-color: var(--c-primary-100);
 }
 c-tab-item {
-  height: 250px;
+  height: 350px;
   color: var(--c-primary-200);
+}
+c-switch {
+  --c-switch-border-color: var(--c-primary-400);
+  --c-switch-handle-color: var(--c-primary-200);
+  --c-switch-slider-color: var(--c-primary-700);
+  --c-switch-border-color-active: var(--c-primary-100);
+  --c-switch-handle-color-active: var(--c-primary-100);
+  --c-switch-slider-color-active: var(--c-secondary-500);
+  --c-switch-slider-color-disabled: var(--c-primary-700);
+  --c-switch-border-color-disabled: var(--c-primary-600);
+  padding-top: 15px;
+  width: 100%;
 }
 .faded {
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);

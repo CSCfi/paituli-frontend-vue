@@ -18,6 +18,9 @@ export const URLS = {
     'https://nominatim.openstreetmap.org/search?q=!query!&format=json',
 
   // GeoServer
+  WMS_PAITULI_BASE:
+    import.meta.env.VITE_GEOSERVER_BASE +
+    '/wms?',
   WMS_PAITULI_BASE_GWC:
     import.meta.env.VITE_GEOSERVER_BASE +
     '/gwc/service/wms?',

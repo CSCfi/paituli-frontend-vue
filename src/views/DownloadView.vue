@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import MapItem from '@/components/MapItem.vue'
 
-import { APP_SETTINGS } from '@/shared/constants'
 import DatasetSelect from '@/components/DatasetSelect.vue'
 import DownloadTab from '@/components/DownloadTab.vue'
 
-// Define shared map center and zoom control
-const mapCenter = ref<[number, number]>(APP_SETTINGS.MAP_DEFAULT_CENTER)
-const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
 </script>
 
 <template>
@@ -19,7 +14,7 @@ const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
       <c-side-navigation-title>Downloads</c-side-navigation-title>
       <DownloadTab />
     </c-side-navigation>
-    <MapItem v-model:center="mapCenter" v-model:zoom="mapZoom" />
+    <MapItem/>
   </div>
 </template>
 

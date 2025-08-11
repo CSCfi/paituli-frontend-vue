@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
@@ -8,19 +8,15 @@ import { shiftKeyOnly } from 'ol/events/condition'
 import { useControls } from '@/composables/controls'
 import type { FeatureLike } from 'ol/Feature'
 
-
 import * as proj from 'ol/proj'
-import { URLS } from '@/shared/constants'
+import { LAYER, URLS } from '@/shared/constants'
+import { TileWMS } from 'ol/source'
 
 const { datasets, currentDataset, fetchDatasets, isFetching, setCurrent } =
   useDatasets()
 const { indexLayerSource, osmSource, dataLayerSource, dataLayerMaxResolution } =
   useSources()
-const { selectedFeatures, featureSelected, dragboxEnd } = useControls()
-
-// Shared control from parent
-const mapCenter = defineModel('center') as Ref<[number, number]>
-const mapZoom = defineModel('zoom') as Ref<number>
+const { indexVisible, dataVisible, backgroundVisible, muncipalitiesVisible, catchmentVisible, mapCenter, mapZoom, selectedFeatures, featureSelected, dragboxEnd } = useControls()
 
 
 // Fetch datasets on load
@@ -67,6 +63,22 @@ const locationSearch = async () => {
 }
 const searchStr = ref('')
 
+const muncipalitiesSource = new TileWMS({
+  url: URLS.WMS_PAITULI_BASE,
+  params: {
+    LAYERS: LAYER.MUNICIPALITIES_LAYER,
+    VERSION: '1.1.0',
+  },
+});
+const catchmentSource = new TileWMS({
+  url: URLS.WMS_PAITULI_BASE,
+  params: {
+    LAYERS: LAYER.CATCHMENT_AREAS_LAYER,
+    VERSION: '1.1.0',
+  },
+});
+
+
 </script>
 
 <template>
@@ -80,17 +92,31 @@ const searchStr = ref('')
 
     <Map.OlView :center="mapCenter" :zoom="mapZoom" projection="EPSG:3857" />
     <!--Layers-->
-    <Layers.OlTileLayer :source="osmSource" />
+    <Layers.OlTileLayer
+      :source="osmSource"
+      :visible="backgroundVisible"
+    />
     <Layers.OlVectorLayer
       v-if="indexLayerSource"
       :source="indexLayerSource"
       :style="indexStyle"
+      :visible="indexVisible"
     />
     <Layers.OlTileLayer
       v-if="dataLayerSource"
       :source="dataLayerSource"
       :max-resolution="dataLayerMaxResolution"
+      :visible="dataVisible"
     />
+    <Layers.OlTileLayer
+      :source="muncipalitiesSource"
+      :visible="muncipalitiesVisible"
+    />
+    <Layers.OlTileLayer
+      :source="catchmentSource"
+      :visible="catchmentVisible"
+    />
+
     <!--Controls-->
     <Interactions.OlInteractionSelect
       @select="featureSelected"
