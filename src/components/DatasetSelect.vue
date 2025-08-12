@@ -177,6 +177,15 @@ const tab = ref<Tab>('tab1')
       </select>
     </label>
 
+    <label>
+      Format:
+      <select v-model="selectedFormat" :disabled="formatOptions.length <= 1" >
+        <option v-for="format in formatOptions" :key="format" :value="format" >
+          {{ format }}
+        </option>
+      </select>
+    </label>
+
     <div v-if="!currentDataset" class="suggestion">
       <p>Please select a Producer to start browsing available datasets.</p>
     </div>
@@ -201,16 +210,9 @@ const tab = ref<Tab>('tab1')
 
           <c-tab-item value="tab3">
 
-            <label>
-              Format:
-              <select v-model="selectedFormat" :disabled="formatOptions.length <= 1" >
-                <option v-for="format in formatOptions" :key="format" :value="format" >
-                  {{ format }}
-                </option>
-              </select>
-            </label>
 
             <label>
+              <!-- Note: When this is deprecated, we can move all settings to a component -->
               Coordinate System:
               <select v-model="selectedCoordSys" :disabled="coordSysOptions.length <= 1" >
                 <option v-for="cs in coordSysOptions" :key="cs" :value="cs">
@@ -259,7 +261,7 @@ c-tabs {
   --c-tabs-indicator-color: var(--c-primary-100);
 }
 c-tab-item {
-  height: 350px;
+  height: 270px;
   color: var(--c-primary-200);
 }
 c-switch {
