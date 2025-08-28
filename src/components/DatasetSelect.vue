@@ -19,7 +19,6 @@ const selectedData = ref<string>('')
 const selectedScale = ref<string>('')
 const selectedYear = ref<string>('')
 const selectedFormat = ref<string>('')
-const selectedCoordSys = ref<string>('')
 
 // Shared metadata
 const metadata = ref<any>()
@@ -71,17 +70,6 @@ const formatOptions = computed(() =>
     .filter(onlyDistinct)
     .sort(),
 )
-const coordSysOptions = computed(() =>
-  datasets.value
-    .filter((d) => d.org === selectedProducer.value)
-    .filter((d) => d.name === selectedData.value)
-    .filter((d) => d.scale === selectedScale.value)
-    .filter((d) => d.year === selectedYear.value)
-    .filter((d) => d.format === selectedFormat.value)
-    .map((d) => d.coord_sys)
-    .filter(onlyDistinct)
-    .sort(),
-)
 
 // Cascade dropdown updates when any of them changes,
 // except for the producer which never changes automatically
@@ -98,9 +86,6 @@ watchEffect(async () => {
   if (!formatOptions.value.includes(selectedFormat.value)) {
     selectedFormat.value = formatOptions.value[0] ?? ''
   }
-  if (!coordSysOptions.value.includes(selectedCoordSys.value)) {
-    selectedCoordSys.value = coordSysOptions.value[0] ?? ''
-  }
   // Set the current dataset matching the updated selections
   const dataset = datasets.value.find(
     (d) =>
@@ -108,8 +93,7 @@ watchEffect(async () => {
       d.name === selectedData.value &&
       d.scale === selectedScale.value &&
       d.year === selectedYear.value &&
-      d.format === selectedFormat.value &&
-      d.coord_sys === selectedCoordSys.value,
+      d.format === selectedFormat.value,
   )
   if (dataset) {
     setCurrent(dataset.data_id)
@@ -210,17 +194,7 @@ const tab = ref<Tab>('tab1')
 
           <c-tab-item value="tab3">
 
-
-            <label>
-              <!-- Note: When this is deprecated, we can move all settings to a component -->
-              Coordinate System:
-              <select v-model="selectedCoordSys" :disabled="coordSysOptions.length <= 1" >
-                <option v-for="cs in coordSysOptions" :key="cs" :value="cs">
-                  {{ cs }}
-                </option>
-              </select>
-            </label>
-
+            <!-- TOOD make SettingsTab component -->
             <c-switch v-model="controls.backgroundVisible.value" v-control>
               Show background map
             </c-switch>
