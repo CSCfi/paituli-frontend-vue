@@ -6,12 +6,9 @@ import InfoTab from '@/components/tabs/InfoTab.vue'
 import LinksTab from '@/components/tabs/LinksTab.vue'
 import type { Dataset } from '@/shared/types'
 import { URLS } from '@/shared/constants'
-import { useControls } from '@/composables/controls'
-import { useSources } from '@/composables/sources'
+import SettingsTab from './tabs/SettingsTab.vue'
 
 const { datasets, setCurrent, clearCurrent, currentDataset } = useDatasets()
-const { indexLayerSource, dataLayerSource } = useSources();
-const controls = useControls();
 
 // Dropdown selections
 const selectedProducer = ref<string>('')
@@ -187,30 +184,11 @@ const tab = ref<Tab>('tab1')
           <c-button ghost class="read-more" @click="infoModal?.open()">
             Read more
           </c-button>
-
           <c-tab-item value="tab2">
             <LinksTab :metadata="metadata" />
           </c-tab-item>
-
           <c-tab-item value="tab3">
-
-            <!-- TOOD make SettingsTab component -->
-            <c-switch v-model="controls.backgroundVisible.value" v-control>
-              Show background map
-            </c-switch>
-            <c-switch v-model="controls.muncipalitiesVisible.value" v-control>
-              Show muncipalities layer
-            </c-switch>
-            <c-switch v-model="controls.catchmentVisible.value" v-control>
-              Show catchment areas layer
-            </c-switch>
-            <c-switch v-model="controls.indexVisible.value" :disabled="!indexLayerSource" v-control>
-              Show index layer
-            </c-switch>
-            <c-switch v-model="controls.dataVisible.value" :disabled="!dataLayerSource" v-control>
-              Show data layer
-            </c-switch>
-
+            <SettingsTab />
           </c-tab-item>
         </c-tab-items>
       </c-tabs>
@@ -237,18 +215,6 @@ c-tabs {
 c-tab-item {
   height: 270px;
   color: var(--c-primary-200);
-}
-c-switch {
-  --c-switch-border-color: var(--c-primary-400);
-  --c-switch-handle-color: var(--c-primary-200);
-  --c-switch-slider-color: var(--c-primary-700);
-  --c-switch-border-color-active: var(--c-primary-100);
-  --c-switch-handle-color-active: var(--c-primary-100);
-  --c-switch-slider-color-active: var(--c-secondary-500);
-  --c-switch-slider-color-disabled: var(--c-primary-700);
-  --c-switch-border-color-disabled: var(--c-primary-600);
-  padding-top: 15px;
-  width: 100%;
 }
 .faded {
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
