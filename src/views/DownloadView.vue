@@ -23,11 +23,11 @@ c-side-navigation {
   padding-right: 25px;
   width: 500px;
 }
-
 .wrapper {
   display: flex;
   gap: 24px;
-  position: fixed;
+  position: absolute;
+  top: var(--site-header-height);
   left: 0;
   width: 100%;
   height: calc(100vh - var(--site-header-height));

@@ -29,6 +29,7 @@ main {
   max-width: 1150px;
   margin: 0 auto;
   margin-top: var(--site-header-height);
+  padding-top: 10px;
 }
 
 .site-header {
