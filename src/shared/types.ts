@@ -20,3 +20,9 @@ export interface Dataset {
 }
 
 export type DownloadType = 'ZIP' | 'LIST'
+
+export interface NominatimResponse {
+  boundingbox: Array<number>
+  lon: number
+  lat: number
+}

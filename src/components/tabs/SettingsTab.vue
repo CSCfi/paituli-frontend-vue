@@ -22,6 +22,9 @@ const controls = useControls();
   <c-switch v-model="controls.dataVisible.value" :disabled="!dataLayerSource" v-control>
     Show data layer
   </c-switch>
+  <c-switch v-model="controls.mapsheetSearch.value" v-control>
+    Search selects mapsheets
+  </c-switch>
 </template>
 
 <style scoped>

@@ -6,6 +6,7 @@ import { useSources } from './sources'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import type { FeatureLike } from 'ol/Feature'
 import { APP_SETTINGS } from '@/shared/constants'
+import { transformExtent } from 'ol/proj'
 
 const { indexLayerSource } = useSources()
 
@@ -19,8 +20,9 @@ const muncipalitiesVisible = ref(false)
 const catchmentVisible = ref(false)
 const indexVisible = ref(true)
 const dataVisible = ref(true)
+const mapsheetSearch = ref(false)
 
-// Mapsheet selection
+// Mapsheet array
 const selectedFeatures = new Collection<Feature>()
 selectedFeatures.on('add', (event) => {
   selectedFeaturesArray.value.push(event.element)
@@ -35,6 +37,7 @@ selectedFeatures.on('remove', (event) => {
   }
 })
 
+// Update style for (de)selected features
 const featureSelected = (event: SelectEvent) => {
   event.selected.forEach((feature) => {
     feature.setStyle(selectionStyle(feature))
@@ -45,6 +48,7 @@ const featureSelected = (event: SelectEvent) => {
   })
 }
 
+// Rectangular selection
 const dragboxEnd = (event: DragBoxEvent) => {
   const extent = event.target.getGeometry().getExtent()
 
@@ -54,6 +58,37 @@ const dragboxEnd = (event: DragBoxEvent) => {
       feature.setStyle(selectionStyle(feature))
     }
   })
+}
+
+// Selection by search string
+function selectFeatureSearch(query: string, bbox: Array<number>) {
+  if (!indexLayerSource.value || !query) return;
+  selectedFeatures.clear();
+  const features = indexLayerSource.value.getFeatures();
+
+  // First try bounding box
+  const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
+  let matches = features.filter((f) => {
+    return f.getGeometry()?.intersectsExtent(extent)
+  })
+  if (matches.length > 0)
+  {
+    matches.forEach((f) => selectedFeatures.push(f))
+    return;
+  }
+
+  // If none found, simply select sheets by label
+  matches = features.filter((f) => {
+    const name = (f.get('label') || f.get('name') || '').toLowerCase();
+    return name.includes(query.toLowerCase());
+  })
+  if (matches.length > 0)
+  {
+    matches.forEach((f) => selectedFeatures.push(f));
+    return;
+  }
+
+  alert('Search query did not match any location or mapsheet label.')
 }
 
 const selectionStyle = function (feature: FeatureLike) {
@@ -74,8 +109,10 @@ export function useControls() {
     backgroundVisible,
     muncipalitiesVisible,
     catchmentVisible,
+    mapsheetSearch,
     featureSelected,
     dragboxEnd,
+    selectFeatureSearch,
     selectStyle: selectionStyle,
     selectedFeaturesArray,
     selectedFeatures,

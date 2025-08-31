@@ -11,12 +11,15 @@ import type { FeatureLike } from 'ol/Feature'
 import * as proj from 'ol/proj'
 import { LAYER, URLS } from '@/shared/constants'
 import { TileWMS } from 'ol/source'
+import type { NominatimResponse } from '@/shared/types'
 
 const { datasets, currentDataset, fetchDatasets, isFetching, setCurrent } =
   useDatasets()
 const { indexLayerSource, osmSource, dataLayerSource, dataLayerMaxResolution } =
   useSources()
-const { indexVisible, dataVisible, backgroundVisible, muncipalitiesVisible, catchmentVisible, mapCenter, mapZoom, selectedFeatures, featureSelected, dragboxEnd } = useControls()
+const { selectFeatureSearch, indexVisible, dataVisible, backgroundVisible, muncipalitiesVisible, catchmentVisible, mapCenter, mapZoom, selectedFeatures, featureSelected, dragboxEnd } = useControls()
+
+const { mapsheetSearch } = useControls();
 
 
 // Fetch datasets on load
@@ -41,24 +44,39 @@ const indexStyle = (feature: FeatureLike) => {
   })
 }
 
-const locationSearch = async () => {
+// Method to search for either a location to zoom to, or
+// a location which to use for mapsheet selection
+const search = async () => {
   if (searchStr.value.trim().length === 0) return
+
+  // Query Nominatim API for loctation data
+  let result: NominatimResponse
   try {
     const response = await fetch(
       URLS.NOMINATIM_API.replace( '!query!', encodeURIComponent(searchStr.value)))
-    const data = await response.json()
-
-    if (data.length > 0) {
-      const [lon, lat] = [Number(data[0].lon), Number(data[0].lat)]
-      const projected = proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857')
-
-      mapCenter.value = [projected[0], projected[1]]
-      mapZoom.value = searchStr.value.includes(',') ? 16 : 13
-    } else {
+    const json = await response.json()
+    if (json.length == 0)
+    {
       alert('Location or address not found. Please double check your spelling.')
+      return
     }
+    result = json[0] // Just select the first result
   } catch (error) {
-    console.error('Search error:', error)
+    alert('Search error: ' + error)
+    return;
+  }
+
+  // If set by user, we select mapsheets.
+  // Otherwise the map is zoomed to found location.
+  if (mapsheetSearch.value)
+  {
+    selectFeatureSearch(searchStr.value, result.boundingbox);
+    return;
+  }
+  else {
+    const projected = proj.transform([result.lon, result.lat], 'EPSG:4326', 'EPSG:3857')
+    mapCenter.value = [projected[0], projected[1]]
+    mapZoom.value = searchStr.value.includes(',') ? 16 : 13
   }
 }
 const searchStr = ref('')
@@ -86,8 +104,8 @@ const catchmentSource = new TileWMS({
   <Map.OlMap style="width: 100%; height: 100%; position: relative;">
 
     <div class="location-search">
-      <input v-model="searchStr" @keypress.enter="locationSearch" placeholder="Helsinki" />
-      <button @click="locationSearch">{{ 'Search' }}</button>
+      <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
+      <button @click="search">{{ 'Search' }}</button>
     </div>
 
     <Map.OlView :center="mapCenter" :zoom="mapZoom" projection="EPSG:3857" />
