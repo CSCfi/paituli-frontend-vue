@@ -13,14 +13,35 @@ import { LAYER, URLS } from '@/shared/constants'
 import { TileWMS } from 'ol/source'
 import type { NominatimResponse } from '@/shared/types'
 
-const { datasets, currentDataset, fetchDatasets, isFetching, setCurrent } =
-  useDatasets()
-const { indexLayerSource, osmSource, dataLayerSource, dataLayerMaxResolution } =
-  useSources()
-const { selectFeatureSearch, indexVisible, dataVisible, backgroundVisible, muncipalitiesVisible, catchmentVisible, mapCenter, mapZoom, selectedFeatures, featureSelected, dragboxEnd } = useControls()
+const {
+  datasets,
+  currentDataset,
+  fetchDatasets,
+  isFetching,
+  setCurrent
+} = useDatasets()
+
+const {
+  indexLayerSource,
+  osmSource,
+  dataLayerSource,
+  dataLayerMaxResolution
+} = useSources()
+
+const {
+  selectFeatureSearch,
+  indexVisible,
+  dataVisible,
+  backgroundVisible,
+  muncipalitiesVisible,
+  catchmentVisible,
+  mapCenter,
+  mapZoom,
+  selectedFeatures,
+  featureSelected,
+  dragboxEnd } = useControls()
 
 const { mapsheetSearch } = useControls();
-
 
 // Fetch datasets on load
 onMounted(async () => {
