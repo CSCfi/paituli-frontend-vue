@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import { VCodeBlock } from '@wdns/vue-code-block';
+
+</script>
+
 <template>
   <h1>Bulk download over HTTPS, FTP and rsync</h1>
 
@@ -19,8 +24,9 @@
   <ul>
     <li>
       <strong>HTTP</strong>:
-      <a href="http://www.nic.funet.fi/index/geodata/" target="_blank"
-        >http://www.nic.funet.fi/index/geodata/</a
+      <a href="http://www.nic.funet.fi/index/geodata/"
+         target="_blank"
+      >http://www.nic.funet.fi/index/geodata/</a
       >
     </li>
     <li><strong>FTP</strong>: ftp://ftp.funet.fi/index/geodata/</li>
@@ -37,7 +43,7 @@
     <li>Mount FTP as local drive</li>
   </ul>
 
-  <h2>Download a folder</h2>
+  <h2>Downloading a folder</h2>
 
   <p>
     This is a relatively easy option, if the download needs match with the folder structure. Each
@@ -84,11 +90,10 @@
 
   <h4>rsync</h4>
 
-  <div class="codeBlock">
-    rsync -a rsync://rsync.nic.funet.fi/ftp/pub/sci/geo/geodata/<b style="color: blue"
-      >mml/hallintorajat_milj_tk/2017/ local_folder_to_save/</b
-    >
-  </div>
+  <VCodeBlock
+    :code="'rsync -a rsync://rsync.nic.funet.fi/ftp/pub/sci/geo/geodata/AAAmml/hallintorajat_milj_tk/2017/ local_folder_to_save/'"
+    highlightjs
+  />
 
   <ul>
     <li>Change the blue parts in the command as needed.</li>
@@ -101,18 +106,14 @@
 
   <p>wget has a lot of different options, one well working combination is this:</p>
 
-  <div class="codeBlock">
-    wget -r -l inf -N -np -nH -x -c --cut-dirs=6 ftp://ftp.funet.fi/pub/sci/geo/geodata/<b
-      style="color: blue"
-      >mml/hallintorajat_milj_tk/2017/ -P local_folder_to_save/</b
-    >
-  </div>
-  <div class="codeBlock">
-    wget -r -l inf -N -np -nH -x -c --cut-dirs=4 https://www.nic.funet.fi/index/geodata/<b
-      style="color: blue"
-      >mml/hallintorajat_milj_tk/2017/ -P local_folder_to_save/</b
-    >
-  </div>
+  <VCodeBlock
+    :code="'wget -r -l inf -N -np -nH -x -c --cut-dirs=6 ftp://ftp.funet.fi/pub/sci/geo/geodata/<b style= >mml/hallintorajat_milj_tk/2017/ -P local_folder_to_save/</b'"
+    highlightjs
+  />
+  <VCodeBlock
+    :code="'wget -r -l inf -N -np -nH -x -c --cut-dirs=4 https://www.nic.funet.fi/index/geodata/<b >mml/hallintorajat_milj_tk/2017/ -P local_folder_to_save/</b'"
+    highlightjs
+  />
 
   <ul>
     <li>-r, recursive download</li>
@@ -163,8 +164,12 @@
   <p>Compared to previous example -i option is added to give the name of files list.</p>
 
   <div class="codeBlock">
-    wget <b style="color: blue">-i file_list.txt -P local_folder_to_save/</b>
   </div>
+
+  <VCodeBlock
+    :code="'wget <b style=>-i file_list.txt -P local_folder_to_save/</b>'"
+    highlightjs
+  />
 
   <h4>rsync</h4>
 
@@ -172,10 +177,11 @@
     For rsync, remove from the beginning of each row 'http://www.nic.funet.fi/index/' in the file
     list.
   </p>
-  <div class="codeBlock">
-    rsync -a --files-from=<b style="color: blue">file_list.txt</b>
-    rsync://rsync.nic.funet.fi/ftp/pub/sci/geo <b style="color: blue">local_folder_to_save/</b>
-  </div>
+
+  <VCodeBlock
+    :code="'rsync -a --files-from=<b style= >file_list.txt</b> rsync://rsync.nic.funet.fi/ftp/pub/sci/geo <b style=color: blue>local_folder_to_save/</b>'"
+    highlightjs
+  />
 
   <h4>Start-BitsTransfer in Windows PowerShell</h4>
 
@@ -184,16 +190,19 @@
     <li>Add to your list of file a new first row: Source</li>
     <li>Make sure your local_folder_to_save exists.</li>
   </ol>
-  <div class="codeBlock">
-    Import-CSV .\<b style="color: blue">file_list.txt</b> | Start-BitsTransfer -Destination
-    <b style="color: blue">local_folder_to_save/</b>
-  </div>
+
+  <VCodeBlock
+    :code="'Import-CSV .\<b style=color: blue>file_list.txt</b> | Start-BitsTransfer -Destination <b style=color: blue>local_folder_to_save/</b>'"
+    lang="PowerShell"
+    highlightjs
+  />
 
   <p>
     This version of the command saves all files to the same folder. If you want to save the files to
     same folder structure as in Paituli, then make a .csv file with output paths, see
-    <a href="https://www.jesusninoc.com/10/08/start-bitstransfer-examples/" target="_blank"
-      >Start-BitsTransfer, Example 2.</a
+    <a href="https://www.jesusninoc.com/10/08/start-bitstransfer-examples/"
+       target="_blank"
+    >Start-BitsTransfer, Example 2.</a
     >
     Use for example Excel for this. All subfolders must exist before running the Start-BitsTransfer
     command.
@@ -243,7 +252,7 @@
           <a
             href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync"
             target="_blank"
-            >rsync </a
+          >rsync </a
           >.
           <a href="https://bobcares.com/blog/rsync-from-windows-to-linux-over-ssh" target="_blank">
             rsync installation to Windows
@@ -253,7 +262,7 @@
           <a
             href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget"
             target="_blank"
-            >wget</a
+          >wget</a
           >.
           <a href="https://eternallybored.org/misc/wget/" target="_blank">
             wget download for Windows
@@ -263,7 +272,7 @@
           <a
             href="https://docs.microsoft.com/en-us/powershell/module/bitstransfer/start-bitstransfer"
             target="_blank"
-            >Start-BitsTransfer</a
+          >Start-BitsTransfer</a
           >
         </li>
       </ul>

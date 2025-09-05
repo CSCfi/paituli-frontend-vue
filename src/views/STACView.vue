@@ -12,6 +12,7 @@
 
   <p>STAC main concepts:</p>
 
+
   <ul dir="auto">
     <li>
       <strong>Catalog</strong> - general description of the service and links to available
@@ -77,7 +78,7 @@
     <a
       href="https://docs.csc.fi/support/tutorials/gis/virtual-rasters/#creating-virtual-raster-with-gdal-gdal_translate-and-stac"
       target="_blank"
-      >GDAL</a
+    >GDAL</a
     >
     enables creating virtual rasters of STAC search results. Each STAC catalog has its own STAC
     end-point, which should be given to the tools, so that they can find the catalog.
@@ -91,31 +92,33 @@
     <a
       href="https://www.github.com/csc-training/geocomputing/blob/master/python/STAC"
       target="_blank"
-      >Python</a
+    >Python</a
     >
     and
-    <a href="https://www.github.com/csc-training/geocomputing/blob/master/R/STAC" target="_blank"
-      >R</a
+    <a href="https://www.github.com/csc-training/geocomputing/blob/master/R/STAC"
+       target="_blank"
+    >R</a
     >, that demostrate how to search and use STAC data and what are the main required libraries.
   </p>
 
   <h2>Paituli STAC contents</h2>
+
   <p>
     Paituli STAC catalog includes Finnish data, currently about 100 datasets. The full list is
     available in
     <a
       href="https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en"
       target="_blank"
-      >STAC browser for Paituli STAC</a
+    >STAC browser for Paituli STAC</a
     >, see what data collections are available, search for items and also preview COG files.
+    Paituli STAC currently includes data from following sources:
   </p>
 
-  <p>Paituli STAC currently includes data from following sources:</p>
 
-  <ul>
-    <li>
-      Stored at CSC, in Espoo and Kajaani datacenter:
-      <ul dir="auto">
+  <c-list>
+    <c-list-item>
+      <c-list-item-title>Stored at CSC, in Espoo and Kajaani datacenter</c-list-item-title>
+      <ul>
         <li>
           <a href="metadata.html" target="_blank">Paituli own data</a>, only raster data, a lot of
           different datasets. Files in different formats, inc. GeoTiff, COG, JPG2000 and NetCDF
@@ -127,32 +130,34 @@
           CSC supercomputer Puhti.
         </li>
       </ul>
-    </li>
-    <li>
-      Stored at CSC, in Kajaani datacenter:
-      <ul dir="auto">
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>Stored at CSC, in Kajaani datacenter</c-list-item-title>
+      <ul>
         <li>
-          ESA,
-          <a href="https://a3s.fi/sentinel-readme/README.txt" target="_blank">Sentinel-2 products</a
-          >, processed to Level-2A (Surface Reflectance), a selection of mostly cloud-free products
+          ESA, <a href="https://a3s.fi/sentinel-readme/README.txt" target="_blank">Sentinel-2 products</a >,
+          processed to Level-2A (Surface Reflectance), a selection of mostly cloud-free products
           from Finland. Downloaded to CSC Allas by Maria Yli-Heikkilä (LUKE), Arttu Kivimäki
           (NLS/FGI) and Matias Heino (Aalto). Files in original JPG2000 format.
         </li>
         <li>
-          <a href="https://vm0160.kaj.pouta.csc.fi/geocubes/datasets/" target="_blank"
-            >Geoportti geocubes</a
+          <a href="https://vm0160.kaj.pouta.csc.fi/geocubes/datasets/"
+             target="_blank"
+          >Geoportti geocubes</a
           >
           data, a lot of different raster datasets, all recalculated to common grid at several
           different resolutions. All files GeoTiffs, for each dataset also COG available.
         </li>
-      </ul>
-    </li>
 
-    <li>
-      Stored at FMI, from
-      <a href="https://pta.data.lit.fmi.fi/stac/root.json" target="_blank"
-        >FMI Tuulituhohaukka static STAC catalog, all files COGs.</a
-      >:
+
+      </ul>
+    </c-list-item>
+
+    <c-list-item>
+      <c-list-item-title>
+        Stored at FMI, from <a href="https://pta.data.lit.fmi.fi/stac/root.json" target="_blank" >
+          FMI Tuulituhohaukka static STAC catalog, all files COGs</a>
+      </c-list-item-title>
       <ul>
         <li>ESA/FMI, Sentinel-2 11-days surface reflectance mosaics.</li>
         <li>ESA/FMI, Sentinel-1 daily backscatter mosaics: VV and VH polarisation.</li>
@@ -167,20 +172,22 @@
         <li>LUKE, Forest wind damage risk map.</li>
         <li>FMI, Daily wind damage risk map.</li>
       </ul>
-    </li>
-  </ul>
+    </c-list-item>
+
+  </c-list>
 
   <p>
     Paituli is a STAC API and its end-point is:
-    <a href="https://paituli.csc.fi/geoserver/ogc/stac/v1" target="_blank"
-      >https://paituli.csc.fi/geoserver/ogc/stac/v1</a
+    <a href="https://paituli.csc.fi/geoserver/ogc/stac/v1"
+       target="_blank"
+    >https://paituli.csc.fi/geoserver/ogc/stac/v1</a
     >
     (end-point changed 25.8.2023)
   </p>
 
   <p>
     <a href="https://gis-workshops.a3s.fi/2023-06-13-stac-workshop.pdf"
-      >Slides of "STAC - how to find and use spatiotemporal data easily?" workshop</a
+    >Slides of "STAC - how to find and use spatiotemporal data easily?" workshop</a
     >, 13.6.2023
   </p>
 
