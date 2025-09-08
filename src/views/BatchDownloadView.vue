@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CodeBlock from '@/components/tabs/CodeBlock.vue';
 import { VCodeBlock } from '@wdns/vue-code-block';
 
 </script>
@@ -90,13 +91,12 @@ import { VCodeBlock } from '@wdns/vue-code-block';
 
   <h4>rsync</h4>
 
-  <VCodeBlock
-    :code="'rsync -a rsync://rsync.nic.funet.fi/ftp/pub/sci/geo/geodata/AAAmml/hallintorajat_milj_tk/2017/ local_folder_to_save/'"
-    highlightjs
+  <CodeBlock
+    :content="`rsync -a rsync://rsync.nic.funet.fi/ftp/pub/sci/geo/geodata/<span style='color:orange;'>mml/hallintorajat_milj_tk/2017/</span> <span style='color:yellow;'>local_folder_to_save/</span>`"
   />
 
   <ul>
-    <li>Change the blue parts in the command as needed.</li>
+    <li>Change the highlighted parts in the command as needed.</li>
     <li>
       -a use archive mode, inc. save the original dates and download recursively also all subfolders
     </li>
@@ -106,13 +106,10 @@ import { VCodeBlock } from '@wdns/vue-code-block';
 
   <p>wget has a lot of different options, one well working combination is this:</p>
 
-  <VCodeBlock
-    :code="'wget -r -l inf -N -np -nH -x -c --cut-dirs=6 ftp://ftp.funet.fi/pub/sci/geo/geodata/<b style= >mml/hallintorajat_milj_tk/2017/ -P local_folder_to_save/</b'"
-    highlightjs
-  />
-  <VCodeBlock
-    :code="'wget -r -l inf -N -np -nH -x -c --cut-dirs=4 https://www.nic.funet.fi/index/geodata/<b >mml/hallintorajat_milj_tk/2017/ -P local_folder_to_save/</b'"
-    highlightjs
+  <CodeBlock
+    :content="`wget -r -l inf -N -np -nH -x -c --cut-dirs=6 \\
+      ftp://ftp.funet.fi/pub/sci/geo/geodata/<span style='color:orange;'>mml/hallintorajat_milj_tk/2017/</span> \\
+      -P <span style='color:yellow;'>local_folder_to_save/</span>`"
   />
 
   <ul>
@@ -166,9 +163,9 @@ import { VCodeBlock } from '@wdns/vue-code-block';
   <div class="codeBlock">
   </div>
 
-  <VCodeBlock
-    :code="'wget <b style=>-i file_list.txt -P local_folder_to_save/</b>'"
-    highlightjs
+  <CodeBlock
+    :content="`wget -i <span style='color:orange;'>file_list.txt</span>\
+      -P <span style='color:yellow;'>local_folder_to_save/</span>`"
   />
 
   <h4>rsync</h4>
@@ -178,9 +175,9 @@ import { VCodeBlock } from '@wdns/vue-code-block';
     list.
   </p>
 
-  <VCodeBlock
-    :code="'rsync -a --files-from=<b style= >file_list.txt</b> rsync://rsync.nic.funet.fi/ftp/pub/sci/geo <b style=color: blue>local_folder_to_save/</b>'"
-    highlightjs
+  <CodeBlock
+    :content="`rsync -a --files-from=<span style='color:orange;'>file_list.txt</span>\
+    rsync://rsync.nic.funet.fi/ftp/pub/sci/geo <span style='color:yellow;'>local_folder_to_save/</span>`"
   />
 
   <h4>Start-BitsTransfer in Windows PowerShell</h4>
@@ -192,9 +189,7 @@ import { VCodeBlock } from '@wdns/vue-code-block';
   </ol>
 
   <VCodeBlock
-    :code="'Import-CSV .\<b style=color: blue>file_list.txt</b> | Start-BitsTransfer -Destination <b style=color: blue>local_folder_to_save/</b>'"
-    lang="PowerShell"
-    highlightjs
+    :content="`Import-CSV .\<b style=color: blue>file_list.txt</b> | Start-BitsTransfer -Destination <b style=color: blue>local_folder_to_save/</b>`"
   />
 
   <p>
