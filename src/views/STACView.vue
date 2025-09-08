@@ -36,7 +36,7 @@
     </li>
   </ul>
 
-  <img align="middle" src="./STAC.png" style="width: 100%" />
+  <img :src="'STAC.png'" style="width: 100%" />
 
   <p>
     Globally, a lot of STAC catalogs exist. STAC index website provides
