@@ -6,6 +6,8 @@ import { TileWMS } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { useDatasets } from './datasets'
 
+import { geojson as FGBGeoJson } from 'flatgeobuf'
+
 const { currentDataset } = useDatasets()
 
 // Background map source
@@ -33,17 +35,17 @@ watch(currentDataset, async (dataset) => {
     '!value!',
     dataset.data_id,
   )
-  const source = new VectorSource({ format: new GeoJSON() })
+  const format = new GeoJSON()
+  const source = new VectorSource({ format: format })
+  indexLayerSource.value = source
 
   try {
-    const response = await fetch(fetch_url + '&outputFormat=application/json')
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`)
+    const response = await fetch(fetch_url + '&outputFormat=application/flatgeobuf')
+    if (!response.ok || response.body == null) throw new Error(`HTTP error ${response.status}`)
 
-    const features = source.getFormat()?.readFeatures(await response.json())
-    if (!features?.length) throw new Error('Fetched 0 features')
-    source.addFeatures(features)
+    const geojson = FGBGeoJson.deserialize(response.body)
+    for await (const feature of geojson) source.addFeatures(format.readFeatures(feature))
 
-    indexLayerSource.value = source
   } catch (error) {
     console.error('Failed to load index map features:', error)
   }
