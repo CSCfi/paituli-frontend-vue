@@ -21,9 +21,9 @@ export const URLS = {
   WMS_PAITULI_BASE:
     import.meta.env.VITE_GEOSERVER_BASE +
     '/wms?',
-  WMS_PAITULI_BASE_GWC:
+  WMTS_PAITULI_BASE_GWC:
     import.meta.env.VITE_GEOSERVER_BASE +
-    '/gwc/service/wms?',
+    '/gwc/service/wmts?',
   WFS_INDEX_MAP_LAYER:
     import.meta.env.VITE_GEOSERVER_BASE +
     '/wfs?service=WFS&version=2.0.0&request=GetFeature&srsname=epsg:3857&typeNames=' +

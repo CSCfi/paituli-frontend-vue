@@ -2,11 +2,14 @@ import { URLS } from '@/shared/constants'
 import { GeoJSON } from 'ol/format'
 import { computed, shallowRef, watch } from 'vue'
 
-import { TileWMS } from 'ol/source'
+import { TileWMS, WMTS } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { useDatasets } from './datasets'
 
 import { geojson as FGBGeoJson } from 'flatgeobuf'
+import WMTSTileGrid from 'ol/tilegrid/WMTS'
+import { getWidth } from 'ol/extent'
+import { get as getProjection } from 'ol/proj'
 
 const { currentDataset } = useDatasets()
 
@@ -51,16 +54,26 @@ watch(currentDataset, async (dataset) => {
   }
 })
 
+// Generate WMTS tile grid for data layers
+const projection = getProjection('EPSG:3857')!
+const projSize = getWidth(projection.getExtent()) / 256;
+const wmtsGrid = new WMTSTileGrid({
+  extent: projection.getExtent(),
+  resolutions: [...Array(19)].map((_, z) => projSize / 2 ** z),
+  matrixIds: [...Array(19)].map((_, z) => 'EPSG:900913:'+z),
+})
+
 // Data layer source
 const dataLayerSource = computed(() => {
   if (!currentDataset.value?.data_url) return null
-  return new TileWMS({
-    url: URLS.WMS_PAITULI_BASE_GWC,
-    params: {
-      LAYERS: currentDataset.value.data_url,
-      VERSION: '1.1.1',
-    },
-    serverType: 'geoserver',
+  return new WMTS({
+    url: URLS.WMTS_PAITULI_BASE_GWC,
+    layer: currentDataset.value.data_url,
+    tileGrid: wmtsGrid,
+    version: '1.0.0',
+    format: 'image/png',
+    style: 'default',
+    matrixSet: 'EPSG:3857'
   })
 })
 
