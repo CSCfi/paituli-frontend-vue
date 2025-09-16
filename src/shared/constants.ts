@@ -4,6 +4,8 @@ export const LAYER = {
   CATCHMENT_AREAS_LAYER: 'paituli:syke_valuma_maa',
 } as const
 
+const _GS_BASE = import.meta.env.VITE_GEOSERVER_BASE
+
 export const URLS = {
   METADATA_API: import.meta.env.VITE_METADATA_API,
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
@@ -18,17 +20,19 @@ export const URLS = {
     'https://nominatim.openstreetmap.org/search?q=!query!&format=json',
 
   // GeoServer
-  WMS_PAITULI_BASE:
-    import.meta.env.VITE_GEOSERVER_BASE +
-    '/wms?',
-  WMTS_PAITULI_BASE_GWC:
-    import.meta.env.VITE_GEOSERVER_BASE +
-    '/gwc/service/wmts?',
+  WMS_PAITULI_BASE: _GS_BASE + '/wms?',
+  WMTS_PAITULI_BASE_GWC: _GS_BASE + '/gwc/service/wmts?',
+  WCS_PAITULI_BASE: _GS_BASE + '/wcs?',
+  WFS_PAITULI_BASE: _GS_BASE + '/wfs?',
   WFS_INDEX_MAP_LAYER:
-    import.meta.env.VITE_GEOSERVER_BASE +
+    _GS_BASE +
     '/wfs?service=WFS&version=2.0.0&request=GetFeature&srsname=epsg:3857&typeNames=' +
     LAYER.INDEX_LAYER +
     '&cql_filter= !key! = \'!value!\'',
+  OGC_MAPS_PAITULI_BASE: _GS_BASE + '/ogc/maps/v1',
+  OGC_TILES_PAITULI_BASE: _GS_BASE + '/ogc/tiles/v1',
+  OGC_FEATURES_PAITULI_BASE: _GS_BASE + '/ogc/features/v1',
+  OGC_COVERAGES_PAITULI_BASE: _GS_BASE + '/ogc/coverages/v1',
 
   // Etsin
   ETSIN_METADATA_BASE:
