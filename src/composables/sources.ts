@@ -59,8 +59,8 @@ const projection = getProjection('EPSG:3857')!
 const projSize = getWidth(projection.getExtent()) / 256;
 const wmtsGrid = new WMTSTileGrid({
   extent: projection.getExtent(),
-  resolutions: [...Array(19)].map((_, z) => projSize / 2 ** z),
-  matrixIds: [...Array(19)].map((_, z) => 'EPSG:900913:'+z),
+  resolutions: [...Array(31)].map((_, z) => projSize / 2 ** z),
+  matrixIds: [...Array(31)].map((_, z) => 'EPSG:900913:'+z),
 })
 
 // Data layer source
