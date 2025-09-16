@@ -128,12 +128,6 @@ function openDownloadModal(zipped: boolean) {
   color: white;
 }
 
-c-button {
-  --c-button-background-color: var(--c-info-500);
-  --c-button-disabled-background-color: var(--c-primary-500);
-  --c-button-disabled-text-color: var(--c-tertiary-400);
-}
-
 a {
   color: var(--c-secondary-300);
 }

@@ -3,7 +3,7 @@ import { ref, computed, watchEffect } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 
 import InfoTab from '@/components/tabs/InfoTab.vue'
-import LinksTab from '@/components/tabs/LinksTab.vue'
+import ServicesTab from '@/components/tabs/ServicesTab.vue'
 import type { Dataset } from '@/shared/types'
 import { URLS } from '@/shared/constants'
 import SettingsTab from './tabs/SettingsTab.vue'
@@ -173,7 +173,7 @@ const tab = ref<Tab>('tab1')
     <div v-else class="extra">
       <c-tabs v-model="tab" v-control>
         <c-tab value="tab1">Info</c-tab>
-        <c-tab value="tab2">Links</c-tab>
+        <c-tab value="tab2">Services</c-tab>
         <c-tab value="tab3">Settings</c-tab>
 
         <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
@@ -181,11 +181,11 @@ const tab = ref<Tab>('tab1')
           <c-tab-item value="tab1" class="faded">
             <InfoTab :metadata="metadata" ref="infoModal" />
           </c-tab-item>
-          <c-button ghost class="read-more" @click="infoModal?.open()">
+          <c-button outlined class="read-more" @click="infoModal?.open()">
             Read more
           </c-button>
           <c-tab-item value="tab2">
-            <LinksTab :metadata="metadata" />
+            <ServicesTab :metadata="metadata" />
           </c-tab-item>
           <c-tab-item value="tab3">
             <SettingsTab />
@@ -229,7 +229,6 @@ c-tab-item {
   position: absolute;
   bottom: 0;
   right: 0;
-  background: var(--c-primary-500);
   color: white;
   z-index: 1;
 }

@@ -18,11 +18,26 @@ import DownloadTab from '@/components/DownloadTab.vue'
   </div>
 </template>
 
-<style scoped>
+<style>
+
 c-side-navigation {
   padding-right: 25px;
   width: 500px;
+
+  div {
+    margin-bottom: 10px;
+  }
+
+  c-button {
+    --c-button-background-color: var(--c-info-500);
+    --c-button-disabled-background-color: var(--c-primary-500);
+    --c-button-disabled-text-color: var(--c-tertiary-400);
+
+    --c-button-outlined-background-color: var(--c-primary-600);
+    --c-button-outlined-border-color: var(--c-primary-400);
+  }
 }
+
 .wrapper {
   display: flex;
   gap: 24px;

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import CodeBlock from '@/components/tabs/CodeBlock.vue';
-import { VCodeBlock } from '@wdns/vue-code-block';
 
 </script>
 
@@ -188,9 +187,9 @@ import { VCodeBlock } from '@wdns/vue-code-block';
     <li>Make sure your local_folder_to_save exists.</li>
   </ol>
 
-  <VCodeBlock
+  <!--VCodeBlock
     :content="`Import-CSV .\<b style=color: blue>file_list.txt</b> | Start-BitsTransfer -Destination <b style=color: blue>local_folder_to_save/</b>`"
-  />
+  /-->
 
   <p>
     This version of the command saves all files to the same folder. If you want to save the files to
