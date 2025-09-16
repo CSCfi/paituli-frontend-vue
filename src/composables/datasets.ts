@@ -29,6 +29,18 @@ const fetchDatasets = async (): Promise<void> => {
   }
 }
 
+function hasRasterData(dataset: Dataset): boolean
+{
+  const formats = ['TIFF', 'PNG']
+  return formats.some(f => dataset.format.toUpperCase().includes(f))
+}
+
+function hasVectorData(dataset: Dataset): boolean
+{
+  const formats = ['SHAPE', 'GEOPACKAGE']
+  return formats.some(f => dataset.format.toUpperCase().includes(f))
+}
+
 export function useDatasets() {
   return {
     datasets: readonly(datasets),
@@ -38,5 +50,7 @@ export function useDatasets() {
     setCurrent,
     clearCurrent,
     fetchDatasets,
+    hasRasterData,
+    hasVectorData,
   }
 }
