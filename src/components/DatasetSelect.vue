@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watchEffect, watch } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 
 import InfoTab from '@/components/tabs/InfoTab.vue'
+import InfoModal from './modals/InfoModal.vue'
 import ServicesTab from '@/components/tabs/ServicesTab.vue'
 import type { Dataset } from '@/shared/types'
 import { URLS } from '@/shared/constants'
 import SettingsTab from './tabs/SettingsTab.vue'
+import { type MetadataParse, parseMetadata } from '@/shared/util'
 
 const { datasets, setCurrent, clearCurrent, currentDataset } = useDatasets()
 
@@ -17,13 +19,13 @@ const selectedScale = ref<string>('')
 const selectedYear = ref<string>('')
 const selectedFormat = ref<string>('')
 
-// Shared metadata
-const metadata = ref<any>()
+// Parsed dataset metadata
+const parsedMetadata = ref<MetadataParse | null>(null);
 
-// Filter helpers
-const onlyDistinct = <T,>(value: T, index: number, self: T[]) =>
-  self.indexOf(value) === index
-//const onlyAuthorized = (data: Dataset) => data.access === 1 || true // TODO: implement proper auth check
+// Modals and tab selection
+type MenuTab = 'infotab' | 'servicestab' | 'settingstab'
+const tab = ref<MenuTab>('infotab')
+const infoModal = ref();
 
 // Reactive options for each dropdown,
 // based on the current selection from available datasets
@@ -67,10 +69,12 @@ const formatOptions = computed(() =>
     .filter(onlyDistinct)
     .sort(),
 )
+//const onlyAuthorized = (data: Dataset) => data.access === 1 || true // TODO: is this needed?
+const onlyDistinct = <T,>(value: T, index: number, self: T[]) => self.indexOf(value) === index
 
 // Cascade dropdown updates when any of them changes,
 // except for the producer which never changes automatically
-watchEffect(async () => {
+watchEffect(() => {
   if (!dataOptions.value.includes(selectedData.value)) {
     selectedData.value = dataOptions.value[0] ?? ''
   }
@@ -83,40 +87,31 @@ watchEffect(async () => {
   if (!formatOptions.value.includes(selectedFormat.value)) {
     selectedFormat.value = formatOptions.value[0] ?? ''
   }
-  // Set the current dataset matching the updated selections
-  const dataset = datasets.value.find(
+  // Select a dataset matching the updated dropdown selections
+  const selectedDataset = datasets.value.find(
     (d) =>
       d.org === selectedProducer.value &&
-      d.name === selectedData.value &&
-      d.scale === selectedScale.value &&
-      d.year === selectedYear.value &&
-      d.format === selectedFormat.value,
-  )
-  if (dataset) {
-    setCurrent(dataset.data_id)
-    await fetchMetadata(dataset)
-  } else {
-    clearCurrent()
-  }
+    d.name === selectedData.value &&
+    d.scale === selectedScale.value &&
+    d.year === selectedYear.value &&
+    d.format === selectedFormat.value,
+  ) ?? null
+  if (selectedDataset) setCurrent(selectedDataset.data_id)
+  else clearCurrent()
 })
 
-async function fetchMetadata(dataset: Dataset)
-{
-  if (!dataset.meta) return
+// When selected dataset changes, fetch its metadata and parse it
+watch(currentDataset, async (dataset: Dataset | null) => {
+  if (!dataset || !dataset.meta) return
 
   try {
     const response = await fetch(`${URLS.ETSIN_METADATA_JSON_BASE}${dataset.meta}`)
     if (!response.ok) throw new Error(`HTTP error ${response.status}`)
-    metadata.value = await response.json()
+    parsedMetadata.value = parseMetadata(await response.json());
   } catch (err) {
     alert(`Failed to parse Etsin metadata: ${(err as Error).message}`)
   }
-}
-
-const infoModal = ref();
-
-type Tab = 'tab1' | 'tab2' | 'tab3'
-const tab = ref<Tab>('tab1')
+})
 
 </script>
 
@@ -172,22 +167,27 @@ const tab = ref<Tab>('tab1')
     </div>
     <div v-else class="extra">
       <c-tabs v-model="tab" v-control>
-        <c-tab value="tab1">Info</c-tab>
-        <c-tab value="tab2">Services</c-tab>
-        <c-tab value="tab3">Settings</c-tab>
+        <c-tab value="infotab">Info</c-tab>
+        <c-tab value="servicestab">Services</c-tab>
+        <c-tab value="settingstab">Settings</c-tab>
 
         <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
         <c-tab-items slot="items">
-          <c-tab-item value="tab1" class="faded">
-            <InfoTab :metadata="metadata" ref="infoModal" />
+          <c-tab-item value="infotab" class="faded">
+            <InfoTab :desc="parsedMetadata?.description" />
           </c-tab-item>
-          <c-button outlined class="read-more" @click="infoModal?.open()">
-            Read more
-          </c-button>
-          <c-tab-item value="tab2">
-            <ServicesTab :metadata="metadata" />
+          <div v-if="parsedMetadata">
+            <InfoModal :desc="parsedMetadata.description"
+                       :links="parsedMetadata.links"
+                       ref="infoModal" />
+            <c-button outlined class="read-more" @click="infoModal?.open()">
+              Read more
+            </c-button>
+          </div>
+          <c-tab-item value="servicestab">
+            <ServicesTab />
           </c-tab-item>
-          <c-tab-item value="tab3">
+          <c-tab-item value="settingstab">
             <SettingsTab />
           </c-tab-item>
         </c-tab-items>
