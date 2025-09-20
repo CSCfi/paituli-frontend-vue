@@ -106,7 +106,6 @@ c-tab-item {
   transform: translateX(-50%);
   z-index: 1;
   color: var(--c-primary-200);
-  --c-button-outlined-background-color-hover: var(--c-primary-500);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;

@@ -29,10 +29,12 @@ c-side-navigation {
   }
   c-button {
     --c-button-background-color: var(--c-info-500);
+    --c-button-background-color-hover: var(--c-info-400);
     --c-button-disabled-background-color: var(--c-primary-500);
     --c-button-disabled-text-color: var(--c-tertiary-400);
 
     --c-button-outlined-background-color: var(--c-primary-600);
+    --c-button-outlined-background-color-hover: var(--c-primary-500);
     --c-button-outlined-border-color: var(--c-primary-400);
   }
   p {
