@@ -52,6 +52,14 @@ watch(currentDataset, async (dataset: Dataset | null) => {
           <div class="faded">
             <InfoTab :desc="parsedMetadata?.description" />
           </div>
+          <div v-if="parsedMetadata">
+            <InfoModal :desc="parsedMetadata.description"
+                       :links="parsedMetadata.links"
+                       ref="infoModal" />
+          </div>
+          <c-button outlined class="read-more" @click="infoModal?.open()">
+            Read more
+          </c-button>
           <div v-if="currentDataset?.meta">
             <p>
               Full metadata is available at
@@ -61,14 +69,6 @@ watch(currentDataset, async (dataset: Dataset | null) => {
             </p>
           </div>
         </c-tab-item>
-        <div v-if="parsedMetadata">
-          <InfoModal :desc="parsedMetadata.description"
-                     :links="parsedMetadata.links"
-                     ref="infoModal" />
-          <c-button outlined class="read-more" @click="infoModal?.open()">
-            Read more
-          </c-button>
-        </div>
         <c-tab-item value="servicestab">
           <ServicesTab />
         </c-tab-item>
@@ -94,20 +94,32 @@ c-tab-item {
   height: 270px;
   color: var(--c-primary-200);
 }
+
 .faded {
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
+.read-more {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  color: var(--c-primary-200);
+  --c-button-outlined-background-color-hover: var(--c-primary-500);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.faded:hover ~ .read-more,
+.read-more:hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .suggestion {
   margin: 5px;
   color: yellow;
 }
-.read-more {
-  position: absolute;
-  bottom: 50px;
-  color: var(--c-primary-200);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-}
+
 </style>
