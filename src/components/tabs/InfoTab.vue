@@ -13,7 +13,7 @@ const props = defineProps<{ desc: string | undefined }>()
     <p>
       You can view more metadata on
       <c-link :href="URLS.ETSIN_METADATA_BASE + currentDataset.meta" target="_blank">
-        Fairdata Etsin<c-icon :path="mdiOpenInNew" color="var(--c-primary-100)" size="18" />
+        Fairdata Etsin<c-icon :path="mdiOpenInNew" size="18" />
       </c-link>
     </p>
   </div>
