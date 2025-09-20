@@ -2,6 +2,7 @@
 import MapItem from '@/components/MapItem.vue'
 
 import DatasetSelect from '@/components/DatasetSelect.vue'
+import DatasetTabs from '@/components/DatasetTabs.vue'
 import DownloadTab from '@/components/DownloadTab.vue'
 
 </script>
@@ -9,8 +10,9 @@ import DownloadTab from '@/components/DownloadTab.vue'
 <template>
   <div class="wrapper">
     <c-side-navigation>
-      <c-side-navigation-title>Dataset</c-side-navigation-title>
+      <c-side-navigation-title>Select data</c-side-navigation-title>
       <DatasetSelect />
+      <DatasetTabs />
       <c-side-navigation-title>Downloads</c-side-navigation-title>
       <DownloadTab />
     </c-side-navigation>

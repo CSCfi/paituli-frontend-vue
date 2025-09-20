@@ -2,12 +2,8 @@
 import { ref, computed, watchEffect, watch } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 
-import InfoTab from '@/components/tabs/InfoTab.vue'
-import InfoModal from './modals/InfoModal.vue'
-import ServicesTab from '@/components/tabs/ServicesTab.vue'
 import type { Dataset } from '@/shared/types'
 import { URLS } from '@/shared/constants'
-import SettingsTab from './tabs/SettingsTab.vue'
 import { type MetadataParse, parseMetadata } from '@/shared/util'
 
 const { datasets, setCurrent, clearCurrent, currentDataset } = useDatasets()
@@ -21,11 +17,6 @@ const selectedFormat = ref<string>('')
 
 // Parsed dataset metadata
 const parsedMetadata = ref<MetadataParse | null>(null);
-
-// Modals and tab selection
-type MenuTab = 'infotab' | 'servicestab' | 'settingstab'
-const tab = ref<MenuTab>('infotab')
-const infoModal = ref();
 
 // Reactive options for each dropdown,
 // based on the current selection from available datasets
@@ -118,7 +109,7 @@ watch(currentDataset, async (dataset: Dataset | null) => {
 <template>
   <div class="controls">
     <label>
-      Producer:
+      <span>Producer</span>
       <select v-model="selectedProducer" :disabled="producerOptions.length <= 1">
         <option v-for="producer in producerOptions" :key="producer" :value="producer">
           {{ producer }}
@@ -127,7 +118,7 @@ watch(currentDataset, async (dataset: Dataset | null) => {
     </label>
 
     <label>
-      Data:
+      <span>Data</span>
       <select v-model="selectedData" :disabled="dataOptions.length <= 1">
         <option v-for="data in dataOptions" :key="data" :value="data">
           {{ data }}
@@ -136,7 +127,7 @@ watch(currentDataset, async (dataset: Dataset | null) => {
     </label>
 
     <label>
-      Scale:
+      <span>Scale</span>
       <select v-model="selectedScale" :disabled="scaleOptions.length <= 1" >
         <option v-for="scale in scaleOptions" :key="scale" :value="scale" >
           {{ scale }}
@@ -145,7 +136,7 @@ watch(currentDataset, async (dataset: Dataset | null) => {
     </label>
 
     <label>
-      Year:
+      <span>Year</span>
       <select v-model="selectedYear" :disabled="yearOptions.length <= 1" >
         <option v-for="year in yearOptions" :key="year" :value="year">
           {{ year }}
@@ -154,46 +145,15 @@ watch(currentDataset, async (dataset: Dataset | null) => {
     </label>
 
     <label>
-      Format:
+      <span>Format</span>
       <select v-model="selectedFormat" :disabled="formatOptions.length <= 1" >
         <option v-for="format in formatOptions" :key="format" :value="format" >
           {{ format }}
         </option>
       </select>
     </label>
-
-    <div v-if="!currentDataset" class="suggestion">
-      <p>Please select a Producer to start browsing available datasets.</p>
-    </div>
-    <div v-else class="extra">
-      <c-tabs v-model="tab" v-control>
-        <c-tab value="infotab">Info</c-tab>
-        <c-tab value="servicestab">Services</c-tab>
-        <c-tab value="settingstab">Settings</c-tab>
-
-        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-        <c-tab-items slot="items">
-          <c-tab-item value="infotab" class="faded">
-            <InfoTab :desc="parsedMetadata?.description" />
-          </c-tab-item>
-          <div v-if="parsedMetadata">
-            <InfoModal :desc="parsedMetadata.description"
-                       :links="parsedMetadata.links"
-                       ref="infoModal" />
-            <c-button outlined class="read-more" @click="infoModal?.open()">
-              Read more
-            </c-button>
-          </div>
-          <c-tab-item value="servicestab">
-            <ServicesTab />
-          </c-tab-item>
-          <c-tab-item value="settingstab">
-            <SettingsTab />
-          </c-tab-item>
-        </c-tab-items>
-      </c-tabs>
-    </div>
   </div>
+
 </template>
 
 <style scoped>
@@ -203,33 +163,17 @@ watch(currentDataset, async (dataset: Dataset | null) => {
 }
 label {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   color: white;
   padding-top: 0.3rem;
-}
-c-tabs {
-  --c-tab-background-color-hover: var(--c-primary-400);
-  --c-tab-text-color: white;
-  --c-tabs-indicator-color: var(--c-primary-100);
-}
-c-tab-item {
-  height: 270px;
-  color: var(--c-primary-200);
-}
-.faded {
-  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-}
-.suggestion {
-  margin: 5px;
-  color: yellow;
-}
 
-.read-more {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  color: white;
-  z-index: 1;
+  select {
+    flex: 1;
+  }
+  span {
+    display: inline-flex;
+    justify-content: flex-start;
+    width: 80px;
+  }
 }
 </style>
