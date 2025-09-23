@@ -5,7 +5,7 @@ import { copyToClipboard } from '@/shared/util'
 import { useDatasets } from '@/composables/datasets';
 import { ref } from 'vue';
 
-import CodeBlock from '@/components/tabs/CodeBlock.vue';
+import CodeBlock from '@/components/CodeBlock.vue';
 
 const { currentDataset, hasRasterData, hasVectorData } = useDatasets()
 

@@ -3,7 +3,7 @@ import MapItem from '@/components/MapItem.vue'
 
 import DatasetSelect from '@/components/DatasetSelect.vue'
 import DatasetTabs from '@/components/DatasetTabs.vue'
-import DownloadTab from '@/components/DownloadTab.vue'
+import DownloadTab from '@/components/DownloadSelect.vue'
 
 </script>
 

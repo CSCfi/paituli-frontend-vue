@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 import { useControls } from '@/composables/controls'
 import { mdiDownload } from '@mdi/js'
-import DownloadModal from './DownloadModal.vue'
+import DownloadModal from './modals/DownloadModal.vue'
 
 const { selectedFeaturesArray } = useControls()
 const { currentDataset } = useDatasets()
