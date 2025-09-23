@@ -17,6 +17,7 @@ export interface Dataset {
   queries: boolean
   scale: string
   year: string
+  stac_id: string
 }
 
 export type DownloadType = 'ZIP' | 'LIST'

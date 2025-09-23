@@ -15,6 +15,9 @@ const servicesModal = ref()
     <c-button @click="servicesModal.open('FileTransferTab')">
       File transfer
     </c-button>
+    <c-button @click="servicesModal.open('STACTab')">
+      STAC
+    </c-button>
     <c-button @click="servicesModal.open('StableOGCTab')">
       OGC APIs
     </c-button>

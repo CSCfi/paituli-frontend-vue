@@ -9,7 +9,7 @@ import CodeBlock from '@/components/tabs/CodeBlock.vue';
 
 const { currentDataset, hasRasterData, hasVectorData } = useDatasets()
 
-type ModalTab = 'FileTransferTab' | 'StableOGCTab' | 'NewOGCTab';
+type ModalTab = 'FileTransferTab' | 'STACTab' | 'StableOGCTab' | 'NewOGCTab';
 const modalTab = ref<ModalTab>('FileTransferTab');
 const showModal = ref(false)
 
@@ -39,6 +39,7 @@ defineExpose({ open })
 
         <c-tabs v-model="modalTab" v-control>
           <c-tab value="FileTransferTab">File transfer</c-tab>
+          <c-tab value="STACTab">STAC</c-tab>
           <c-tab value="StableOGCTab">Stable OGC APIs</c-tab>
           <c-tab value="NewOGCTab">New OGC APIs</c-tab>
 
@@ -76,6 +77,56 @@ defineExpose({ open })
                   Help?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
                 </c-link>
               </div>
+            </c-tab-item>
+
+            <c-tab-item value="STACTab">
+              <div v-if="currentDataset.stac_id">
+                <p>
+                  The SpatioTemporal Asset Catalog (STAC) specification provides a common structure for describing and cataloging spatiotemporal assets.
+                </p>
+                <p>
+                  This dataset has been catalogued in Paituli STAC, and it's availabie for viewing in
+                  <c-link :href="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id" target="_blank">
+                    STAC browsers<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                  </c-link>
+                </p>
+                <c-table>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>Endpoint</td>
+                        <td>{{ URLS.STAC_PAITULI_BASE }}</td>
+                        <td>
+                          <c-button ghost
+                                    size="small"
+                                    @click="copyToClipboard(URLS.STAC_PAITULI_BASE)">
+                            Copy
+                          </c-button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Collection</td>
+                        <td>{{ currentDataset.stac_id }}</td>
+                        <td>
+                          <c-button ghost
+                                    size="small"
+                                    @click="copyToClipboard(currentDataset.stac_id)">
+                            Copy
+                          </c-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </c-table>
+              </div>
+              <div v-else>
+                <p>
+                  This dataset has not been catalogued in Paituli STAC.
+                </p>
+              </div>
+              <c-link href="/stac" target="_blank">
+                Help?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+              </c-link>
             </c-tab-item>
 
             <c-tab-item value="StableOGCTab">

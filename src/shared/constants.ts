@@ -34,6 +34,10 @@ export const URLS = {
   OGC_FEATURES_PAITULI_BASE: _GS_BASE + '/ogc/features/v1',
   OGC_COVERAGES_PAITULI_BASE: _GS_BASE + '/ogc/coverages/v1',
 
+  // STAC
+  STAC_PAITULI_BASE: _GS_BASE + '/ogc/stac/v1',
+  STAC_BROWSER_BASE: 'https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1/collections',
+
   // Etsin
   ETSIN_METADATA_BASE:
     'http://urn.fi/',
