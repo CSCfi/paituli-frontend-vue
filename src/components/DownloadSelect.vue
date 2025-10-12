@@ -66,19 +66,18 @@ function cutLicenseURL(url: string) {
 
 // Exposed download modal control
 const modalRef = ref()
-function openDownloadModal(zipped: boolean) {
+function openDownloadModal() {
   modalRef.value.open(
     filePaths.value,
     fileLabels.value,
-    123,
-    zipped ? 'ZIP' : 'LIST',
+    12983712938127,
   )
 }
 </script>
 
 <template>
   <div class="download-panel">
-    <c-button :disabled="!canDownload" @click="openDownloadModal(false)">
+    <c-button :disabled="!canDownload" @click="openDownloadModal()">
       <c-icon :path="mdiDownload" />
       Download ({{ downloadSize }} MB)
     </c-button>

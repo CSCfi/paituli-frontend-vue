@@ -1,4 +1,6 @@
 
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text)
     .then(() => {

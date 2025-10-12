@@ -27,3 +27,10 @@ export interface NominatimResponse {
   lon: number
   lat: number
 }
+
+export interface JobResponse {
+  message: string,
+  ID: string,
+  progress: number,
+  error: string,
+}
