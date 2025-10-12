@@ -14,9 +14,13 @@ const licenseChecked = ref(true)
 const licenseUrl = computed(() => currentDataset.value?.license_url)
 
 const filePaths = computed(() => {
-  return selectedFeaturesArray.value
+  const paths: string[] = selectedFeaturesArray.value
     .filter((f) => checkboxStates.value[f.get('label')])
-    .map((f) => f.get('path'))
+    .map((f) => f.get('path'));
+  if (licenseUrl.value && licenseChecked.value) {
+    paths.push(cutLicenseURL(licenseUrl.value))
+  }
+  return paths;
 })
 
 const fileLabels = computed(() => {
@@ -24,7 +28,7 @@ const fileLabels = computed(() => {
     .filter((f) => checkboxStates.value[f.get('label')])
     .map((f) => f.get('label'))
   if (licenseUrl.value && licenseChecked.value) {
-    labels.push(cutLicenseURL(licenseUrl.value))
+    labels.push(licenseUrl.value)
   }
   return labels
 })
