@@ -17,9 +17,7 @@ const {
   datasets,
   currentDataset,
   fetchDatasets,
-  isFetching,
-  setCurrent
-} = useDatasets()
+  isFetching} = useDatasets()
 
 const {
   indexLayerSource,
@@ -47,7 +45,6 @@ const { mapsheetSearch } = useControls();
 onMounted(async () => {
   try {
     await fetchDatasets()
-    setCurrent('mml_korkeusmalli_25m_2000_tiff_ykj') // DEBUG: select dataset on mount
   } catch (error) {
     alert(`Failed to load datasets: ${(error as Error).message}`)
   }

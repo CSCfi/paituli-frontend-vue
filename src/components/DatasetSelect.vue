@@ -6,7 +6,9 @@ import type { Dataset } from '@/shared/types'
 import { URLS } from '@/shared/constants'
 import { type MetadataParse, parseMetadata } from '@/shared/util'
 
-const { datasets, setCurrent, clearCurrent, currentDataset } = useDatasets()
+const { datasets, setCurrent, clearCurrent, currentDataset, getById } = useDatasets()
+
+const props = defineProps<{ loadId?: string }>()
 
 // Dropdown selections
 const selectedProducer = ref<string>('')
@@ -103,6 +105,31 @@ watch(currentDataset, async (dataset: Dataset | null) => {
     alert(`Failed to parse Etsin metadata: ${(err as Error).message}`)
   }
 })
+
+// When datasets are fetched, check if we should load one
+watch(datasets, () => {
+  if (currentDataset.value) {
+    // Something already selected which we won't override
+    return;
+  }
+  if (!props.loadId) {
+    // No load requested
+    return;
+  }
+  const dataset = getById(props.loadId)
+  if (!dataset) {
+    alert('Uknown dataset by id ' + props.loadId)
+    return
+  }
+  selectedProducer.value = dataset.org
+  selectedData.value = dataset.name
+  selectedScale.value = dataset.scale
+  selectedYear.value = dataset.year
+  selectedFormat.value = dataset.format
+
+  alert('Loaded dataset by id ' + props.loadId)
+})
+
 
 </script>
 

@@ -4,6 +4,11 @@ import MapItem from '@/components/MapItem.vue'
 import DatasetSelect from '@/components/DatasetSelect.vue'
 import DatasetTabs from '@/components/DatasetTabs.vue'
 import DownloadTab from '@/components/DownloadSelect.vue'
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const route = useRoute()
+const dataset_id = computed(() => route.query.id as string | undefined)
 
 </script>
 
@@ -11,7 +16,7 @@ import DownloadTab from '@/components/DownloadSelect.vue'
   <div class="wrapper">
     <c-side-navigation>
       <c-side-navigation-title>Select data</c-side-navigation-title>
-      <DatasetSelect />
+      <DatasetSelect :loadId="dataset_id"/>
       <DatasetTabs />
       <c-side-navigation-title>Downloads</c-side-navigation-title>
       <DownloadTab />
