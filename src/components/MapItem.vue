@@ -177,7 +177,7 @@ const catchmentSource = new TileWMS({
     </div>
     <div v-else>No datasets found.</div>
     <div v-if="dataLayerSource">Data layer visible</div>
-    <div v-if="!indexLayerSource">Loading index layer...</div>
+    <div v-if="!indexLayerSource">Waiting for index layer...</div>
     <div v-else>Index layer visible</div>
   </div>
 </template>
