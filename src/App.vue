@@ -1,4 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { useToasts } from './composables/toasts';
+
+const { initToasts } = useToasts()
+
+// Initialize global toasts messages container
+const toasts = ref<HTMLCToastsElement | null>(null)
+onMounted(() => {
+  initToasts(toasts.value)
+})
+
+</script>
 
 <template>
   <header>
@@ -21,6 +33,7 @@
   </header>
   <main>
     <RouterView />
+    <c-toasts ref="toasts" horizontal="center" vertical="top" />
   </main>
 </template>
 
@@ -30,6 +43,10 @@ main {
   margin: 0 auto;
   margin-top: var(--site-header-height);
   padding-top: 10px;
+}
+
+c-toasts {
+  padding-top: var(--site-header-height);
 }
 
 .site-header {

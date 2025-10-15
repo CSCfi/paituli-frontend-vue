@@ -5,8 +5,11 @@ import { useDatasets } from '@/composables/datasets'
 import type { Dataset } from '@/shared/types'
 import { URLS } from '@/shared/constants'
 import { type MetadataParse, parseMetadata } from '@/shared/util'
+import { useToasts } from '@/composables/toasts'
+import { CToastType } from '@cscfi/csc-ui'
 
 const { datasets, setCurrent, clearCurrent, currentDataset, getById } = useDatasets()
+const { addToast } = useToasts();
 
 const props = defineProps<{ loadId?: string }>()
 
@@ -118,7 +121,11 @@ watch(datasets, () => {
   }
   const dataset = getById(props.loadId)
   if (!dataset) {
-    alert('Uknown dataset by id ' + props.loadId)
+    addToast({
+      type: CToastType.Error,
+      title: 'Could not load dataset',
+      message: 'Unknown dataset by id ' + props.loadId,
+    })
     return
   }
   selectedProducer.value = dataset.org
@@ -127,13 +134,24 @@ watch(datasets, () => {
   selectedYear.value = dataset.year
   selectedFormat.value = dataset.format
 
-  alert('Loaded dataset by id ' + props.loadId)
+  addToast({
+    type: CToastType.Info,
+    title: 'Dataset loaded',
+    message: 'Loaded dataset ' + dataset.data_id,
+    duration: 5000,
+  })
 })
 
 
 </script>
 
 <template>
+  <c-toasts
+    ref="toasts"
+    horizontal="center"
+    vertical="center"
+  />
+
   <div class="controls">
     <label>
       <span>Producer</span>
