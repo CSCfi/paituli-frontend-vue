@@ -10,13 +10,9 @@ import { sleep } from '@/shared/util'
 const { currentDataset } = useDatasets()
 
 const showModal = ref(false)
-const email = ref('')
-const licenseAccepted = ref(false)
-//const privacyAccepted = ref(false)
 
-//const emailError = ref('')
-const licenseError = ref('')
-//const privacyError = ref('')
+const licenseCheckbox = ref(false)
+const licenseError = ref(false)
 
 const filePaths = ref<string[]>([])
 const fileLabels = ref<string[]>([])
@@ -46,7 +42,8 @@ const open = (paths: string[], labels: string[], size: number) => {
   filePaths.value = paths
   fileLabels.value = labels
   downloadSize.value = size
-  resetErrors()
+
+  resetForm()
   showModal.value = true
 }
 
@@ -56,41 +53,32 @@ const downloadDescription = computed(() => {
   return `${current.org}, ${current.name}\n${current.scale}, ${current.year}, ${current.coord_sys}, ${current.format}`
 })
 
-const validate = () => {
+const validateForm = () => {
+  resetErrors()
   let valid = true
-  //emailError.value = ''
-  licenseError.value = ''
-  //privacyError.value = ''
-
   /*
   if (!email.value || email.value.length > 80 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
     emailError.value = 'Please enter a valid email.'
     valid = false
   }
-  if (!privacyAccepted.value) {
-    privacyError.value = 'You must accept the privacy policy.'
-    valid = false
-  }
   */
-  if (!licenseAccepted.value) {
-    licenseError.value = 'You must accept the license.'
+  if (licenseCheckbox.value != true) {
+    licenseError.value = true
     valid = false
   }
-
   return valid
 }
 
 const submit = async () => {
   const current = currentDataset.value!
-  if (!validate()) {
-    alert('Invalid form!')
+  if (!validateForm()) {
     return
   }
 
   const payload = {
     data_id: current.data_id,
     downloadType: downloadAsList.value ? 'LIST' : 'ZIP',
-    email: email.value,
+    email: '',
     locale: 'en',
     filePaths: filePaths.value,
     filenames: fileLabels.value,
@@ -198,9 +186,12 @@ function downloadJobOutput(url: string) {
 
 
 const resetErrors = () => {
-  //emailError.value = ''
-  licenseError.value = ''
-  //privacyError.value = ''
+  licenseError.value = false
+}
+
+const resetForm = () => {
+  resetErrors()
+  licenseCheckbox.value = false
 }
 
 defineExpose({ open })
@@ -229,33 +220,14 @@ defineExpose({ open })
           </ToolTip>
         </c-switch>
 
-        <!--div class="form-group">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            class="input"
-            :class="{ error: emailError }"
-            placeholder="you@example.com"
-          />
-          <p v-if="emailError" class="error-text">{{ emailError }}</p>
-        </div>
-
         <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="privacyAccepted" />
-            I agree to the privacy policy
-          </label>
-          <p v-if="privacyError" class="error-text">{{ privacyError }}</p>
-        </div-->
-
-        <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="licenseAccepted" />
-            I agree to the license
-          </label>
-          <p v-if="licenseError" class="error-text">{{ licenseError }}</p>
+          <c-checkbox v-control
+                      v-model="licenseCheckbox"
+                      :valid="!licenseError"
+                      required>
+            I agree to the
+            <c-link href="https://csc.fi" underline>dataset license</c-link>
+          </c-checkbox>
         </div>
 
 
@@ -294,5 +266,8 @@ defineExpose({ open })
 c-progress-bar {
   width: 100%;
   color: var(--c-tertiary-500);
+}
+c-link {
+  --c-link-color: var(--c-primary-500);
 }
 </style>
