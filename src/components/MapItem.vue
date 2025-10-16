@@ -50,7 +50,11 @@ onMounted(async () => {
   try {
     await fetchDatasets()
   } catch (error) {
-    alert(`Failed to load datasets: ${(error as Error).message}`)
+    addToast({
+      type: CToastType.Error,
+      title: 'Failed to load datasets',
+      message: `Refresh the page to retry. If the problem persists, please try again later. (${error})`,
+    })
   }
 })
 
@@ -87,7 +91,11 @@ const search = async () => {
     }
     result = json[0] // Just select the first result
   } catch (error) {
-    alert('Search error: ' + error)
+    addToast({
+      type: CToastType.Error,
+      message: 'The search API encountered an error. Please try again later.',
+    })
+    console.error('Nominatim search error: ' + error)
     return;
   }
 

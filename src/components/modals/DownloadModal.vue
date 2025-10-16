@@ -6,8 +6,11 @@ import { mdiHelpCircle } from '@mdi/js';
 import ToolTip from '../ToolTip.vue';
 import type { JobResponse } from '@/shared/types';
 import { sleep } from '@/shared/util'
+import { useToasts } from '@/composables/toasts';
+import { CToastType } from '@cscfi/csc-ui';
 
 const { currentDataset } = useDatasets()
+const { addToast } = useToasts()
 
 const showModal = ref(false)
 
@@ -69,6 +72,10 @@ const validateForm = () => {
   return valid
 }
 
+const networkErrorMessage = 'Failed to contact download service. Check your internet connection. '
+const somethingWrongMessage = 'Something went wrong while processing your download. '
+const pleaseRetryMessage = 'If the problem persists, please try again later. '
+
 const submit = async () => {
   const current = currentDataset.value!
   if (!validateForm()) {
@@ -105,8 +112,8 @@ const submit = async () => {
     })
     if (!response.ok) {
       // The backend should always return OK - network error?
-      toastErrorMessage = 'Failed to contact download service'
-      throw Error(await response.text())
+      toastErrorMessage = networkErrorMessage
+      throw Error(`HTTP code ${response.status}`)
     }
 
     // Shorthand
@@ -135,14 +142,17 @@ const submit = async () => {
         // Let's just silently try again, unless we hit our retry limit.
         if (--silentRetries == 0)
         {
-          // TODO: Toast warning about potential network problems
+          addToast({
+            type: CToastType.Warning,
+            message: networkErrorMessage + pleaseRetryMessage,
+          })
         }
         continue;
       }
 
       // Job progressing okay? If yes, update progress
       job = await request.json()
-      assertJob(job, 'Something went wrong while processing your download')
+      assertJob(job, somethingWrongMessage)
       progress.value = Math.ceil(job.progress * 100)
       if (progress.value > 0)
       {
@@ -164,12 +174,11 @@ const submit = async () => {
     console.error('Download failed: ', e)
     // If the toast message is undefined at this point, either the backend did
     // not specify a reason for failure, or we tripped on something unexpected.
-    if (toastErrorMessage) {
-      alert(toastErrorMessage)
-    }
-    else {
-      alert('wtf? check log?')
-    }
+    if (!toastErrorMessage) toastErrorMessage = somethingWrongMessage
+    addToast({
+      type: CToastType.Error,
+      message: toastErrorMessage + pleaseRetryMessage
+    })
   } finally {
     fetching.value = false
   }
