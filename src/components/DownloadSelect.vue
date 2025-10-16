@@ -23,6 +23,11 @@ const filePaths = computed(() => {
   return paths;
 })
 
+function cutLicenseURL(url: string): string {
+  if (!url) return ''
+  return url.split('geodata/')[1] || url
+}
+
 const fileLabels = computed(() => {
   const labels: string[] = selectedFeaturesArray.value
     .filter((f) => checkboxStates.value[f.get('label')])
@@ -50,19 +55,24 @@ watch(
 
 const downloadSize = computed(() => {
   const fileSize = currentDataset.value?.file_size
-  return fileSize ? Math.ceil(fileSize * filePaths.value.length) : 0
+  if (!fileSize) return 0
+  // License is exluded from the file count
+  const fileCount = filePaths.value.length;
+  return Math.ceil(fileSize * (licenseChecked.value ? fileCount-1 : fileCount))
 })
 
-const canDownload = computed(() => {
-  return (
-    filePaths.value.length > 0 && downloadSize.value <= MAX_DOWNLOADABLE_SIZE
-  )
+const downloadSizeExceeded = computed(() => {
+  return downloadSize.value > MAX_DOWNLOADABLE_SIZE
 })
 
-function cutLicenseURL(url: string) {
-  if (!url) return ''
-  return url.split('geodata/')[1] || url
-}
+const downloadButtonDisabled = computed(() => {
+  // The download button is disabled whenever we exceed maximum download size,
+  // or if download selection is empty. Having only the license selected also counts
+  return downloadSizeExceeded.value
+    || (filePaths.value.length == 1 && licenseChecked.value)
+    || !(filePaths.value.length > 0)
+})
+
 
 // Exposed download modal control
 const modalRef = ref()
@@ -77,7 +87,7 @@ function openDownloadModal() {
 
 <template>
   <div class="download-panel">
-    <c-button :disabled="!canDownload" @click="openDownloadModal()">
+    <c-button :disabled="downloadButtonDisabled" @click="openDownloadModal()">
       <c-icon :path="mdiDownload" />
       Download ({{ downloadSize }} MB)
     </c-button>
