@@ -12,6 +12,10 @@ import * as proj from 'ol/proj'
 import { LAYER, URLS } from '@/shared/constants'
 import { TileWMS } from 'ol/source'
 import type { NominatimResponse } from '@/shared/types'
+import { useToasts } from '@/composables/toasts'
+import { CToastType } from '@cscfi/csc-ui'
+
+const { addToast } = useToasts()
 
 const {
   datasets,
@@ -75,7 +79,10 @@ const search = async () => {
     const json = await response.json()
     if (json.length == 0)
     {
-      alert('Location or address not found. Please double check your spelling.')
+      addToast({
+        type: CToastType.Warning,
+        message: 'Location or address not found. Please double check your spelling'
+      })
       return
     }
     result = json[0] // Just select the first result

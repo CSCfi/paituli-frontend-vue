@@ -14,7 +14,8 @@ export function useToasts() {
     // wait a tick for Vue to flush DOM and ensure the ref is assigned
     await nextTick()
 
-    if (!message.duration) message.persistent = true
+    if (!message.title) message.title = 'Notice'
+    if (!message.duration) message.duration = 30000 // 30 seconds
     toastsRef.value?.addToast(message)
   }
 

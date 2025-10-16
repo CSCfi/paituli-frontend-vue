@@ -7,8 +7,11 @@ import { Fill, Stroke, Style, Text } from 'ol/style'
 import type { FeatureLike } from 'ol/Feature'
 import { APP_SETTINGS } from '@/shared/constants'
 import { transformExtent } from 'ol/proj'
+import { useToasts } from './toasts'
+import { CToastType } from '@cscfi/csc-ui'
 
 const { indexLayerSource } = useSources()
+const { addToast } = useToasts()
 
 // Map zoom controls
 const mapCenter = ref<[number, number]>(APP_SETTINGS.MAP_DEFAULT_CENTER)
@@ -88,7 +91,10 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
     return;
   }
 
-  alert('Search query did not match any location or mapsheet label.')
+  addToast({
+    type: CToastType.Warning,
+    message: 'Search query did not match any location or mapsheet label'
+  })
 }
 
 const selectionStyle = function (feature: FeatureLike) {
