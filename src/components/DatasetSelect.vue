@@ -2,9 +2,6 @@
 import { ref, computed, watchEffect, watch } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 
-import type { Dataset } from '@/shared/types'
-import { URLS } from '@/shared/constants'
-import { type MetadataParse, parseMetadata } from '@/shared/util'
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
 
@@ -19,9 +16,6 @@ const selectedData = ref<string>('')
 const selectedScale = ref<string>('')
 const selectedYear = ref<string>('')
 const selectedFormat = ref<string>('')
-
-// Parsed dataset metadata
-const parsedMetadata = ref<MetadataParse | null>(null);
 
 // Reactive options for each dropdown,
 // based on the current selection from available datasets
@@ -94,19 +88,6 @@ watchEffect(() => {
   ) ?? null
   if (selectedDataset) setCurrent(selectedDataset.data_id)
   else clearCurrent()
-})
-
-// When selected dataset changes, fetch its metadata and parse it
-watch(currentDataset, async (dataset: Dataset | null) => {
-  if (!dataset || !dataset.meta) return
-
-  try {
-    const response = await fetch(`${URLS.ETSIN_METADATA_JSON_BASE}${dataset.meta}`)
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`)
-    parsedMetadata.value = parseMetadata(await response.json());
-  } catch (err) {
-    alert(`Failed to parse Etsin metadata: ${(err as Error).message}`)
-  }
 })
 
 // When datasets are fetched, check if we should load one

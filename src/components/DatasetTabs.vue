@@ -10,8 +10,11 @@ import { URLS } from '@/shared/constants'
 import SettingsTab from './tabs/SettingsTab.vue'
 import { type MetadataParse, parseMetadata } from '@/shared/util'
 import { mdiOpenInNew } from '@mdi/js';
+import { useToasts } from '@/composables/toasts'
+import { CToastType } from '@cscfi/csc-ui'
 
 const { currentDataset } = useDatasets()
+const { addToast } = useToasts()
 
 // Parsed dataset metadata
 const parsedMetadata = ref<MetadataParse | null>(null);
@@ -24,13 +27,16 @@ const infoModal = ref();
 // When selected dataset changes, fetch its metadata and parse it
 watch(currentDataset, async (dataset: Dataset | null) => {
   if (!dataset || !dataset.meta) return
-
   try {
     const response = await fetch(`${URLS.ETSIN_METADATA_JSON_BASE}${dataset.meta}`)
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`)
+    if (!response.ok) throw new Error(`HTTP code ${response.status}`)
     parsedMetadata.value = parseMetadata(await response.json());
   } catch (err) {
-    alert(`Failed to parse Etsin metadata: ${(err as Error).message}`)
+    addToast({
+      type: CToastType.Warning,
+      message: 'Failed to load dataset metadata. If the problem persists, please try again later.'
+    })
+    console.error(`Failed to parse Etsin metadata: ${(err as Error).message}`)
   }
 })
 

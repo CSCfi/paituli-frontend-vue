@@ -8,7 +8,6 @@ const props = defineProps<{ desc: string | undefined }>()
   <div v-if="props.desc"
        class="metadata-description"
        v-html="props.desc"></div>
-  <div v-else>Metadata is not available.</div>
 </template>
 
 <style scoped>
