@@ -21,7 +21,8 @@ const {
   datasets,
   currentDataset,
   fetchDatasets,
-  isFetching} = useDatasets()
+  isFetching
+} = useDatasets()
 
 const {
   indexLayerSource,
@@ -39,11 +40,10 @@ const {
   catchmentVisible,
   mapCenter,
   mapZoom,
-  selectedFeatures,
+  selectedOlFeatures,
+  mapsheetSearch,
   featureSelected,
   dragboxEnd } = useControls()
-
-const { mapsheetSearch } = useControls();
 
 // Fetch datasets on load
 onMounted(async () => {
@@ -171,7 +171,7 @@ const catchmentSource = new TileWMS({
     <!--Controls-->
     <Interactions.OlInteractionSelect
       @select="featureSelected"
-      :features="selectedFeatures"
+      :features="selectedOlFeatures"
       :multi="true"
     />
     <Interactions.OlInteractionDragbox

@@ -5,7 +5,7 @@ import { useControls } from '@/composables/controls'
 import { mdiDownload } from '@mdi/js'
 import DownloadModal from './modals/DownloadModal.vue'
 
-const { selectedFeaturesArray } = useControls()
+const { selectedFeaturesArray, selectedOlFeatures } = useControls()
 const { currentDataset } = useDatasets()
 
 const MAX_DOWNLOADABLE_SIZE = 3000
@@ -52,6 +52,11 @@ watch(
   },
   { deep: true },
 )
+
+// Reset base feature selection when the dataset changes
+watch(currentDataset, () => {
+  selectedOlFeatures.clear()
+})
 
 const downloadSize = computed(() => {
   const fileSize = currentDataset.value?.file_size

@@ -25,19 +25,20 @@ const indexVisible = ref(true)
 const dataVisible = ref(true)
 const mapsheetSearch = ref(false)
 
-// Mapsheet array
-const selectedFeatures = new Collection<Feature>()
-selectedFeatures.on('add', (event) => {
+// Selected features managed by OL map element
+const selectedOlFeatures = new Collection<Feature>()
+
+// Mapsheet array, which gets updated based on changes to the above
+// Honestly I forgot why we need this and the collection separately,
+// must have been some Vue shenanigans?
+const selectedFeaturesArray = ref<Feature[]>([])
+selectedOlFeatures.on('add', (event) => {
   selectedFeaturesArray.value.push(event.element)
 })
-
-const selectedFeaturesArray = ref<Feature[]>([])
-selectedFeatures.on('remove', (event) => {
+selectedOlFeatures.on('remove', (event) => {
   selectedFeaturesArray.value = selectedFeaturesArray.value.filter(
     (f) => f.get('label') !== event.element.get('label'),
   )
-  if (!selectedFeaturesArray.value.length) {
-  }
 })
 
 // Update style for (de)selected features
@@ -56,8 +57,8 @@ const dragboxEnd = (event: DragBoxEvent) => {
   const extent = event.target.getGeometry().getExtent()
 
   indexLayerSource.value?.forEachFeatureIntersectingExtent(extent, (feature) => {
-    if (!selectedFeatures.getArray().includes(feature)) {
-      selectedFeatures.push(feature)
+    if (!selectedOlFeatures.getArray().includes(feature)) {
+      selectedOlFeatures.push(feature)
       feature.setStyle(selectionStyle(feature))
     }
   })
@@ -66,7 +67,7 @@ const dragboxEnd = (event: DragBoxEvent) => {
 // Selection by search string
 function selectFeatureSearch(query: string, bbox: Array<number>) {
   if (!indexLayerSource.value || !query) return;
-  selectedFeatures.clear();
+  selectedOlFeatures.clear();
   const features = indexLayerSource.value.getFeatures();
 
   // First try bounding box
@@ -76,7 +77,7 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
   })
   if (matches.length > 0)
   {
-    matches.forEach((f) => selectedFeatures.push(f))
+    matches.forEach((f) => selectedOlFeatures.push(f))
     return;
   }
 
@@ -87,7 +88,7 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
   })
   if (matches.length > 0)
   {
-    matches.forEach((f) => selectedFeatures.push(f));
+    matches.forEach((f) => selectedOlFeatures.push(f));
     return;
   }
 
@@ -121,6 +122,6 @@ export function useControls() {
     selectFeatureSearch,
     selectStyle: selectionStyle,
     selectedFeaturesArray,
-    selectedFeatures,
+    selectedOlFeatures,
   }
 }
