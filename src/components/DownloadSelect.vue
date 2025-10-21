@@ -4,11 +4,10 @@ import { useDatasets } from '@/composables/datasets'
 import { useControls } from '@/composables/controls'
 import { mdiDownload } from '@mdi/js'
 import DownloadModal from './modals/DownloadModal.vue'
+import { APP_SETTINGS } from '@/shared/constants'
 
 const { selectedFeaturesArray, selectedOlFeatures } = useControls()
 const { currentDataset } = useDatasets()
-
-const MAX_DOWNLOADABLE_SIZE = 3000
 
 const licenseChecked = ref(true)
 const licenseUrl = computed(() => currentDataset.value?.license_url)
@@ -66,18 +65,16 @@ const downloadSize = computed(() => {
   return Math.ceil(fileSize * (licenseChecked.value ? fileCount-1 : fileCount))
 })
 
-const downloadSizeExceeded = computed(() => {
-  return downloadSize.value > MAX_DOWNLOADABLE_SIZE
-})
-
 const downloadButtonDisabled = computed(() => {
-  // The download button is disabled whenever we exceed maximum download size,
-  // or if download selection is empty. Having only the license selected also counts
-  return downloadSizeExceeded.value
-    || (filePaths.value.length == 1 && licenseChecked.value)
-    || !(filePaths.value.length > 0)
+  // The download button is disabled if the mapsheet selection is empty,
+  // or if we have selected only the license
+  return (filePaths.value.length == 1 && licenseChecked.value)
+    || filePaths.value.length == 0
 })
 
+const downloadSizeExceeded = computed(() => {
+  return downloadSize.value > APP_SETTINGS.MAX_ZIP_SIZE
+})
 
 // Exposed download modal control
 const modalRef = ref()
@@ -85,7 +82,7 @@ function openDownloadModal() {
   modalRef.value.open(
     filePaths.value,
     fileLabels.value,
-    12983712938127,
+    downloadSize.value,
   )
 }
 </script>
@@ -96,6 +93,10 @@ function openDownloadModal() {
       <c-icon :path="mdiDownload" />
       Download ({{ downloadSize }} MB)
     </c-button>
+    <div class="download-size-warning" v-if="downloadSizeExceeded">
+      Note: You have selected over {{ APP_SETTINGS.MAX_ZIP_SIZE }} MB of data,
+      which is over the limit of compressed archive download.
+    </div>
 
     <div class="columns">
       <div class="documents" v-if="licenseUrl">
@@ -134,7 +135,9 @@ function openDownloadModal() {
   flex-direction: column;
   gap: 10px;
 }
-
+.download-size-warning {
+  color: var(--c-warning-400);
+}
 .columns {
   display: flex;
   gap: 20px;

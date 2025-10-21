@@ -33,8 +33,8 @@ onMounted(() => {
   </header>
   <main>
     <RouterView />
-    <c-toasts ref="toasts" horizontal="center" vertical="top" />
   </main>
+  <c-toasts ref="toasts" horizontal="center" vertical="top" />
 </template>
 
 <style scoped>

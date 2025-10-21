@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { URLS } from '@/shared/constants'
+import { APP_SETTINGS, URLS } from '@/shared/constants'
 import { useDatasets } from '@/composables/datasets'
 import { mdiHelpCircle } from '@mdi/js';
 import ToolTip from '../ToolTip.vue';
@@ -16,6 +16,9 @@ const showModal = ref(false)
 
 const licenseCheckbox = ref(false)
 const licenseError = ref(false)
+const licenseUrl = computed(() => currentDataset.value?.license_url)
+
+const zipDownloadDisabled = ref(false)
 
 const filePaths = ref<string[]>([])
 const fileLabels = ref<string[]>([])
@@ -26,8 +29,10 @@ const fetching = ref(false)
 const started = ref(false)
 const progress = ref(0)
 const progressLabel = ref('')
+const downloadError = ref(false)
 
 const open = (paths: string[], labels: string[], size: number) => {
+
   if (paths.length == 0)
   {
     console.error('Refusing to open download modal with zero file paths!')
@@ -38,15 +43,22 @@ const open = (paths: string[], labels: string[], size: number) => {
     console.error('Refusing to open download modal with zero file labels!')
     return;
   }
+  resetForm()
+
   if (size <= 0)
   {
     console.warn('Download modal did not expect a download size of ' + size)
   }
+  else if (size > APP_SETTINGS.MAX_ZIP_SIZE)
+  {
+    zipDownloadDisabled.value = true
+    downloadAsList.value = true
+  }
+
   filePaths.value = paths
   fileLabels.value = labels
   downloadSize.value = size
 
-  resetForm()
   showModal.value = true
 }
 
@@ -57,6 +69,8 @@ const downloadDescription = computed(() => {
 })
 
 const validateForm = () => {
+  // We double check that download form input should not make
+  // the backend angry, and we show error message(s) if it would be so.
   resetErrors()
   let valid = true
   /*
@@ -65,6 +79,10 @@ const validateForm = () => {
     valid = false
   }
   */
+  if (zipDownloadDisabled.value && !downloadAsList.value)
+  {
+    valid = false
+  }
   if (licenseCheckbox.value != true) {
     licenseError.value = true
     valid = false
@@ -143,9 +161,9 @@ const submit = async () => {
         if (--silentRetries == 0)
         {
           addToast({
-            type: CToastType.Warning,
+            type: CToastType.Warning, progress: true,
             message: networkErrorMessage + pleaseRetryMessage,
-          })
+          }, toasts.value)
         }
         continue;
       }
@@ -168,6 +186,7 @@ const submit = async () => {
     downloadJobOutput(URLS.DOWNLOAD_API + '/' + job.ID)
 
   } catch (e) {
+    downloadError.value = true
     // Caught error details should go to the log,
     // while toasts communicate the failed download to the user
     progressLabel.value = '(Failed!)'
@@ -176,9 +195,9 @@ const submit = async () => {
     // not specify a reason for failure, or we tripped on something unexpected.
     if (!toastErrorMessage) toastErrorMessage = somethingWrongMessage
     addToast({
-      type: CToastType.Error,
+      type: CToastType.Error, persistent: true, closeText: 'Okay 😔',
       message: toastErrorMessage + pleaseRetryMessage
-    })
+    }, toasts.value)
   } finally {
     fetching.value = false
   }
@@ -193,15 +212,21 @@ function downloadJobOutput(url: string) {
   document.body.removeChild(a)
 }
 
-
 const resetErrors = () => {
+  downloadError.value = false
   licenseError.value = false
 }
 
 const resetForm = () => {
   resetErrors()
   licenseCheckbox.value = false
+  downloadAsList.value = false
+  zipDownloadDisabled.value = false
 }
+
+// By default toasts get hidden behind the modal backdrop,
+// so we need a custom toast element for addToast()
+const toasts = ref<HTMLCToastsElement | null>(null)
 
 defineExpose({ open })
 </script>
@@ -211,40 +236,51 @@ defineExpose({ open })
     <c-card>
       <c-card-title>Download</c-card-title>
       <c-card-content>
-
-
-        <!--form method="get" action="file.doc" target="_blank">
-          <button type="submit">Download!</button>
-        </form-->
-
         <div class="summary">
           <strong>Download Summary:</strong>
           <p>{{ downloadDescription }}</p>
+
+          <div class="zip-size-warning" v-if="zipDownloadDisabled">
+            Note: You can download selected data only as a file list,
+            as the selection size exceeds the compressed archive size limit of {{ APP_SETTINGS.MAX_ZIP_SIZE }} MB.
+          </div>
+          <div v-else-if="!downloadAsList">
+            Your download will be a zip archive with and estimated size of {{ downloadSize }} MB
+          </div>
+          <div v-else>
+            Your download will be a text file.
+          </div>
         </div>
 
-        <c-switch v-model="downloadAsList" v-control>
+        <!-- Download type (zip / file list) option -->
+        <c-switch v-model="downloadAsList" :disabled="zipDownloadDisabled" v-control>
           Download as file list
           <ToolTip text="Download the selected data paths as a text file for batch download">
             <c-icon :path="mdiHelpCircle" color="var(--c-primary-500)" size="18" />
           </ToolTip>
         </c-switch>
 
-        <div class="form-group">
+        <!-- Render the required license checkbox, if we have a license -->
+        <div class="form-group" v-if="licenseUrl">
           <c-checkbox v-control
                       v-model="licenseCheckbox"
                       :valid="!licenseError"
                       required>
             I agree to the
-            <c-link href="https://csc.fi" underline>dataset license</c-link>
+            <c-link :href="licenseUrl" target="_blank" underline>dataset license</c-link>
           </c-checkbox>
         </div>
 
-
+        <!-- Errors and warnings -->
+        <c-toasts ref="toasts" vertical="bottom" absolute="true" />
       </c-card-content>
 
       <c-card-actions justify="end">
-        <c-progress-bar v-if="started" :value="progress" :label="progressLabel"/>
-        <c-button :loading="fetching" :disabled="fetching" @click="submit">Send</c-button>
+        <c-progress-bar v-if="started"
+                        :value="progress"
+                        :label="progressLabel"
+                        :error="downloadError"/>
+        <c-button :loading="fetching" :disabled="fetching" @click="submit">Download</c-button>
         <c-button @click="showModal = false" variant="light">Cancel</c-button>
       </c-card-actions>
     </c-card>
@@ -252,22 +288,18 @@ defineExpose({ open })
 </template>
 
 <style scoped>
+
 .input {
   display: block;
   width: 100%;
   padding: 0.5em;
   margin-top: 0.25rem;
 }
-.error-text {
-  color: red;
-  font-size: 0.85em;
-}
-.error {
-  border-color: red;
+.zip-size-warning {
+  color: var(--c-warning-600);
 }
 .summary {
-  margin-top: 1rem;
-  background-color: #f6f6f6;
+  background-color: var(--c-tertiary-100);
   padding: 0.5em;
   border-radius: 4px;
   white-space: pre-line;
@@ -275,6 +307,11 @@ defineExpose({ open })
 c-progress-bar {
   width: 100%;
   color: var(--c-tertiary-500);
+
+  &[error="true"] {
+    color: var(--c-error-600);
+    --c-progress-bar-color: var(--c-error-600);
+  }
 }
 c-link {
   --c-link-color: var(--c-primary-500);
