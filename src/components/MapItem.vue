@@ -138,7 +138,7 @@ const catchmentSource = new TileWMS({
 
     <div class="location-search">
       <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
-      <button @click="search">{{ 'Search' }}</button>
+      <button @click="search">Search</button>
     </div>
 
     <Map.OlView :center="mapCenter" :zoom="mapZoom" projection="EPSG:3857" />
