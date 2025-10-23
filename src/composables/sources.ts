@@ -1,4 +1,4 @@
-import { URLS } from '@/shared/constants'
+import { LAYER, URLS } from '@/shared/constants'
 import { GeoJSON } from 'ol/format'
 import { computed, shallowRef, watch } from 'vue'
 
@@ -97,6 +97,22 @@ const dataLayerMaxResolution = computed(() => {
   return max_scale / 2835
 })
 
+// Utility layers WMS sources
+const muncipalitiesSource = new TileWMS({
+  url: URLS.WMS_PAITULI_BASE,
+  params: {
+    LAYERS: LAYER.MUNICIPALITIES_LAYER,
+    VERSION: '1.1.0',
+  },
+});
+const catchmentSource = new TileWMS({
+  url: URLS.WMS_PAITULI_BASE,
+  params: {
+    LAYERS: LAYER.CATCHMENT_AREAS_LAYER,
+    VERSION: '1.1.0',
+  },
+});
+
 export function useSources() {
   return {
     osmSource,
@@ -104,5 +120,7 @@ export function useSources() {
     featureInfoSource,
     dataLayerSource,
     dataLayerMaxResolution,
+    muncipalitiesSource,
+    catchmentSource,
   }
 }

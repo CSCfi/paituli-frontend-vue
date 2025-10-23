@@ -9,8 +9,7 @@ import { useControls } from '@/composables/controls'
 import type { FeatureLike } from 'ol/Feature'
 
 import * as proj from 'ol/proj'
-import { LAYER, URLS } from '@/shared/constants'
-import { TileWMS } from 'ol/source'
+import { URLS } from '@/shared/constants'
 import type { NominatimResponse } from '@/shared/types'
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
@@ -31,7 +30,9 @@ const {
   osmSource,
   featureInfoSource,
   dataLayerSource,
-  dataLayerMaxResolution
+  dataLayerMaxResolution,
+  muncipalitiesSource,
+  catchmentSource
 } = useSources()
 
 const {
@@ -116,21 +117,6 @@ const search = async () => {
   }
 }
 const searchStr = ref('')
-
-const muncipalitiesSource = new TileWMS({
-  url: URLS.WMS_PAITULI_BASE,
-  params: {
-    LAYERS: LAYER.MUNICIPALITIES_LAYER,
-    VERSION: '1.1.0',
-  },
-});
-const catchmentSource = new TileWMS({
-  url: URLS.WMS_PAITULI_BASE,
-  params: {
-    LAYERS: LAYER.CATCHMENT_AREAS_LAYER,
-    VERSION: '1.1.0',
-  },
-});
 
 const featureInfoAvailable = (currentResolution: number | undefined): boolean => {
   // Do we have feature data, it's visible and we are zoomed in enough?
