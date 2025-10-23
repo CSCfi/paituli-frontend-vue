@@ -21,6 +21,7 @@ export const URLS = {
 
   // GeoServer
   WMS_PAITULI_BASE: _GS_BASE + '/wms?',
+  WMS_PAITULI_BASE_GWC: _GS_BASE + '/gwc/service/wms?',
   WMTS_PAITULI_BASE_GWC: _GS_BASE + '/gwc/service/wmts?',
   WCS_PAITULI_BASE: _GS_BASE + '/wcs?',
   WFS_PAITULI_BASE: _GS_BASE + '/wfs?',

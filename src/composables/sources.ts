@@ -54,16 +54,21 @@ watch(currentDataset, async (dataset) => {
   }
 })
 
-// Generate WMTS tile grid for data layers
-const projection = getProjection('EPSG:3857')!
-const projSize = getWidth(projection.getExtent()) / 256;
-const wmtsGrid = new WMTSTileGrid({
-  extent: projection.getExtent(),
-  resolutions: [...Array(31)].map((_, z) => projSize / 2 ** z),
-  matrixIds: [...Array(31)].map((_, z) => 'EPSG:900913:'+z),
+
+// Data layer WMS source for feature info queries
+const featureInfoSource = computed(() => {
+  if (!currentDataset.value?.data_url) return null
+  return new TileWMS({
+    url: URLS.WMS_PAITULI_BASE_GWC,
+    serverType: 'geoserver',
+    params: {
+      LAYERS: currentDataset.value.data_url,
+      VERSION: '1.1.1',
+    },
+  })
 })
 
-// Data layer source
+// Data layer WMTS source for rendering
 const dataLayerSource = computed(() => {
   if (!currentDataset.value?.data_url) return null
   return new WMTS({
@@ -77,6 +82,15 @@ const dataLayerSource = computed(() => {
   })
 })
 
+// Tile grid for WMTS data layer
+const projection = getProjection('EPSG:3857')!
+const projSize = getWidth(projection.getExtent()) / 256;
+const wmtsGrid = new WMTSTileGrid({
+  extent: projection.getExtent(),
+  resolutions: [...Array(31)].map((_, z) => projSize / 2 ** z),
+  matrixIds: [...Array(31)].map((_, z) => 'EPSG:900913:'+z),
+})
+
 const dataLayerMaxResolution = computed(() => {
   const max_scale = currentDataset.value?.data_max_scale
   if (!max_scale) return 100
@@ -87,6 +101,7 @@ export function useSources() {
   return {
     osmSource,
     indexLayerSource,
+    featureInfoSource,
     dataLayerSource,
     dataLayerMaxResolution,
   }
