@@ -14,6 +14,8 @@ import { TileWMS } from 'ol/source'
 import type { NominatimResponse } from '@/shared/types'
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
+import { MapBrowserEvent } from 'ol'
+import type { GeoJSONFeatureCollection } from 'ol/format/GeoJSON'
 
 const { addToast } = useToasts()
 
@@ -27,6 +29,7 @@ const {
 const {
   indexLayerSource,
   osmSource,
+  featureInfoSource,
   dataLayerSource,
   dataLayerMaxResolution
 } = useSources()
@@ -129,12 +132,98 @@ const catchmentSource = new TileWMS({
   },
 });
 
+const featureInfoAvailable = (currentResolution: number | undefined): boolean => {
+  // Do we have feature data, it's visible and we are zoomed in enough?
+  if (!featureInfoSource.value) return false
+  if (!dataVisible || currentResolution == undefined) return false
+  if (currentResolution > dataLayerMaxResolution.value) return false
+  return true
+}
+
+const onPointerMove = (_event: unknown) => {
+
+  // A silly cast here because OL's typing mismatch
+  const event = _event as MapBrowserEvent<PointerEvent>
+
+  if (featureInfoAvailable(event.map.getView().getResolution())) {
+    // Change cursor to crosshair
+    event.map.getTargetElement().style.cursor = 'crosshair'
+  }
+  else {
+    // No feature info available, change cursor back
+    event.map.getTargetElement().style.cursor = ''
+  }
+
+}
+
+const onPointerClick = (_event: unknown) => {
+
+  // A silly cast here because OL's typing mismatch
+  const event = _event as MapBrowserEvent<PointerEvent>
+  if (event.dragging) return
+
+  // We only handle clicks if we have feature info
+  const view = event.map.getView()
+  if (!featureInfoAvailable(view.getResolution())) return
+
+  // Get feature info URL
+  const url = featureInfoSource.value!.getFeatureInfoUrl(
+    event.coordinate, view.getResolution()!, view.getProjection(),
+    {INFO_FORMAT: 'application/json'}
+  )
+  if (!url) {
+    console.warn('OpenLayers failed to construct GetFeatureInfo URL')
+    return
+  }
+
+  // Fetch the feature info and display it
+  fetch(url)
+    .then(response => {
+      if (!response.ok) throw Error(`HTTP code ${response.status}`)
+      return response.json();
+    })
+    .then((json: GeoJSONFeatureCollection) => {
+      popup.value.content = parseFeatureInfo(json)
+      popup.value.coordinate = event.coordinate
+      popup.value.visible = true
+    })
+    .catch(err => {
+      addToast({
+        type: CToastType.Error,
+        message: 'Failed to load feature information. ' +
+                 'If the problem persists, please try again later.',
+      })
+      console.error(err)
+    })
+}
+
+// Parses GeoJSON feature properties into a human-readable string
+const parseFeatureInfo = (json: GeoJSONFeatureCollection): string => {
+  const info = json.features[0]?.properties
+  if (!info) return 'None!'
+  return Object.entries(info)
+    // A bit like JSON.Stringify but without braces etc.
+    .map(([key, value]) => `${key}: ${value}`)
+    .join('\n')
+}
+
+const popup = ref({
+  visible: false,
+  coordinate: [0,0],
+  content: ''
+})
+
+const closePopup = () => {
+  popup.value.visible = false
+}
 
 </script>
 
 <template>
 
-  <Map.OlMap style="width: 100%; height: 100%; position: relative;">
+  <Map.OlMap style="width: 100%; height: 100%; position: relative;"
+             @pointermove="onPointerMove"
+             @click="onPointerClick">
 
     <div class="location-search">
       <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
@@ -181,6 +270,22 @@ const catchmentSource = new TileWMS({
     <MapControls.OlOverviewmapControl :collapsed="true">
       <Layers.OlTileLayer :source="osmSource" />
     </MapControls.OlOverviewmapControl>
+
+    <!-- Feature info popup -->
+    <Map.OlOverlay
+      v-if="popup.visible"
+      :position="popup.coordinate"
+      :auto-pan="true"
+      :auto-pan-animation="{ duration: 250 }"
+    >
+      <div class="popup">
+        <button class="popup-closer" @click="closePopup">×</button>
+        <div class="popup-content">
+          <p>Feature info:</p>
+          <pre>{{ popup.content }}</pre>
+        </div>
+      </div>
+    </Map.OlOverlay>
   </Map.OlMap>
 
   <!-- debug stuff -->
@@ -198,6 +303,31 @@ const catchmentSource = new TileWMS({
 </template>
 
 <style scoped>
+.popup {
+  position: relative;
+  background-color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.popup-closer {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.popup-content {
+  margin-top: 10px;
+  font-family: monospace;
+}
+
 .location-search {
   position: absolute;
   right: 0;
