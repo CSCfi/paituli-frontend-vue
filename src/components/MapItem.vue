@@ -84,41 +84,44 @@ const closePopup = () => {
   featureInfoPopup.value.visible = false
 }
 
-// Method to search for either a location to zoom to, or
+// Queries Nominatim API for location data
+const fetchLocationData = async (searchString: string): Promise<NominatimResponse[]> => {
+  const response = await fetch(
+    URLS.NOMINATIM_API.replace('!query!', encodeURIComponent(searchString)))
+  if (!response.ok) throw Error(`HTTP code ${response.status}`)
+  return response.json()
+}
+
+// Searches either a location to zoom to, or
 // a location which to use for mapsheet selection
 const search = async () => {
   if (searchStr.value.trim().length === 0) return
 
-  // Query Nominatim API for loctation data
+  // Fetch location info
   let result: NominatimResponse
   try {
-    const response = await fetch(
-      URLS.NOMINATIM_API.replace( '!query!', encodeURIComponent(searchStr.value)))
-    const json = await response.json()
-    if (json.length == 0)
-    {
+    const results = await fetchLocationData(searchStr.value)
+    if (results.length == 0) {
       addToast({
         type: CToastType.Warning,
         message: 'Location or address not found. Please double check your spelling'
       })
       return
     }
-    result = json[0] // Just select the first result
+    result = results[0] // Just select the first result
   } catch (error) {
     addToast({
       type: CToastType.Error,
       message: 'The search API encountered an error. Please try again later.',
     })
     console.error('Nominatim search error: ' + error)
-    return;
+    return
   }
 
   // If set by user, we select mapsheets.
   // Otherwise the map is zoomed to found location.
-  if (mapsheetSearch.value)
-  {
+  if (mapsheetSearch.value) {
     selectFeatureSearch(searchStr.value, result.boundingbox);
-    return;
   }
   else {
     const projected = proj.transform([result.lon, result.lat], 'EPSG:4326', 'EPSG:3857')
