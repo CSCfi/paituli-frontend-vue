@@ -8,9 +8,13 @@ import { useDatasets } from './datasets'
 
 import { geojson as FGBGeoJson } from 'flatgeobuf'
 import WMTSTileGrid from 'ol/tilegrid/WMTS'
-import { getWidth } from 'ol/extent'
+import { getWidth, type Extent } from 'ol/extent'
 import { get as getProjection, type ProjectionLike } from 'ol/proj'
 import type { GeoJSONFeatureCollection } from 'ol/format/GeoJSON'
+import type { Geometry } from 'ol/geom'
+import Feature from 'ol/Feature'
+import { fromExtent } from 'ol/geom/Polygon'
+import { Stroke, Style } from 'ol/style'
 
 const { currentDataset } = useDatasets()
 
@@ -34,6 +38,9 @@ watch(currentDataset, async (dataset) => {
   if (!dataset?.data_id) {
     return
   }
+
+  // Clear our highlights at this point
+  highlightSource.clear()
 
   const fetch_url = URLS.WFS_INDEX_MAP_LAYER.replace('!key!', 'data_id').replace(
     '!value!',
@@ -146,6 +153,23 @@ const fetchFeatureInfo = async (
     .join('\n')
 }
 
+// A vector source for highlights
+const highlightSource = new VectorSource<Feature<Geometry>>({
+  features: []
+})
+
+// Uses the highlight source to display an extent polygon
+const drawBoundingBox = (extent: Extent) => {
+  const feature = new Feature({ geometry: fromExtent(extent) })
+  feature.setStyle(new Style({
+    stroke: new Stroke({
+      color: 'red', width: 2
+    })
+  }))
+  highlightSource.clear()
+  highlightSource.addFeature(feature)
+}
+
 export function useSources() {
   return {
     osmSource,
@@ -154,6 +178,8 @@ export function useSources() {
     dataLayerMaxResolution,
     muncipalitiesSource,
     catchmentSource,
-    fetchFeatureInfo
+    highlightSource,
+    fetchFeatureInfo,
+    drawBoundingBox,
   }
 }

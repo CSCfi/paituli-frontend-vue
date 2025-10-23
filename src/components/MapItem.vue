@@ -32,6 +32,7 @@ const {
   dataLayerMaxResolution,
   muncipalitiesSource,
   catchmentSource,
+  highlightSource,
   fetchFeatureInfo,
 } = useSources()
 
@@ -224,6 +225,9 @@ const indexStyle = (feature: FeatureLike) => {
     <Layers.OlTileLayer
       :source="catchmentSource"
       :visible="catchmentVisible"
+    />
+    <Layers.OlVectorLayer
+      :source="highlightSource"
     />
 
     <!--Controls-->

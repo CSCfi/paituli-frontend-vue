@@ -10,7 +10,12 @@ import { transformExtent } from 'ol/proj'
 import { useToasts } from './toasts'
 import { CToastType } from '@cscfi/csc-ui'
 
-const { indexLayerSource, dataLayerMaxResolution } = useSources()
+const {
+  indexLayerSource,
+  drawBoundingBox,
+  dataLayerMaxResolution
+} = useSources()
+
 const { addToast } = useToasts()
 
 // Map zoom controls
@@ -75,13 +80,13 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
 
   // First try bounding box
   const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
+  drawBoundingBox(extent)
   let matches = features.filter((f) => {
     return f.getGeometry()?.intersectsExtent(extent)
   })
-  if (matches.length > 0)
-  {
+  if (matches.length > 0) {
     matches.forEach((f) => selectedOlFeatures.push(f))
-    return;
+    return
   }
 
   // If none found, simply select sheets by label
@@ -89,10 +94,9 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
     const name = (f.get('label') || f.get('name') || '').toLowerCase();
     return name.includes(query.toLowerCase());
   })
-  if (matches.length > 0)
-  {
+  if (matches.length > 0) {
     matches.forEach((f) => selectedOlFeatures.push(f));
-    return;
+    return
   }
 
   addToast({
