@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
@@ -7,6 +7,7 @@ import { useSources } from '@/composables/sources'
 import { shiftKeyOnly } from 'ol/events/condition'
 import { useControls } from '@/composables/controls'
 import type { FeatureLike } from 'ol/Feature'
+import OlMap from 'ol/Map.js'
 
 import * as proj from 'ol/proj'
 import { URLS } from '@/shared/constants'
@@ -14,7 +15,6 @@ import type { NominatimResponse } from '@/shared/types'
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
 import { MapBrowserEvent } from 'ol'
-import type { GeoJSONFeatureCollection } from 'ol/format/GeoJSON'
 
 const { addToast } = useToasts()
 
@@ -28,11 +28,11 @@ const {
 const {
   indexLayerSource,
   osmSource,
-  featureInfoSource,
   dataLayerSource,
   dataLayerMaxResolution,
   muncipalitiesSource,
-  catchmentSource
+  catchmentSource,
+  fetchFeatureInfo,
 } = useSources()
 
 const {
@@ -47,31 +47,41 @@ const {
   selectedOlFeatures,
   mapsheetSearch,
   featureSelected,
-  dragboxEnd } = useControls()
+  handleResolutionChange,
+  featureInfoToolMode,
+  dragboxEnd
+} = useControls()
 
-// Fetch datasets on load
+// The map instance exposed (dynamically) by OL
+const olMapRef = ref<{ map: OlMap } | null>(null)
+let olMapElement: HTMLElement
+
+
 onMounted(async () => {
+  // Grab the OL map DOM element
+  olMapElement = olMapRef.value!.map.getTargetElement()
+
+  // Fetch datasets on load
   try {
     await fetchDatasets()
   } catch (error) {
     addToast({
       type: CToastType.Error,
       title: 'Failed to load datasets',
-      message: `Refresh the page to retry. If the problem persists, please try again later. (${error})`,
+      message: 'Refresh the page to retry. If the problem persists, ' +
+               `please try again later. (${error})`,
     })
   }
 })
 
-const indexStyle = (feature: FeatureLike) => {
-  // Note: If we define this outside of the component file, the style prop is undefined during patch (??)
-  return new Style({
-    stroke: new Stroke({ color: 'rgba(0, 0, 255, 1.0)', width: 2 }),
-    fill: new Fill({ color: 'rgba(0, 0, 255, 0)' }),
-    text: new Text({
-      text: feature.get('label'),
-      stroke: new Stroke({ width: 0.6 }),
-    }),
-  })
+// A popup for displaying feature information
+const featureInfoPopup = ref({
+  visible: false,
+  coordinate: [0,0],
+  content: ''
+})
+const closePopup = () => {
+  featureInfoPopup.value.visible = false
 }
 
 // Method to search for either a location to zoom to, or
@@ -118,98 +128,68 @@ const search = async () => {
 }
 const searchStr = ref('')
 
-const featureInfoAvailable = (currentResolution: number | undefined): boolean => {
-  // Do we have feature data, it's visible and we are zoomed in enough?
-  if (!featureInfoSource.value) return false
-  if (!dataVisible || currentResolution == undefined) return false
-  if (currentResolution > dataLayerMaxResolution.value) return false
-  return true
-}
+// Track switching between feature inspection and mapsheet selection
+watch(featureInfoToolMode, (active: boolean) => {
 
-const onPointerMove = (_event: unknown) => {
+  // In feature info mode we have a different cursor and we
+  // hide the index layer, to not obstruct feature inspection
+  olMapElement.style.cursor = active ? 'crosshair' : ''
+  indexVisible.value = !active
 
-  // A silly cast here because OL's typing mismatch
-  const event = _event as MapBrowserEvent<PointerEvent>
-
-  if (featureInfoAvailable(event.map.getView().getResolution())) {
-    // Change cursor to crosshair
-    event.map.getTargetElement().style.cursor = 'crosshair'
+  // If we are not, hide any leftover feature info popups
+  if (!active) {
+    featureInfoPopup.value.visible = false
   }
-  else {
-    // No feature info available, change cursor back
-    event.map.getTargetElement().style.cursor = ''
-  }
-
-}
-
-const onPointerClick = (_event: unknown) => {
-
-  // A silly cast here because OL's typing mismatch
-  const event = _event as MapBrowserEvent<PointerEvent>
-  if (event.dragging) return
-
-  // We only handle clicks if we have feature info
-  const view = event.map.getView()
-  if (!featureInfoAvailable(view.getResolution())) return
-
-  // Get feature info URL
-  const url = featureInfoSource.value!.getFeatureInfoUrl(
-    event.coordinate, view.getResolution()!, view.getProjection(),
-    {INFO_FORMAT: 'application/json'}
-  )
-  if (!url) {
-    console.warn('OpenLayers failed to construct GetFeatureInfo URL')
-    return
-  }
-
-  // Fetch the feature info and display it
-  fetch(url)
-    .then(response => {
-      if (!response.ok) throw Error(`HTTP code ${response.status}`)
-      return response.json();
-    })
-    .then((json: GeoJSONFeatureCollection) => {
-      popup.value.content = parseFeatureInfo(json)
-      popup.value.coordinate = event.coordinate
-      popup.value.visible = true
-    })
-    .catch(err => {
-      addToast({
-        type: CToastType.Error,
-        message: 'Failed to load feature information. ' +
-                 'If the problem persists, please try again later.',
-      })
-      console.error(err)
-    })
-}
-
-// Parses GeoJSON feature properties into a human-readable string
-const parseFeatureInfo = (json: GeoJSONFeatureCollection): string => {
-  const info = json.features[0]?.properties
-  if (!info) return 'None!'
-  return Object.entries(info)
-    // A bit like JSON.Stringify but without braces etc.
-    .map(([key, value]) => `${key}: ${value}`)
-    .join('\n')
-}
-
-const popup = ref({
-  visible: false,
-  coordinate: [0,0],
-  content: ''
 })
 
-const closePopup = () => {
-  popup.value.visible = false
+const handleClickedFeature = async (e: unknown) => {
+  const event = e as MapBrowserEvent<PointerEvent> // OL typing bug
+  if (event.dragging) return
+
+  // We only care about clicks if we are in feature info mode
+  if (!featureInfoToolMode.value) return
+
+  // Fetch the feature info and display it
+  try {
+    const view = event.map.getView()
+    const info = await fetchFeatureInfo(
+      event.coordinate, view.getResolution(), view.getProjection())
+
+    featureInfoPopup.value.content = info
+    featureInfoPopup.value.coordinate = event.coordinate
+    featureInfoPopup.value.visible = true
+  }
+  catch (err) {
+    addToast({
+      type: CToastType.Error,
+      message: 'Failed to load feature information. ' +
+               'If the problem persists, please try again later.',
+    })
+    console.error(err)
+    featureInfoPopup.value.visible = false
+  }
+}
+
+const indexStyle = (feature: FeatureLike) => {
+  // Note: If we define this outside of the component file,
+  // the style prop is undefined during patch (??)
+  return new Style({
+    stroke: new Stroke({ color: 'rgba(0, 0, 255, 1.0)', width: 2 }),
+    fill: new Fill({ color: 'rgba(0, 0, 255, 0)' }),
+    text: new Text({
+      text: feature.get('label'),
+      stroke: new Stroke({ width: 0.6 }),
+    }),
+  })
 }
 
 </script>
 
 <template>
-
   <Map.OlMap style="width: 100%; height: 100%; position: relative;"
-             @pointermove="onPointerMove"
-             @click="onPointerClick">
+             ref="olMapRef"
+             @click="handleClickedFeature"
+             @moveend="handleResolutionChange">
 
     <div class="location-search">
       <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
@@ -259,8 +239,8 @@ const closePopup = () => {
 
     <!-- Feature info popup -->
     <Map.OlOverlay
-      v-if="popup.visible"
-      :position="popup.coordinate"
+      v-if="featureInfoPopup.visible"
+      :position="featureInfoPopup.coordinate"
       :auto-pan="true"
       :auto-pan-animation="{ duration: 250 }"
     >
@@ -268,7 +248,7 @@ const closePopup = () => {
         <button class="popup-closer" @click="closePopup">×</button>
         <div class="popup-content">
           <p>Feature info:</p>
-          <pre>{{ popup.content }}</pre>
+          <pre>{{ featureInfoPopup.content }}</pre>
         </div>
       </div>
     </Map.OlOverlay>
@@ -276,6 +256,8 @@ const closePopup = () => {
 
   <!-- debug stuff -->
   <div class="debug">
+    <c-switch v-model="featureInfoToolMode" v-control disabled>
+    </c-switch>
     <div v-if="isFetching">Loading datasets...</div>
     <div v-else-if="datasets.length > 0">
       Found {{ datasets.length }} datasets
@@ -298,7 +280,6 @@ const closePopup = () => {
   min-width: 160px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
-
 .popup-closer {
   position: absolute;
   top: 4px;
@@ -308,7 +289,6 @@ const closePopup = () => {
   font-size: 16px;
   cursor: pointer;
 }
-
 .popup-content {
   margin-top: 10px;
   font-family: monospace;

@@ -9,7 +9,8 @@ import { useDatasets } from './datasets'
 import { geojson as FGBGeoJson } from 'flatgeobuf'
 import WMTSTileGrid from 'ol/tilegrid/WMTS'
 import { getWidth } from 'ol/extent'
-import { get as getProjection } from 'ol/proj'
+import { get as getProjection, type ProjectionLike } from 'ol/proj'
+import type { GeoJSONFeatureCollection } from 'ol/format/GeoJSON'
 
 const { currentDataset } = useDatasets()
 
@@ -50,22 +51,9 @@ watch(currentDataset, async (dataset) => {
     for await (const feature of geojson) source.addFeatures(format.readFeatures(feature))
 
   } catch (error) {
+    // TODO: Put the same toast here as MapItem mount
     console.error('Failed to load index map features:', error)
   }
-})
-
-
-// Data layer WMS source for feature info queries
-const featureInfoSource = computed(() => {
-  if (!currentDataset.value?.data_url) return null
-  return new TileWMS({
-    url: URLS.WMS_PAITULI_BASE_GWC,
-    serverType: 'geoserver',
-    params: {
-      LAYERS: currentDataset.value.data_url,
-      VERSION: '1.1.1',
-    },
-  })
 })
 
 // Data layer WMTS source for rendering
@@ -113,14 +101,59 @@ const catchmentSource = new TileWMS({
   },
 });
 
+// Auxiliary WMS source for feature info queries
+const _featureInfoSource = computed(() => {
+  if (!currentDataset.value?.data_url) return null
+  return new TileWMS({
+    url: URLS.WMS_PAITULI_BASE_GWC,
+    serverType: 'geoserver',
+    params: {
+      LAYERS: currentDataset.value.data_url,
+      VERSION: '1.1.1',
+    },
+  })
+})
+
+// Fetches the feature info of current dataset from the provided point,
+// and parses the info into a string to be to be displayed to the user
+const fetchFeatureInfo = async (
+  coordinate: number[],
+  resolution: number | undefined,
+  projection: ProjectionLike): Promise<string> => {
+
+  if (!_featureInfoSource.value) throw Error(
+    'Cannot fetch feature info for datasets with no data layer!'
+  )
+  if (resolution == undefined) throw Error('Undefined map resolution!?')
+
+  // Build feature info query
+  const url = _featureInfoSource.value.getFeatureInfoUrl(
+    coordinate, resolution, projection,
+    {INFO_FORMAT: 'application/json'}
+  )
+  if (!url) throw Error('OpenLayers failed to construct GetFeatureInfo URL')
+
+  // Fetch the information and parse it
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`HTTP code ${response.status}`)
+
+  const json: GeoJSONFeatureCollection = await response.json()
+  const info = json.features[0]?.properties
+  if (!info) return 'None!'
+
+  return Object.entries(info)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join('\n')
+}
+
 export function useSources() {
   return {
     osmSource,
     indexLayerSource,
-    featureInfoSource,
     dataLayerSource,
     dataLayerMaxResolution,
     muncipalitiesSource,
     catchmentSource,
+    fetchFeatureInfo
   }
 }

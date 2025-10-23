@@ -1,4 +1,4 @@
-import { Collection, Feature } from 'ol'
+import { Collection, Feature, MapBrowserEvent } from 'ol'
 import type { DragBoxEvent } from 'ol/interaction/DragBox'
 import type { SelectEvent } from 'ol/interaction/Select'
 import { ref } from 'vue'
@@ -10,7 +10,7 @@ import { transformExtent } from 'ol/proj'
 import { useToasts } from './toasts'
 import { CToastType } from '@cscfi/csc-ui'
 
-const { indexLayerSource } = useSources()
+const { indexLayerSource, dataLayerMaxResolution } = useSources()
 const { addToast } = useToasts()
 
 // Map zoom controls
@@ -24,6 +24,9 @@ const catchmentVisible = ref(false)
 const indexVisible = ref(true)
 const dataVisible = ref(true)
 const mapsheetSearch = ref(false)
+
+// Tool modes
+const featureInfoToolMode = ref(false)
 
 // Selected features managed by OL map element
 const selectedOlFeatures = new Collection<Feature>()
@@ -107,6 +110,23 @@ const selectionStyle = function (feature: FeatureLike) {
   })
 }
 
+// Handles user moving or zooming the map. Zooming can trigger an
+// automatic switch between mapsheet mode and feature info mode.
+const handleResolutionChange = (e: unknown) => {
+  const event = e as MapBrowserEvent<PointerEvent> // OL typing bug
+
+  // We assume feature info mode if we zoom within its resolution limits.
+  const newResolution = event.map.getView().getResolution();
+  if (newResolution == undefined) {
+    console.error('undefined new resolution!?')
+  }
+  else {
+    const infoMode = newResolution <= dataLayerMaxResolution.value
+    featureInfoToolMode.value = infoMode
+  }
+
+}
+
 export function useControls() {
   return {
     indexVisible,
@@ -117,10 +137,12 @@ export function useControls() {
     muncipalitiesVisible,
     catchmentVisible,
     mapsheetSearch,
+    featureInfoToolMode,
     featureSelected,
     dragboxEnd,
     selectFeatureSearch,
     selectStyle: selectionStyle,
+    handleResolutionChange,
     selectedFeaturesArray,
     selectedOlFeatures,
   }
