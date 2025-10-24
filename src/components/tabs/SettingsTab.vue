@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import { useControls } from '@/composables/controls'
 import { useSources } from '@/composables/sources'
+import { ref } from 'vue';
 
 const { indexLayerSource, dataLayerSource } = useSources();
 const controls = useControls();
+
+const fileInput = ref<HTMLInputElement | null>(null)
+const openFileDialog = () => {
+  fileInput.value?.click()
+}
+const onFileSelected = (event: Event) => {
+  const files = (event.target as HTMLInputElement)?.files
+  if (!files) return
+  for (const file of files) controls.fileSelectedCallback.value?.(file)
+}
+
 </script>
 
 <template>
@@ -25,6 +37,15 @@ const controls = useControls();
   <c-switch v-model="controls.mapsheetSearch.value" v-control>
     Search selects mapsheets
   </c-switch>
+
+  <c-button @click="openFileDialog">Load GeoJSON</c-button>
+  <input
+    ref="fileInput"
+    type="file"
+    accept=".json,.geojson"
+    style="display: none"
+    @change="onFileSelected"
+  />
 </template>
 
 <style scoped>

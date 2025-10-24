@@ -9,11 +9,12 @@ import { APP_SETTINGS } from '@/shared/constants'
 import { transformExtent } from 'ol/proj'
 import { useToasts } from './toasts'
 import { CToastType } from '@cscfi/csc-ui'
+import type { Extent } from 'ol/extent'
 
 const {
   indexLayerSource,
   drawBoundingBox,
-  dataLayerMaxResolution
+  dataLayerMaxResolution,
 } = useSources()
 
 const { addToast } = useToasts()
@@ -72,6 +73,18 @@ const dragboxEnd = (event: DragBoxEvent) => {
   })
 }
 
+// Selects index mapsheets by the provided extent
+const selectSheetsByExtent = (extent: Extent): boolean => {
+  if (!indexLayerSource.value) return false
+
+  const matches = indexLayerSource.value.getFeatures().filter((f) => {
+    return f.getGeometry()?.intersectsExtent(extent)
+  })
+  matches.forEach((f) => selectedOlFeatures.push(f))
+  drawBoundingBox(extent)
+  return matches.length > 0
+}
+
 // Selection by search string
 function selectFeatureSearch(query: string, bbox: Array<number>) {
   if (!indexLayerSource.value || !query) return;
@@ -80,17 +93,10 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
 
   // First try bounding box
   const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
-  drawBoundingBox(extent)
-  let matches = features.filter((f) => {
-    return f.getGeometry()?.intersectsExtent(extent)
-  })
-  if (matches.length > 0) {
-    matches.forEach((f) => selectedOlFeatures.push(f))
-    return
-  }
+  if (selectSheetsByExtent(extent)) return
 
   // If none found, simply select sheets by label
-  matches = features.filter((f) => {
+  const matches = features.filter((f) => {
     const name = (f.get('label') || f.get('name') || '').toLowerCase();
     return name.includes(query.toLowerCase());
   })
@@ -131,6 +137,9 @@ const handleResolutionChange = (e: unknown) => {
 
 }
 
+// Callback for user selecting files to upload
+const fileSelectedCallback = ref<(file: File) => void>()
+
 export function useControls() {
   return {
     indexVisible,
@@ -145,9 +154,11 @@ export function useControls() {
     featureSelected,
     dragboxEnd,
     selectFeatureSearch,
+    selectSheetsByExtent,
     selectStyle: selectionStyle,
     handleResolutionChange,
     selectedFeaturesArray,
     selectedOlFeatures,
+    fileSelectedCallback,
   }
 }

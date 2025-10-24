@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
@@ -8,6 +8,7 @@ import { shiftKeyOnly } from 'ol/events/condition'
 import { useControls } from '@/composables/controls'
 import type { FeatureLike } from 'ol/Feature'
 import OlMap from 'ol/Map.js'
+import { getCenter } from 'ol/extent.js'
 
 import * as proj from 'ol/proj'
 import { URLS } from '@/shared/constants'
@@ -15,6 +16,7 @@ import type { NominatimResponse } from '@/shared/types'
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
 import { MapBrowserEvent } from 'ol'
+import { GeoJSON } from 'ol/format'
 
 const { addToast } = useToasts()
 
@@ -48,19 +50,26 @@ const {
   selectedOlFeatures,
   mapsheetSearch,
   featureSelected,
+  selectSheetsByExtent,
   handleResolutionChange,
   featureInfoToolMode,
-  dragboxEnd
+  dragboxEnd,
+  fileSelectedCallback,
 } = useControls()
 
 // The map instance exposed (dynamically) by OL
 const olMapRef = ref<{ map: OlMap } | null>(null)
+const mapView = computed(() => olMapRef.value!.map.getView())
 let olMapElement: HTMLElement
 
 
 onMounted(async () => {
   // Grab the OL map DOM element
   olMapElement = olMapRef.value!.map.getTargetElement()
+
+  // Add drag-n-drop listeners
+  olMapElement.addEventListener('drop', dragDropHandler)
+  olMapElement.addEventListener('dragover', (e) => e.preventDefault())
 
   // Fetch datasets on load
   try {
@@ -173,6 +182,56 @@ const handleClickedFeature = async (e: unknown) => {
     featureInfoPopup.value.visible = false
   }
 }
+
+// Handles user drag-and-dropping files onto the map item
+const dragDropHandler = (event: DragEvent) => {
+  event.preventDefault()
+
+  const files = event.dataTransfer?.files
+  if (!files) return
+  for (const file of files) {
+    loadGeoJSONFile(file)
+  }
+}
+
+// Loads provided file as GeoJSON to select mapsheets
+const loadGeoJSONFile = (file: File) => {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    try {
+      const text = e.target?.result
+      if (!text) throw Error(file.name + ' is empty?')
+
+      const features = new GeoJSON().readFeatures(
+        JSON.parse(text.toString()),
+        { featureProjection: mapView.value.getProjection() }
+      )
+      for (const feature of features) {
+        const extent = feature.getGeometry()!.getExtent()
+        selectSheetsByExtent(extent)
+        mapView.value.animate({
+          center: getCenter(extent),
+          duration: 1000,
+        })
+      }
+
+      addToast({
+        type: CToastType.Success, title: 'Loaded provided GeoJSON',
+        message: 'Mapsheets have been selected using the extents'
+      })
+    } catch (err) {
+      addToast({
+        type: CToastType.Error, title: 'Invalid GeoJSON',
+        message: 'Could not load valid GeoJSON from ' + file.name,
+      })
+      console.error('User dropped Invalid GeoJSON', err)
+    }
+  }
+  reader.readAsText(file)
+}
+
+// Set the file load callback for file load dialog use
+fileSelectedCallback.value = loadGeoJSONFile
 
 const indexStyle = (feature: FeatureLike) => {
   // Note: If we define this outside of the component file,
