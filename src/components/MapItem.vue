@@ -135,8 +135,11 @@ const search = async () => {
   }
   else {
     const projected = proj.transform([result.lon, result.lat], 'EPSG:4326', 'EPSG:3857')
-    mapCenter.value = [projected[0], projected[1]]
-    mapZoom.value = searchStr.value.includes(',') ? 16 : 13
+    mapView.value.animate({
+      center: [projected[0], projected[1]],
+      zoom: searchStr.value.includes(',') ? 16 : 13,
+      duration: 1000,
+    })
   }
 }
 const searchStr = ref('')
@@ -164,9 +167,10 @@ const handleClickedFeature = async (e: unknown) => {
 
   // Fetch the feature info and display it
   try {
-    const view = event.map.getView()
     const info = await fetchFeatureInfo(
-      event.coordinate, view.getResolution(), view.getProjection())
+      event.coordinate,
+      mapView.value.getResolution(),
+      mapView.value.getProjection())
 
     featureInfoPopup.value.content = info
     featureInfoPopup.value.coordinate = event.coordinate
