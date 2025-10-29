@@ -67,21 +67,12 @@ onMounted(async () => {
   // Grab the OL map DOM element
   olMapElement = olMapRef.value!.map.getTargetElement()
 
+  // Fetch datasets on mount
+  await fetchDatasets()
+
   // Add drag-n-drop listeners
   olMapElement.addEventListener('drop', dragDropHandler)
   olMapElement.addEventListener('dragover', (e) => e.preventDefault())
-
-  // Fetch datasets on load
-  try {
-    await fetchDatasets()
-  } catch (error) {
-    addToast({
-      type: CToastType.Error,
-      title: 'Failed to load datasets',
-      message: 'Refresh the page to retry. If the problem persists, ' +
-               `please try again later. (${error})`,
-    })
-  }
 })
 
 // A popup for displaying feature information
