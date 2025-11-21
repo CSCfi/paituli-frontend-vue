@@ -22,7 +22,6 @@ const { addToast } = useToasts()
 // Map zoom controls
 const mapCenter = ref<[number, number]>(APP_SETTINGS.MAP_DEFAULT_CENTER)
 const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
-
 // Map layer controls
 const backgroundVisible = ref(true)
 const muncipalitiesVisible = ref(false)

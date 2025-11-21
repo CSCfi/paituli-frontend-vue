@@ -3,8 +3,10 @@ import type { Dataset } from '@/shared/types'
 import { readonly, ref } from 'vue'
 import { useToasts } from './toasts'
 import { CToastType } from '@cscfi/csc-ui'
+import { useLocale } from './locale'
 
 const { addToast } = useToasts()
+const { locale } = useLocale()
 
 const datasets = ref<Dataset[]>([])
 const currentDataset = ref<Dataset | null>(null)
@@ -24,7 +26,7 @@ const clearCurrent = () => {
 const fetchDatasets = async (): Promise<void> => {
   isFetching.value = true
   try {
-    const response = await fetch(`${URLS.METADATA_API}`)
+    const response = await fetch(`${URLS.METADATA_API}/${locale.value}`)
     if (!response.ok) throw new Error(`HTTP code ${response.status}`)
     datasets.value = await response.json()
   } catch (error) {
