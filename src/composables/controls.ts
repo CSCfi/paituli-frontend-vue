@@ -1,27 +1,23 @@
-import { Collection, Feature, MapBrowserEvent } from 'ol'
+import { Collection, Feature } from 'ol'
 import type { DragBoxEvent } from 'ol/interaction/DragBox'
 import type { SelectEvent } from 'ol/interaction/Select'
 import { ref } from 'vue'
 import { useSources } from './sources'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import type { FeatureLike } from 'ol/Feature'
-import { APP_SETTINGS } from '@/shared/constants'
 import { transformExtent } from 'ol/proj'
 import { useToasts } from './toasts'
 import { CToastType } from '@cscfi/csc-ui'
 import type { Extent } from 'ol/extent'
+import type { DrawEvent } from 'ol/interaction/Draw'
 
 const {
   indexLayerSource,
   drawBoundingBox,
-  dataLayerMaxResolution,
 } = useSources()
 
 const { addToast } = useToasts()
 
-// Map zoom controls
-const mapCenter = ref<[number, number]>(APP_SETTINGS.MAP_DEFAULT_CENTER)
-const mapZoom = ref<number>(APP_SETTINGS.MAP_DEFAULT_ZOOM)
 // Map layer controls
 const backgroundVisible = ref(true)
 const muncipalitiesVisible = ref(false)
@@ -31,7 +27,10 @@ const dataVisible = ref(true)
 const mapsheetSearch = ref(false)
 
 // Tool modes
-const featureInfoToolMode = ref(false)
+type ControlMode = 'move' | 'select' | 'inspect'
+type SelectMode = 'single' | 'multi' | 'draw' | 'clear'
+const controlMode = ref<ControlMode>('move')
+const selectMode = ref<SelectMode>('single')
 
 // Selected features managed by OL map element
 const selectedOlFeatures = new Collection<Feature>()
@@ -60,12 +59,25 @@ const featureSelected = (event: SelectEvent) => {
   })
 }
 
-// Rectangular selection
+// Rectangular selections
 const dragboxEnd = (event: DragBoxEvent) => {
   const extent = event.target.getGeometry().getExtent()
 
   indexLayerSource.value?.forEachFeatureIntersectingExtent(extent, (feature) => {
     if (!selectedOlFeatures.getArray().includes(feature)) {
+      selectedOlFeatures.push(feature)
+      feature.setStyle(selectionStyle(feature))
+    }
+  })
+}
+
+// Polygon selections
+const polyDrawEnd = (event: DrawEvent) => {
+  const geometry = event.feature.getGeometry()
+  if (!geometry) return
+  indexLayerSource.value?.forEachFeature((feature) => {
+    const featureExtent = feature.getGeometry()?.getExtent()
+    if (featureExtent && geometry.intersectsExtent(featureExtent)) {
       selectedOlFeatures.push(feature)
       feature.setStyle(selectionStyle(feature))
     }
@@ -119,23 +131,6 @@ const selectionStyle = function (feature: FeatureLike) {
   })
 }
 
-// Handles user moving or zooming the map. Zooming can trigger an
-// automatic switch between mapsheet mode and feature info mode.
-const handleResolutionChange = (e: unknown) => {
-  const event = e as MapBrowserEvent<PointerEvent> // OL typing bug
-
-  // We assume feature info mode if we zoom within its resolution limits.
-  const newResolution = event.map.getView().getResolution();
-  if (newResolution == undefined) {
-    console.error('undefined new resolution!?')
-  }
-  else {
-    const infoMode = newResolution <= dataLayerMaxResolution.value
-    featureInfoToolMode.value = infoMode
-  }
-
-}
-
 // Callback for user selecting files to upload
 const fileSelectedCallback = ref<(file: File) => void>()
 
@@ -143,19 +138,18 @@ export function useControls() {
   return {
     indexVisible,
     dataVisible,
-    mapCenter,
-    mapZoom,
     backgroundVisible,
     muncipalitiesVisible,
     catchmentVisible,
     mapsheetSearch,
-    featureInfoToolMode,
+    controlMode,
+    selectMode,
     featureSelected,
     dragboxEnd,
+    polyDrawEnd,
     selectFeatureSearch,
     selectSheetsByExtent,
     selectStyle: selectionStyle,
-    handleResolutionChange,
     selectedFeaturesArray,
     selectedOlFeatures,
     fileSelectedCallback,

@@ -88,8 +88,7 @@ const wmtsGrid = new WMTSTileGrid({
 
 const dataLayerMaxResolution = computed(() => {
   const max_scale = currentDataset.value?.data_max_scale
-  if (!max_scale) return 100
-  return max_scale / 2835
+  return max_scale ? max_scale / 2835 : 100
 })
 
 // Utility layers WMS sources

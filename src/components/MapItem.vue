@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import { useSources } from '@/composables/sources'
-import { shiftKeyOnly } from 'ol/events/condition'
+import { always } from 'ol/events/condition'
 import { useControls } from '@/composables/controls'
 import type { FeatureLike } from 'ol/Feature'
 import OlMap from 'ol/Map.js'
 import { getCenter } from 'ol/extent.js'
 
 import * as proj from 'ol/proj'
-import { URLS } from '@/shared/constants'
+import { APP_SETTINGS, URLS } from '@/shared/constants'
 import type { NominatimResponse } from '@/shared/types'
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
+import ControlsRibbon from './ControlsRibbon.vue'
 
 const { addToast } = useToasts()
 
@@ -45,32 +46,28 @@ const {
   backgroundVisible,
   muncipalitiesVisible,
   catchmentVisible,
-  mapCenter,
-  mapZoom,
   selectedOlFeatures,
   mapsheetSearch,
   featureSelected,
   selectSheetsByExtent,
-  handleResolutionChange,
-  featureInfoToolMode,
   dragboxEnd,
+  polyDrawEnd,
   fileSelectedCallback,
+  controlMode,
+  selectMode,
 } = useControls()
 
 // The map instance exposed (dynamically) by OL
 const olMapRef = ref<{ map: OlMap } | null>(null)
 const mapView = computed(() => olMapRef.value!.map.getView())
-let olMapElement: HTMLElement
-
 
 onMounted(async () => {
-  // Grab the OL map DOM element
-  olMapElement = olMapRef.value!.map.getTargetElement()
 
   // Fetch datasets on mount
   await fetchDatasets()
 
   // Add drag-n-drop listeners
+  const olMapElement = olMapRef.value!.map.getTargetElement()
   olMapElement.addEventListener('drop', dragDropHandler)
   olMapElement.addEventListener('dragover', (e) => e.preventDefault())
 })
@@ -135,26 +132,12 @@ const search = async () => {
 }
 const searchStr = ref('')
 
-// Track switching between feature inspection and mapsheet selection
-watch(featureInfoToolMode, (active: boolean) => {
-
-  // In feature info mode we have a different cursor and we
-  // hide the index layer, to not obstruct feature inspection
-  olMapElement.style.cursor = active ? 'crosshair' : ''
-  indexVisible.value = !active
-
-  // If we are not, hide any leftover feature info popups
-  if (!active) {
-    featureInfoPopup.value.visible = false
-  }
-})
-
 const handleClickedFeature = async (e: unknown) => {
   const event = e as MapBrowserEvent<PointerEvent> // OL typing bug
   if (event.dragging) return
 
-  // We only care about clicks if we are in feature info mode
-  if (!featureInfoToolMode.value) return
+  // We only care about these events if we are in feature info mode
+  if (controlMode.value != 'inspect') return
 
   // Fetch the feature info and display it
   try {
@@ -246,15 +229,18 @@ const indexStyle = (feature: FeatureLike) => {
 <template>
   <Map.OlMap style="width: 100%; height: 100%; position: relative;"
              ref="olMapRef"
-             @click="handleClickedFeature"
-             @moveend="handleResolutionChange">
+             @click="handleClickedFeature" >
 
     <div class="location-search">
       <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
       <button @click="search">Search</button>
     </div>
 
-    <Map.OlView :center="mapCenter" :zoom="mapZoom" projection="EPSG:3857" />
+    <Map.OlView
+      :center="APP_SETTINGS.MAP_DEFAULT_CENTER"
+      :zoom="APP_SETTINGS.MAP_DEFAULT_ZOOM"
+      projection="EPSG:3857" />
+
     <!--Layers-->
     <Layers.OlTileLayer
       :source="osmSource"
@@ -284,27 +270,36 @@ const indexStyle = (feature: FeatureLike) => {
       :source="highlightSource"
     />
 
-    <!--Controls-->
     <Interactions.OlInteractionSelect
       @select="featureSelected"
       :features="selectedOlFeatures"
-      :multi="true"
+      :toggle-condition="always"
     />
     <Interactions.OlInteractionDragbox
+      v-if="controlMode == 'select' && selectMode == 'multi'"
       @boxend="dragboxEnd"
-      :condition="shiftKeyOnly"
+    />
+    <Interactions.OlInteractionDraw
+      v-if="controlMode == 'select' && selectMode == 'draw'"
+      type="Polygon"
+      @drawend="polyDrawEnd"
+      :stop-click="true"
     />
     <MapControls.OlOverviewmapControl :collapsed="true">
       <Layers.OlTileLayer :source="osmSource" />
     </MapControls.OlOverviewmapControl>
+
+    <div class="controls-ribbon">
+      <!-- Mount only after OL has provided us the map ref! -->
+      <ControlsRibbon v-if="olMapRef" :map="(olMapRef.map as OlMap)" />
+    </div>
 
     <!-- Feature info popup -->
     <Map.OlOverlay
       v-if="featureInfoPopup.visible"
       :position="featureInfoPopup.coordinate"
       :auto-pan="true"
-      :auto-pan-animation="{ duration: 250 }"
-    >
+      :auto-pan-animation="{ duration: 250 }">
       <div class="popup">
         <button class="popup-closer" @click="closePopup">×</button>
         <div class="popup-content">
@@ -317,8 +312,8 @@ const indexStyle = (feature: FeatureLike) => {
 
   <!-- debug stuff -->
   <div class="debug">
-    <c-switch v-model="featureInfoToolMode" v-control disabled>
-    </c-switch>
+    {{ controlMode }}
+    {{ selectMode }}
     <div v-if="isFetching">Loading datasets...</div>
     <div v-else-if="datasets.length > 0">
       Found {{ datasets.length }} datasets
@@ -360,6 +355,13 @@ const indexStyle = (feature: FeatureLike) => {
   right: 0;
   z-index: 1;
   margin: .5em 1em;
+}
+.controls-ribbon {
+  position: absolute;
+  width: 250px;
+  margin: .5em 1em;
+  left: 1.5em;
+  z-index: 1;
 }
 .debug {
   position: fixed;
