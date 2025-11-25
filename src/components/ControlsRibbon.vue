@@ -14,7 +14,7 @@ const props = defineProps<{ map: OlMap }>()
 const viewResolution = ref<number>(0)
 const dataHidden = computed(() => viewResolution.value > dataLayerMaxResolution.value )
 
-const { controlMode, selectMode, selectedOlFeatures } = useControls()
+const { controlMode, selectMode, selectedOlFeatures, fileSelectedCallback } = useControls()
 
 const clearClickAmount = ref<number>(0)
 
@@ -54,6 +54,16 @@ const clearHandler = () => {
   }
 }
 
+const fileInput = ref<HTMLInputElement | null>(null)
+const openFileDialog = () => {
+  fileInput.value?.click()
+}
+const onFileSelected = (event: Event) => {
+  const files = (event.target as HTMLInputElement)?.files
+  if (!files) return
+  for (const file of files) fileSelectedCallback.value?.(file)
+}
+
 </script>
 
 <template>
@@ -80,6 +90,7 @@ const clearHandler = () => {
           <c-button value="single">Single</c-button>
           <c-button value="multi">Multi</c-button>
           <c-button value="draw">Draw</c-button>
+          <c-button value="json">JSON</c-button>
           <c-button @click="clearHandler()" value="clear">Clear</c-button>
         </c-tab-buttons>
         <p v-if="selectMode == 'single'">
@@ -90,6 +101,17 @@ const clearHandler = () => {
         </p>
         <p v-if="selectMode == 'draw'">
           Click to start drawing a polygon to select multiple map sheets.
+        </p>
+        <p v-if="selectMode == 'json'">
+          Load GeoJSON to select intersecting map sheets. Use the button below or drag and drop json files onto the map view.
+          <input
+            ref="fileInput"
+            type="file"
+            accept=".json,.geojson"
+            style="display: none"
+            @change="onFileSelected"
+          />
+          <c-button @click="openFileDialog">Open file dialog</c-button>
         </p>
         <p v-if="selectMode == 'clear'">
           Remove all map sheets from selection. Click the button again to confirm.
@@ -111,9 +133,15 @@ const clearHandler = () => {
 <style scoped>
 c-tabs {
   --c-tab-buttons-background-color-active: var(--c-primary-400);
+  min-width: 333px;
 }
 c-tab-item {
   color: white;
+
+  input + c-button {
+    margin-top: 10px;
+    --c-button-background-color: var(--c-info-500);
+  }
 }
 
 </style>

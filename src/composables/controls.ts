@@ -28,7 +28,7 @@ const mapsheetSearch = ref(false)
 
 // Tool modes
 type ControlMode = 'move' | 'select' | 'inspect'
-type SelectMode = 'single' | 'multi' | 'draw' | 'clear'
+type SelectMode = 'single' | 'multi' | 'draw' | 'json' | 'clear'
 const controlMode = ref<ControlMode>('move')
 const selectMode = ref<SelectMode>('single')
 
