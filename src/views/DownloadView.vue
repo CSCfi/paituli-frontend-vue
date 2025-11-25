@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 
 const route = useRoute()
-const dataset_id = computed(() => route.query.id as string | undefined)
+const dataset_id = computed(() => route.query.data_id as string | undefined)
 
 </script>
 
