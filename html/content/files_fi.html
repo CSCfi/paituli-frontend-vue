@@ -1,6 +1,7 @@
 <h1>Paitulin aineistojen massalataus</h1>
 <p>
-  Paitulin <a href="download.html">Lataussivu</a> mahdollistaa aineistojen latauksen .zip tiedostona, kerralla voi ladata max. 3 Gb. Tämä voi isompien aineistojen osalta olla rajoittavaa. Tämä sivu kuvaa miten ladata isompia aineistoja tiedostoina. Vaihtoehtoisesti isompien aineistojen käyttämiseksi ovat sopivat <a href="webservices.html" >OGC API-rajapinnat</a> tai <a href="stac.html" >STAC</a>.
+Paitulin <a href="download.html">Lataussivu</a> mahdollistaa aineistojen latauksen .zip tiedostona, kerralla voi ladata max. 3 Gb. Tämä voi isompien aineistojen osalta olla rajoittavaa. 
+Tämä sivu kuvaa miten ladata isompia aineistoja tiedostoina. Vaihtoehtoisesti isompien aineistojen käyttämiseksi sopivat <a href="webservices.html" >OGC API-rajapinnat</a> tai <a href="stac.html" >STAC</a>.
  </p> 
  
  <p>Vaihtoehdot isompien aineistojen lataamiseksi:</p>
@@ -15,10 +16,9 @@
 <p>Tiedostot ovat saatavilla kolmen rajapinnan yli:</p>
 <ul>
   <li>
-    <strong>HTTP</strong>:
-    <a href="http://www.nic.funet.fi/index/geodata/" target="_blank"
-      >http://www.nic.funet.fi/index/geodata/</a
-    >
+    <strong>HTTPS</strong>:
+    <a href="https://www.nic.funet.fi/index/geodata/" target="_blank"
+      >https://www.nic.funet.fi/index/geodata/</a>
   </li>
   <li>
     <strong>FTP</strong>: ftp://ftp.funet.fi/pub/sci/geo/geodata/
@@ -28,9 +28,9 @@
   </li>
 </ul>
 
-<p>FTP ja rsync on joissakin organisaatioissa rajoitettu pois palomuuri tasolla. HTTPS yleensä toimii. </p>
+<p>FTP ja rsync ovat joissakin organisaatioissa rajoitettu pois palomuurin avulla. HTTPS toimii yleensä. </p>
 
-<p>Valitse sopiva lataustapa riippuen käyttämäsi käyttöjärjestelmästä, palomuuri rajoituksista ja lataustoiveista:</p>
+<p>Valitse sopiva lataustapa riippuen käyttämästäsi käyttöjärjestelmästä, palomuurin rajoituksista ja lataustoiveista:</p>
 
 <table>
   <tr>
@@ -50,7 +50,8 @@
   </tr>
 </table>
 
-<p>Jos olet haluat ladata hakemiston, mutta olet Windows käyttäjä, eikä FTP/rsync käyttö ole mahdollista, sitten sopivia työkaluja hakemiston lataamiseksi valitettavasti ei ole olemassa. Siinä tilanteessa suosittelemme, että luot .txt tiedoston, jossa on vain haluamasi hakemiston nimi ja käytät Paituli PowerShell skriptia hakemiston lataamiseksi. </p>
+<p>Jos haluat ladata hakemiston, mutta olet Windows käyttäjä, eikä FTP:n tai rsync:n käyttö ole mahdollista, sitten sopivia työkaluja hakemiston lataamiseksi valitettavasti ei ole olemassa.
+	Siinä tilanteessa suosittelemme, että luot .txt tiedoston, jossa on vain haluamasi hakemiston nimi ja käytät Paituli PowerShell skriptiä hakemiston lataamiseksi. </p>
 
 <h2>Lataus tiedostolistauksen mukaisesti</h2>
 
@@ -70,8 +71,8 @@
 </ol>
 
 <p>
-Vaihtoehtoisesti voi tiedostolistauksen muodostaa hyödyntämällä
-    indeksikartan path sarakkeen tietoja. Indeksikartta on saatavilla Linkit
+Vaihtoehtoisesti tiedostolistauksen voi muodostaa hyödyntämällä
+    indeksikartan path-sarakkeen tietoja. Indeksikartta on saatavilla Linkit
     välilehdeltä
     <a href="download.html">Latauspalvelu</a> sivulla.
 </p>
@@ -79,22 +80,25 @@ Vaihtoehtoisesti voi tiedostolistauksen muodostaa hyödyntämällä
   
 <h3>Lataus tiedostolistauksen mukaisesti</h3>
 
-<p> Valitettavasti graafiset työkalut eivät tue tiedostolistauksen käyttöä, joten tämä on mahdollista vain komentorivityökaluilla. Windows-käyttäjille tarjoamme lataukseen PowerShell skrtiptin. Linux ja Mac-käyttäjät voivat käyttää lataukseen <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget" target="_blank">wget</a> or <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync" target="_blank">rsync </a> ohjelmia, jotka yleensä ovat oletuksena saatavilla.
+<p> Valitettavasti graafiset työkalut eivät tue tiedostolistauksen käyttöä, joten tämä on mahdollista vain komentorivityökaluilla. 
+	Windows-käyttäjille tarjoamme lataukseen PowerShell skrtiptin. 
+	Linux- ja Mac-käyttäjät voivat käyttää lataukseen <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget" target="_blank">wget</a> tai <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync" target="_blank">rsync </a> ohjelmia, jotka yleensä ovat oletuksena saatavilla.
 </p>
 
 <h4>Paituli PowerShell skripti Windowsille</h4>
 
-<p>For Windows users we provide PowerShell script to download files via HTTPS. This works ONLY in Windows. The script creates new folders, to keep the original folder structure.
-The script skips already downloaded files. </p>
+<p>Windows-käyttäjille tarjoamme PowerShell skrtiptin lataukseen HTTPS:n kautta. Tämä toimii AINOASTAAN Windowsilla. 
+	Skripti luo uusia kansioita säilyttäen alkuperäisen kansiorakenteen sekä ohittaa jo ladatut tiedostot. 
+</p>
 
-<p>Askelet skriptin käyttämiseksi:</p>
+<p>Askeleet skriptin käyttämiseksi:</p>
 <ol>
   <li>Lataa tiedostojen lista.</li>
   <li>Lataa <a href="https://www.nic.funet.fi/index/geodata/download_paituli_data.ps1">Paituli latausskripti</a>.</li>
-  <li>Avaa skripti tekstieditorilla (esim. NotePad) ja muokaa skrptin alusa oleva polut, jotka on merkitty CHANGE kommentilla. Tallenna.</li>
+  <li>Avaa skripti tekstieditorilla (esim. Muistio) ja muokkaa skriptin alussa olevat polut, jotka on merkitty CHANGE kommentilla. Tallenna.</li>
   <li>Avaa PowerShell.</li>
-  <li>Menee hakemistoon, johon tallensit skriptin, käytä cd komentoa.</li>
-  <li>Ajaa skripti: <div class="codeBlock">.\download_paituli_data.ps1</div></li>
+  <li>Menee hakemistoon, johon tallensit skriptin, käytä cd-komentoa.</li>
+  <li>Aja skripti: <div class="codeBlock">.\download_paituli_data.ps1</div></li>
 </ol>
 
 
@@ -181,7 +185,7 @@ Alla olevat esimerkit lataavat koko hakemiston sekä sen alihakemistot, ja talle
 <h4>wget</h4>
 
 <p>
-   Joissakin organisaatioissa FTP ja rsync ovat estetty palomuuri-tasolla, käytä HTTPS latausta wget:in kanssa. wget:lla on paljon asetuksia, yksi toimiva tapa on seuraava:
+   Joissakin organisaatioissa FTP ja rsync ovat estetty palomuurilla, silloin käytä HTTPS-latausta wget:in kanssa. wget:llä on paljon asetuksia, joista yksi toimiva tapa on seuraava:
 </p>
 <div class="codeBlock">wget -r -l inf -N -np -nH -x -R html -c --cut-dirs=6 ftp://ftp.funet.fi/pub/sci/geo/geodata/<b style="color: blue;">mml/hallintorajat_milj_tk/2017/ -P local_folder_to_save/</b></div>
 
@@ -206,4 +210,4 @@ Alla olevat esimerkit lataavat koko hakemiston sekä sen alihakemistot, ja talle
     </li>
 </ul>
 
-<p>Jos huomaat ongelmia tai tiedät paremman tavan Windowsista tiedostojen lataamiseksi, ilmoita giscoord@csc.fi</p>
+<p>Jos huomaat ongelmia tai tiedät paremman tavan Windowsilla tiedostojen lataamiseksi, ilmoita giscoord@csc.fi</p>
