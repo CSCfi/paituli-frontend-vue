@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useToasts } from './composables/toasts';
+import { mdiTranslate } from '@mdi/js';
+import { useI18n } from 'vue-i18n'
+import { useLocale } from './composables/locale';
 
+const { t } = useI18n()
 const { initToasts } = useToasts()
+const { languageItems } = useLocale()
 
 // Initialize global toasts messages container
 const toasts = ref<HTMLCToastsElement | null>(null)
@@ -10,25 +15,29 @@ onMounted(() => {
   initToasts(toasts.value)
 })
 
+
 </script>
 
 <template>
   <header>
-    <c-toolbar class="relative site-header">
+    <c-toolbar class="absolute site-header">
       <div class="header-content">
         <c-csc-logo />
-        <h2>Paituli logo</h2>
+        <h2>Paituli</h2>
         <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/download">Download data</RouterLink>
-          <RouterLink to="/webservices">Web services</RouterLink>
-          <RouterLink to="/files">Batch download</RouterLink>
-          <RouterLink to="/stac">STAC</RouterLink>
-          <RouterLink to="/opendata">Share your data</RouterLink>
+          <RouterLink to="/">{{ t("home") }}</RouterLink>
+          <RouterLink to="/download">{{ t("download") }}</RouterLink>
+          <RouterLink to="/webservices">{{ t("webservices") }}</RouterLink>
+          <RouterLink to="/files">{{ t("files") }}</RouterLink>
+          <RouterLink to="/stac">{{ t("stac") }}</RouterLink>
+          <RouterLink to="/opendata">{{ t("opendata") }}</RouterLink>
         </nav>
       </div>
-      <!--c-spacer />
-      <c-navigation-button /-->
+      <c-menu :items="languageItems">
+        <c-icon-button ghost>
+          <c-icon :path="mdiTranslate" />
+        </c-icon-button>
+      </c-menu>
     </c-toolbar>
   </header>
   <main>
@@ -36,6 +45,27 @@ onMounted(() => {
   </main>
   <c-toasts ref="toasts" horizontal="center" vertical="top" />
 </template>
+
+<i18n>
+  {
+    "en": {
+      "home": "Home",
+      "download": "Download Data",
+      "webservices": "Web Services",
+      "files": "Batch Download",
+      "stac": "STAC",
+      "opendata": "Share Your Data",
+    },
+    "fi": {
+      "home": "Koti",
+      "download": "Latauspalvelu",
+      "webservices": "Rajapinnat",
+      "files": "Massalataus",
+      "stac": "STAC",
+      "opendata": "Jaa Aineistosi",
+    },
+  }
+</i18n>
 
 <style scoped>
 main {

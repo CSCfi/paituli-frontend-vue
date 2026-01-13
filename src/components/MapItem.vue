@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useDatasets } from '@/composables/datasets'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { Fill, Stroke, Style, Text } from 'ol/style'
@@ -18,6 +18,7 @@ import { CToastType } from '@cscfi/csc-ui'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
 import ControlsRibbon from './ControlsRibbon.vue'
+import { useLocale } from '@/composables/locale'
 
 const { addToast } = useToasts()
 
@@ -57,6 +58,8 @@ const {
   selectMode,
 } = useControls()
 
+const { currentLocale } = useLocale()
+
 // The map instance exposed (dynamically) by OL
 const olMapRef = ref<{ map: OlMap } | null>(null)
 const mapView = computed(() => olMapRef.value!.map.getView())
@@ -70,6 +73,12 @@ onMounted(async () => {
   const olMapElement = olMapRef.value!.map.getTargetElement()
   olMapElement.addEventListener('drop', dragDropHandler)
   olMapElement.addEventListener('dragover', (e) => e.preventDefault())
+})
+
+// Fetch datasets again if locale changes, due to the
+// endpoint returning different datasets for different locale
+watch(currentLocale, async () => {
+  await fetchDatasets()
 })
 
 // A popup for displaying feature information

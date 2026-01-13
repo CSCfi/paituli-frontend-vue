@@ -6,7 +6,7 @@ import { CToastType } from '@cscfi/csc-ui'
 import { useLocale } from './locale'
 
 const { addToast } = useToasts()
-const { locale } = useLocale()
+const { currentLocale } = useLocale()
 
 const datasets = ref<Dataset[]>([])
 const currentDataset = ref<Dataset | null>(null)
@@ -26,7 +26,7 @@ const clearCurrent = () => {
 const fetchDatasets = async (): Promise<void> => {
   isFetching.value = true
   try {
-    const response = await fetch(`${URLS.METADATA_API}/${locale.value}`)
+    const response = await fetch(`${URLS.METADATA_API}/${currentLocale()}`)
     if (!response.ok) throw new Error(`HTTP code ${response.status}`)
     datasets.value = await response.json()
   } catch (error) {
