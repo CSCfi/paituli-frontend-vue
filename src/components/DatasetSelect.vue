@@ -4,9 +4,11 @@ import { useDatasets } from '@/composables/datasets'
 
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
+import { useI18n } from 'vue-i18n'
 
 const { datasets, setCurrent, clearCurrent, currentDataset, getById } = useDatasets()
 const { addToast } = useToasts();
+const { t } = useI18n()
 
 const props = defineProps<{ loadId?: string }>()
 
@@ -104,8 +106,8 @@ watch(datasets, () => {
   if (!dataset) {
     addToast({
       type: CToastType.Error,
-      title: 'Could not load dataset',
-      message: 'Unknown dataset by id ' + props.loadId,
+      title: t('toasts.failed.title'),
+      message: t('toasts.failed.message', { id: props.loadId }),
     })
     return
   }
@@ -117,8 +119,8 @@ watch(datasets, () => {
 
   addToast({
     type: CToastType.Info,
-    title: 'Dataset loaded',
-    message: 'Loaded dataset ' + dataset.data_id,
+    title: t('toasts.loaded.title'),
+    message: t('toasts.loaded.message', { id: dataset.data_id }),
     duration: 5000,
   })
 })
@@ -135,7 +137,7 @@ watch(datasets, () => {
 
   <div class="controls">
     <label>
-      <span>Producer</span>
+      <span>{{ t("labels.producer") }}</span>
       <select v-model="selectedProducer" :disabled="producerOptions.length <= 1">
         <option v-for="producer in producerOptions" :key="producer" :value="producer">
           {{ producer }}
@@ -144,7 +146,7 @@ watch(datasets, () => {
     </label>
 
     <label>
-      <span>Data</span>
+      <span>{{ t("labels.data") }}</span>
       <select v-model="selectedData" :disabled="dataOptions.length <= 1">
         <option v-for="data in dataOptions" :key="data" :value="data">
           {{ data }}
@@ -153,7 +155,7 @@ watch(datasets, () => {
     </label>
 
     <label>
-      <span>Scale</span>
+      <span>{{ t("labels.scale") }}</span>
       <select v-model="selectedScale" :disabled="scaleOptions.length <= 1" >
         <option v-for="scale in scaleOptions" :key="scale" :value="scale" >
           {{ scale }}
@@ -162,7 +164,7 @@ watch(datasets, () => {
     </label>
 
     <label>
-      <span>Year</span>
+      <span>{{ t("labels.year") }}</span>
       <select v-model="selectedYear" :disabled="yearOptions.length <= 1" >
         <option v-for="year in yearOptions" :key="year" :value="year">
           {{ year }}
@@ -171,7 +173,7 @@ watch(datasets, () => {
     </label>
 
     <label>
-      <span>Format</span>
+      <span>{{ t("labels.format") }}</span>
       <select v-model="selectedFormat" :disabled="formatOptions.length <= 1" >
         <option v-for="format in formatOptions" :key="format" :value="format" >
           {{ format }}
@@ -181,6 +183,49 @@ watch(datasets, () => {
   </div>
 
 </template>
+
+<i18n>
+  {
+    "en": {
+      "labels": {
+        "producer": "Producer",
+        "data": "Dataset",
+        "scale": "Scale",
+        "year": "Year",
+        "format": "Format",
+      },
+      "toasts": {
+        "loaded": {
+          "title": "Dataset loaded",
+          "message": "Loaded dataset {id}",
+        },
+        "failed": {
+          "title": "Could not load dataset",
+          "message": "Unknown dataset by id {id}",
+        },
+      },
+    },
+    "fi": {
+      "labels": {
+        "producer": "Tuottaja",
+        "data": "Aineisto",
+        "scale": "Mittakaava",
+        "year": "Vuosi",
+        "format": "Formaatti",
+      },
+      "toasts": {
+        "loaded": {
+          "title": "Aineisto ladattu",
+          "message": "Aineisto {id} ladattu",
+        },
+        "failed": {
+          "title": "Aineiston lataaminen epäonnistui",
+          "message": "Tuntematon aineisto tunnisteella {id}",
+        },
+      },
+    },
+  }
+</i18n>
 
 <style scoped>
 .controls {
@@ -199,7 +244,7 @@ label {
   span {
     display: inline-flex;
     justify-content: flex-start;
-    width: 80px;
+    width: 90px;
   }
 }
 </style>
