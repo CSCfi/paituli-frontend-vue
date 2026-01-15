@@ -8,9 +8,11 @@ import type { JobResponse } from '@/shared/types';
 import { sleep } from '@/shared/util'
 import { useToasts } from '@/composables/toasts';
 import { CToastType } from '@cscfi/csc-ui';
+import { useI18n } from 'vue-i18n';
 
 const { currentDataset } = useDatasets()
 const { addToast } = useToasts()
+const { t } = useI18n()
 
 const showModal = ref(false)
 
@@ -90,9 +92,6 @@ const validateForm = () => {
   return valid
 }
 
-const networkErrorMessage = 'Failed to contact download service. Check your internet connection. '
-const somethingWrongMessage = 'Something went wrong while processing your download. '
-const pleaseRetryMessage = 'If the problem persists, please try again later. '
 
 const submit = async () => {
   const current = currentDataset.value!
@@ -118,7 +117,7 @@ const submit = async () => {
   started.value = true
   fetching.value = true
   progress.value = 0
-  progressLabel.value = '(Starting...)'
+  progressLabel.value = t('progress.starting')
 
   let toastErrorMessage = ''
   try {
@@ -130,7 +129,7 @@ const submit = async () => {
     })
     if (!response.ok) {
       // The backend should always return OK - network error?
-      toastErrorMessage = networkErrorMessage
+      toastErrorMessage = t('toasts.network_error')
       throw Error(`HTTP code ${response.status}`)
     }
 
@@ -162,7 +161,7 @@ const submit = async () => {
         {
           addToast({
             type: CToastType.Warning, progress: true,
-            message: networkErrorMessage + pleaseRetryMessage,
+            message: t('toasts.network_error') + t('toasts.please_retry'),
           }, toasts.value)
         }
         continue;
@@ -170,11 +169,11 @@ const submit = async () => {
 
       // Job progressing okay? If yes, update progress
       job = await request.json()
-      assertJob(job, somethingWrongMessage)
+      assertJob(job, t('toasts.something_wrong'))
       progress.value = Math.ceil(job.progress * 100)
       if (progress.value > 0)
       {
-        progressLabel.value = '(Processing files...)'
+        progressLabel.value = t('progress.processing')
       }
     }
     while (job.progress < 1.0)
@@ -189,14 +188,14 @@ const submit = async () => {
     downloadError.value = true
     // Caught error details should go to the log,
     // while toasts communicate the failed download to the user
-    progressLabel.value = '(Failed!)'
+    progressLabel.value = t('progress.failed')
     console.error('Download failed: ', e)
     // If the toast message is undefined at this point, either the backend did
     // not specify a reason for failure, or we tripped on something unexpected.
-    if (!toastErrorMessage) toastErrorMessage = somethingWrongMessage
+    if (!toastErrorMessage) toastErrorMessage = t('toasts.something_wrong')
     addToast({
       type: CToastType.Error, persistent: true, closeText: 'Okay 😔',
-      message: toastErrorMessage + pleaseRetryMessage
+      message: toastErrorMessage + t('toasts.please_retry')
     }, toasts.value)
   } finally {
     fetching.value = false
@@ -234,28 +233,27 @@ defineExpose({ open })
 <template>
   <c-modal v-model="showModal" v-control>
     <c-card>
-      <c-card-title>Download</c-card-title>
+      <c-card-title>{{ t("title") }}</c-card-title>
       <c-card-content>
         <div class="summary">
-          <strong>Download Summary:</strong>
+          <strong>{{ t("summary.header") }}:</strong>
           <p>{{ downloadDescription }}</p>
 
           <div class="zip-size-warning" v-if="zipDownloadDisabled">
-            Note: You can download selected data only as a file list,
-            as the selection size exceeds the compressed archive size limit of {{ APP_SETTINGS.MAX_ZIP_SIZE }} MB.
+            {{ t("summary.size_warning", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
           </div>
           <div v-else-if="!downloadAsList">
-            Your download will be a zip archive with and estimated size of {{ downloadSize }} MB
+            {{ t("summary.info_zip", { size: downloadSize }) }}
           </div>
           <div v-else>
-            Your download will be a text file.
+            {{ t("summary.info_list") }}
           </div>
         </div>
 
         <!-- Download type (zip / file list) option -->
         <c-switch v-model="downloadAsList" :disabled="zipDownloadDisabled" v-control>
-          Download as file list
-          <ToolTip text="Download the selected data paths as a text file for batch download">
+          {{ t("as_list") }}
+          <ToolTip :text="t('list_tooltip')">
             <c-icon :path="mdiHelpCircle" color="var(--c-primary-500)" size="18" />
           </ToolTip>
         </c-switch>
@@ -266,12 +264,12 @@ defineExpose({ open })
                       v-model="licenseCheckbox"
                       :valid="!licenseError"
                       required>
-            I agree to the
-            <c-link :href="licenseUrl" target="_blank" underline>dataset license</c-link>
+            {{ t("license_agree") }}
+            <c-link :href="licenseUrl" target="_blank" underline>{{ t("license") }}</c-link>
           </c-checkbox>
         </div>
 
-        <!-- Errors and warnings -->
+        <!-- Separate toasts container because the backdrop obscures global toasts -->
         <c-toasts ref="toasts" vertical="bottom" absolute="true" />
       </c-card-content>
 
@@ -280,12 +278,67 @@ defineExpose({ open })
                         :value="progress"
                         :label="progressLabel"
                         :error="downloadError"/>
-        <c-button :loading="fetching" :disabled="fetching" @click="submit">Download</c-button>
-        <c-button @click="showModal = false" variant="light">Cancel</c-button>
+        <c-button :loading="fetching" :disabled="fetching" @click="submit">{{ t("confirm") }}</c-button>
+        <c-button @click="showModal = false" variant="light">{{ t("cancel") }}</c-button>
       </c-card-actions>
     </c-card>
   </c-modal>
 </template>
+
+<i18n>
+{
+  "en": {
+    "title": "Download",
+    "summary": {
+      "header": "Download Summary",
+      "size_warning": "Note: You can download selected data only as a file list, as the selection size exceeds the compressed archive size limit of {size} MB.",
+      "info_zip": "Your download will be a zip archive with and estimated size of {size} MB.",
+      "info_list": "Your download will be a text file.",
+    },
+    "as_list": "Download as file list",
+    "list_tooltip": "Download data paths as a text file for batch download",
+    "license_agree": "I agree to the",
+    "license": "dataset license",
+    "confirm": "Download",
+    "cancel": "Cancel",
+    "toasts": {
+      "network_error": "Failed to contact download service. Check your internet connection. ",
+      "something_wrong": "Something went wrong while processing your download. ",
+      "please_retry": "If the problem persists, please try again later. ",
+    },
+    "progress": {
+      "starting": "(Starting...)",
+      "processing": "(Processing files...)",
+      "failed": "(Failed!)",
+    },
+  },
+  "fi": {
+    "title": "Aineiston lataus",
+    "summary": {
+      "header": "Yhteenveto",
+      "size_warning": "Huom: Voit ladata valitun datan vain tiedostolistana, koska valinnan koko ylittää pakatun arkiston kokorajan {size} MB.",
+      "info_zip": "Latauksesi on ZIP-tiedosto, jonka arvioitu koko on {size} MB.",
+      "info_list": "Latauksesi on tekstitiedosto.",
+    },
+    "as_list": "Lataa tiedostolistana",
+    "list_tooltip": "Lataa valinnan polut tekstitiedostona massalatausta varten",
+    "license_agree": "Hyväksyn",
+    "license": "aineiston lisenssin",
+    "confirm": "Lataa",
+    "cancel": "Peruuta",
+    "toasts": {
+      "network_error": "Yhteydenotto latauspalveluun epäonnistui. Tarkista internet-yhteytesi. ",
+      "something_wrong": "Jotain meni pieleen latauksen käsittelyn aikana. ",
+      "please_retry": "Jos ongelma jatkuu, yritä myöhemmin uudelleen. ",
+    },
+    "progress": {
+      "starting": "(Käynnistetään...)",
+      "processing": "(Käsitellään tiedostoja...)",
+      "failed": "(Epäonnistui!)",
+    },
+  },
+}
+</i18n>
 
 <style scoped>
 
