@@ -5,9 +5,11 @@ import { useControls } from '@/composables/controls'
 import { mdiDownload } from '@mdi/js'
 import DownloadModal from './modals/DownloadModal.vue'
 import { APP_SETTINGS } from '@/shared/constants'
+import { useI18n } from 'vue-i18n'
 
 const { selectedFeaturesArray, selectedOlFeatures } = useControls()
 const { currentDataset } = useDatasets()
+const { t } = useI18n()
 
 const licenseChecked = ref(true)
 const licenseUrl = computed(() => currentDataset.value?.license_url)
@@ -91,24 +93,23 @@ function openDownloadModal() {
   <div class="download-panel">
     <c-button :disabled="downloadButtonDisabled" @click="openDownloadModal()">
       <c-icon :path="mdiDownload" />
-      Download ({{ downloadSize }} MB)
+      {{ t("size", { size: downloadSize }) }}
     </c-button>
     <div class="download-size-warning" v-if="downloadSizeExceeded">
-      Note: You have selected over {{ APP_SETTINGS.MAX_ZIP_SIZE }} MB of data,
-      which is over the limit of compressed archive download.
+      {{ t("warning", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
     </div>
 
     <div class="columns">
       <div class="documents" v-if="licenseUrl">
-        <p>Documents</p>
+        <p>{{ t("documents") }}</p>
         <label>
           <input type="checkbox" v-model="licenseChecked" />
-          <a :href="licenseUrl" target="_blank">License</a>
+          <a :href="licenseUrl" target="_blank">{{ t("license") }}</a>
         </label>
       </div>
 
       <div class="files" v-if="selectedFeaturesArray.length">
-        <p>Files</p>
+        <p>{{ t("files") }}</p>
         <div
           v-for="feature in selectedFeaturesArray"
           :key="feature.getId()"
@@ -128,6 +129,25 @@ function openDownloadModal() {
 
   <DownloadModal ref="modalRef" />
 </template>
+
+<i18n>
+{
+  "en": {
+    "size": "Download ({size} MB)",
+    "warning": "Note: You have selected over {size} MB of data, which is over the limit of compressed archive download.",
+    "documents": "Documents",
+    "files": "Files",
+    "license": "License",
+  },
+  "fi": {
+    "size": "Lataa ({size} MB)",
+    "warning": "Huom: Olet valinnut yli {size} MB dataa, mikä ylittää pakatun arkistolatauksen kokorajan.",
+    "documents": "Asiakirjat",
+    "files": "Tiedostot",
+    "license": "Lisenssi",
+  },
+}
+</i18n>
 
 <style scoped>
 .download-panel {
