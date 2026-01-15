@@ -12,9 +12,11 @@ import { type MetadataParse, parseMetadata } from '@/shared/util'
 import { mdiOpenInNew } from '@mdi/js';
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
+import { useI18n } from 'vue-i18n'
 
 const { currentDataset } = useDatasets()
 const { addToast } = useToasts()
+const { t } = useI18n()
 
 // Parsed dataset metadata
 const parsedMetadata = ref<MetadataParse | null>(null);
@@ -34,7 +36,7 @@ watch(currentDataset, async (dataset: Dataset | null) => {
   } catch (err) {
     addToast({
       type: CToastType.Warning,
-      message: 'Failed to load dataset metadata. If the problem persists, please try again later.'
+      message: t('toasts.metafail')
     })
     console.error(`Failed to parse Etsin metadata: ${(err as Error).message}`)
   }
@@ -44,13 +46,13 @@ watch(currentDataset, async (dataset: Dataset | null) => {
 
 <template>
   <div v-if="!currentDataset" class="suggestion">
-    <p>Please select a Producer to start browsing available datasets.</p>
+    <p>{{ t("suggestion") }}</p>
   </div>
   <div v-else class="extra">
     <c-tabs v-model="tab" v-control>
-      <c-tab value="infotab">Info</c-tab>
-      <c-tab value="servicestab">Services</c-tab>
-      <c-tab value="settingstab">Settings</c-tab>
+      <c-tab value="infotab">{{ t("tabs.info.label") }}</c-tab>
+      <c-tab value="servicestab">{{ t("tabs.services.label") }}</c-tab>
+      <c-tab value="settingstab">{{ t("tabs.settings.label") }}</c-tab>
 
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-tab-items slot="items">
@@ -64,13 +66,13 @@ watch(currentDataset, async (dataset: Dataset | null) => {
                        ref="infoModal" />
           </div>
           <c-button outlined class="read-more" @click="infoModal?.open()">
-            Read more
+            {{ t("tabs.info.more") }}
           </c-button>
           <div v-if="currentDataset?.meta">
             <p>
-              Full metadata is available at
+              {{ t("tabs.info.metadata") }}
               <c-link :href="URLS.ETSIN_METADATA_BASE + currentDataset.meta" target="_blank">
-                Fairdata Etsin<c-icon :path="mdiOpenInNew" size="18" />
+                {{ t("tabs.info.etsin") }}<c-icon :path="mdiOpenInNew" size="18" />
               </c-link>
             </p>
           </div>
@@ -86,6 +88,51 @@ watch(currentDataset, async (dataset: Dataset | null) => {
   </div>
 
 </template>
+
+<i18n>
+{
+  "en": {
+    "suggestion": "Please select a Producer to start browsing available datasets.",
+    "tabs": {
+      "info": {
+        "label": "Info",
+        "more": "Read more",
+        "metadata": "Full metadata available at",
+        "etsin": "Fairdata Etsin",
+      },
+      "services": {
+        "label": "Services",
+      },
+      "settings": {
+        "label": "Settings",
+      },
+    },
+    "toasts": {
+      "metafail": "Failed to load dataset metadata. If the problem persists, please try again later.",
+    },
+  },
+  "fi": {
+    "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
+    "tabs": {
+      "info": {
+        "label": "Tietoa",
+        "more": "Lue lisää",
+        "metadata": "Täydet metatiedot saatavilla",
+        "etsin": "Fairdata Etsimessä",
+      },
+      "services": {
+        "label": "Palvelut",
+      },
+      "settings": {
+        "label": "Asetukset",
+      },
+    },
+    "toasts": {
+      "metafail": "Aineiston metatietojen lataaminen epäonnistui. Jos ongelma toistuu, yritä uudelleen myöhemmin.",
+    },
+  },
+}
+</i18n>
 
 <style scoped>
 .extra {
