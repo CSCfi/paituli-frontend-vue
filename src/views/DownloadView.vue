@@ -6,6 +6,9 @@ import DatasetTabs from '@/components/DatasetTabs.vue'
 import DownloadTab from '@/components/DownloadSelect.vue'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const dataset_id = computed(() => route.query.data_id as string | undefined)
@@ -15,10 +18,10 @@ const dataset_id = computed(() => route.query.data_id as string | undefined)
 <template>
   <div class="wrapper">
     <c-side-navigation>
-      <c-side-navigation-title>Select data</c-side-navigation-title>
+      <c-side-navigation-title>{{ t("select") }}</c-side-navigation-title>
       <DatasetSelect :loadId="dataset_id"/>
       <DatasetTabs />
-      <c-side-navigation-title>Downloads</c-side-navigation-title>
+      <c-side-navigation-title>{{ t("downloads") }}</c-side-navigation-title>
       <DownloadTab />
     </c-side-navigation>
     <MapItem/>
@@ -55,6 +58,19 @@ c-side-navigation {
   }
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "select": "Select data",
+    "downloads": "Downloads",
+  },
+  "fi": {
+    "select": "Valitse aineisto",
+    "downloads": "Lataukset",
+  }
+}
+</i18n>
 
 <style scoped>
 .wrapper {
