@@ -6,8 +6,10 @@ import { useDatasets } from '@/composables/datasets';
 import { ref } from 'vue';
 
 import CodeBlock from '@/components/CodeBlock.vue';
+import { useI18n } from 'vue-i18n';
 
 const { currentDataset, hasRasterData, hasVectorData } = useDatasets()
+const { t } = useI18n()
 
 type ModalTab = 'FileTransferTab' | 'STACTab' | 'StableOGCTab' | 'NewOGCTab';
 const modalTab = ref<ModalTab>('FileTransferTab');
@@ -32,16 +34,16 @@ defineExpose({ open })
            width="800px">
     <c-card>
       <c-card-title>
-        Dataset web services
+        {{ t("title") }}
       </c-card-title>
       <c-card-content>
         <strong>{{ currentDataset.name }} - {{ currentDataset.org }}</strong>
 
         <c-tabs v-model="modalTab" v-control>
-          <c-tab value="FileTransferTab">File transfer</c-tab>
-          <c-tab value="STACTab">STAC</c-tab>
-          <c-tab value="StableOGCTab">Stable OGC APIs</c-tab>
-          <c-tab value="NewOGCTab">New OGC APIs</c-tab>
+          <c-tab value="FileTransferTab">{{ t("tabs.file_transfer") }}</c-tab>
+          <c-tab value="STACTab">{{ t("tabs.stac") }}</c-tab>
+          <c-tab value="StableOGCTab">{{ t("tabs.stable_ogc") }}</c-tab>
+          <c-tab value="NewOGCTab">{{ t("tabs.new_ogc") }}</c-tab>
 
           <!--p> TODO: check link from v3
                   Names, paths and geometry as
@@ -58,9 +60,9 @@ defineExpose({ open })
 
                 <strong>HTTP</strong>
                 <p>
-                  You can view or download dataset contents using its
+                  {{ t("file_transfer.info") }}
                   <c-link :href="URLS.HTTP_LINKS_BASE + currentDataset.funet" target="_blank">
-                    HTTP file index<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18"/>
+                    {{ t("file_transfer.link") }}<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18"/>
                   </c-link>
                 </p>
 
@@ -74,7 +76,7 @@ defineExpose({ open })
                 />
 
                 <c-link href="/files" target="_blank">
-                  Help?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                  {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
                 </c-link>
               </div>
             </c-tab-item>
@@ -82,36 +84,36 @@ defineExpose({ open })
             <c-tab-item value="STACTab">
               <div v-if="currentDataset.stac_id">
                 <p>
-                  The SpatioTemporal Asset Catalog (STAC) specification provides a common structure for describing and cataloging spatiotemporal assets.
+                  {{ t("stac.info") }}
                 </p>
                 <p>
-                  This dataset has been catalogued in Paituli STAC, and it's availabie for viewing in
+                  {{ t("stac.catalogued") }}
                   <c-link :href="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id" target="_blank">
-                    STAC browsers<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                    {{ t("stac.link") }}<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
                   </c-link>
                 </p>
                 <c-table>
                   <table>
                     <tbody>
                       <tr>
-                        <td>Endpoint</td>
+                        <td>{{ t("endpoint") }}</td>
                         <td>{{ URLS.STAC_PAITULI_BASE }}</td>
                         <td>
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(URLS.STAC_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
                       <tr>
-                        <td>Collection</td>
+                        <td>{{ t("stac.collection") }}</td>
                         <td>{{ currentDataset.stac_id }}</td>
                         <td>
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(currentDataset.stac_id)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
@@ -121,25 +123,25 @@ defineExpose({ open })
               </div>
               <div v-else>
                 <p>
-                  This dataset has not been catalogued in Paituli STAC.
+                  {{ t("stac.not_catalogued") }}
                 </p>
               </div>
               <c-link href="/stac" target="_blank">
-                Help?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
               </c-link>
             </c-tab-item>
 
             <c-tab-item value="StableOGCTab">
               <p v-if="!currentDataset.data_url">
-                This dataset is not provided by Paituli Geoserver APIs
+                {{ t("apis.not_provided") }}
               </p>
               <div v-else>
                 <c-table>
                   <table>
                     <thead>
                       <tr>
-                        <th>API</th>
-                        <th>Endpoint</th>
+                        <th>{{ t("api") }}</th>
+                        <th>{{ t("endpoint") }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -150,7 +152,7 @@ defineExpose({ open })
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(URLS.WMS_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
@@ -162,33 +164,33 @@ defineExpose({ open })
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(URLS.WMTS_PAITULI_BASE_GWC)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
                       <tr :class="{ 'grayed': !hasVectorData(currentDataset) }">
                         <td>WFS</td>
                         <td v-if="hasVectorData(currentDataset)">{{ URLS.WFS_PAITULI_BASE }}</td>
-                        <td v-else>N/A</td>
+                        <td v-else>{{ t("apis.not_available") }}</td>
 
                         <td>
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(URLS.WFS_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
                       <tr :class="{ 'grayed': !hasRasterData(currentDataset) }">
                         <td>WCS</td>
                         <td v-if="hasRasterData(currentDataset)">{{ URLS.WCS_PAITULI_BASE }}</td>
-                        <td v-else>N/A</td>
+                        <td v-else>{{ t("apis.not_available") }}</td>
 
                         <td>
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(URLS.WCS_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
@@ -196,10 +198,7 @@ defineExpose({ open })
                   </table>
                 </c-table>
 
-                <p>
-                  When using the listed APIs, copy the endpoint(s) and the identifier below into your application of choice.
-                  Note that some APIs are only available for specific dataset formats.
-                </p>
+                <p>{{ t("apis.instruction") }}</p>
 
                 <c-table>
                   <table>
@@ -211,14 +210,14 @@ defineExpose({ open })
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(currentDataset.data_url)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
                       <tr :class="{ 'grayed': !currentDataset.data_max_scale }">
                         <td>max visible scale</td>
                         <td v-if="currentDataset.data_max_scale">{{ currentDataset.data_max_scale }}</td>
-                        <td v-else>N/A</td>
+                        <td v-else>{{ t("apis.not_available") }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -228,22 +227,22 @@ defineExpose({ open })
 
               <p>
                 <c-link href="/webservices" target="_blank">
-                  Help?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                  {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
                 </c-link>
               </p>
             </c-tab-item>
 
             <c-tab-item value="NewOGCTab">
               <p v-if="!currentDataset.data_url">
-                This dataset is not provided by Paituli Geoserver APIs
+                {{ t("apis.not_provided") }}
               </p>
               <div v-else>
                 <c-table>
                   <table>
                     <thead>
                       <tr>
-                        <th>API</th>
-                        <th>Endpoint</th>
+                        <th>{{ t("api") }}</th>
+                        <th>{{ t("endpoint") }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -252,7 +251,7 @@ defineExpose({ open })
                         <td>{{ URLS.OGC_MAPS_PAITULI_BASE }}</td>
                         <td>
                           <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_MAPS_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
@@ -261,7 +260,7 @@ defineExpose({ open })
                         <td>{{ URLS.OGC_TILES_PAITULI_BASE }}</td>
                         <td>
                           <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_TILES_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
@@ -273,20 +272,20 @@ defineExpose({ open })
                         </td>
                         <td v-else>Features</td>
                         <td v-if="hasVectorData(currentDataset)">{{ URLS.OGC_FEATURES_PAITULI_BASE }}</td>
-                        <td v-else>N/A</td>
+                        <td v-else>{{ t("apis.not_available") }}</td>
                         <td>
                           <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_FEATURES_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
                       <tr :class="{ 'grayed': !hasRasterData(currentDataset) }">
                         <td>Coverages</td>
                         <td v-if="hasRasterData(currentDataset)">{{ URLS.OGC_COVERAGES_PAITULI_BASE }}</td>
-                        <td v-else>N/A</td>
+                        <td v-else>{{ t("apis.not_available") }}</td>
                         <td>
                           <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_COVERAGES_PAITULI_BASE)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
@@ -294,10 +293,7 @@ defineExpose({ open })
                   </table>
                 </c-table>
 
-                <p>
-                  When using the listed APIs, copy the endpoint(s) and the identifier below into your application of choice.
-                  Note that some APIs are only available for specific dataset formats.
-                </p>
+                <p>{{ t("apis.instruction") }}</p>
 
                 <c-table>
                   <table>
@@ -309,14 +305,14 @@ defineExpose({ open })
                           <c-button ghost
                                     size="small"
                                     @click="copyToClipboard(currentDataset.data_url)">
-                            Copy
+                            {{ t("copy") }}
                           </c-button>
                         </td>
                       </tr>
                       <tr :class="{ 'grayed': !currentDataset.data_max_scale }">
                         <td>max visible scale</td>
                         <td v-if="currentDataset.data_max_scale">{{ currentDataset.data_max_scale }}</td>
-                        <td v-else>N/A</td>
+                        <td v-else>{{ t("apis.not_available") }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -325,7 +321,7 @@ defineExpose({ open })
 
               <p>
                 <c-link href="/webservices" target="_blank">
-                  Help?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                  {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
                 </c-link>
               </p>
             </c-tab-item>
@@ -337,12 +333,77 @@ defineExpose({ open })
 
       <c-card-actions justify="end">
         <c-button @click="showModal = false">
-          Close
+          {{ t("close") }}
         </c-button>
       </c-card-actions>
     </c-card>
   </c-modal>
 </template>
+
+<i18n>
+{
+  "en": {
+    "title": "Dataset web services",
+    "tabs": {
+      "file_transfer": "File transfer",
+      "stac": "STAC",
+      "stable_ogc": "Stable OGC APIs",
+      "new_ogc": "New OGC APIs",
+    },
+    "api": "API",
+    "endpoint": "Endpoint",
+    "file_transfer": {
+      "info": "You can view or download dataset contents using its",
+      "link": "HTTP file index",
+    },
+    "stac": {
+      "collection": "Collection",
+      "info": "The SpatioTemporal Asset Catalog (STAC) specification provides a common structure for describing and cataloging spatiotemporal assets.",
+      "catalogued": "This dataset has been catalogued in Paituli STAC, and it's availabie for viewing in",
+      "link": "STAC browsers",
+      "not_catalogued": "This dataset has not been catalogued in Paituli STAC.",
+    },
+    "apis": {
+      "instruction": "When using the listed APIs, copy the endpoint(s) and the identifier below into your application of choice. Note that some APIs are only available for specific dataset formats.",
+      "not_available": "Not available",
+      "not_provided": "This dataset is not provided by Paituli Geoserver APIs",
+    },
+    "copy": "Copy",
+    "help": "Help",
+    "close": "Close",
+  },
+  "fi": {
+    "title": "Aineiston verkkopalvelut",
+    "tabs": {
+      "file_transfer": "Tiedostonsiirto",
+      "stac": "STAC",
+      "stable_ogc": "Vakaat OGC APIt",
+      "new_ogc": "Uudet OGC APIt",
+    },
+    "api": "Rajapinta",
+    "endpoint": "Pääte",
+    "file_transfer": {
+      "info": "Voit tarkastella tai ladata aineiston sisältöä käyttämällä sen",
+      "link": "HTTP-tiedostoindeksiä",
+    },
+    "stac": {
+      "collection": "Kokoelma",
+      "info": "SpatioTemporal Asset Catalog (STAC) -spesifikaatio tarjoaa yhtenäisen rakenteen spatiotemporaalisten aineistojen kuvaamiseen ja katalogisointiin.",
+      "catalogued": "Tämä aineisto on katalogoitu Paituli STAC:ssa, ja se on nähtävissä",
+      "link": "STAC-selaimissa",
+      "not_catalogued": "Tätä aineistoa ei ole katalogoitu Paituli STAC:ssa.",
+    },
+    "apis": {
+      "instruction": "Käyttäessäsi listattuja rajapintoja, kopioi alla olevat päätteet ja tunniste sovellukseesi. Huomaa, että osa rajapinnoista on käytettävissä vain tietyille aineistomuodoille.",
+      "not_available": "Ei saatavilla",
+      "not_provided": "Paitulin Geoserver rajapinnat eivät tarjoa tätä aineistoa",
+    },
+    "copy": "Kopioi",
+    "help": "Apua",
+    "close": "Sulje",
+  },
+}
+</i18n>
 
 <style scoped>
 c-tabs {
