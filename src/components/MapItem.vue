@@ -19,6 +19,7 @@ import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
 import ControlsRibbon from './ControlsRibbon.vue'
 import { useLocale } from '@/composables/locale'
+import { useI18n } from 'vue-i18n'
 
 const { addToast } = useToasts()
 
@@ -59,6 +60,7 @@ const {
 } = useControls()
 
 const { currentLocale } = useLocale()
+const { t } = useI18n()
 
 // The map instance exposed (dynamically) by OL
 const olMapRef = ref<{ map: OlMap } | null>(null)
@@ -111,7 +113,7 @@ const search = async () => {
     if (results.length == 0) {
       addToast({
         type: CToastType.Warning,
-        message: 'Location or address not found. Please double check your spelling'
+        message: t('toasts.search.nothing_found'),
       })
       return
     }
@@ -119,7 +121,7 @@ const search = async () => {
   } catch (error) {
     addToast({
       type: CToastType.Error,
-      message: 'The search API encountered an error. Please try again later.',
+      message: t('toasts.search.api_error'),
     })
     console.error('Nominatim search error: ' + error)
     return
@@ -162,8 +164,7 @@ const handleClickedFeature = async (e: unknown) => {
   catch (err) {
     addToast({
       type: CToastType.Error,
-      message: 'Failed to load feature information. ' +
-               'If the problem persists, please try again later.',
+      message: t('toasts.feature_error'),
     })
     console.error(err)
     featureInfoPopup.value.visible = false
@@ -203,13 +204,15 @@ const loadGeoJSONFile = (file: File) => {
       }
 
       addToast({
-        type: CToastType.Success, title: 'Loaded provided GeoJSON',
-        message: 'Mapsheets have been selected using the extents'
+        type: CToastType.Success,
+        title: t('toasts.geojson.loaded.title'),
+        message: t('toasts.geojson.loaded.message'),
       })
     } catch (err) {
       addToast({
-        type: CToastType.Error, title: 'Invalid GeoJSON',
-        message: 'Could not load valid GeoJSON from ' + file.name,
+        type: CToastType.Error,
+        title: t('toasts.geojson.invalid.title'),
+        message: t('toasts.geojson.invalid.message', { filename: file.name }),
       })
       console.error('User dropped Invalid GeoJSON', err)
     }
@@ -242,7 +245,7 @@ const indexStyle = (feature: FeatureLike) => {
 
     <div class="location-search">
       <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
-      <button @click="search">Search</button>
+      <button @click="search">{{ t("search") }}</button>
     </div>
 
     <Map.OlView
@@ -312,7 +315,7 @@ const indexStyle = (feature: FeatureLike) => {
       <div class="popup">
         <button class="popup-closer" @click="closePopup">×</button>
         <div class="popup-content">
-          <p>Feature info:</p>
+          <p>{{ t("feature") }}</p>
           <pre>{{ featureInfoPopup.content }}</pre>
         </div>
       </div>
@@ -321,19 +324,65 @@ const indexStyle = (feature: FeatureLike) => {
 
   <!-- debug stuff -->
   <div class="debug">
-    {{ controlMode }}
-    {{ selectMode }}
+    <b>Dev info</b>
     <div v-if="isFetching">Loading datasets...</div>
     <div v-else-if="datasets.length > 0">
-      Found {{ datasets.length }} datasets
+      Fetched {{ datasets.length }} datasets
       <div v-if="currentDataset">{{ currentDataset.data_id }}</div>
     </div>
     <div v-else>No datasets found.</div>
-    <div v-if="dataLayerSource">Data layer visible</div>
+    <div v-if="dataLayerSource">Data layer source active</div>
     <div v-if="!indexLayerSource">Waiting for index layer...</div>
-    <div v-else>Index layer visible</div>
+    <div v-else>Index layer source active</div>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "search": "Search",
+    "feature": "Feature info:",
+    "toasts": {
+      "geojson": {
+        "loaded": {
+          "title": "Loaded provided GeoJSON",
+          "message": "Mapsheets have been selected using the extents",
+        },
+        "invalid": {
+          "title": "Invalid GeoJSON",
+          "message": "Could not load valid GeoJSON from {filename}",
+        },
+      },
+      "search": {
+        "nothing_found": "Location or address not found. Please double check your spelling.",
+        "api_error": "The search API encountered an error. Please try again later.",
+      },
+      "feature_error": "Failed to load feature information. If the problem persists, please try again later.",
+    },
+  },
+  "fi": {
+    "search": "Hae",
+    "feature": "Kohteen tiedot:",
+    "toasts": {
+      "geojson": {
+        "loaded": {
+          "title": "GeoJSON ladattu",
+          "message": "Karttalehdet valittu rajojen perusteella",
+        },
+        "invalid": {
+          "title": "Virjeellinen GeoJSON",
+          "message": "Kelvollista GeoJSON:ia ei voitu ladata tiedostosta {filename}",
+        },
+      },
+      "search": {
+        "nothing_found": "Sijaintia tai osoitetta ei löytynyt. Tarkista kirjoitusasu.",
+        "api_error": "Hakurajapinta kohtasi virheen. Yritä myöhemmin uudelleen.",
+      },
+      "feature_error": "Kohdetietojen lataaminen epäonnistui. Jos ongelma jatkuu, yritä myöhemmin uudelleen.",
+    },
+  },
+}
+</i18n>
 
 <style scoped>
 .popup {
