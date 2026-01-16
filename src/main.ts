@@ -18,14 +18,20 @@ app.component('VCodeBlock', VCodeBlock)
 app.use(i18n)
 
 // Register CSC Design System components
-app.directive('control', vControl)
-defineCustomElements()
+app.directive('control', vControl);
 
-// We have to flush the DOM before mounting because some design system elements
-// (like <c-menu>, <c-toasts>, etc.) are registered somehow asynchronously via defineCustomElements()
-// Not ideal, but without the nextTick() those web components may not exist yet,
-// causing them to render empty or not function correctly.
-// TODO TEST IF THIS HELPS WITH THE TOASTS
-await nextTick()
+(async () => {
 
-app.mount('#app')
+  defineCustomElements();
+
+  // We have to flush the DOM before mounting because some design system elements
+  // (like <c-menu>, <c-toasts>, etc.) are registered somehow asynchronously via defineCustomElements()
+  // Not ideal, but without the nextTick() those web components may not exist yet,
+  // causing them to render empty or not function correctly.
+  // TODO TEST IF THIS HELPS WITH THE TOASTS
+  await nextTick();
+
+  app.mount('#app');
+
+})();
+
