@@ -1,3 +1,4 @@
+import { computed, defineAsyncComponent, type Component } from 'vue';
 import { createI18n } from 'vue-i18n'
 
 // Available locales
@@ -30,6 +31,23 @@ const setLocale = (locale: Locale) => {
   i18n.global.locale.value = locale
 }
 
+// Import all content that is localized per-page
+const pages = import.meta.glob<Component>('/src/views/content/*.vue')
+
+// For lazy loading textual template content for views
+// These files use filename format `[name]-[locale].vue`, e.g. `Home-en.vue`
+const loadLocalizedContent = (baseName: string, fallback: Locale = 'en') => computed(() => {
+  const localizedPath = `/src/views/content/${baseName}-${currentLocale.value}.vue`
+  const fallbackPath =  `/src/views/content/${baseName}-${fallback}.vue`
+  if (!pages[localizedPath]) console.warn(`Missing localized ${baseName} page`)
+
+  const loader = pages[localizedPath] ?? pages[fallbackPath]
+  return defineAsyncComponent(async () => {
+    return await loader()
+  })
+})
+
+
 export function useLocale() {
   return {
     i18n,
@@ -37,5 +55,6 @@ export function useLocale() {
     currentFlag,
     setLocale,
     languageItems,
+    loadLocalizedContent,
   }
 }
