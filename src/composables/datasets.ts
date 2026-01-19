@@ -26,7 +26,7 @@ const clearCurrent = () => {
 const fetchDatasets = async (): Promise<void> => {
   isFetching.value = true
   try {
-    const response = await fetch(`${URLS.METADATA_API}/${currentLocale()}`)
+    const response = await fetch(`${URLS.METADATA_API}/${currentLocale.value}`)
     if (!response.ok) throw new Error(`HTTP code ${response.status}`)
     datasets.value = await response.json()
   } catch (error) {

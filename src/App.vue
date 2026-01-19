@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useToasts } from './composables/toasts';
-import { mdiTranslate } from '@mdi/js';
 import { useI18n } from 'vue-i18n'
 import { useLocale } from './composables/locale';
 
 const { t } = useI18n()
 const { initToasts } = useToasts()
-const { languageItems } = useLocale()
+const { languageItems, currentFlag } = useLocale()
 
 // Initialize global toasts messages container
 const toasts = ref<HTMLCToastsElement | null>(null)
@@ -34,9 +33,7 @@ onMounted(() => {
         </nav>
       </div>
       <c-menu :items="languageItems">
-        <c-icon-button ghost>
-          <c-icon :path="mdiTranslate" />
-        </c-icon-button>
+        <h3>{{ currentFlag }}</h3>
       </c-menu>
     </c-toolbar>
   </header>
