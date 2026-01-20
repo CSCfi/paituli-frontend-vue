@@ -11,9 +11,9 @@ export const URLS = {
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
 
   // Links tab
-  FTP_LINKS_BASE: 'ftp://ftp.funet.fi/index/geodata/',
   HTTP_LINKS_BASE: 'http://www.nic.funet.fi/index/geodata/',
-  INFO_LINK: 'https://paituli.csc.fi/files.html',
+  FTP_LINKS_BASE: 'ftp://ftp.funet.fi/index/geodata/',
+  RSYNC_LINKS_BASE: 'rsync://rsync.nic.funet.fi/ftp/index/geodata/',
 
   // Location search
   NOMINATIM_API:
@@ -52,5 +52,5 @@ export const APP_SETTINGS = {
   MAP_DEFAULT_ZOOM: 5.5,
   MAP_DEFAULT_CENTER: [2900000, 9800000] as [number, number],
   APP_NAME: 'Paituli',
-  MAX_ZIP_SIZE: 1000 // MB
+  MAX_ZIP_SIZE: 3000 // MB
 } as const

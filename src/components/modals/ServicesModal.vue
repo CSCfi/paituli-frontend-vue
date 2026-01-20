@@ -72,7 +72,7 @@ defineExpose({ open })
                 />
                 <p><strong>RSYNC</strong></p>
                 <CodeBlock
-                  :content="'rsync://rsync.nic.funet.fi/ftp/index/geodata/' + currentDataset.funet"
+                  :content="URLS.RSYNC_LINKS_BASE + currentDataset.funet"
                 />
 
                 <c-link href="/files" target="_blank">
