@@ -60,10 +60,13 @@ defineExpose({ open })
 
                 <strong>HTTP</strong>
                 <p>
-                  {{ t("file_transfer.info") }}
+                  <CodeBlock
+                    :content="URLS.HTTP_LINKS_BASE + currentDataset.funet"
+                  />
                   <c-link :href="URLS.HTTP_LINKS_BASE + currentDataset.funet" target="_blank">
                     {{ t("file_transfer.link") }}<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18"/>
                   </c-link>
+                  {{ t("file_transfer.info") }}
                 </p>
 
                 <p><strong>FTP</strong></p>
@@ -353,8 +356,8 @@ defineExpose({ open })
     "api": "API",
     "endpoint": "Endpoint",
     "file_transfer": {
-      "info": "You can view or download dataset contents using its",
       "link": "HTTP file index",
+      "info": "can be also opened in your browser to view or download dataset contents",
     },
     "stac": {
       "collection": "Collection",
@@ -383,8 +386,8 @@ defineExpose({ open })
     "api": "Rajapinta",
     "endpoint": "Pääte",
     "file_transfer": {
-      "info": "Voit tarkastella tai ladata aineiston sisältöä käyttämällä sen",
-      "link": "HTTP-tiedostoindeksiä",
+      "link": "HTTP-tiedostoindeksin",
+      "info": "voi avata myös selaimessa, jonka kautta voi tarkastella tai ladata aineiston sisältöä.",
     },
     "stac": {
       "collection": "Kokoelma",
