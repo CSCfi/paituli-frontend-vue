@@ -1,3 +1,6 @@
+import { useLocale } from '@/composables/locale';
+
+const { currentLocale } = useLocale()
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -36,8 +39,9 @@ export function parseMetadata(metadata: any): MetadataParse | null {
     }))
 
   const descObj = metadata.research_dataset.description || {}
+  const desc = currentLocale.value == 'fi' ? descObj.fi : descObj.en
   return {
-    description: parseMarkdownishText(descObj.en ?? ''),
+    description: parseMarkdownishText(desc ?? ''),
     links: links
   }
 }
