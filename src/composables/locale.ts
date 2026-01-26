@@ -18,6 +18,7 @@ const flags: Record<string, string> = {
 // Internationalization instance
 const i18n = createI18n({
   legacy: false,
+  locale: 'en',
   messages: {} // Global translations here
 })
 
