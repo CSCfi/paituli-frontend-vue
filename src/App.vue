@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useToasts } from './composables/toasts';
 import { useI18n } from 'vue-i18n'
 import { useLocale } from './composables/locale';
+import FooterItem from '@/components/FooterItem.vue';
 
 const { t } = useI18n()
 const { initToasts } = useToasts()
@@ -14,12 +15,11 @@ onMounted(() => {
   initToasts(toasts.value)
 })
 
-
 </script>
 
 <template>
   <header>
-    <c-toolbar class="absolute site-header">
+    <c-toolbar class="site-header">
       <div class="header-content">
         <c-csc-logo />
         <h2>Paituli</h2>
@@ -37,9 +37,12 @@ onMounted(() => {
       </c-menu>
     </c-toolbar>
   </header>
-  <main>
-    <RouterView />
-  </main>
+  <div class="page">
+    <main>
+      <RouterView />
+    </main>
+    <FooterItem />
+  </div>
   <c-toasts ref="toasts" horizontal="center" vertical="top" />
 </template>
 
@@ -65,11 +68,19 @@ onMounted(() => {
 </i18n>
 
 <style scoped>
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 main {
   max-width: 1150px;
   margin: 0 auto;
   margin-top: var(--site-header-height);
   padding-top: 10px;
+
+  flex: 1;
 }
 
 c-toasts {
@@ -80,15 +91,15 @@ c-toasts {
   position: fixed;
   top: 0;
   left: 0;
-}
-.site-header nav {
-  width: 100%;
-  max-width: 1450px;
-  margin: 0 auto;
-}
-.site-header nav * {
-  margin-right: 15px;
-  padding: 5px 10px;
+  nav {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    * {
+      margin-right: 15px;
+      padding: 5px 10px;
+    }
+  }
 }
 
 .header-content {
