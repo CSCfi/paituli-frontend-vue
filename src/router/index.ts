@@ -38,6 +38,16 @@ const router = createRouter({
       name: 'shareyourdata',
       component: () => import('@/views/ShareYourDataView.vue'),
     },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: () => import('@/views/PrivacyView.vue'),
+    },
+    {
+      path: '/accessibility',
+      name: 'accessibility',
+      component: () => import('@/views/AccessibilityView.vue'),
+    },
   ],
 })
 
