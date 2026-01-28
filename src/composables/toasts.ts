@@ -2,9 +2,11 @@ import { nextTick, ref } from 'vue'
 import { type CToastMessage } from '@cscfi/csc-ui'
 import { useI18n } from 'vue-i18n'
 
+// Global
+const toastsRef = ref<HTMLCToastsElement | null>(null)
+
 export function useToasts() {
 
-  const toastsRef = ref<HTMLCToastsElement | null>(null)
   const { t } = useI18n({ useScope: 'global' })
 
   function initToasts(element: HTMLCToastsElement | null) {
