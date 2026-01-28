@@ -15,7 +15,6 @@
   "dependencies": {
     "@cscfi/csc-ui": "^3.0.7",
     "@cscfi/csc-ui-vue": "^0.0.2",
-    "@wdns/vue-code-block": "^2.3.5",
     "flatgeobuf": "^4.2.0",
     "ol": "^10.5.0",
     "ol-contextmenu": "^5.5.0",
