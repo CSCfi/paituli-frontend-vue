@@ -5,18 +5,19 @@ import { useDatasets } from '@/composables/datasets'
 import InfoTab from '@/components/tabs/InfoTab.vue'
 import InfoModal from './modals/InfoModal.vue'
 import ServicesTab from '@/components/tabs/ServicesTab.vue'
-import type { Dataset } from '@/shared/types'
+import type { Dataset, MetadataParse } from '@/shared/types'
 import { URLS } from '@/shared/constants'
 import SettingsTab from './tabs/SettingsTab.vue'
-import { type MetadataParse, parseMetadata } from '@/shared/util'
 import { mdiOpenInNew } from '@mdi/js';
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
 import { useI18n } from 'vue-i18n'
+import { useLocale } from '@/composables/locale';
 
 const { currentDataset } = useDatasets()
 const { addToast } = useToasts()
 const { t } = useI18n()
+const { currentLocale } = useLocale()
 
 // Parsed dataset metadata
 const parsedMetadata = ref<MetadataParse | null>(null);
@@ -41,6 +42,44 @@ watch(currentDataset, async (dataset: Dataset | null) => {
     console.error(`Failed to parse Etsin metadata: ${(err as Error).message}`)
   }
 })
+
+// For extracting a human-readable description from metadata
+function parseMetadata(metadata: any): MetadataParse | null {
+  if (!metadata || !metadata.research_dataset) {
+    return null
+  }
+
+  const resources = metadata.research_dataset.remote_resources || []
+  const links: { title: string, url: string }[] = resources
+    .filter((item: any) =>
+      item.title &&
+      item.download_url?.identifier &&
+      !item.download_url.identifier.toLowerCase().includes('paituli.csc.fi/download')
+    )
+    .map((item: any) => ({
+      title: item.title,
+      url: item.download_url.identifier,
+    }))
+
+  const descObj = metadata.research_dataset.description || {}
+  const desc = currentLocale.value == 'fi' ? descObj.fi : descObj.en
+
+  const parseMarkdownishText = (text: string): string => {
+    // Markdown-style [title](url)
+    text = text.replace(/\[([^\]]+)\]\((http.*?)\)/g, '<a href="$2" target="_blank">$1</a>')
+    // <http://example.com>
+    text = text.replace(/<http(.*?)>/g, '<a href="http$1" target="_blank">http$1</a>')
+    // Line breaks
+    return text.replace(/(\r\n|\n|\r)/gm, '<br>')
+    // Would we need further sanitization?
+  }
+
+  return {
+    description: parseMarkdownishText(desc ?? ''),
+    links: links
+  }
+}
+
 
 </script>
 

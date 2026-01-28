@@ -22,6 +22,11 @@ export interface Dataset {
 
 export type DownloadType = 'ZIP' | 'LIST'
 
+export type MetadataParse = {
+  description: string,
+  links: { title: string, url: string }[]
+}
+
 export interface NominatimResponse {
   boundingbox: Array<number>
   lon: number
