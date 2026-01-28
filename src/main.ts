@@ -28,7 +28,6 @@ app.directive('control', vControl);
   // (like <c-menu>, <c-toasts>, etc.) are registered somehow asynchronously via defineCustomElements()
   // Not ideal, but without the nextTick() those web components may not exist yet,
   // causing them to render empty or not function correctly.
-  // TODO TEST IF THIS HELPS WITH THE TOASTS
   await nextTick();
 
   app.mount('#app');
