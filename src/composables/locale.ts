@@ -19,7 +19,20 @@ const flags: Record<string, string> = {
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
-  messages: {} // Global translations here
+  messages: {
+    // These are global translations.
+    // Component-specific translations are in the components' files.
+    'en': {
+      'toasts': {
+        'default_title': 'Notice',
+      },
+    },
+    'fi': {
+      'toasts': {
+        'default_title': 'Huomautus',
+      },
+    },
+  },
 })
 
 const currentLocale = computed(() => i18n.global.locale.value);
