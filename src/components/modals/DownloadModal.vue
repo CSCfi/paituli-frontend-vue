@@ -75,12 +75,6 @@ const validateForm = () => {
   // the backend angry, and we show error message(s) if it would be so.
   resetErrors()
   let valid = true
-  /*
-  if (!email.value || email.value.length > 80 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-    emailError.value = 'Please enter a valid email.'
-    valid = false
-  }
-  */
   if (zipDownloadDisabled.value && !downloadAsList.value)
   {
     valid = false
