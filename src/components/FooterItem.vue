@@ -8,7 +8,7 @@ const { t } = useI18n()
 <template>
   <div class="footer">
     <a href="https://www.okm.fi/">
-      <img :src="'okm_logo.svg'" />
+      <img :src="'okm_logo.png'" />
     </a>
     <a href="https://www.csc.fi">
       <img :src="'csc.png'" />
