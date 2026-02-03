@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
+import LocalizedContentView from '@/views/LocalizedContentView.vue'
 import DownloadView from '@/views/DownloadView.vue'
 
 const router = createRouter({
@@ -7,46 +7,42 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'Home',
+      component: LocalizedContentView,
     },
     {
       path: '/download',
-      name: 'download',
       component: DownloadView,
     },
     {
       path: '/webservices',
-      name: 'webservices',
-      // route level code-splitting
-      // this generates a separate chunk (e.g. About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('@/views/WebServicesView.vue'),
+      name: 'WebServices',
+      component: LocalizedContentView,
     },
     {
       path: '/files',
-      name: 'batchdownload',
-      component: () => import('@/views/BatchDownloadView.vue'),
+      name: 'BatchDownload',
+      component: LocalizedContentView,
     },
     {
       path: '/stac',
-      name: 'stac',
-      component: () => import('@/views/STACView.vue'),
+      name: 'STAC',
+      component: LocalizedContentView,
     },
     {
       path: '/opendata',
-      name: 'shareyourdata',
-      component: () => import('@/views/ShareYourDataView.vue'),
+      name: 'ShareYourData',
+      component: LocalizedContentView,
     },
     {
       path: '/privacy',
-      name: 'privacy',
-      component: () => import('@/views/PrivacyView.vue'),
+      name: 'Privacy',
+      component: LocalizedContentView,
     },
     {
       path: '/accessibility',
-      name: 'accessibility',
-      component: () => import('@/views/AccessibilityView.vue'),
+      name: 'Accessibility',
+      component: LocalizedContentView,
     },
   ],
 })

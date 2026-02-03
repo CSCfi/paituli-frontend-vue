@@ -51,7 +51,7 @@ export function useLocale() {
     { name: 'Suomeksi 🇫🇮', action: () => setLocale('fi') },
   ]
 
-  // For lazy loading textual template content for views
+  // For lazy loading translated template content for views
   // These files use filename format `[name]-[locale].vue`, e.g. `Home-en.vue`
   const loadLocalizedContent = (baseName: string, fallback: Locale = 'en') => computed(() => {
     const localizedPath = `/src/views/content/${baseName}-${currentLocale.value}.vue`
