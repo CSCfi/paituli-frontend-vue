@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useDatasets } from '@/composables/datasets'
 
 import InfoTab from '@/components/tabs/InfoTab.vue'
 import InfoModal from './modals/InfoModal.vue'
@@ -12,12 +11,11 @@ import { mdiOpenInNew } from '@mdi/js';
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
 import { useI18n } from 'vue-i18n'
-import { useLocale } from '@/composables/locale';
+import { currentDataset } from '@/modules/datasets'
+import { currentLocale } from '@/modules/locale'
 
-const { currentDataset } = useDatasets()
 const { addToast } = useToasts()
 const { t } = useI18n()
-const { currentLocale } = useLocale()
 
 // Parsed dataset metadata
 const parsedMetadata = ref<MetadataParse | null>(null);

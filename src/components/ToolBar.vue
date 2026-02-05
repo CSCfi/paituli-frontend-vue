@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { useControls } from '@/composables/controls';
-import { useSources } from '@/composables/sources';
-import OlMap from 'ol/Map.js'
 import { computed, onMounted, ref, watch } from 'vue';
-
 import { mdiAlert, mdiCrosshairs, mdiCursorMove, mdiSelect } from '@mdi/js';
+
+import OlMap from 'ol/Map.js'
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+import { dataLayerMaxResolution, dataSource } from '@/modules/layers';
+import { selectedOlFeatures, } from '@/modules/selection';
+import { fileSelectedCallback, selectMode, toolbarMode } from '@/modules/controls';
 
-const { dataLayerMaxResolution, dataLayerSource } = useSources()
-const { controlMode, selectMode, selectedOlFeatures, fileSelectedCallback } = useControls()
+const { t } = useI18n()
 
 const props = defineProps<{ map: OlMap }>()
 
 const viewResolution = ref<number>(0)
-const dataHidden = computed(() => viewResolution.value > dataLayerMaxResolution.value )
+const dataHidden = computed(() => viewResolution.value > dataLayerMaxResolution.value)
 const clearClickAmount = ref<number>(0)
 
 onMounted(() => {
@@ -27,12 +26,12 @@ onMounted(() => {
   })
 })
 
-watch(dataLayerSource, () => {
+watch(dataSource, () => {
   // Reset selection to 'move' in case inspect becomes unavailable
-  controlMode.value = 'move'
+  toolbarMode.value = 'move'
 })
 
-watch(controlMode, (mode) => {
+watch(toolbarMode, (mode) => {
   // Change our cursor depending on the mode
   const domElement = props.map.getTargetElement()
   domElement.style.cursor = {
@@ -67,14 +66,14 @@ const onFileSelected = (event: Event) => {
 </script>
 
 <template>
-  <c-tabs v-model="controlMode"
+  <c-tabs v-model="toolbarMode"
           v-control
           borderless
           disable-animation>
     <c-tab-buttons mandatory>
       <c-button value="move">{{ t("move.label") }} <c-icon :path="mdiCursorMove"/></c-button>
       <c-button value="select">{{ t("select.label") }} <c-icon :path="mdiSelect"/></c-button>
-      <c-button value="inspect" :disabled="!dataLayerSource">{{ t("inspect.label") }} <c-icon :path="mdiCrosshairs"/></c-button>
+      <c-button value="inspect" :disabled="!dataSource">{{ t("inspect.label") }} <c-icon :path="mdiCrosshairs"/></c-button>
     </c-tab-buttons>
     <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
     <c-tab-items slot="items">

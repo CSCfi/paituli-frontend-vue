@@ -1,33 +1,32 @@
 <script setup lang="ts">
-import { useControls } from '@/composables/controls'
-import { useSources } from '@/composables/sources'
+import { showLayer } from '@/modules/controls';
+import { dataSource, indexSource } from '@/modules/layers';
 import { useI18n } from 'vue-i18n';
 
-const { indexLayerSource, dataLayerSource } = useSources();
-const controls = useControls();
 const { t } = useI18n()
 
 </script>
 
 <template>
   {{ t("search") }}
-  <c-switch v-model="controls.mapsheetSearch.value" v-control>
+  MOVED
+  <!--c-switch v-model="controls.mapsheetSearch.value" v-control>
     {{ t("alt_search") }}
-  </c-switch>
+  </c-switch-->
   <p>{{ t("show") }}...</p>
-  <c-switch v-model="controls.backgroundVisible.value" v-control>
+  <c-switch v-model="showLayer.background.value" v-control>
     {{ t("background") }}
   </c-switch>
-  <c-switch v-model="controls.muncipalitiesVisible.value" v-control>
+  <c-switch v-model="showLayer.muncipalities.value" v-control>
     {{ t("muncipalities") }}
   </c-switch>
-  <c-switch v-model="controls.catchmentVisible.value" v-control>
+  <c-switch v-model="showLayer.catchment.value" v-control>
     {{ t("catchment") }}
   </c-switch>
-  <c-switch v-model="controls.indexVisible.value" :disabled="!indexLayerSource" v-control>
+  <c-switch v-model="showLayer.index.value" :disabled="!indexSource" v-control>
     {{ t("index") }}
   </c-switch>
-  <c-switch v-model="controls.dataVisible.value" :disabled="!dataLayerSource" v-control>
+  <c-switch v-model="showLayer.data.value" :disabled="!dataSource" v-control>
     {{ t("data") }}
   </c-switch>
 </template>

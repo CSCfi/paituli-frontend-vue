@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { getLocalizedPage } from '@/modules/locale'
+import { computed, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
-import { useLocale } from '@/composables/locale'
 
 const route = useRoute()
-const { loadLocalizedContent } = useLocale()
 
-// This view template is a generic approach on loading localized (translated)
+// This view template is a generic approach on lazy-loading translated
 // view content. It uses the 'name' router parameter with the current locale
 // to determine which view content file to display. For more detail, see:
-// * router/index.ts
-// * composables/locale.ts: loadLocalizedContent() and `pages`
+// * router.ts
+// * modules/locale.ts: getLocalizedPage() and `pages`
 
 const Content = computed(() => {
   if (!route.name) {
     throw new Error('Route is missing the name parameter')
   }
-  return loadLocalizedContent(route.name as string).value
+  const loader = getLocalizedPage(route.name as string)
+  return defineAsyncComponent(async () => await loader())
 })
 </script>
 

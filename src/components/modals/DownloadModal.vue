@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { APP_SETTINGS, URLS } from '@/shared/constants'
-import { useDatasets } from '@/composables/datasets'
 import { mdiHelpCircle } from '@mdi/js';
-import ToolTip from '../ToolTip.vue';
-import type { JobResponse } from '@/shared/types';
-import { sleep } from '@/shared/util'
-import { useToasts } from '@/composables/toasts';
 import { CToastType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
 
-const { currentDataset } = useDatasets()
+import ToolTip from '@/components/ToolTip.vue';
+import type { JobResponse } from '@/shared/types';
+import { APP_SETTINGS, URLS } from '@/shared/constants'
+import { sleep } from '@/shared/util'
+import { useToasts } from '@/composables/toasts';
+import { currentDataset } from '@/modules/datasets';
+
 const { addToast } = useToasts()
 const { t } = useI18n()
 

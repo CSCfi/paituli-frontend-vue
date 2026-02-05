@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useToasts } from './composables/toasts';
 import { useI18n } from 'vue-i18n'
-import { useLocale } from './composables/locale';
+
+import { initToasts } from '@/composables/toasts';
 import FooterItem from '@/components/FooterItem.vue';
+import { currentFlag, languageItems } from '@/modules/locale';
 
 const { t } = useI18n()
-const { initToasts } = useToasts()
-const { languageItems, currentFlag } = useLocale()
 
 // Initialize global toasts messages container
 const toasts = ref<HTMLCToastsElement | null>(null)

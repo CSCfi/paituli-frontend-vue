@@ -2,13 +2,12 @@
 import { mdiOpenInNew } from '@mdi/js';
 import { URLS } from '@/shared/constants'
 import { copyToClipboard } from '@/shared/util'
-import { useDatasets } from '@/composables/datasets';
 import { ref } from 'vue';
 
 import CodeBlock from '@/components/CodeBlock.vue';
 import { useI18n } from 'vue-i18n';
+import { currentDataset, hasRasterData, hasVectorData } from '@/modules/datasets';
 
-const { currentDataset, hasRasterData, hasVectorData } = useDatasets()
 const { t } = useI18n()
 
 type ModalTab = 'FileTransferTab' | 'STACTab' | 'StableOGCTab' | 'NewOGCTab';
@@ -45,18 +44,13 @@ defineExpose({ open })
           <c-tab value="StableOGCTab">{{ t("tabs.stable_ogc") }}</c-tab>
           <c-tab value="NewOGCTab">{{ t("tabs.new_ogc") }}</c-tab>
 
-          <!--p> TODO: check link from v3
-                  Names, paths and geometry as
-                  <c-link :href="URLS.HTTP_LINKS_BASE+ currentDataset.funet" target="_blank">
-                    Shapefile<c-icon :path="mdiOpenInNew" color="var(--c-primary-100)" size="18" />
-                  </c-link>
-                </p-->
-
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <c-tab-items slot="items">
             <c-tab-item value="FileTransferTab">
 
               <div v-if="currentDataset.funet">
+
+                FORMAT ME {{ URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id) }}
 
                 <strong>HTTP</strong>
                 <p>

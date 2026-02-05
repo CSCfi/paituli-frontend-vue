@@ -1,74 +1,60 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { useDatasets } from '@/composables/datasets'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
-import { Fill, Stroke, Style, Text } from 'ol/style'
-import { useSources } from '@/composables/sources'
-import { always } from 'ol/events/condition'
-import { useControls } from '@/composables/controls'
-import type { FeatureLike } from 'ol/Feature'
-import OlMap from 'ol/Map.js'
-import { getCenter } from 'ol/extent.js'
-
-import * as proj from 'ol/proj'
-import { APP_SETTINGS, URLS } from '@/shared/constants'
-import type { NominatimResponse } from '@/shared/types'
-import { useToasts } from '@/composables/toasts'
+import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
+
+import type { FeatureLike } from 'ol/Feature'
+import { Fill, Stroke, Style, Text } from 'ol/style'
+import { always } from 'ol/events/condition'
+import { getCenter } from 'ol/extent.js'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
-import ControlsRibbon from './ControlsRibbon.vue'
-import { useLocale } from '@/composables/locale'
-import { useI18n } from 'vue-i18n'
+import OlMap from 'ol/Map.js'
 
-const { addToast } = useToasts()
+import { currentDataset, datasets, isFetching } from '@/modules/datasets'
+import { APP_SETTINGS, URLS } from '@/shared/constants'
+import { useToasts } from '@/composables/toasts'
+import { currentLocale } from '@/modules/locale'
+import SearchBar from '@/components/SearchBar.vue'
+import ToolBar from '@/components/ToolBar.vue'
 
-const {
-  datasets,
-  currentDataset,
-  fetchDatasets,
-  isFetching
-} = useDatasets()
-
-const {
-  indexLayerSource,
+import {
+  indexSource,
   osmSource,
-  dataLayerSource,
+  dataSource,
   dataLayerMaxResolution,
   muncipalitiesSource,
   catchmentSource,
   highlightSource,
   fetchFeatureInfo,
-} = useSources()
+  loadIndexLayer,
+} from '@/modules/layers'
 
-const {
-  selectFeatureSearch,
-  indexVisible,
-  dataVisible,
-  backgroundVisible,
-  muncipalitiesVisible,
-  catchmentVisible,
+import {
   selectedOlFeatures,
-  mapsheetSearch,
   featureSelected,
   selectSheetsByExtent,
   dragboxEnd,
   polyDrawEnd,
-  fileSelectedCallback,
-  controlMode,
-  selectMode,
-} = useControls()
+} from '@/modules/selection'
 
-const { currentLocale } = useLocale()
+import {
+  fileSelectedCallback,
+  selectMode,
+  showLayer,
+  toolbarMode
+} from '@/modules/controls'
+
+const { addToast } = useToasts()
 const { t } = useI18n()
 
 // The map instance exposed (dynamically) by OL
 const olMapRef = ref<{ map: OlMap } | null>(null)
 const mapView = computed(() => olMapRef.value!.map.getView())
 
+// Fetch datasets on mount
 onMounted(async () => {
-
-  // Fetch datasets on mount
   await fetchDatasets()
 
   // Add drag-n-drop listeners
@@ -78,10 +64,41 @@ onMounted(async () => {
 })
 
 // Fetch datasets again if locale changes, due to the
-// endpoint returning different datasets for different locale
-watch(currentLocale, async () => {
-  await fetchDatasets()
+// endpoint returning different descriptions for each locale
+watch(currentLocale, async () => await fetchDatasets())
+
+// Update index layer whenever the current dataset changes
+watch(currentDataset, async (dataset) => {
+
+  // Clear our highlights at this point
+  highlightSource.clear()
+
+  try {
+    loadIndexLayer(dataset!.data_id)
+  } catch (error) {
+    // TODO: Put the same toast here as MapItem mount
+    console.error('Failed to load index map features:', error)
+  }
 })
+
+// Fetches Dataset metadata from the backend
+async function fetchDatasets(): Promise<void> {
+  isFetching.value = true
+  try {
+    const response = await fetch(`${URLS.METADATA_API}/${currentLocale.value}`)
+    if (!response.ok) throw new Error(`HTTP code ${response.status}`)
+    datasets.value = await response.json()
+  } catch (error) {
+    addToast({
+      type: CToastType.Error,
+      title: 'Failed to load datasets',
+      message: 'Refresh the page to retry. If the problem persists, ' +
+               `please try again later. (${error})`,
+    })
+  } finally {
+    isFetching.value = false
+  }
+}
 
 // A popup for displaying feature information
 const featureInfoPopup = ref({
@@ -93,62 +110,13 @@ const closePopup = () => {
   featureInfoPopup.value.visible = false
 }
 
-// Queries Nominatim API for location data
-const fetchLocationData = async (searchString: string): Promise<NominatimResponse[]> => {
-  const response = await fetch(
-    URLS.NOMINATIM_API.replace('!query!', encodeURIComponent(searchString)))
-  if (!response.ok) throw Error(`HTTP code ${response.status}`)
-  return response.json()
-}
-
-// Searches either a location to zoom to, or
-// a location which to use for mapsheet selection
-const search = async () => {
-  if (searchStr.value.trim().length === 0) return
-
-  // Fetch location info
-  let result: NominatimResponse
-  try {
-    const results = await fetchLocationData(searchStr.value)
-    if (results.length == 0) {
-      addToast({
-        type: CToastType.Warning,
-        message: t('toasts.search.nothing_found'),
-      })
-      return
-    }
-    result = results[0] // Just select the first result
-  } catch (error) {
-    addToast({
-      type: CToastType.Error,
-      message: t('toasts.search.api_error'),
-    })
-    console.error('Nominatim search error: ' + error)
-    return
-  }
-
-  // If set by user, we select mapsheets.
-  // Otherwise the map is zoomed to found location.
-  if (mapsheetSearch.value) {
-    selectFeatureSearch(searchStr.value, result.boundingbox);
-  }
-  else {
-    const projected = proj.transform([result.lon, result.lat], 'EPSG:4326', 'EPSG:3857')
-    mapView.value.animate({
-      center: [projected[0], projected[1]],
-      zoom: searchStr.value.includes(',') ? 16 : 13,
-      duration: 1000,
-    })
-  }
-}
-const searchStr = ref('')
-
+// Displays feature info when clicking features in the inspect mode
 const handleClickedFeature = async (e: unknown) => {
   const event = e as MapBrowserEvent<PointerEvent> // OL typing bug
-  if (event.dragging) return
 
   // We only care about these events if we are in feature info mode
-  if (controlMode.value != 'inspect') return
+  if (toolbarMode.value != 'inspect') return
+  if (event.dragging) return
 
   // Fetch the feature info and display it
   try {
@@ -202,7 +170,6 @@ const loadGeoJSONFile = (file: File) => {
           duration: 1000,
         })
       }
-
       addToast({
         type: CToastType.Success,
         title: t('toasts.geojson.loaded.title'),
@@ -244,8 +211,7 @@ const indexStyle = (feature: FeatureLike) => {
              @click="handleClickedFeature" >
 
     <div class="location-search">
-      <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
-      <button @click="search">{{ t("search") }}</button>
+      <SearchBar v-if="olMapRef" :map="(olMapRef.map as OlMap)" />
     </div>
 
     <Map.OlView
@@ -256,27 +222,27 @@ const indexStyle = (feature: FeatureLike) => {
     <!--Layers-->
     <Layers.OlTileLayer
       :source="osmSource"
-      :visible="backgroundVisible"
+      :visible="showLayer.background.value"
     />
     <Layers.OlVectorLayer
-      v-if="indexLayerSource"
-      :source="indexLayerSource"
+      v-if="indexSource"
+      :source="indexSource"
       :style="indexStyle"
-      :visible="indexVisible"
+      :visible="showLayer.index.value"
     />
     <Layers.OlTileLayer
-      v-if="dataLayerSource"
-      :source="dataLayerSource"
+      v-if="dataSource"
+      :source="dataSource"
       :max-resolution="dataLayerMaxResolution"
-      :visible="dataVisible"
+      :visible="showLayer.data.value"
     />
     <Layers.OlTileLayer
       :source="muncipalitiesSource"
-      :visible="muncipalitiesVisible"
+      :visible="showLayer.muncipalities.value"
     />
     <Layers.OlTileLayer
       :source="catchmentSource"
-      :visible="catchmentVisible"
+      :visible="showLayer.catchment.value"
     />
     <Layers.OlVectorLayer
       :source="highlightSource"
@@ -288,11 +254,11 @@ const indexStyle = (feature: FeatureLike) => {
       :toggle-condition="always"
     />
     <Interactions.OlInteractionDragbox
-      v-if="controlMode == 'select' && selectMode == 'multi'"
+      v-if="toolbarMode == 'select' && selectMode == 'multi'"
       @boxend="dragboxEnd"
     />
     <Interactions.OlInteractionDraw
-      v-if="controlMode == 'select' && selectMode == 'draw'"
+      v-if="toolbarMode == 'select' && selectMode == 'draw'"
       type="Polygon"
       @drawend="polyDrawEnd"
       :stop-click="true"
@@ -303,7 +269,7 @@ const indexStyle = (feature: FeatureLike) => {
 
     <div class="controls-ribbon">
       <!-- Mount only after OL has provided us the map ref! -->
-      <ControlsRibbon v-if="olMapRef" :map="(olMapRef.map as OlMap)" />
+      <ToolBar v-if="olMapRef" :map="(olMapRef.map as OlMap)" />
     </div>
 
     <!-- Feature info popup -->
@@ -331,8 +297,8 @@ const indexStyle = (feature: FeatureLike) => {
       <div v-if="currentDataset">{{ currentDataset.data_id }}</div>
     </div>
     <div v-else>No datasets found.</div>
-    <div v-if="dataLayerSource">Data layer source active</div>
-    <div v-if="!indexLayerSource">Waiting for index layer...</div>
+    <div v-if="dataSource">Data layer source active</div>
+    <div v-if="!indexSource">Waiting for index layer...</div>
     <div v-else>Index layer source active</div>
   </div>
 </template>
@@ -340,7 +306,6 @@ const indexStyle = (feature: FeatureLike) => {
 <i18n>
 {
   "en": {
-    "search": "Search",
     "feature": "Feature info:",
     "toasts": {
       "geojson": {
@@ -353,15 +318,10 @@ const indexStyle = (feature: FeatureLike) => {
           "message": "Could not load valid GeoJSON from {filename}",
         },
       },
-      "search": {
-        "nothing_found": "Location or address not found. Please double check your spelling.",
-        "api_error": "The search API encountered an error. Please try again later.",
-      },
       "feature_error": "Failed to load feature information. If the problem persists, please try again later.",
     },
   },
   "fi": {
-    "search": "Hae",
     "feature": "Kohteen tiedot:",
     "toasts": {
       "geojson": {
@@ -373,10 +333,6 @@ const indexStyle = (feature: FeatureLike) => {
           "title": "Virjeellinen GeoJSON",
           "message": "Kelvollista GeoJSON:ia ei voitu ladata tiedostosta {filename}",
         },
-      },
-      "search": {
-        "nothing_found": "Sijaintia tai osoitetta ei löytynyt. Tarkista kirjoitusasu.",
-        "api_error": "Hakurajapinta kohtasi virheen. Yritä myöhemmin uudelleen.",
       },
       "feature_error": "Kohdetietojen lataaminen epäonnistui. Jos ongelma jatkuu, yritä myöhemmin uudelleen.",
     },

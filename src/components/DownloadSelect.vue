@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useDatasets } from '@/composables/datasets'
-import { useControls } from '@/composables/controls'
 import { mdiDownload } from '@mdi/js'
 import DownloadModal from './modals/DownloadModal.vue'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n'
+import { currentDataset } from '@/modules/datasets'
+import { selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
 
-const { selectedFeaturesArray, selectedOlFeatures } = useControls()
-const { currentDataset } = useDatasets()
 const { t } = useI18n()
 
 const licenseChecked = ref(true)

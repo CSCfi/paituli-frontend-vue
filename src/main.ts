@@ -3,12 +3,10 @@ import './assets/main.css'
 import { createApp, nextTick } from 'vue'
 import { defineCustomElements } from '@cscfi/csc-ui/loader'
 import { vControl } from '@cscfi/csc-ui-vue'
-import { useLocale } from './composables/locale';
 
-const { i18n } = useLocale();
-
-import App from './App.vue'
-import router from './routes'
+import App from '@/App.vue'
+import router from '@/routes'
+import { i18n } from '@/modules/locale'
 
 const app = createApp(App)
 app.use(router)

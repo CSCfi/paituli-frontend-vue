@@ -34,6 +34,7 @@ export const URLS = {
   OGC_TILES_PAITULI_BASE: _GS_BASE + '/ogc/tiles/v1',
   OGC_FEATURES_PAITULI_BASE: _GS_BASE + '/ogc/features/v1',
   OGC_COVERAGES_PAITULI_BASE: _GS_BASE + '/ogc/coverages/v1',
+  GEOPACKAGE_BASE: _GS_BASE + '/wfs?service=WFS&version=2.0.0&request=GetFeature&srsname=epsg:4326&typeNames=paituli:index_wgs84&outputFormat=shape-zip&propertyname=label,path,geom&cql_filter=data_id=\'!id!\'',
 
   // STAC
   STAC_PAITULI_BASE: _GS_BASE + '/ogc/stac/v1',

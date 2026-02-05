@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { useDatasets } from '@/composables/datasets';
+import { currentDataset } from '@/modules/datasets';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { currentDataset } = useDatasets()
 const { t } = useI18n()
 
 const props = defineProps<{

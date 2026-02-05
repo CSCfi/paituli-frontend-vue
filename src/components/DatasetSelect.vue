@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch } from 'vue'
-import { useDatasets } from '@/composables/datasets'
+
+import { useI18n } from 'vue-i18n'
+import { CToastType } from '@cscfi/csc-ui'
 
 import { useToasts } from '@/composables/toasts'
-import { CToastType } from '@cscfi/csc-ui'
-import { useI18n } from 'vue-i18n'
+import {
+  clearCurrent,
+  currentDataset,
+  datasets,
+  getById,
+  setCurrent
+} from '@/modules/datasets';
 
-const { datasets, setCurrent, clearCurrent, currentDataset, getById } = useDatasets()
 const { addToast } = useToasts();
 const { t } = useI18n()
 

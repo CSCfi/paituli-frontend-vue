@@ -2,15 +2,13 @@ import { ref } from 'vue'
 import { type CToastMessage } from '@cscfi/csc-ui'
 import { useI18n } from 'vue-i18n'
 
-// Global
 const toastsRef = ref<HTMLCToastsElement | null>(null)
+
+export const initToasts =
+  (element: HTMLCToastsElement | null) => toastsRef.value = element;
 
 export function useToasts() {
   const { t } = useI18n({ useScope: 'global' })
-
-  function initToasts(element: HTMLCToastsElement | null) {
-    toastsRef.value = element
-  }
 
   // Displays a message to the user (near the header ribbon by default)
   async function addToast(message: CToastMessage, customRef: HTMLCToastsElement | null = null) {
@@ -23,5 +21,5 @@ export function useToasts() {
     else customRef.addToast(message)
   }
 
-  return { initToasts, addToast }
+  return { addToast }
 }
