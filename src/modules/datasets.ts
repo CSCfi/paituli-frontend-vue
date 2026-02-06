@@ -1,10 +1,21 @@
-import type { Dataset } from '@/shared/types'
 import { ref } from 'vue'
+
+import type { Dataset } from '@/shared/types'
+import { URLS } from '@/shared/constants'
+import { currentLocale } from '@/modules/locale'
 
 // Global state for fetched datasets and the selected one
 export const datasets = ref<Dataset[]>([])
+
+// Fetches dataset metadata for the current locale from the backend.
+// This metadata is used to fetch actual layer data in other methods.
+export async function fetchMetadata() {
+  const response = await fetch(`${URLS.METADATA_API}/${currentLocale.value}`)
+  if (!response.ok) throw new Error(`HTTP code ${response.status}`)
+  datasets.value = await response.json()
+}
+
 export const currentDataset = ref<Dataset | null>(null)
-export const isFetching = ref(false)
 
 export function getById(id: string) {
   return datasets.value.find((d) => d.data_id === id) ?? null

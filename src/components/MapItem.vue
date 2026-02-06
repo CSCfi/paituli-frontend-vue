@@ -12,8 +12,8 @@ import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
 import OlMap from 'ol/Map.js'
 
-import { currentDataset, datasets, isFetching } from '@/modules/datasets'
-import { APP_SETTINGS, URLS } from '@/shared/constants'
+import { currentDataset, datasets, fetchMetadata } from '@/modules/datasets'
+import { APP_SETTINGS } from '@/shared/constants'
 import { useToasts } from '@/composables/toasts'
 import { currentLocale } from '@/modules/locale'
 import SearchBar from '@/components/SearchBar.vue'
@@ -55,7 +55,7 @@ const mapView = computed(() => olMapRef.value!.map.getView())
 
 // Fetch datasets on mount
 onMounted(async () => {
-  await fetchDatasets()
+  fetchDatasets()
 
   // Add drag-n-drop listeners
   const olMapElement = olMapRef.value!.map.getTargetElement()
@@ -65,7 +65,7 @@ onMounted(async () => {
 
 // Fetch datasets again if locale changes, due to the
 // endpoint returning different descriptions for each locale
-watch(currentLocale, async () => await fetchDatasets())
+watch(currentLocale, async () => fetchDatasets())
 
 // Update index layer whenever the current dataset changes
 watch(currentDataset, async (dataset) => {
@@ -73,21 +73,19 @@ watch(currentDataset, async (dataset) => {
   // Clear our highlights at this point
   highlightSource.clear()
 
+  if (!dataset) return
   try {
-    loadIndexLayer(dataset!.data_id)
+    await loadIndexLayer(dataset.data_id)
   } catch (error) {
     // TODO: Put the same toast here as MapItem mount
     console.error('Failed to load index map features:', error)
   }
 })
 
-// Fetches Dataset metadata from the backend
-async function fetchDatasets(): Promise<void> {
-  isFetching.value = true
+// Fetches dataset metadata from the backend
+async function fetchDatasets() {
   try {
-    const response = await fetch(`${URLS.METADATA_API}/${currentLocale.value}`)
-    if (!response.ok) throw new Error(`HTTP code ${response.status}`)
-    datasets.value = await response.json()
+    await fetchMetadata()
   } catch (error) {
     addToast({
       type: CToastType.Error,
@@ -95,8 +93,6 @@ async function fetchDatasets(): Promise<void> {
       message: 'Refresh the page to retry. If the problem persists, ' +
                `please try again later. (${error})`,
     })
-  } finally {
-    isFetching.value = false
   }
 }
 
@@ -291,8 +287,7 @@ const indexStyle = (feature: FeatureLike) => {
   <!-- debug stuff -->
   <div class="debug">
     <b>Dev info</b>
-    <div v-if="isFetching">Loading datasets...</div>
-    <div v-else-if="datasets.length > 0">
+    <div v-if="datasets.length > 0">
       Fetched {{ datasets.length }} datasets
       <div v-if="currentDataset">{{ currentDataset.data_id }}</div>
     </div>
