@@ -76,9 +76,12 @@ watch(currentDataset, async (dataset) => {
   if (!dataset) return
   try {
     await loadIndexLayer(dataset.data_id)
-  } catch (error) {
-    // TODO: Put the same toast here as MapItem mount
-    console.error('Failed to load index map features:', error)
+  } catch (exc) {
+    addToast({
+      type: CToastType.Error,
+      title: t('toasts.fetching.index_failed'),
+      message: t('toasts.fetching.please_refresh', { error: exc })
+    })
   }
 })
 
@@ -86,12 +89,11 @@ watch(currentDataset, async (dataset) => {
 async function fetchDatasets() {
   try {
     await fetchMetadata()
-  } catch (error) {
+  } catch (exc) {
     addToast({
       type: CToastType.Error,
-      title: 'Failed to load datasets',
-      message: 'Refresh the page to retry. If the problem persists, ' +
-               `please try again later. (${error})`,
+      title: t('toasts.fetching.metadata_failed'),
+      message: t('toasts.fetching.please_refresh', { error: exc }),
     })
   }
 }
@@ -303,6 +305,11 @@ const indexStyle = (feature: FeatureLike) => {
   "en": {
     "feature": "Feature info:",
     "toasts": {
+      "fetching": {
+        "index_failed": "Failed to load index map features",
+        "metadata_failed": "Failed to load datasets",
+        "please_refresh": "Refresh the page to retry. If the problem persists, please try again later. Cause: {error}",
+      },
       "geojson": {
         "loaded": {
           "title": "Loaded provided GeoJSON",
@@ -319,6 +326,11 @@ const indexStyle = (feature: FeatureLike) => {
   "fi": {
     "feature": "Kohteen tiedot:",
     "toasts": {
+      "fetching": {
+        "index_failed": "Indeksikartan noutaminen epäonnistui",
+        "metadata_failed": "Aineistojen noutaminen epäonnistui",
+        "please_refresh": "Päivitä sivu yrittääksesi uudelleen. Jos ongelma jatkuu, yritä myöhemmin uudelleen. Syy: {error}",
+      },
       "geojson": {
         "loaded": {
           "title": "GeoJSON ladattu",
