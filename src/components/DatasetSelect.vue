@@ -94,27 +94,34 @@ watchEffect(() => {
     d.year === selectedYear.value &&
     d.format === selectedFormat.value,
   ) ?? null
-  if (selectedDataset) setCurrent(selectedDataset.data_id)
-  else clearCurrent()
+  if (selectedDataset) {
+    setCurrent(selectedDataset.data_id)
+  }
 })
 
 // When datasets are fetched, check if we should load one
 watch(datasets, () => {
-  if (currentDataset.value) {
-    // Something already selected which we won't override
-    return;
-  }
-  if (!props.loadId) {
-    // No load requested
-    return;
-  }
-  const dataset = getById(props.loadId)
+  // If we have a dataset currently selected, we use its id.
+  // If not, we use the id user requested upon mounting
+  const data_id = currentDataset.value?.data_id ?? props.loadId
+  if (!data_id) return
+
+  const dataset = getById(data_id)
   if (!dataset) {
-    addToast({
-      type: CToastType.Error,
-      title: t('toasts.failed.title'),
-      message: t('toasts.failed.message', { id: props.loadId }),
-    })
+    if (props.loadId) {
+      // Requested id does not match any fetched dataset
+      addToast({
+        type: CToastType.Error,
+        title: t('toasts.failed.title'),
+        message: t('toasts.failed.message', { id: props.loadId }),
+      })
+    }
+    else {
+      // Metadata does not exist for new locale...?
+      console.error(
+        'Dataset not found upon metadata refresh: ' + data_id)
+      clearCurrent()
+    }
     return
   }
   selectedProducer.value = dataset.org
