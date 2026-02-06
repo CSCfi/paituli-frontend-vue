@@ -218,6 +218,7 @@ const indexStyle = (feature: FeatureLike) => {
       projection="EPSG:3857" />
 
     <!--Layers-->
+
     <Layers.OlTileLayer
       :source="osmSource"
       :visible="showLayer.background.value"
@@ -245,6 +246,8 @@ const indexStyle = (feature: FeatureLike) => {
     <Layers.OlVectorLayer
       :source="highlightSource"
     />
+
+    <!-- Controls and interactions -->
 
     <Interactions.OlInteractionSelect
       @select="featureSelected"

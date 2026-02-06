@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { mdiAlert, mdiCrosshairs, mdiCursorMove, mdiSelect } from '@mdi/js';
 
 import OlMap from 'ol/Map.js'
+import DragPan from 'ol/interaction/DragPan'
 import { useI18n } from 'vue-i18n';
 
 import { dataLayerMaxResolution, dataSource } from '@/modules/layers';
@@ -32,6 +33,9 @@ watch(dataSource, () => {
 })
 
 watch(toolbarMode, (mode) => {
+  // When tool mode changes, we only allow drag-pan in 'move'
+  dragPan?.setActive(mode == 'move')
+
   // Change our cursor depending on the mode
   const domElement = props.map.getTargetElement()
   domElement.style.cursor = {
@@ -45,6 +49,11 @@ watch(selectMode, () => {
   // Whenever select tool mode changes we reset clear handler
   clearClickAmount.value = 0
 })
+
+// Seeminly this interaction is not accessible as a vue3-ol component,
+// but we can dig it up from amongst all current interactions
+const dragPan = props.map.getInteractions().getArray()
+  .find(i => i instanceof DragPan) as DragPan | undefined
 
 const clearHandler = () => {
   if (++clearClickAmount.value == 2) {
