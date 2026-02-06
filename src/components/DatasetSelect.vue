@@ -129,15 +129,7 @@ watch(datasets, () => {
   selectedScale.value = dataset.scale
   selectedYear.value = dataset.year
   selectedFormat.value = dataset.format
-
-  addToast({
-    type: CToastType.Info,
-    title: t('toasts.loaded.title'),
-    message: t('toasts.loaded.message', { id: dataset.data_id }),
-    duration: 5000,
-  })
 })
-
 
 </script>
 
@@ -208,10 +200,6 @@ watch(datasets, () => {
         "format": "Format",
       },
       "toasts": {
-        "loaded": {
-          "title": "Dataset loaded",
-          "message": "Loaded dataset {id}",
-        },
         "failed": {
           "title": "Could not load dataset",
           "message": "Unknown dataset by id {id}",
@@ -227,10 +215,6 @@ watch(datasets, () => {
         "format": "Formaatti",
       },
       "toasts": {
-        "loaded": {
-          "title": "Aineisto ladattu",
-          "message": "Aineisto {id} ladattu",
-        },
         "failed": {
           "title": "Aineiston lataaminen epäonnistui",
           "message": "Tuntematon aineisto tunnisteella {id}",
