@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { mdiAlert, mdiCrosshairs, mdiCursorMove, mdiSelect } from '@mdi/js';
+import {
+  mdiAlert,
+  mdiCheckboxMultipleMarkedOutline,
+  mdiCursorDefaultOutline,
+  mdiCursorMove,
+  mdiFileUploadOutline,
+  mdiShapePolygonPlus,
+  mdiTarget,
+  mdiTrashCanOutline
+} from '@mdi/js';
 
 import OlMap from 'ol/Map.js'
 import DragPan from 'ol/interaction/DragPan'
@@ -16,7 +25,6 @@ const props = defineProps<{ map: OlMap }>()
 
 const viewResolution = ref<number>(0)
 const dataHidden = computed(() => viewResolution.value > dataLayerMaxResolution.value)
-const clearClickAmount = ref<number>(0)
 
 onMounted(() => {
   // Grab initial resolution value and subscribe to future changes
@@ -45,9 +53,14 @@ watch(toolbarMode, (mode) => {
   }[mode] ?? ''
 })
 
-watch(selectMode, () => {
-  // Whenever select tool mode changes we reset clear handler
-  clearClickAmount.value = 0
+watch(selectMode, (newMode, oldMode) => {
+  // Whenever select tool mode changes, we check if user selected clear mode.
+  // We use the tab simply as a button, so we'll revert to the previous mode
+  // after clearing the selected features
+  if (newMode == 'clear') {
+    selectedOlFeatures.clear()
+    selectMode.value = oldMode
+  }
 })
 
 // Seeminly this interaction is not accessible as a vue3-ol component,
@@ -55,12 +68,6 @@ watch(selectMode, () => {
 const dragPan = props.map.getInteractions().getArray()
   .find(i => i instanceof DragPan) as DragPan | undefined
 
-const clearHandler = () => {
-  if (++clearClickAmount.value == 2) {
-    // We only clear the selection if user confirms
-    selectedOlFeatures.clear()
-  }
-}
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const openFileDialog = () => {
@@ -80,37 +87,47 @@ const onFileSelected = (event: Event) => {
           borderless
           disable-animation>
     <c-tab-buttons mandatory>
-      <c-button value="move">{{ t("move.label") }} <c-icon :path="mdiCursorMove"/></c-button>
-      <c-button value="select">{{ t("select.label") }} <c-icon :path="mdiSelect"/></c-button>
-      <c-button value="inspect" :disabled="!dataSource">{{ t("inspect.label") }} <c-icon :path="mdiCrosshairs"/></c-button>
+      <c-button value="move">
+        {{ t("move.label") }}<c-icon :path="mdiCursorMove"/>
+      </c-button>
+      <c-button value="select">
+        {{ t("select.label") }}<c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
+      </c-button>
+      <c-button value="inspect" :disabled="!dataSource">
+        {{ t("inspect.label") }}<c-icon :path="mdiTarget"/>
+      </c-button>
     </c-tab-buttons>
     <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
     <c-tab-items slot="items">
       <c-tab-item value="move">
         {{ t("move.help") }}
       </c-tab-item>
-      <c-tab-item value="select">
+      <c-tab-item id="select" value="select">
         <c-tab-buttons v-model="selectMode"
                        v-control
                        mandatory
                        size="small">
-          <c-button value="single">{{ t("select.single.label") }}</c-button>
-          <c-button value="multi">{{ t("select.multi.label") }}</c-button>
-          <c-button value="draw">{{ t("select.draw.label") }}</c-button>
-          <c-button value="json">{{ t("select.json.label") }}</c-button>
-          <c-button @click="clearHandler()" value="clear">{{ t("select.clear.label") }}</c-button>
+          <c-button value="basic">
+            {{ t("select.basic.label") }}<c-icon :path="mdiCursorDefaultOutline"/>
+          </c-button>
+          <c-button value="poly">
+            {{ t("select.poly.label") }}<c-icon :path="mdiShapePolygonPlus"/>
+          </c-button>
+          <c-button value="json">
+            {{ t("select.json.label") }}<c-icon :path="mdiFileUploadOutline"/>
+          </c-button>
+          <c-button value="clear" id="trash">
+            <c-icon :path="mdiTrashCanOutline" />
+          </c-button>
         </c-tab-buttons>
-        <p v-if="selectMode == 'single'">
-          {{ t("select.single.help") }}
-        </p>
-        <p v-if="selectMode == 'multi'">
-          {{ t("select.multi.help") }}
-        </p>
-        <p v-if="selectMode == 'draw'">
-          {{ t("select.draw.help") }}
-        </p>
-        <p v-if="selectMode == 'json'">
-          {{ t("select.json.help") }}
+        <div v-if="selectMode == 'basic'">
+          <p>{{ t("select.basic.help") }}</p>
+        </div>
+        <div v-if="selectMode == 'poly'">
+          <p>{{ t("select.poly.help") }}</p>
+        </div>
+        <div v-if="selectMode == 'json'">
+          <p>{{ t("select.json.help") }}</p>
           <input
             ref="fileInput"
             type="file"
@@ -118,11 +135,10 @@ const onFileSelected = (event: Event) => {
             style="display: none"
             @change="onFileSelected"
           />
-          <c-button @click="openFileDialog">{{ t("select.json.open") }}</c-button>
-        </p>
-        <p v-if="selectMode == 'clear'">
-          {{ t("select.clear.help") }}
-        </p>
+          <c-button @click="openFileDialog">
+            {{ t("select.json.open") }}
+          </c-button>
+        </div>
       </c-tab-item>
       <c-tab-item value="inspect">
         <div v-if="dataHidden">
@@ -146,20 +162,16 @@ const onFileSelected = (event: Event) => {
     },
     "select": {
       "label": "Select",
-      "single": {
-        "label": "Single",
-        "help": "Select single map sheets by clicking. Clicking selected sheets de-selects them.",
+      "basic": {
+        "label": "Basic",
+        "help": "Select single map sheets by clicking or drag a rectangular selection to select multiple map sheets. Clicking selected sheets de-selects them.",
       },
-      "multi": {
-        "label": "Multi",
-        "help": "Click and drag a rectangular selection to select multiple map sheets.",
-      },
-      "draw": {
-        "label": "Draw",
-        "help": "Click to start drawing a polygon to select multiple map sheets.",
+      "poly": {
+        "label": "Polygon",
+        "help": "Click to start drawing a shape to select multiple map sheets.",
       },
       "json": {
-        "label": "JSON",
+        "label": "GeoJSON",
         "help": "Load GeoJSON to select intersecting map sheets. Use the button below or drag and drop json files onto the map view.",
         "open": "Open file dialog",
       },
@@ -181,21 +193,17 @@ const onFileSelected = (event: Event) => {
     },
     "select": {
       "label": "Valitse",
-      "single": {
-        "label": "Yksi",
-        "help": "Valitse yksittäisiä karttalehtiä napsauttamalla. Valittuja lehtiä napsauttamalla poistat ne valinnasta.",
+      "basic": {
+        "label": "Tavallinen",
+        "help": "Valitse yksittäisiä karttalehtiä napsauttamalla tai raahaa suorakulmainen valinta valitaksesi useita karttalehtiä. Valittuja lehtiä napsauttamalla poistat ne valinnasta.",
       },
-      "multi": {
-        "label": "Monta",
-        "help": "Napsauta ja vedä suorakulmainen valinta valitaksesi useita karttalehtiä.",
-      },
-      "draw": {
-        "label": "Piirrä",
+      "poly": {
+        "label": "Polygoni",
         "help": "Napsauta aloittaaksesi monikulmion piirtämisen useiden karttalehtien valitsemiseksi.",
       },
       "json": {
-        "label": "JSON",
-        "help": "Lataa GeoJSON tiedosto valitaksesi leikkaavat karttalehdet. Käytä alla olevaa painiketta tai pudota JSON-tiedostoja karttanäkymään.",
+        "label": "GeoJSON",
+        "help": "Lataa GeoJSON-tiedosto valitaksesi leikkaavat karttalehdet. Käytä alla olevaa painiketta tai pudota JSON-tiedostoja karttanäkymään.",
         "open": "Avaa tiedostonvalinta",
       },
       "clear": {
@@ -215,15 +223,27 @@ const onFileSelected = (event: Event) => {
 <style scoped>
 c-tabs {
   --c-tab-buttons-background-color-active: var(--c-primary-400);
-  min-width: 333px;
+  min-width: 430px;
 }
+
 c-tab-item {
   color: white;
 
   input + c-button {
-    margin-top: 10px;
     --c-button-background-color: var(--c-info-500);
   }
 }
+
+c-button {
+  --_c-button-font-size: 17px;
+}
+
+c-button#trash {
+  color: var(--c-error-500);
+  max-width: 30px;
+  min-width: 0;
+  --_c-button-min-width: 0;
+}
+
 
 </style>

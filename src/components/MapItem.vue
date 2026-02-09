@@ -255,11 +255,11 @@ const indexStyle = (feature: FeatureLike) => {
       :toggle-condition="always"
     />
     <Interactions.OlInteractionDragbox
-      v-if="toolbarMode == 'select' && selectMode == 'multi'"
+      v-if="toolbarMode == 'select' && selectMode == 'basic'"
       @boxend="dragboxEnd"
     />
     <Interactions.OlInteractionDraw
-      v-if="toolbarMode == 'select' && selectMode == 'draw'"
+      v-if="toolbarMode == 'select' && selectMode == 'poly'"
       type="Polygon"
       @drawend="polyDrawEnd"
       :stop-click="true"

@@ -11,9 +11,9 @@ export const showLayer = {
 
 // Tool modes
 type ControlMode = 'move' | 'select' | 'inspect'
-type SelectMode = 'single' | 'multi' | 'draw' | 'json' | 'clear'
+type SelectMode = 'basic' | 'poly' | 'json' | 'clear'
 export const toolbarMode = ref<ControlMode>('move')
-export const selectMode = ref<SelectMode>('single')
+export const selectMode = ref<SelectMode>('basic')
 
 // Callback for user selecting files to upload
 export const fileSelectedCallback = ref<(file: File) => void>()
