@@ -19,6 +19,7 @@ import { useI18n } from 'vue-i18n';
 import { dataLayerMaxResolution, dataSource } from '@/modules/layers';
 import { selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, selectMode, toolbarMode } from '@/modules/controls';
+import { vTooltip } from '@/directives/tooltip';
 
 const { t } = useI18n()
 
@@ -88,13 +89,13 @@ const onFileSelected = (event: Event) => {
           borderless
           disable-animation>
     <c-tab-buttons mandatory>
-      <c-button value="move">
+      <c-button value="move" v-tooltip="t('move.tooltip')">
         {{ t("move.label") }}<c-icon :path="mdiCursorMove"/>
       </c-button>
-      <c-button value="select">
+      <c-button value="select" v-tooltip="t('select.tooltip')">
         {{ t("select.label") }}<c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
       </c-button>
-      <c-button value="inspect" :disabled="!dataSource">
+      <c-button value="inspect" :disabled="!dataSource" v-tooltip="t('inspect.tooltip')">
         {{ t("inspect.label") }}<c-icon :path="mdiTarget"/>
       </c-button>
     </c-tab-buttons>
@@ -108,16 +109,16 @@ const onFileSelected = (event: Event) => {
                        v-control
                        mandatory
                        size="small">
-          <c-button value="basic">
+          <c-button value="basic" v-tooltip="t('select.basic.tooltip')">
             {{ t("select.basic.label") }}<c-icon :path="mdiCursorDefaultOutline"/>
           </c-button>
-          <c-button value="poly">
+          <c-button value="poly" v-tooltip="t('select.poly.tooltip')">
             {{ t("select.poly.label") }}<c-icon :path="mdiShapePolygonPlus"/>
           </c-button>
-          <c-button value="json">
+          <c-button value="json" v-tooltip="t('select.json.tooltip')">
             {{ t("select.json.label") }}<c-icon :path="mdiFileUploadOutline"/>
           </c-button>
-          <c-button value="clear" id="trash">
+          <c-button value="clear" id="trash" v-tooltip="t('select.clear.tooltip')">
             <c-icon :path="mdiTrashCanOutline" />
           </c-button>
         </c-tab-buttons>
@@ -163,30 +164,37 @@ const onFileSelected = (event: Event) => {
   "en": {
     "move": {
       "label": "Move",
+      "tooltip": "Pan the map view",
       "help": "Click and drag to move the map view. Hold Shift while doing so to zoom into a region. You can zoom in and out by scrolling and using the zoom buttons.",
     },
     "select": {
       "label": "Select",
+      "tooltip": "Select mapsheets for download",
       "basic": {
         "label": "Basic",
+        "tooltip": "Select mapsheets using a simple selection",
         "help": "Select single map sheets by clicking or drag a rectangular selection to select multiple map sheets. Clicking selected sheets de-selects them.",
       },
       "poly": {
         "label": "Polygon",
+        "tooltip": "Select mapsheets using a polygon selection",
         "help": "Click to start drawing a shape to select multiple map sheets.",
       },
       "json": {
         "label": "GeoJSON",
+        "tooltip": "Select mapsheets using a file",
         "help": "Load {0} to select intersecting map sheets. Use the button below or drag and drop JSON files onto the map view.",
         "open": "Open file dialog",
       },
       "clear": {
         "label": "Clear",
+        "tooltip": "Clear all mapsheets from selection",
         "help": "Remove all map sheets from selection. Click the button again to confirm.",
       },
     },
     "inspect": {
       "label": "Inspect",
+      "tooltip": "Inspect feature information",
       "help": "Click highlighted map features to display feature information.",
       "zoom": "To use the inspect tool, zoom in until you see the data layer preview.",
     },
@@ -194,30 +202,37 @@ const onFileSelected = (event: Event) => {
   "fi": {
     "move": {
       "label": "Liiku",
+      "tooltip": "Liikuta karttanäkymää",
       "help": "Napsauta ja vedä karttanäkymää liikuttaaksesi sitä. Pidä Shift painettuna, zoomataksesi alueelle. Voit zoomata sisään ja ulos vierittämällä tai käyttämällä zoomauspainikkeita.",
     },
     "select": {
       "label": "Valitse",
+      "tooltip": "Valitase karttalehtiä lataukseen",
       "basic": {
         "label": "Tavallinen",
+        "tooltip": "Valita karttalehtiä yksinkertaisella valinnalla",
         "help": "Valitse yksittäisiä karttalehtiä napsauttamalla tai raahaa suorakulmainen valinta valitaksesi useita karttalehtiä. Valittuja lehtiä napsauttamalla poistat ne valinnasta.",
       },
       "poly": {
         "label": "Polygoni",
+        "tooltip": "Valitse karttalehtiä monikulmiovalinnalla",
         "help": "Napsauta aloittaaksesi monikulmion piirtämisen useiden karttalehtien valitsemiseksi.",
       },
       "json": {
         "label": "GeoJSON",
+        "tooltip": "Valitse karttalehtiä tiedoston avulla",
         "help": "Lataa {0} -tiedosto valitaksesi leikkaavat karttalehdet. Käytä alla olevaa painiketta tai pudota JSON-tiedostoja karttanäkymään.",
         "open": "Avaa tiedostonvalinta",
       },
       "clear": {
         "label": "Poista",
+        "tooltip": "Poista kaikki karttalehdet valinnasta",
         "help": "Poista kaikki karttalehdet valinnasta. Vahvista painamalla uudelleen.",
       },
     },
     "inspect": {
       "label": "Tarkastele",
+      "tooltip": "Tarkastele aineiston kohdetietoja",
       "help": "Napsauta korostettuja karttakohteita näyttääksesi kohteen tiedot.",
       "zoom": "Käyttääksesi tarkastelutyökalua, zoomaa kunnes näet datan esikatselun.",
     },

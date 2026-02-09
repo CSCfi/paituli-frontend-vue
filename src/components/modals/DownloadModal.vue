@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { mdiHelpCircle } from '@mdi/js';
 import { CToastType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
 
-import ToolTip from '@/components/ToolTip.vue';
 import type { JobResponse } from '@/shared/types';
 import { APP_SETTINGS, URLS } from '@/shared/constants'
 import { sleep } from '@/shared/util'
@@ -247,9 +245,6 @@ defineExpose({ open })
         <!-- Download type (zip / file list) option -->
         <c-switch v-model="downloadAsList" :disabled="zipDownloadDisabled" v-control>
           {{ t("as_list") }}
-          <ToolTip :text="t('list_tooltip')">
-            <c-icon :path="mdiHelpCircle" color="var(--c-primary-500)" size="18" />
-          </ToolTip>
         </c-switch>
 
         <!-- Render the required license checkbox, if we have a license -->

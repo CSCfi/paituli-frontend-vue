@@ -15,3 +15,17 @@ a {
     background-color: var(--c-info-200);
   }
 }
+
+.v-tooltip {
+  position: absolute;
+  background: var(--c-info-900);
+  color: var(--c-primary-100);
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 9999;
+}

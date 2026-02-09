@@ -7,12 +7,14 @@ import { vControl } from '@cscfi/csc-ui-vue'
 import App from '@/App.vue'
 import router from '@/routes'
 import { i18n } from '@/modules/locale'
+import { vTooltip } from '@/directives/tooltip'
 
 const app = createApp(App)
 app.use(router)
 app.use(i18n)
 
 app.directive('control', vControl);
+app.directive('tooltip', vTooltip);
 
 (async () => {
 
