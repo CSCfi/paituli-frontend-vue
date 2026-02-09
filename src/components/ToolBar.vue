@@ -6,6 +6,7 @@ import {
   mdiCursorDefaultOutline,
   mdiCursorMove,
   mdiFileUploadOutline,
+  mdiOpenInNew,
   mdiShapePolygonPlus,
   mdiTarget,
   mdiTrashCanOutline
@@ -127,7 +128,11 @@ const onFileSelected = (event: Event) => {
           <p>{{ t("select.poly.help") }}</p>
         </div>
         <div v-if="selectMode == 'json'">
-          <p>{{ t("select.json.help") }}</p>
+          <i18n-t keypath="select.json.help" tag="p">
+            <c-link href="https://geojson.org/" target="_blank">
+              GeoJSON<c-icon :path="mdiOpenInNew" size="18" />
+            </c-link>
+          </i18n-t>
           <input
             ref="fileInput"
             type="file"
@@ -172,7 +177,7 @@ const onFileSelected = (event: Event) => {
       },
       "json": {
         "label": "GeoJSON",
-        "help": "Load GeoJSON to select intersecting map sheets. Use the button below or drag and drop json files onto the map view.",
+        "help": "Load {0} to select intersecting map sheets. Use the button below or drag and drop JSON files onto the map view.",
         "open": "Open file dialog",
       },
       "clear": {
@@ -203,7 +208,7 @@ const onFileSelected = (event: Event) => {
       },
       "json": {
         "label": "GeoJSON",
-        "help": "Lataa GeoJSON-tiedosto valitaksesi leikkaavat karttalehdet. Käytä alla olevaa painiketta tai pudota JSON-tiedostoja karttanäkymään.",
+        "help": "Lataa {0} -tiedosto valitaksesi leikkaavat karttalehdet. Käytä alla olevaa painiketta tai pudota JSON-tiedostoja karttanäkymään.",
         "open": "Avaa tiedostonvalinta",
       },
       "clear": {
@@ -243,6 +248,10 @@ c-button#trash {
   max-width: 30px;
   min-width: 0;
   --_c-button-min-width: 0;
+}
+
+c-link {
+  --c-link-color: var(--c-accent-300);
 }
 
 
