@@ -1,27 +1,35 @@
 import type { DirectiveBinding } from 'vue'
 
-type TooltipState = {
+const tooltipState = new WeakMap<HTMLElement, {
   tooltip: HTMLDivElement
+  timer: number | null
   show: () => void
   hide: () => void
-  timer: number | null
-}
-
-const tooltipState = new WeakMap<HTMLElement, TooltipState>()
+}>()
 
 const SHOW_DELAY = 500 // ms
 const TOP_OFFSET = 8   // px
 
+// This directive shows tooltips, but also hacks past c-buttons' shadow root to
+// change the cursor depending on the button's state. If you are reading this
+// and know how to do that with CSS, please do that instead - seems impossible?
+
 export const vTooltip = {
   mounted(el: HTMLElement, binding: DirectiveBinding<string>) {
+    const parent = document.querySelector('header') || document.body
     const tooltip = document.createElement('div')
     tooltip.textContent = binding.value
     tooltip.className = 'v-tooltip'
-    document.body.appendChild(tooltip)
+    parent.appendChild(tooltip)
 
     let timer: number | null = null
-
+    // Change cursor based on whether the parent c-button is disabled,
+    // and show tooltip after the delay
     const show = () => {
+      const target = (el.shadowRoot?.querySelector('button') as HTMLElement) ?? el
+      const isDisabled = el.classList.contains('c-button--disabled')
+      target.style.cursor = isDisabled ? 'not-allowed' : ''
+
       timer = window.setTimeout(() => {
         const rect = el.getBoundingClientRect()
         tooltip.style.opacity = '1'
@@ -30,7 +38,7 @@ export const vTooltip = {
           `${rect.top + window.scrollY - tooltip.offsetHeight - TOP_OFFSET}px`
       }, SHOW_DELAY)
     }
-
+    // Hide tooltip and reset timer
     const hide = () => {
       if (timer !== null) {
         clearTimeout(timer)

@@ -89,13 +89,21 @@ const onFileSelected = (event: Event) => {
           borderless
           disable-animation>
     <c-tab-buttons mandatory>
-      <c-button value="move" v-tooltip="t('move.tooltip')">
+      <c-button
+        value="move"
+        v-tooltip="t('move.tooltip')">
         {{ t("move.label") }}<c-icon :path="mdiCursorMove"/>
       </c-button>
-      <c-button value="select" :disabled="autoSelectSheets" v-tooltip="t('select.tooltip')">
+      <c-button
+        value="select"
+        :disabled="autoSelectSheets"
+        v-tooltip="!autoSelectSheets ? t('select.tooltip') : t('select.disabled')">
         {{ t("select.label") }}<c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
       </c-button>
-      <c-button value="inspect" :disabled="!dataSource" v-tooltip="t('inspect.tooltip')">
+      <c-button
+        value="inspect"
+        :disabled="!dataSource"
+        v-tooltip="dataSource ? t('inspect.tooltip') : t('inspect.disabled')">
         {{ t("inspect.label") }}<c-icon :path="mdiTarget"/>
       </c-button>
     </c-tab-buttons>
@@ -170,6 +178,7 @@ const onFileSelected = (event: Event) => {
     "select": {
       "label": "Select",
       "tooltip": "Select mapsheets for download",
+      "disabled": "Selection tools are available for datasets with more than one map sheet",
       "basic": {
         "label": "Basic",
         "tooltip": "Select mapsheets using a simple selection",
@@ -195,6 +204,7 @@ const onFileSelected = (event: Event) => {
     "inspect": {
       "label": "Inspect",
       "tooltip": "Inspect feature information",
+      "disabled": "Selected dataset does not have inspectable feature information",
       "help": "Click highlighted map features to display feature information.",
       "zoom": "To use the inspect tool, zoom in until you see the data layer preview.",
     },
@@ -208,6 +218,7 @@ const onFileSelected = (event: Event) => {
     "select": {
       "label": "Valitse",
       "tooltip": "Valitase karttalehtiä lataukseen",
+      "disabled": "Valintatyökalut ovat käytössä aineistoille, joilla on useampi kuin yksi karttalehti",
       "basic": {
         "label": "Tavallinen",
         "tooltip": "Valita karttalehtiä yksinkertaisella valinnalla",
@@ -233,6 +244,7 @@ const onFileSelected = (event: Event) => {
     "inspect": {
       "label": "Tarkastele",
       "tooltip": "Tarkastele aineiston kohdetietoja",
+      "disabled": "Valitulla aineistolla ei ole tarkasteltavia kohdetietoja",
       "help": "Napsauta korostettuja karttakohteita näyttääksesi kohteen tiedot.",
       "zoom": "Käyttääksesi tarkastelutyökalua, zoomaa kunnes näet datan esikatselun.",
     },
@@ -267,6 +279,12 @@ c-button#trash {
 
 c-link {
   --c-link-color: var(--c-accent-300);
+}
+
+.c-button--disabled {
+  /* a hack for disabled button tooltips */
+  pointer-events: auto;
+  transition: background-color 9999999s;
 }
 
 
