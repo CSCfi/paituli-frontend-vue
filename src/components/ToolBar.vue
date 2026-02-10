@@ -17,7 +17,7 @@ import DragPan from 'ol/interaction/DragPan'
 import { useI18n } from 'vue-i18n';
 
 import { dataLayerMaxResolution, dataSource } from '@/modules/layers';
-import { selectedOlFeatures, } from '@/modules/selection';
+import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
 
@@ -92,7 +92,7 @@ const onFileSelected = (event: Event) => {
       <c-button value="move" v-tooltip="t('move.tooltip')">
         {{ t("move.label") }}<c-icon :path="mdiCursorMove"/>
       </c-button>
-      <c-button value="select" v-tooltip="t('select.tooltip')">
+      <c-button value="select" :disabled="autoSelectSheets" v-tooltip="t('select.tooltip')">
         {{ t("select.label") }}<c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
       </c-button>
       <c-button value="inspect" :disabled="!dataSource" v-tooltip="t('inspect.tooltip')">
