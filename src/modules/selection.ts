@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { Collection, Feature } from 'ol'
 import type { DragBoxEvent } from 'ol/interaction/DragBox'
@@ -9,6 +9,7 @@ import type { Extent } from 'ol/extent'
 import type { DrawEvent } from 'ol/interaction/Draw'
 
 import { drawBoundingBox, indexSource } from '@/modules/layers'
+import { currentDataset } from './datasets'
 
 
 // Selected features managed by OL map element
@@ -29,8 +30,19 @@ selectedOlFeatures.on('remove', (event) => {
   )
 })
 
+// Sheets should be automatically selected if there is only one of them
+export const autoSelectSheets =
+  computed(() => currentDataset.value?.map_sheets == 1)
+
+// Simply selects all mapsheets in the current index source, if any
+export function selectAll() {
+  indexSource.value?.forEachFeature(
+    (feature) => selectedOlFeatures.push(feature)
+  )
+}
+
 // Update style for (de)selected features
-export const featureSelected = (event: SelectEvent) => {
+export function featureSelected(event: SelectEvent) {
   event.selected.forEach((feature) => {
     feature.setStyle(selectionStyle(feature))
   })
@@ -41,7 +53,7 @@ export const featureSelected = (event: SelectEvent) => {
 }
 
 // Rectangular selections
-export const dragboxEnd = (event: DragBoxEvent) => {
+export function dragboxEnd(event: DragBoxEvent) {
   const extent = event.target.getGeometry().getExtent()
 
   indexSource.value?.forEachFeatureIntersectingExtent(extent, (feature) => {
@@ -53,7 +65,7 @@ export const dragboxEnd = (event: DragBoxEvent) => {
 }
 
 // Polygon selections
-export const polyDrawEnd = (event: DrawEvent) => {
+export function polyDrawEnd(event: DrawEvent) {
   const geometry = event.feature.getGeometry()
   if (!geometry) return
   indexSource.value?.forEachFeature((feature) => {
@@ -65,8 +77,9 @@ export const polyDrawEnd = (event: DrawEvent) => {
   })
 }
 
-// Selects index mapsheets by the provided extent
-export const selectSheetsByExtent = (extent: Extent): boolean => {
+// Selects index mapsheets by the provided extent,
+// and returns whether any sheets were selected
+export function selectSheetsByExtent(extent: Extent): boolean {
   if (!indexSource.value) return false
 
   const matches = indexSource.value.getFeatures().filter((f) => {
@@ -78,7 +91,7 @@ export const selectSheetsByExtent = (extent: Extent): boolean => {
 }
 
 // Style for selected mapsheets
-const selectionStyle = function (feature: FeatureLike) {
+const selectionStyle = (feature: FeatureLike) => {
   return new Style({
     stroke: new Stroke({ color: 'rgba(255, 0, 255, 1.0)', width: 2 }),
     fill: new Fill({ color: 'rgba(0, 0, 255, 0.4)' }),

@@ -37,6 +37,8 @@ import {
   selectSheetsByExtent,
   dragboxEnd,
   polyDrawEnd,
+  autoSelectSheets,
+  selectAll,
 } from '@/modules/selection'
 
 import {
@@ -67,7 +69,8 @@ onMounted(async () => {
 // endpoint returning different descriptions for each locale
 watch(currentLocale, async () => fetchDatasets())
 
-// Update index layer whenever the current dataset changes
+// Update index layer whenever the current dataset changes,
+// and automatically select mapsheets if we have only one
 watch(currentDataset, async (dataset) => {
 
   // Clear our highlights at this point
@@ -76,6 +79,7 @@ watch(currentDataset, async (dataset) => {
   if (!dataset) return
   try {
     await loadIndexLayer(dataset.data_id)
+    if (autoSelectSheets.value) selectAll()
   } catch (exc) {
     addToast({
       type: CToastType.Error,
