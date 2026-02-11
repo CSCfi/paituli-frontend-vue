@@ -195,15 +195,22 @@ fileSelectedCallback.value = loadGeoJSONFile
 const indexStyle = (feature: FeatureLike) => {
   // Note: If we define this outside of the component file,
   // the style prop is undefined during patch (??)
-  return new Style({
-    stroke: new Stroke({ color: 'rgba(0, 0, 255, 1.0)', width: 2 }),
-    fill: new Fill({ color: 'rgba(0, 0, 255, 0)' }),
-    text: new Text({
-      text: feature.get('label'),
-      stroke: new Stroke({ width: 0.6 }),
-    }),
-  })
+  return toolbarMode.value == 'select'
+    ? new Style({
+      stroke: new Stroke({ color: 'rgb(0, 0, 255', width: 2 }),
+      fill: new Fill({ color: 'transparent' }),
+      text: new Text({
+        text: feature.get('label'),
+        stroke: new Stroke({ width: 0.6 }),
+      }),
+    })
+    : new Style({
+      stroke: new Stroke({ color: 'rgb(0, 0, 255)', width: 1.5 }),
+    })
 }
+
+// Signal OL to redraw index layer (styles) when we change tool modes
+watch(toolbarMode, () => indexSource.value?.changed())
 
 </script>
 

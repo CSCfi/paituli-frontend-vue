@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { Collection, Feature } from 'ol'
 import type { DragBoxEvent } from 'ol/interaction/DragBox'
@@ -10,6 +10,7 @@ import type { DrawEvent } from 'ol/interaction/Draw'
 
 import { drawBoundingBox, indexSource } from '@/modules/layers'
 import { currentDataset } from './datasets'
+import { toolbarMode } from './controls'
 
 
 // Selected features managed by OL map element
@@ -90,12 +91,26 @@ export function selectSheetsByExtent(extent: Extent): boolean {
   return matches.length > 0
 }
 
-// Style for selected mapsheets
+// Style for selected mapsheets,
+// which is different between select mode and other modes
 const selectionStyle = (feature: FeatureLike) => {
-  return new Style({
-    stroke: new Stroke({ color: 'rgba(255, 0, 255, 1.0)', width: 2 }),
-    fill: new Fill({ color: 'rgba(0, 0, 255, 0.4)' }),
-    text: new Text({ text: feature.get('label'), stroke: new Stroke({ width: 0.6 }) }),
-    zIndex: 50,
-  })
+  return toolbarMode.value == 'select'
+    // Select mode
+    ? new Style({
+      stroke: new Stroke({ color: 'rgba(255, 0, 255, 1.0)', width: 2.5 }),
+      fill: new Fill({ color: 'rgba(200, 0, 255, 0.15)' }),
+      text: new Text({
+        text: feature.get('label'),
+        stroke: new Stroke({ width: 0.6 }) }),
+      zIndex: 50,
+    })
+    // Other modes
+    : new Style({
+      stroke: new Stroke({ color: 'rgba(255, 0, 255, 1.0)', width: 2.5 }),
+      zIndex: 50,
+    })
 }
+
+// Refresh style for selected mapsheets whenever tool modes change
+watch(toolbarMode, () =>
+  selectedOlFeatures.forEach(f => f.setStyle(selectionStyle(f))))
