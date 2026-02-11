@@ -4,6 +4,7 @@ import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
 
+import type SelectInteraction from 'ol/interaction/Select'
 import type { FeatureLike } from 'ol/Feature'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import { always } from 'ol/events/condition'
@@ -212,6 +213,14 @@ const indexStyle = (feature: FeatureLike) => {
 // Signal OL to redraw index layer (styles) when we change tool modes
 watch(toolbarMode, () => indexSource.value?.changed())
 
+// Disable selection interaction when we are out of select mode,
+// so user does not accidentally select mapsheets
+const selectInteraction = ref<{ select: SelectInteraction }>()
+watch(toolbarMode, (mode) => {
+  selectInteraction.value!.select.setActive(mode == 'select')
+})
+
+
 </script>
 
 <template>
@@ -261,6 +270,7 @@ watch(toolbarMode, () => indexSource.value?.changed())
     <!-- Controls and interactions -->
 
     <Interactions.OlInteractionSelect
+      ref="selectInteraction"
       @select="featureSelected"
       :features="selectedOlFeatures"
       :toggle-condition="always"
