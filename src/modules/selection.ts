@@ -36,10 +36,12 @@ export const autoSelectSheets =
   computed(() => currentDataset.value?.map_sheets == 1)
 
 // Simply selects all mapsheets in the current index source, if any
+// and ensures their style gets updated
 export function selectAll() {
-  indexSource.value?.forEachFeature(
-    (feature) => selectedOlFeatures.push(feature)
-  )
+  indexSource.value?.forEachFeature((feature) => {
+    selectedOlFeatures.push(feature)
+    feature.setStyle(selectionStyle(feature))
+  })
 }
 
 // Update style for (de)selected features
@@ -94,21 +96,28 @@ export function selectSheetsByExtent(extent: Extent): boolean {
 // Style for selected mapsheets,
 // which is different between select mode and other modes
 const selectionStyle = (feature: FeatureLike) => {
-  return toolbarMode.value == 'select'
-    // Select mode
-    ? new Style({
-      stroke: new Stroke({ color: 'rgba(255, 0, 255, 1.0)', width: 2.5 }),
+  switch (toolbarMode.value) {
+  case 'select':
+    return new Style({
+      stroke: new Stroke({ color: 'rgba(222, 0, 255, 1.0)', width: 2.5 }),
       fill: new Fill({ color: 'rgba(200, 0, 255, 0.15)' }),
       text: new Text({
         text: feature.get('label'),
         stroke: new Stroke({ width: 0.6 }) }),
       zIndex: 50,
     })
-    // Other modes
-    : new Style({
-      stroke: new Stroke({ color: 'rgba(255, 0, 255, 1.0)', width: 2.5 }),
+  case 'move':
+    return new Style({
+      stroke: new Stroke({ color: 'rgba(222, 0, 255, 1.0)', width: 2.5 }),
+      fill: new Fill({ color: 'rgba(200, 0, 255, 0.08)' }),
       zIndex: 50,
     })
+  default:
+    return new Style({
+      stroke: new Stroke({ color: 'rgba(222, 0, 255, 1.0)', width: 2.5 }),
+      zIndex: 50,
+    })
+  }
 }
 
 // Refresh style for selected mapsheets whenever tool modes change
