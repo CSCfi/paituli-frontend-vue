@@ -20,6 +20,7 @@ import { dataLayerMaxResolution, dataSource } from '@/modules/layers';
 import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
+import { currentLocale } from '@/modules/locale';
 
 const { t } = useI18n()
 
@@ -138,8 +139,13 @@ const onFileSelected = (event: Event) => {
         </div>
         <div v-if="selectMode == 'json'">
           <i18n-t keypath="select.json.help" tag="p">
-            <c-link href="https://geojson.org/" target="_blank">
+            <c-link
+              :href="`https://${currentLocale}.wikipedia.org/wiki/GeoJSON`"
+              target="_blank">
               GeoJSON<c-icon :path="mdiOpenInNew" size="18" />
+            </c-link>
+            <c-link href="https://geojson.io/" target="_blank">
+              geojson.io<c-icon :path="mdiOpenInNew" size="18" />
             </c-link>
           </i18n-t>
           <input
@@ -192,7 +198,7 @@ const onFileSelected = (event: Event) => {
       "json": {
         "label": "GeoJSON",
         "tooltip": "Select mapsheets using a file",
-        "help": "Load {0} to select intersecting map sheets. Use the button below or drag and drop JSON files onto the map view.",
+        "help": "Load {0} to select intersecting map sheets. Use the button below or drag and drop JSON files onto the map view. {1} hosts an interactive editor for creating and adjusting GeoJSON data.",
         "open": "Open file dialog",
       },
       "clear": {
@@ -232,7 +238,7 @@ const onFileSelected = (event: Event) => {
       "json": {
         "label": "GeoJSON",
         "tooltip": "Valitse karttalehtiä tiedoston avulla",
-        "help": "Lataa {0} -tiedosto valitaksesi leikkaavat karttalehdet. Käytä alla olevaa painiketta tai pudota JSON-tiedostoja karttanäkymään.",
+        "help": "Lataa {0} -tiedosto valitaksesi leikkaavat karttalehdet. Käytä alla olevaa painiketta tai pudota JSON-tiedostoja karttanäkymään. {1} tarjoaa interaktiivisen käyttöliittymän GeoJSON datan luomiseen ja muokkaamiseen.",
         "open": "Avaa tiedostonvalinta",
       },
       "clear": {
@@ -278,7 +284,7 @@ c-button#trash {
 }
 
 c-link {
-  --c-link-color: var(--c-accent-300);
+  --c-link-color: var(--c-accent-400);
 }
 
 .c-button--disabled {
