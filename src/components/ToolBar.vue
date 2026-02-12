@@ -272,7 +272,7 @@ c-button {
 
 c-button#trash {
   color: var(--c-error-500);
-  max-width: 30px;
+  max-width: 40px;
   min-width: 0;
   --_c-button-min-width: 0;
 }
