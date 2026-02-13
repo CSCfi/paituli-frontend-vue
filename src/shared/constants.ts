@@ -50,8 +50,8 @@ export const URLS = {
 } as const
 
 export const APP_SETTINGS = {
-  MAP_DEFAULT_ZOOM: 5.5,
-  MAP_DEFAULT_CENTER: [2900000, 9800000] as [number, number],
+  MAP_DEFAULT_ZOOM: 5.45,
+  MAP_DEFAULT_CENTER: [2900000, 9950000] as [number, number],
   APP_NAME: 'Paituli',
   MAX_ZIP_SIZE: 3000 // MB
 } as const
