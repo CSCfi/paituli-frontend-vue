@@ -5,6 +5,8 @@ import OlMap from 'ol/Map.js'
 import { transform, transformExtent } from 'ol/proj'
 import { useI18n } from 'vue-i18n';
 
+import { mdiMagnify } from '@mdi/js'
+
 import type { NominatimResponse } from '@/shared/types';
 import { URLS } from '@/shared/constants';
 import { useToasts } from '@/composables/toasts';
@@ -32,7 +34,7 @@ async function fetchLocationData(query: string): Promise<NominatimResponse[]> {
 // Searches either a location to zoom to, or
 // a location which to use for mapsheet selection
 async function search() {
-  if (searchStr.value.trim().length === 0) return
+  if (searchStr.value.length === 0) return
 
   // Fetch location info
   let result: NominatimResponse
@@ -99,8 +101,19 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
 </script>
 
 <template>
-  <input v-model="searchStr" @keypress.enter="search" placeholder="Helsinki" />
-  <button @click="search">{{ t("search") }}</button>
+  <c-text-field v-model="searchStr"
+                @keypress.enter="search"
+                placeholder="Helsinki"
+                trim-whitespace
+                shadow>
+    <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+    <c-icon slot="pre" :path="mdiMagnify" size="16" />
+    <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+    <c-button slot="post"
+              size="small"
+              @click="search()"
+              ghost>{{ t("search") }}</c-button>
+  </c-text-field>
 </template>
 
 <i18n>
