@@ -231,8 +231,10 @@ watch(toolbarMode, (mode) => {
              ref="olMapRef"
              @click="handleClickedFeature" >
 
-    <div class="location-search">
-      <SearchBar v-if="olMapRef" :map="(olMapRef.map as OlMap)" />
+    <!-- Mount tools only after OL has provided us the map ref! -->
+    <div class="tools" v-if="olMapRef">
+      <SearchBar id="search" :map="(olMapRef.map as OlMap)" />
+      <ToolBar id="toolbar" :map="(olMapRef.map as OlMap)" />
     </div>
 
     <Map.OlView
@@ -292,10 +294,6 @@ watch(toolbarMode, (mode) => {
       <Layers.OlTileLayer :source="osmSource" />
     </MapControls.OlOverviewmapControl>
 
-    <div class="controls-ribbon">
-      <!-- Mount only after OL has provided us the map ref! -->
-      <ToolBar v-if="olMapRef" :map="(olMapRef.map as OlMap)" />
-    </div>
 
     <!-- Feature info popup -->
     <Map.OlOverlay
@@ -398,22 +396,33 @@ watch(toolbarMode, (mode) => {
   font-family: monospace;
 }
 
-.location-search {
-  position: absolute;
-  right: 0;
-  z-index: 1;
-  margin: .5em 1em;
+.tools {
+  position: relative;
+  top: 1em;
+
+  #toolbar {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #search {
+    position: absolute;
+    right: 3em;
+    z-index: 1;
+  }
 }
-.controls-ribbon {
-  position: absolute;
-  width: 250px;
-  margin: .5em 1em;
-  left: 1.5em;
-  z-index: 1;
+
+:global(.ol-zoom) {
+  left: unset;
+  right: .5em;
+  top: 1em;
 }
+
 .debug {
   position: fixed;
   right: 0;
+  bottom: 0;
   margin: 50px 10px;
   padding: 10px;
   text-align: end;
