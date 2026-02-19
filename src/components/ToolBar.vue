@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import {
-  mdiAlert,
   mdiCheckboxMultipleMarkedOutline,
   mdiCursorDefaultOutline,
   mdiCursorMove,
@@ -23,6 +22,7 @@ import { vTooltip } from '@/directives/tooltip';
 import { vHelp } from '@/directives/help';
 import { currentLocale } from '@/modules/locale';
 import HelpContent from './HelpContent.vue';
+import { CAlertType } from '@cscfi/csc-ui';
 
 const { t } = useI18n()
 
@@ -167,8 +167,12 @@ const onFileSelected = (event: Event) => {
         </div>
       </c-tab-item>
       <c-tab-item value="inspect">
-        <div v-if="dataHidden">
-          <c-icon :path="mdiAlert"/>{{ t("inspect.zoom") }}
+        <div id="inspect-warning" v-if="dataHidden">
+          <c-alert :type="CAlertType.Info">
+            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+            <div slot="title">{{ t("inspect.zoom.title") }}</div>
+            {{ t("inspect.zoom.message") }}
+          </c-alert>
         </div>
       </c-tab-item>
     </c-tab-items>
@@ -215,7 +219,10 @@ const onFileSelected = (event: Event) => {
       "tooltip": "Inspect feature information",
       "disabled": "Selected dataset does not have inspectable feature information",
       "help": "Click highlighted map features to display feature information.",
-      "zoom": "To use the inspect tool, zoom in until you see the data layer preview.",
+      "zoom": {
+        "title": "Notice",
+        "message": "To use the inspect tool, zoom in until you see the data layer preview.",
+      },
     },
   },
   "fi": {
@@ -255,7 +262,10 @@ const onFileSelected = (event: Event) => {
       "tooltip": "Tarkastele aineiston kohdetietoja",
       "disabled": "Valitulla aineistolla ei ole tarkasteltavia kohdetietoja",
       "help": "Napsauta korostettuja karttakohteita näyttääksesi kohteen tiedot.",
-      "zoom": "Käyttääksesi tarkastelutyökalua, zoomaa kunnes näet datan esikatselun.",
+      "zoom": {
+        "title": "Huomautus",
+        "message": "Käyttääksesi tarkastelutyökalua, zoomaa kunnes näet datan esikatselun.",
+      },
     },
   },
 }
@@ -302,5 +312,9 @@ c-link {
   transition: background-color 9999999s;
 }
 
+#inspect-warning {
+  background-color: white;
+  border-radius: 10px;
+}
 
 </style>
