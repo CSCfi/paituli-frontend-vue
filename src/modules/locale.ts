@@ -1,5 +1,6 @@
 import { computed, type Component } from 'vue';
 import { createI18n } from 'vue-i18n'
+import { setHelp } from '@/modules/helpText';
 
 // Available locales
 export type Locale = 'en' | 'fi'
@@ -17,18 +18,26 @@ export const i18n = createI18n({
       'toasts': {
         'default_title': 'Notice',
       },
+      'help': {
+        'default': 'Click something for help!'
+      },
     },
     'fi': {
       'toasts': {
         'default_title': 'Huomautus',
+      },
+      'help': {
+        'default': 'Napsauta jotain saadaksesi siitä apua!'
       },
     },
   },
 })
 
 export const currentLocale = computed(() => i18n.global.locale.value);
-export const setLocale =
-  (locale: Locale) => i18n.global.locale.value = locale
+export function setLocale(locale: Locale) {
+  i18n.global.locale.value = locale
+  setHelp(null)
+}
 
 // Flags for visualization
 const flags: Record<string, string> = {

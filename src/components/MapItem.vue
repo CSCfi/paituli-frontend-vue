@@ -19,6 +19,7 @@ import { useToasts } from '@/composables/toasts'
 import { currentLocale } from '@/modules/locale'
 import SearchBar from '@/components/SearchBar.vue'
 import ToolBar from '@/components/ToolBar.vue'
+import HelpBox from '@/components/HelpBox.vue'
 
 import {
   indexSource,
@@ -230,6 +231,8 @@ watch(toolbarMode, (mode) => {
   <Map.OlMap style="width: 100%; height: 100%; position: relative;"
              ref="olMapRef"
              @click="handleClickedFeature" >
+
+    <HelpBox />
 
     <!-- Mount tools only after OL has provided us the map ref! -->
     <div class="tools" v-if="olMapRef">

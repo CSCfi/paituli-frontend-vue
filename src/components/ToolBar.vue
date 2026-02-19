@@ -20,7 +20,9 @@ import { dataLayerMaxResolution, dataSource } from '@/modules/layers';
 import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
+import { vHelp } from '@/directives/help';
 import { currentLocale } from '@/modules/locale';
+import HelpContent from './HelpContent.vue';
 
 const { t } = useI18n()
 
@@ -47,7 +49,7 @@ watch(toolbarMode, (mode) => {
   // When tool mode changes, we only allow drag-pan in 'move'
   dragPan?.setActive(mode == 'move')
 
-  // Change our cursor depending on the mode
+  // Update cursor
   const domElement = props.map.getTargetElement()
   domElement.style.cursor = {
     'move': 'move',
@@ -71,11 +73,8 @@ watch(selectMode, (newMode, oldMode) => {
 const dragPan = props.map.getInteractions().getArray()
   .find(i => i instanceof DragPan) as DragPan | undefined
 
-
+// GeoJSON file handling
 const fileInput = ref<HTMLInputElement | null>(null)
-const openFileDialog = () => {
-  fileInput.value?.click()
-}
 const onFileSelected = (event: Event) => {
   const files = (event.target as HTMLInputElement)?.files
   if (!files) return
@@ -87,22 +86,24 @@ const onFileSelected = (event: Event) => {
 <template>
   <c-tabs v-model="toolbarMode"
           v-control
-          borderless
           disable-animation>
     <c-tab-buttons mandatory>
       <c-button
         value="move"
+        v-help="t('move.help')"
         v-tooltip="t('move.tooltip')">
         {{ t("move.label") }}<c-icon :path="mdiCursorMove"/>
       </c-button>
       <c-button
         value="select"
         :disabled="autoSelectSheets"
+        v-help="`#${selectMode}-help`"
         v-tooltip="!autoSelectSheets ? t('select.tooltip') : t('select.disabled')">
         {{ t("select.label") }}<c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
       </c-button>
       <c-button
         value="inspect"
+        v-help="t('inspect.help')"
         :disabled="!dataSource"
         v-tooltip="dataSource ? t('inspect.tooltip') : t('inspect.disabled')">
         {{ t("inspect.label") }}<c-icon :path="mdiTarget"/>
@@ -110,62 +111,64 @@ const onFileSelected = (event: Event) => {
     </c-tab-buttons>
     <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
     <c-tab-items slot="items">
-      <c-tab-item value="move">
-        {{ t("move.help") }}
-      </c-tab-item>
-      <c-tab-item id="select" value="select">
+      <c-tab-item value="move"/>
+      <c-tab-item value="select">
         <c-tab-buttons v-model="selectMode"
                        v-control
                        mandatory
                        size="small">
-          <c-button value="basic" v-tooltip="t('select.basic.tooltip')">
+          <c-button
+            value="basic"
+            v-help
+            v-tooltip="t('select.basic.tooltip')">
             {{ t("select.basic.label") }}<c-icon :path="mdiCursorDefaultOutline"/>
+            <help-content id="basic-help">{{ t('select.basic.help') }}</help-content>
           </c-button>
-          <c-button value="poly" v-tooltip="t('select.poly.tooltip')">
+          <c-button
+            value="poly"
+            v-help
+            v-tooltip="t('select.poly.tooltip')">
             {{ t("select.poly.label") }}<c-icon :path="mdiShapePolygonPlus"/>
+            <help-content id="poly-help">{{ t('select.poly.help') }}</help-content>
           </c-button>
-          <c-button value="json" v-tooltip="t('select.json.tooltip')">
+          <c-button
+            value="json"
+            v-help
+            v-tooltip="t('select.json.tooltip')">
             {{ t("select.json.label") }}<c-icon :path="mdiFileUploadOutline"/>
+            <help-content id="json-help">
+              <i18n-t keypath="select.json.help">
+                <c-link
+                  :href="`https://${currentLocale}.wikipedia.org/wiki/GeoJSON`"
+                  target="_blank">
+                  GeoJSON<c-icon :path="mdiOpenInNew" size="18" />
+                </c-link>
+                <c-link href="https://geojson.io/" target="_blank">
+                  geojson.io<c-icon :path="mdiOpenInNew" size="18" />
+                </c-link>
+              </i18n-t>
+            </help-content>
           </c-button>
           <c-button value="clear" id="trash" v-tooltip="t('select.clear.tooltip')">
             <c-icon :path="mdiTrashCanOutline" />
           </c-button>
         </c-tab-buttons>
-        <div v-if="selectMode == 'basic'">
-          <p>{{ t("select.basic.help") }}</p>
-        </div>
-        <div v-if="selectMode == 'poly'">
-          <p>{{ t("select.poly.help") }}</p>
-        </div>
-        <div v-if="selectMode == 'json'">
-          <i18n-t keypath="select.json.help" tag="p">
-            <c-link
-              :href="`https://${currentLocale}.wikipedia.org/wiki/GeoJSON`"
-              target="_blank">
-              GeoJSON<c-icon :path="mdiOpenInNew" size="18" />
-            </c-link>
-            <c-link href="https://geojson.io/" target="_blank">
-              geojson.io<c-icon :path="mdiOpenInNew" size="18" />
-            </c-link>
-          </i18n-t>
-          <input
-            ref="fileInput"
-            type="file"
-            accept=".json,.geojson"
-            style="display: none"
-            @change="onFileSelected"
-          />
-          <c-button @click="openFileDialog">
+        <div id="json" v-if="selectMode == 'json'">
+          <c-button @click="fileInput?.click()">
             {{ t("select.json.open") }}
+            <input
+              ref="fileInput"
+              type="file"
+              accept=".json,.geojson"
+              style="display: none"
+              @change="onFileSelected"
+            />
           </c-button>
         </div>
       </c-tab-item>
       <c-tab-item value="inspect">
         <div v-if="dataHidden">
           <c-icon :path="mdiAlert"/>{{ t("inspect.zoom") }}
-        </div>
-        <div v-else>
-          {{ t("inspect.help") }}
         </div>
       </c-tab-item>
     </c-tab-items>
@@ -259,17 +262,23 @@ const onFileSelected = (event: Event) => {
 </i18n>
 
 <style scoped>
+
+
 c-tabs {
   --c-tab-buttons-background-color-active: var(--c-primary-400);
-  min-width: 430px;
+  width: 450px;
+  z-index: 1;
 }
 
 c-tab-item {
   color: white;
 
-  input + c-button {
-    --c-button-background-color: var(--c-info-500);
+  #json {
+    --c-button-background-color: var(--c-secondary-500);
+    margin-top: 1em;
+    text-align: center;
   }
+
 }
 
 c-button {
