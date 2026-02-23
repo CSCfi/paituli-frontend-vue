@@ -8,11 +8,6 @@ const { t } = useI18n()
 </script>
 
 <template>
-  {{ t("search") }}
-  MOVED
-  <!--c-switch v-model="controls.mapsheetSearch.value" v-control>
-    {{ t("alt_search") }}
-  </c-switch-->
   <p>{{ t("show") }}...</p>
   <c-switch v-model="showLayer.background.value" v-control>
     {{ t("background") }}
@@ -34,8 +29,6 @@ const { t } = useI18n()
 <i18n>
 {
   "en": {
-    "search": "Search",
-    "alt_search": "Select mapsheets with result bounding box",
     "show": "Show",
     "background": "Background map",
     "muncipalities": "Muncipalities",
@@ -44,8 +37,6 @@ const { t } = useI18n()
     "data": "Data layer",
   },
   "fi": {
-    "search": "Haku",
-    "alt_search": "Valitse karttalehtiä haun tuloksen rajoilla",
     "show": "Näytä",
     "background": "Taustakartta",
     "muncipalities": "Kuntarajat",

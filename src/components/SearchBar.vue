@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import OlMap from 'ol/Map.js'
 import { transform, transformExtent } from 'ol/proj'
 import { useI18n } from 'vue-i18n';
 
-import { mdiMagnify } from '@mdi/js'
+import { mdiMagnify, mdiSelectSearch } from '@mdi/js'
 
 import type { NominatimResponse } from '@/shared/types';
 import { URLS } from '@/shared/constants';
@@ -13,6 +13,9 @@ import { useToasts } from '@/composables/toasts';
 import { CToastType } from '@cscfi/csc-ui';
 import { selectedOlFeatures, selectSheetsByExtent } from '@/modules/selection';
 import { indexSource } from '@/modules/layers';
+import { vHelp } from '@/directives/help';
+import HelpContent from './HelpContent.vue';
+import { toolbarMode } from '@/modules/controls';
 
 const { addToast } = useToasts()
 const { t } = useI18n()
@@ -21,7 +24,6 @@ const { t } = useI18n()
 const props = defineProps<{ map: OlMap }>()
 
 const searchStr = ref('')
-const mapsheetSearch = ref(false)
 
 // Queries Nominatim API for location data
 async function fetchLocationData(query: string): Promise<NominatimResponse[]> {
@@ -58,7 +60,7 @@ async function search() {
   }
 
   // If set by user, we select mapsheets.
-  if (mapsheetSearch.value) {
+  if (searchMode.value == 'select') {
     selectFeatureSearch(searchStr.value, result.boundingbox);
   }
   // Otherwise the map is zoomed to found location.
@@ -98,37 +100,113 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
   })
 }
 
+type SearchMode = 'select' | 'search'
+const searchMode = ref<SearchMode>('search')
+
+// Set search mode to mapsheet select when tool mode is select,
+// and back to common search otherwise.
+watch(toolbarMode, (newMode) => {
+  searchMode.value = newMode == 'select' ? 'select' : 'search'
+})
+
 </script>
 
 <template>
-  <c-text-field v-model="searchStr"
-                @keypress.enter="search"
-                placeholder="Helsinki"
-                trim-whitespace
-                shadow>
-    <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-    <c-icon slot="pre" :path="mdiMagnify" size="16" />
-    <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-    <c-button slot="post"
-              size="small"
-              @click="search()"
-              ghost>{{ t("search") }}</c-button>
-  </c-text-field>
+  <div :class="{selectMode: searchMode == 'select'}">
+    <c-text-field v-model="searchStr"
+                  @keypress.enter="search"
+                  placeholder="Helsinki"
+                  v-help="`#${searchMode}-help`"
+                  trim-whitespace
+                  hide-details
+                  shadow>
+      <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+      <c-icon slot="pre"
+              :path="searchMode == 'select' ? mdiSelectSearch : mdiMagnify"
+              :key="searchMode"
+              size="18" />
+      <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+      <c-button slot="post"
+                size="small"
+                @click="search()"
+                ghost>{{ t(`${searchMode}.button`) }}</c-button>
+    </c-text-field>
+
+    <!-- Seach mode buttons are only shown in select tool mode -->
+    <c-tab-buttons v-model="searchMode"
+                   v-control
+                   mandatory
+                   :style="{ display: toolbarMode != 'select' ? 'none': ''}"
+                   size="small">
+      <c-button value="select"
+                v-tooltip="t('select.tooltip')"
+                v-help>
+        {{ t('select.tab') }}<c-icon :path="mdiSelectSearch" />
+        <help-content id="select-help">{{ t('select.help') }}</help-content>
+      </c-button>
+      <c-button value="search"
+                v-tooltip="t('search.tooltip')"
+                v-help>
+        {{ t('search.tab') }}<c-icon :path="mdiMagnify" />
+        <help-content id="search-help">{{ t('search.help') }}</help-content>
+      </c-button>
+    </c-tab-buttons>
+  </div>
+
+
 </template>
 
 <i18n>
 {
   "en": {
-    "search": "Search",
+    "select": {
+      "button": "Select",
+      "tab": "Mapsheet search",
+      "tooltip": "Select mapsheets with result bounding box",
+      "help": "The bounding box of your search query will be used to select all intersecting map sheets and will be highlighted on the map. Alternatively, you can use the mapsheet search mode to select sheets by label, including any sheet whose label contains your search query.",
+
+    },
+    "search": {
+      "button": "Search",
+      "tab": "Location search",
+      "tooltip": "Seach for a location and zoom into it",
+      "help": "Search for a geographic location and zoom the map into it.",
+    },
     "no_matches": "Search query did not match any location or mapsheet label.",
     "nothing_found": "Location or address not found. Please double check your spelling.",
     "api_error": "The search API encountered an error. Please try again later.",
   },
   "fi": {
-    "search": "Hae",
+    "select": {
+      "button": "Valitse",
+      "tab": "Karttalehtihaku",
+      "tooltip": "Valitse karttalehtiä haun tuloksen rajoilla",
+      "help": "Hakusi rajaavaa aluetta käytetään kaikkien risteävien karttalehtien valintaan, joka korostetaan kartalla. Vaihtoehtoisesti voit käyttää karttalehtihakua valitaksesi lehtiä tunnuksen perusteella, mukaan lukien kaikki lehdet, joiden tunnuksessa esiintyy hakusi."
+    },
+    "search": {
+      "button": "Hae",
+      "tab": "Sijaintihaku",
+      "tooltip": "Hae sijaintia ja zoomaa tulokseen",
+      "help": "Sijaintihaku zoomaa kartan hakua vastaavaan maantieteelliseen paikkaan",
+    },
     "no_matches": "Haku ei vastannut yhtäkään lokaatiota tai karttalehden nimeä.",
     "nothing_found": "Sijaintia tai osoitetta ei löytynyt. Tarkista kirjoitusasu.",
     "api_error": "Hakurajapinta kohtasi virheen. Yritä myöhemmin uudelleen.",
   },
 }
 </i18n>
+
+<style scoped>
+
+c-tab-buttons {
+  --c-tab-buttons-background-color-active: var(--c-primary-400);
+  /* Aligns the tabs with the toolbar select mode tabs */
+  margin-top: 22px;
+}
+
+.selectMode {
+  --c-button-ghost-background-color: var(--c-secondary-400);
+  --c-button-ghost-text-color: white;
+}
+
+</style>
