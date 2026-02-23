@@ -8,7 +8,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <p>{{ t("show") }}...</p>
+  <p><strong>{{ t("show") }}...</strong></p>
   <c-switch v-model="showLayer.background.value" v-control>
     {{ t("background") }}
   </c-switch>
@@ -21,7 +21,10 @@ const { t } = useI18n()
   <c-switch v-model="showLayer.index.value" :disabled="!indexSource" v-control>
     {{ t("index") }}
   </c-switch>
-  <c-switch v-model="showLayer.data.value" :disabled="!dataSource" v-control>
+  <c-switch v-model="showLayer.data.value"
+            :disabled="dataSource == null"
+            :checked="dataSource != null"
+            v-control>
     {{ t("data") }}
   </c-switch>
 </template>
@@ -33,7 +36,7 @@ const { t } = useI18n()
     "background": "Background map",
     "muncipalities": "Muncipalities",
     "catchment": "Catchment areas",
-    "index": "Index layer",
+    "index": "Mapsheets",
     "data": "Data layer",
   },
   "fi": {
@@ -41,7 +44,7 @@ const { t } = useI18n()
     "background": "Taustakartta",
     "muncipalities": "Kuntarajat",
     "catchment": "Valuma-alueet",
-    "index": "Indeksikartta",
+    "index": "Karttalehdet",
     "data": "Datakerros",
   },
 }
@@ -59,8 +62,5 @@ c-switch {
   --c-switch-border-color-disabled: var(--c-primary-600);
   padding-top: 5px;
   width: 100%;
-}
-p {
-  margin-bottom: 0px;
 }
 </style>

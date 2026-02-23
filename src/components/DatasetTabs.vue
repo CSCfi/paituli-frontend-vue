@@ -6,7 +6,7 @@ import InfoModal from './modals/InfoModal.vue'
 import ServicesTab from '@/components/tabs/ServicesTab.vue'
 import type { Dataset, MetadataParse } from '@/shared/types'
 import { URLS } from '@/shared/constants'
-import SettingsTab from './tabs/SettingsTab.vue'
+import LayersTab from './tabs/LayersTab.vue'
 import { mdiOpenInNew } from '@mdi/js';
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
@@ -89,7 +89,7 @@ function parseMetadata(metadata: any): MetadataParse | null {
     <c-tabs v-model="tab" v-control>
       <c-tab value="infotab">{{ t("tabs.info.label") }}</c-tab>
       <c-tab value="servicestab">{{ t("tabs.services.label") }}</c-tab>
-      <c-tab value="settingstab">{{ t("tabs.settings.label") }}</c-tab>
+      <c-tab value="settingstab">{{ t("tabs.layers.label") }}</c-tab>
 
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-tab-items slot="items">
@@ -118,7 +118,7 @@ function parseMetadata(metadata: any): MetadataParse | null {
           <ServicesTab />
         </c-tab-item>
         <c-tab-item value="settingstab">
-          <SettingsTab />
+          <LayersTab />
         </c-tab-item>
       </c-tab-items>
     </c-tabs>
@@ -140,8 +140,8 @@ function parseMetadata(metadata: any): MetadataParse | null {
       "services": {
         "label": "Services",
       },
-      "settings": {
-        "label": "Settings",
+      "layers": {
+        "label": "Layers",
       },
     },
     "toasts": {
@@ -160,8 +160,8 @@ function parseMetadata(metadata: any): MetadataParse | null {
       "services": {
         "label": "Palvelut",
       },
-      "settings": {
-        "label": "Asetukset",
+      "layers": {
+        "label": "Tasot",
       },
     },
     "toasts": {
