@@ -33,9 +33,12 @@ export const vHelp: Directive<HTMLElement, string | undefined> = {
 // If the directive is used with an id selector ('#something'),
 // we'll query for such an element and render its html
 function idQuery(el: HelpDirectiveEl) {
-  const target = document.querySelector<HTMLElement>(el._value!)
-  if (target) {
-    setHelp(target.innerHTML)
+  const targets = document.querySelectorAll<HTMLElement>(el._value!)
+  if (targets.length > 1) {
+    console.warn('v-help found multiple ' + el._value)
+  }
+  if (targets.length > 0) {
+    setHelp(targets[0].innerHTML)
   }
   else {
     console.error('v-help query selector did not find anything')
