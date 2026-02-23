@@ -4,6 +4,12 @@
   --site-header-height: 60px;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 a {
   text-decoration: none;
   transition: 0.4s;
