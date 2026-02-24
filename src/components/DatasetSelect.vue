@@ -131,6 +131,18 @@ watch(datasets, () => {
   selectedFormat.value = dataset.format
 })
 
+// Precomputed dataset count map to be displayed in producer dropdown,
+// indexed with producer id
+const datasetCount = computed(() => {
+  const map: Record<string, number> = {}
+  for (const producer of producerOptions.value) {
+    const filtered = datasets.value.filter(d => d.org === producer)
+    const distinctNames = new Set(filtered.map(d => d.name))
+    map[producer] = distinctNames.size
+  }
+  return map
+})
+
 </script>
 
 <template>
@@ -140,51 +152,84 @@ watch(datasets, () => {
     vertical="center"
   />
 
-  <div class="controls">
-    <label>
-      <span>{{ t("labels.producer") }}</span>
-      <select v-model="selectedProducer" :disabled="producerOptions.length <= 1">
-        <option v-for="producer in producerOptions" :key="producer" :value="producer">
+  <div>
+    <c-select
+      v-model="selectedProducer"
+      v-control
+      :placeholder="`${t('choose')} ${t('labels.producer')}...`"
+      :label="t('labels.producer')"
+      :key="producerOptions"
+      hide-details>
+      <c-option
+        v-for="producer in producerOptions"
+        :key="producer"
+        v-bind="{ value: producer, name: producer }">
+        <c-row align="center" justify="space-between">
           {{ producer }}
-        </option>
-      </select>
-    </label>
+          <c-tag flat>
+            {{ datasetCount[producer] }} {{ t('labels.data', datasetCount[producer]) }}
+          </c-tag>
+        </c-row>
+      </c-option>
+    </c-select>
 
-    <label>
-      <span>{{ t("labels.data") }}</span>
-      <select v-model="selectedData" :disabled="dataOptions.length <= 1">
-        <option v-for="data in dataOptions" :key="data" :value="data">
-          {{ data }}
-        </option>
-      </select>
-    </label>
+    <c-select
+      v-model="selectedData"
+      v-control
+      :placeholder="`${t('choose')} ${t('labels.data')}...`"
+      :label="t('labels.data')"
+      :disabled="dataOptions.length < 1"
+      hide-details>
+      <c-option
+        v-for="dataset in dataOptions"
+        :key="dataset"
+        v-bind="{ value: dataset, name: dataset }">
+        {{ dataset }}
+      </c-option>
+    </c-select>
 
-    <label>
-      <span>{{ t("labels.scale") }}</span>
-      <select v-model="selectedScale" :disabled="scaleOptions.length <= 1" >
-        <option v-for="scale in scaleOptions" :key="scale" :value="scale" >
-          {{ scale }}
-        </option>
-      </select>
-    </label>
+    <c-select
+      v-model="selectedScale"
+      v-control
+      :label="t('labels.scale')"
+      :disabled="scaleOptions.length < 1"
+      hide-details>
+      <c-option
+        v-for="scale in scaleOptions"
+        :key="scale"
+        v-bind="{ value: scale, name: scale }">
+        {{ scale }}
+      </c-option>
+    </c-select>
 
-    <label>
-      <span>{{ t("labels.year") }}</span>
-      <select v-model="selectedYear" :disabled="yearOptions.length <= 1" >
-        <option v-for="year in yearOptions" :key="year" :value="year">
-          {{ year }}
-        </option>
-      </select>
-    </label>
+    <c-select
+      v-model="selectedYear"
+      v-control
+      :label="t('labels.year')"
+      :disabled="yearOptions.length < 1"
+      hide-details>
+      <c-option
+        v-for="year in yearOptions"
+        :key="year"
+        v-bind="{ value: year, name: year }">
+        {{ year }}
+      </c-option>
+    </c-select>
 
-    <label>
-      <span>{{ t("labels.format") }}</span>
-      <select v-model="selectedFormat" :disabled="formatOptions.length <= 1" >
-        <option v-for="format in formatOptions" :key="format" :value="format" >
-          {{ format }}
-        </option>
-      </select>
-    </label>
+    <c-select
+      v-model="selectedFormat"
+      v-control
+      :label="t('labels.format')"
+      :disabled="formatOptions.length < 1"
+      hide-details>
+      <c-option
+        v-for="format in formatOptions"
+        :key="format"
+        v-bind="{ value: format, name: format }">
+        {{ format }}
+      </c-option>
+    </c-select>
+
   </div>
 
 </template>
@@ -192,9 +237,10 @@ watch(datasets, () => {
 <i18n>
   {
     "en": {
+      "choose": "Choose",
       "labels": {
         "producer": "Producer",
-        "data": "Dataset",
+        "data": "Dataset | Datasets",
         "scale": "Scale",
         "year": "Year",
         "format": "Format",
@@ -207,9 +253,10 @@ watch(datasets, () => {
       },
     },
     "fi": {
+      "choose": "Valitse",
       "labels": {
         "producer": "Tuottaja",
-        "data": "Aineisto",
+        "data": "Aineisto | Aineistoa",
         "scale": "Mittakaava",
         "year": "Vuosi",
         "format": "Formaatti",
@@ -225,23 +272,22 @@ watch(datasets, () => {
 </i18n>
 
 <style scoped>
+
+c-select {
+  padding-top: 0.75rem;
+  --c-select-active-color: white;
+  --c-select-background-color: var(--c-primary-800);
+  --c-select-inactive-color: white;
+  --c-select-option-background-color: white;
+  --c-select-option-background-color-hover: white;
+  --c-select-option-text-color: white;
+  --c-select-text-color: white;
+  --c-select-placeholder-color: var(--c-tertiary-300);
+}
+
 .controls {
   display: flex;
   flex-direction: column;
 }
-label {
-  display: flex;
-  align-items: center;
-  color: white;
-  padding-top: 0.3rem;
 
-  select {
-    flex: 1;
-  }
-  span {
-    display: inline-flex;
-    justify-content: flex-start;
-    width: 90px;
-  }
-}
 </style>
