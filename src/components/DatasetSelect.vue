@@ -290,4 +290,8 @@ c-select {
   flex-direction: column;
 }
 
+div {
+  margin-bottom: .5em;
+}
+
 </style>
