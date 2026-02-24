@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { mdiOpenInNew } from '@mdi/js';
 import { currentDataset } from '@/modules/datasets';
+import { URLS } from '@/shared/constants';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -35,9 +37,16 @@ defineExpose({ open })
           <strong>{{ t("files") }}:</strong>
           <ul class="metadata-links">
             <li v-for="link in props.links" :key="link.url">
-              <a :href="link.url" target="_blank">{{ link.title }}</a>
+              <c-link :href="link.url" target="_blank">{{ link.title }}</c-link>
             </li>
           </ul>
+        </div>
+
+        <div v-if="currentDataset?.meta">
+          {{ t("metadata") }}
+          <c-link :href="URLS.ETSIN_METADATA_BASE + currentDataset.meta" target="_blank">
+            {{ t("etsin") }}<c-icon :path="mdiOpenInNew" size="18" />
+          </c-link>
         </div>
       </c-card-content>
 
@@ -55,11 +64,15 @@ defineExpose({ open })
   "en": {
     "title": "Dataset description",
     "files": "Files describing this dataset",
+    "metadata": "Full metadata available at",
+    "etsin": "Fairdata Etsin",
     "close": "Close",
   },
   "fi": {
     "title": "Tietoa aineistosta",
     "files": "Tiedostot, jotka kuvaavat tätä aineistoa",
+    "metadata": "Täydet metatiedot saatavilla",
+    "etsin": "Fairdata Etsimessä",
     "close": "Sulje",
   },
 }

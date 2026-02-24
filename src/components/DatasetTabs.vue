@@ -7,7 +7,6 @@ import ServicesTab from '@/components/tabs/ServicesTab.vue'
 import type { Dataset, MetadataParse } from '@/shared/types'
 import { URLS } from '@/shared/constants'
 import LayersTab from './tabs/LayersTab.vue'
-import { mdiOpenInNew } from '@mdi/js';
 import { useToasts } from '@/composables/toasts'
 import { CToastType } from '@cscfi/csc-ui'
 import { useI18n } from 'vue-i18n'
@@ -105,14 +104,6 @@ function parseMetadata(metadata: any): MetadataParse | null {
           <c-button outlined class="read-more" @click="infoModal?.open()">
             {{ t("tabs.info.more") }}
           </c-button>
-          <div v-if="currentDataset?.meta">
-            <p>
-              {{ t("tabs.info.metadata") }}
-              <c-link :href="URLS.ETSIN_METADATA_BASE + currentDataset.meta" target="_blank">
-                {{ t("tabs.info.etsin") }}<c-icon :path="mdiOpenInNew" size="18" />
-              </c-link>
-            </p>
-          </div>
         </c-tab-item>
         <c-tab-item value="servicestab">
           <ServicesTab />
@@ -134,8 +125,6 @@ function parseMetadata(metadata: any): MetadataParse | null {
       "info": {
         "label": "Info",
         "more": "Read more",
-        "metadata": "Full metadata available at",
-        "etsin": "Fairdata Etsin",
       },
       "services": {
         "label": "Services",
@@ -154,8 +143,6 @@ function parseMetadata(metadata: any): MetadataParse | null {
       "info": {
         "label": "Tietoa",
         "more": "Lue lisää",
-        "metadata": "Täydet metatiedot saatavilla",
-        "etsin": "Fairdata Etsimessä",
       },
       "services": {
         "label": "Palvelut",
@@ -181,29 +168,21 @@ c-tabs {
   --c-tabs-indicator-color: var(--c-primary-100);
 }
 c-tab-item {
-  height: 270px;
+  height: 185px;
   color: var(--c-primary-200);
 }
 
 .faded {
-  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 80%);
 }
 .read-more {
   position: absolute;
-  bottom: 60px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  color: var(--c-primary-200);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-.faded:hover ~ .read-more,
-.read-more:hover {
-  opacity: 1;
-  pointer-events: auto;
+  color: var(--c-primary-100);
 }
 
 .suggestion {

@@ -8,7 +8,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <p><strong>{{ t("show") }}...</strong></p>
+  <strong>{{ t("show") }}...</strong>
   <c-switch v-model="showLayer.background.value" v-control>
     {{ t("background") }}
   </c-switch>
@@ -60,7 +60,7 @@ c-switch {
   --c-switch-slider-color-active: var(--c-secondary-500);
   --c-switch-slider-color-disabled: var(--c-primary-700);
   --c-switch-border-color-disabled: var(--c-primary-600);
-  padding-top: 5px;
+  padding-top: .3em;
   width: 100%;
 }
 </style>
