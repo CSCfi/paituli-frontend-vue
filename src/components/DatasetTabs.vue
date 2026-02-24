@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 import InfoTab from '@/components/tabs/InfoTab.vue'
 import InfoModal from './modals/InfoModal.vue'
-import ServicesTab from '@/components/tabs/ServicesTab.vue'
+import APIsTab from '@/components/tabs/APIsTab.vue'
 import type { Dataset, MetadataParse } from '@/shared/types'
 import { URLS } from '@/shared/constants'
 import LayersTab from './tabs/LayersTab.vue'
@@ -87,7 +87,7 @@ function parseMetadata(metadata: any): MetadataParse | null {
   <div v-else class="extra">
     <c-tabs v-model="tab" v-control>
       <c-tab value="infotab">{{ t("tabs.info.label") }}</c-tab>
-      <c-tab value="servicestab">{{ t("tabs.services.label") }}</c-tab>
+      <c-tab value="servicestab">{{ t("tabs.apis.label") }}</c-tab>
       <c-tab value="settingstab">{{ t("tabs.layers.label") }}</c-tab>
 
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
@@ -106,7 +106,7 @@ function parseMetadata(metadata: any): MetadataParse | null {
           </c-button>
         </c-tab-item>
         <c-tab-item value="servicestab">
-          <ServicesTab />
+          <APIsTab />
         </c-tab-item>
         <c-tab-item value="settingstab">
           <LayersTab />
@@ -126,8 +126,8 @@ function parseMetadata(metadata: any): MetadataParse | null {
         "label": "Info",
         "more": "Read more",
       },
-      "services": {
-        "label": "Services",
+      "apis": {
+        "label": "APIs",
       },
       "layers": {
         "label": "Layers",
@@ -144,8 +144,8 @@ function parseMetadata(metadata: any): MetadataParse | null {
         "label": "Tietoa",
         "more": "Lue lisää",
       },
-      "services": {
-        "label": "Palvelut",
+      "apis": {
+        "label": "Rajapinnat",
       },
       "layers": {
         "label": "Tasot",
