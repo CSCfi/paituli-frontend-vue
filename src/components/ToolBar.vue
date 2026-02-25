@@ -23,6 +23,7 @@ import { vHelp } from '@/directives/help';
 import { currentLocale } from '@/modules/locale';
 import HelpContent from './HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
+import { currentDataset } from '@/modules/datasets';
 
 const { t } = useI18n()
 
@@ -86,6 +87,7 @@ const onFileSelected = (event: Event) => {
 <template>
   <c-tabs v-model="toolbarMode"
           v-control
+          :style="{ display: !currentDataset ? 'none': ''}"
           disable-animation>
     <c-tab-buttons mandatory>
       <c-button
@@ -104,7 +106,7 @@ const onFileSelected = (event: Event) => {
       <c-button
         value="inspect"
         v-help="t('inspect.help')"
-        :disabled="!dataSource"
+        :disabled="currentDataset && !dataSource"
         v-tooltip="dataSource ? t('inspect.tooltip') : t('inspect.disabled')">
         {{ t("inspect.label") }}<c-icon :path="mdiTarget"/>
       </c-button>
@@ -275,7 +277,7 @@ const onFileSelected = (event: Event) => {
 
 
 c-tabs {
-  --c-tab-buttons-background-color-active: var(--c-primary-400);
+  --c-tab-buttons-background-color-active: var(--c-primary-500);
   width: 450px;
   z-index: 1;
 }
@@ -310,6 +312,7 @@ c-link {
   /* a hack for disabled button tooltips */
   pointer-events: auto;
   transition: background-color 9999999s;
+  color: var(--c-tertiary-300);
 }
 
 #inspect-warning {
