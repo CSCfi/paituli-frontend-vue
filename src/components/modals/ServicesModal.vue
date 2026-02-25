@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiOpenInNew } from '@mdi/js';
+import { mdiFileDownloadOutline, mdiOpenInNew } from '@mdi/js';
 import { URLS } from '@/shared/constants'
 import { copyToClipboard } from '@/shared/util'
 import { ref } from 'vue';
@@ -50,8 +50,6 @@ defineExpose({ open })
 
               <div v-if="currentDataset.funet">
 
-                FORMAT ME {{ URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id) }}
-
                 <strong>HTTP</strong>
                 <p>
                   <CodeBlock
@@ -72,10 +70,18 @@ defineExpose({ open })
                   :content="URLS.RSYNC_LINKS_BASE + currentDataset.funet"
                 />
 
-                <c-link href="/files" target="_blank">
-                  {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
-                </c-link>
               </div>
+
+              <p>
+                <strong>Index map as Geopackage: </strong>
+                <c-link :href="URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id)">
+                  Download<c-icon :path="mdiFileDownloadOutline"></c-icon>
+                </c-link>
+              </p>
+
+              <c-link href="/files" target="_blank">
+                {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+              </c-link>
             </c-tab-item>
 
             <c-tab-item value="STACTab">
