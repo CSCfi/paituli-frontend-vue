@@ -401,7 +401,7 @@ watch(toolbarMode, (mode) => {
 
 .tools {
   position: relative;
-  top: 1em;
+  top: 1.25em;
 
   #toolbar {
     position: absolute;
@@ -411,15 +411,16 @@ watch(toolbarMode, (mode) => {
 
   #search {
     position: absolute;
-    right: 3em;
+    right: 2.75em;
     z-index: 1;
+    top: -.25em;
   }
 }
 
 :global(.ol-zoom) {
   left: unset;
   right: .5em;
-  top: 1em;
+  top: 1.25em;
 }
 
 .debug {

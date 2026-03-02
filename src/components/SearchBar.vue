@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 
 import OlMap from 'ol/Map.js'
 import { transform, transformExtent } from 'ol/proj'
@@ -42,7 +42,8 @@ async function search() {
   let result: NominatimResponse
   try {
     const results = await fetchLocationData(searchStr.value)
-    if (results.length == 0) {
+    // We should stop to warn about bad locations only in geographic mode
+    if (!selectMode.value && results.length == 0) {
       addToast({
         type: CToastType.Warning,
         message: t('nothing_found'),
@@ -60,7 +61,7 @@ async function search() {
   }
 
   // If set by user, we select mapsheets.
-  if (searchMode.value == 'select') {
+  if (selectMode.value) {
     selectFeatureSearch(searchStr.value, result.boundingbox);
   }
   // Otherwise the map is zoomed to found location.
@@ -100,59 +101,38 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
   })
 }
 
-type SearchMode = 'select' | 'search'
-const searchMode = ref<SearchMode>('search')
-
-// Set search mode to mapsheet select when tool mode is select,
-// and back to common search otherwise.
-watch(toolbarMode, (newMode) => {
-  searchMode.value = newMode == 'select' ? 'select' : 'search'
-})
+// Whether we should select mapsheets instead of location search
+const selectMode = computed(() => toolbarMode.value == 'select')
+const modeName = computed(() => selectMode.value ? 'select' : 'search')
 
 </script>
 
 <template>
-  <div :class="{selectMode: searchMode == 'select'}">
+  <div :class="{selectMode: selectMode}">
     <c-text-field v-model="searchStr"
                   @keypress.enter="search"
+                  :key="selectMode"
+                  v-tooltip="t(`${modeName}.tooltip`)"
+                  v-help="`#${modeName}-help`"
+                  :label="t(`${modeName}.label`)"
                   placeholder="Helsinki"
-                  v-help="`#${searchMode}-help`"
                   trim-whitespace
                   hide-details
-                  shadow>
+                  id="searchbar">
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-icon slot="pre"
-              :path="searchMode == 'select' ? mdiSelectSearch : mdiMagnify"
-              :key="searchMode"
+              :path="selectMode ? mdiSelectSearch : mdiMagnify"
               size="18" />
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-button slot="post"
                 size="small"
                 @click="search()"
-                ghost>{{ t(`${searchMode}.button`) }}</c-button>
+                ghost>{{ t(`${modeName}.button`) }}</c-button>
     </c-text-field>
 
-    <!-- Seach mode buttons are only shown in select tool mode -->
-    <c-tab-buttons v-model="searchMode"
-                   v-control
-                   mandatory
-                   :style="{ display: toolbarMode != 'select' ? 'none': ''}"
-                   size="small">
-      <c-button value="select"
-                v-tooltip="t('select.tooltip')"
-                v-help>
-        {{ t('select.tab') }}<c-icon :path="mdiSelectSearch" />
-        <help-content id="select-help">{{ t('select.help') }}</help-content>
-      </c-button>
-      <c-button value="search"
-                v-tooltip="t('search.tooltip')"
-                v-help>
-        {{ t('search.tab') }}<c-icon :path="mdiMagnify" />
-        <help-content id="search-help">{{ t('search.help') }}</help-content>
-      </c-button>
-    </c-tab-buttons>
+    <help-content id="select-help">{{ t('select.help') }}</help-content>
+    <help-content id="search-help">{{ t('search.help') }}</help-content>
   </div>
-
 
 </template>
 
@@ -161,14 +141,14 @@ watch(toolbarMode, (newMode) => {
   "en": {
     "select": {
       "button": "Select",
-      "tab": "Mapsheet search",
+      "label": "Mapsheet search",
       "tooltip": "Select mapsheets with result bounding box",
       "help": "The bounding box of your search query will be used to select all intersecting map sheets and will be highlighted on the map. Alternatively, you can use the mapsheet search mode to select sheets by label, including any sheet whose label contains your search query.",
 
     },
     "search": {
       "button": "Search",
-      "tab": "Location search",
+      "label": "Location search",
       "tooltip": "Seach for a location and zoom into it",
       "help": "Search for a geographic location and zoom the map into it.",
     },
@@ -179,13 +159,13 @@ watch(toolbarMode, (newMode) => {
   "fi": {
     "select": {
       "button": "Valitse",
-      "tab": "Karttalehtihaku",
+      "label": "Karttalehtihaku",
       "tooltip": "Valitse karttalehtiä haun tuloksen rajoilla",
       "help": "Hakusi rajaavaa aluetta käytetään kaikkien risteävien karttalehtien valintaan, joka korostetaan kartalla. Vaihtoehtoisesti voit käyttää karttalehtihakua valitaksesi lehtiä tunnuksen perusteella, mukaan lukien kaikki lehdet, joiden tunnuksessa esiintyy hakusi."
     },
     "search": {
       "button": "Hae",
-      "tab": "Sijaintihaku",
+      "label": "Sijaintihaku",
       "tooltip": "Hae sijaintia ja zoomaa tulokseen",
       "help": "Sijaintihaku zoomaa kartan hakua vastaavaan maantieteelliseen paikkaan",
     },
@@ -197,6 +177,12 @@ watch(toolbarMode, (newMode) => {
 </i18n>
 
 <style scoped>
+
+div {
+  background-color: white;
+  padding: .3em;
+  border-radius: .3em;
+}
 
 c-tab-buttons {
   --c-tab-buttons-background-color-active: var(--c-primary-400);
