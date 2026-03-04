@@ -19,6 +19,7 @@ import { currentLocale } from '@/modules/locale'
 import SearchBar from '@/components/SearchBar.vue'
 import ToolBar from '@/components/ToolBar.vue'
 import HelpBox from '@/components/HelpBox.vue'
+import ButtonColumn from '@/components/ButtonColumn.vue'
 
 import {
   indexSource,
@@ -233,6 +234,7 @@ watch(toolbarMode, (mode) => {
     <div class="tools" v-if="olMapRef">
       <SearchBar id="search" :map="(olMapRef.map as OlMap)" />
       <ToolBar id="toolbar" :map="(olMapRef.map as OlMap)" />
+      <ButtonColumn id="button-column" :map="(olMapRef.map as OlMap)" />
     </div>
 
     <Map.OlView
@@ -397,6 +399,7 @@ watch(toolbarMode, (mode) => {
 .tools {
   position: relative;
   top: 1.25em;
+  z-index: 1;
 
   #toolbar {
     position: absolute;
@@ -406,16 +409,20 @@ watch(toolbarMode, (mode) => {
 
   #search {
     position: absolute;
-    right: 2.75em;
-    z-index: 1;
+    right: 3em;
+    top: -.25em;
+  }
+
+  #button-column {
+    position: absolute;
+    right: .65em;
     top: -.25em;
   }
 }
 
 :global(.ol-zoom) {
-  left: unset;
-  right: .5em;
-  top: 1.25em;
+  /* We have our own zoom buttons */
+  display: none;
 }
 
 .debug {
