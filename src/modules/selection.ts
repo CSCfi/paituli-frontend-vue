@@ -1,11 +1,11 @@
 import { computed, ref, watch } from 'vue'
 
-import { Collection, Feature } from 'ol'
+import { Collection, Feature, View } from 'ol'
 import type { DragBoxEvent } from 'ol/interaction/DragBox'
 import type { SelectEvent } from 'ol/interaction/Select'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import type { FeatureLike } from 'ol/Feature'
-import type { Extent } from 'ol/extent'
+import { createEmpty, extend, getArea, type Extent } from 'ol/extent'
 import type { DrawEvent } from 'ol/interaction/Draw'
 
 import { drawBoundingBox, indexSource } from '@/modules/layers'
@@ -81,20 +81,41 @@ export function polyDrawEnd(event: DrawEvent) {
 }
 
 // Selects index mapsheets by the provided extent,
-// and returns whether any sheets were selected
-export function selectSheetsByExtent(extent: Extent): boolean {
+// and returns whether any sheets were selected.
+// Also draws the extent and zooms to the selection, if any.
+export function selectSheetsByExtent(
+  extent: Extent,
+  mapView: View,
+): boolean {
   if (!indexSource.value) return false
 
   const matches = indexSource.value.getFeatures().filter((f) => {
     return f.getGeometry()?.intersectsExtent(extent)
   })
-  matches.forEach((f) => selectedOlFeatures.push(f))
+  if (matches.length == 0) return false
   drawBoundingBox(extent)
-  return matches.length > 0
+
+  const selection = createEmpty()
+  matches.forEach((feature) => {
+    selectedOlFeatures.push(feature)
+    feature.setStyle(selectionStyle(feature))
+    extend(selection, feature.getGeometry()!.getExtent())
+  })
+
+  // We zoom so that both extents stay in view
+  const biggerExtent =
+    getArea(selection) > getArea(extent) ? selection : extent
+  requestAnimationFrame(() => {
+    mapView.fit(biggerExtent, {
+      padding: [150, 40, 40, 40],
+      duration: 1500,
+    })
+  })
+  return true
 }
 
 // Style for selected mapsheets,
-// which is different between select mode and other modes
+// which is different between inspect mode and other modes
 const selectionStyle = (feature: FeatureLike) => {
   switch (toolbarMode.value) {
   case 'inspect':

@@ -8,7 +8,6 @@ import type SelectInteraction from 'ol/interaction/Select'
 import type { FeatureLike } from 'ol/Feature'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import { always } from 'ol/events/condition'
-import { getCenter } from 'ol/extent.js'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
 import OlMap from 'ol/Map.js'
@@ -168,11 +167,7 @@ const loadGeoJSONFile = (file: File) => {
       )
       for (const feature of features) {
         const extent = feature.getGeometry()!.getExtent()
-        selectSheetsByExtent(extent)
-        mapView.value.animate({
-          center: getCenter(extent),
-          duration: 1000,
-        })
+        selectSheetsByExtent(extent, mapView.value)
       }
       addToast({
         type: CToastType.Success,

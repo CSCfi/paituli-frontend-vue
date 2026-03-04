@@ -83,7 +83,7 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
 
   // First try bounding box
   const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
-  if (selectSheetsByExtent(extent)) return
+  if (selectSheetsByExtent(extent, props.map.getView())) return
 
   // If none found, simply select sheets by label
   const matches = features.filter((f) => {
