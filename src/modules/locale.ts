@@ -19,7 +19,8 @@ export const i18n = createI18n({
         'default_title': 'Notice',
       },
       'help': {
-        'default': 'Click something for help!'
+        'default': 'Click something for help!',
+        'tooltip': 'Show help',
       },
     },
     'fi': {
@@ -27,7 +28,8 @@ export const i18n = createI18n({
         'default_title': 'Huomautus',
       },
       'help': {
-        'default': 'Napsauta jotain saadaksesi siitä apua!'
+        'default': 'Napsauta jotain saadaksesi siitä apua!',
+        'tooltip': 'Näytä ohjeet',
       },
     },
   },
@@ -36,7 +38,7 @@ export const i18n = createI18n({
 export const currentLocale = computed(() => i18n.global.locale.value);
 export function setLocale(locale: Locale) {
   i18n.global.locale.value = locale
-  setHelp(null)
+  setHelp(undefined)
 }
 
 // Flags for visualization
