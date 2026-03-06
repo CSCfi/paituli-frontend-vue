@@ -42,7 +42,6 @@ async function loadMetadata() {
 onMounted(async () => await loadMetadata())
 watch(currentDataset, async () => await loadMetadata())
 
-
 </script>
 
 <template>
@@ -51,7 +50,11 @@ watch(currentDataset, async () => await loadMetadata())
       <div v-if="parsedMetadata">
         <InfoModal :meta="parsedMetadata" ref="infoModal" />
       </div>
-      <c-button :disabled="!parsedMetadata" outlined @click="infoModal?.open()">
+      <c-button
+        :disabled="!parsedMetadata"
+        :loading="!parsedMetadata"
+        outlined
+        @click="infoModal?.open()">
         {{ t("info") }}
         <c-icon :path="mdiInformationVariantCircleOutline"></c-icon>
       </c-button>
@@ -93,9 +96,6 @@ c-button {
   margin-bottom: .5em;
 
   --c-button-outlined-text-color: var(--c-primary-200);
-
-  --c-button-outlined-disabled-text-color: var(--c-tertiary-600);
-  --c-button-outlined-disabled-background-color: var(--c-tertiary-500);
 }
 
 

@@ -6,7 +6,7 @@ import DatasetButtons from '@/components/DatasetButtons.vue'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { currentDataset } from '@/modules/datasets'
+import { currentDataset, datasets } from '@/modules/datasets'
 import DownloadSelect from '@/components/DownloadSelect.vue'
 import { menuMode } from '@/modules/controls'
 
@@ -38,13 +38,19 @@ const label = computed(() => {
         <c-tab-items slot="items">
 
           <c-tab-item value="datasets">
-            <DatasetSelect :loadId="dataset_id"/>
-            <div v-if="!currentDataset" class="suggestion">
-              <p>{{ t("suggestion") }}</p>
+            <div class="loading" v-if="!datasets.length">
+              <h4>Loading datasets...</h4>
+              <c-spinner size="50"/>
             </div>
             <div v-else>
-              <c-side-navigation-title>{{ t("dataset") + label}}</c-side-navigation-title>
-              <DatasetButtons />
+              <DatasetSelect :loadId="dataset_id"/>
+              <div v-if="!currentDataset" class="suggestion">
+                <p>{{ t("suggestion") }}</p>
+              </div>
+              <div v-else>
+                <c-side-navigation-title>{{ t("dataset") + label}}</c-side-navigation-title>
+                <DatasetButtons />
+              </div>
             </div>
           </c-tab-item>
 
@@ -118,6 +124,16 @@ c-tabs {
   --c-tab-background-color-hover: var(--c-primary-500);
 }
 
+.loading {
+  color: var(--c-white);
+  --c-spinner-color: var(--c-white);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
 c-side-navigation {
   width: 550px;
