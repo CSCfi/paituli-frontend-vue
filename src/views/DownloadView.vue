@@ -7,6 +7,8 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
+import DownloadSelect from '@/components/DownloadSelect.vue'
+import { menuMode } from '@/modules/controls'
 
 const { t } = useI18n()
 
@@ -23,18 +25,35 @@ const label = computed(() => {
 <template>
   <div class="wrapper">
     <c-side-navigation>
-      <c-side-navigation-title>{{ t("select") }}</c-side-navigation-title>
-      <DatasetSelect :loadId="dataset_id"/>
-      <div v-if="!currentDataset" class="suggestion">
-        <p>{{ t("suggestion") }}</p>
-      </div>
-      <div v-else>
-        <c-side-navigation-title>{{ t("dataset") + label}}</c-side-navigation-title>
-        <DatasetButtons />
-      </div>
-      <!--DatasetTabs />
-      <c-side-navigation-title>{{ t("downloads") }}</c-side-navigation-title>
-      <DownloadTab /-->
+      <c-tabs v-model="menuMode" v-control>
+        <c-tab
+          value="datasets">
+          {{ t("tabs.datasets") }}</c-tab>
+        <c-tab
+          value="download"
+          :disabled="!currentDataset">
+          {{ t("tabs.download") }}
+        </c-tab>
+        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+        <c-tab-items slot="items">
+
+          <c-tab-item value="datasets">
+            <DatasetSelect :loadId="dataset_id"/>
+            <div v-if="!currentDataset" class="suggestion">
+              <p>{{ t("suggestion") }}</p>
+            </div>
+            <div v-else>
+              <c-side-navigation-title>{{ t("dataset") + label}}</c-side-navigation-title>
+              <DatasetButtons />
+            </div>
+          </c-tab-item>
+
+          <c-tab-item value="download">
+            <DownloadSelect />
+          </c-tab-item>
+
+        </c-tab-items>
+      </c-tabs>
     </c-side-navigation>
     <MapItem/>
   </div>
@@ -63,12 +82,20 @@ c-side-navigation {
     "select": "Select dataset",
     "dataset": "Dataset",
     "downloads": "Downloads",
+    "tabs": {
+      "datasets": "Select dataset",
+      "download": "Dataset download",
+    },
   },
   "fi": {
     "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
     "select": "Valitse aineisto",
     "dataset": "Aineisto",
     "downloads": "Lataukset",
+    "tabs": {
+      "datasets": "Valitse aineisto",
+      "download": "Aineiston lataus",
+    },
   }
 }
 </i18n>
@@ -83,6 +110,14 @@ c-side-navigation {
   height: calc(100vh - var(--site-header-height));
   background-color: var(--c-tertiary-100);
 }
+
+c-tabs {
+  --c-tabs-indicator-color: var(--c-white);
+
+  --c-tab-text-color: white;
+  --c-tab-background-color-hover: var(--c-primary-500);
+}
+
 
 c-side-navigation {
   width: 550px;

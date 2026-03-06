@@ -6,6 +6,8 @@ import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
 import { selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
+import { selectMode, toolbarMode } from '@/modules/controls'
+import { vHelp } from '@/directives/help';
 
 const { t } = useI18n()
 
@@ -85,6 +87,14 @@ function openDownloadModal() {
     downloadSize.value,
   )
 }
+
+// Tracks selection warning which we will only show once per dataset
+const showSelectWarning = ref(true)
+watch(currentDataset, () => showSelectWarning.value = true)
+watch(selectedFeaturesArray, () => {
+  if (selectedFeaturesArray.value.length) showSelectWarning.value = false
+}, { deep: true })
+
 </script>
 
 <template>
@@ -93,11 +103,24 @@ function openDownloadModal() {
       <c-icon :path="mdiDownload" />
       {{ t("size", { size: downloadSize }) }}
     </c-button>
-    <div class="download-size-warning" v-if="downloadSizeExceeded">
-      {{ t("warning", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
+    <div class="warning" v-if="downloadSizeExceeded">
+      {{ t("warnings.size", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
     </div>
 
-    <div class="columns">
+    <div class="warning" v-if="showSelectWarning">
+      <p>{{ t("warnings.select") }}</p>
+      <!-- Note: The help ID points to a <help-content> in ToolBar.vue -->
+      <c-button
+        id="shortcut"
+        outlined
+        :disabled="toolbarMode == 'select'"
+        @click="toolbarMode = 'select'; selectMode = 'basic'"
+        v-help="'#basic-help'"
+        size="small">
+        {{ t("shortcut") }}
+      </c-button>
+    </div>
+    <div v-else class="columns">
       <div class="documents" v-if="licenseUrl">
         <p>{{ t("documents") }}</p>
         <label>
@@ -132,14 +155,22 @@ function openDownloadModal() {
 {
   "en": {
     "size": "Download ({size} MB)",
-    "warning": "Note: You have selected over {size} MB of data, which is over the limit of compressed archive download.",
+    "warnings": {
+      "size": "Note: You have selected over {size} MB of data, which is over the limit of compressed archive download.",
+      "select": "You must select at least one map sheet to proceed to download. You can do this by using the map view in select mode.",
+    },
+    "shortcut": "Change to select mode",
     "documents": "Documents",
     "files": "Files",
     "license": "License",
   },
   "fi": {
     "size": "Lataa ({size} MB)",
-    "warning": "Huom: Olet valinnut yli {size} MB dataa, mikä ylittää pakatun arkistolatauksen kokorajan.",
+    "warnings": {
+      "size": "Huom: Olet valinnut yli {size} MB dataa, mikä ylittää pakatun arkistolatauksen kokorajan.",
+      "select": "Sinun täytyy valita vähintään yksi karttalehti jatkaaksesi lataukseen. Voit tehdä näin käyttämällä karttanäkymän valintatilaa.",
+    },
+    "shortcut": "Vaihda valintatilaan",
     "documents": "Asiakirjat",
     "files": "Tiedostot",
     "license": "Lisenssi",
@@ -153,12 +184,17 @@ function openDownloadModal() {
   flex-direction: column;
   gap: 10px;
 }
-.download-size-warning {
-  color: var(--c-warning-400);
+.warning {
+  color: yellow;
 }
 .columns {
   display: flex;
   gap: 20px;
+}
+c-button#shortcut {
+  --c-button-outlined-text-color: var(--c-white);
+  --c-button-outlined-disabled-text-color: var(--c-tertiary-500);
+  --c-button-outlined-disabled-border-color: var(--c-tertiary-500);
 }
 
 .documents,

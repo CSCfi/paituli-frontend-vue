@@ -1,5 +1,9 @@
 import { ref } from 'vue'
 
+// Side menu mode
+type MenuMode = 'datasets' | 'download'
+export const menuMode = ref<MenuMode>('datasets')
+
 // Map layer visibility controls
 export const showLayer = {
   background: ref(true),

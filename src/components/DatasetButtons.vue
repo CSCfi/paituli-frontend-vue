@@ -14,6 +14,7 @@ import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
 
 import { fetchEtsinMetadata } from '@/modules/etsin'
+import { menuMode } from '@/modules/controls';
 
 const { addToast } = useToasts()
 const { t } = useI18n()
@@ -59,7 +60,7 @@ watch(currentDataset, async () => await loadMetadata())
         <c-icon :path="mdiCloudDownloadOutline"></c-icon>
       </c-button>
       <ServicesModal ref="servicesModal"/>
-      <c-button @click="() => {}">
+      <c-button @click="menuMode = 'download'">
         {{ t("download") }}
         <c-icon :path="mdiDownload"></c-icon>
       </c-button>
