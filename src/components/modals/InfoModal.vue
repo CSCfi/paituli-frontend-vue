@@ -4,12 +4,11 @@ import { currentDataset } from '@/modules/datasets';
 import { URLS } from '@/shared/constants';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { MetadataParse } from '@/shared/types';
 
 const { t } = useI18n()
 
-const props = defineProps<{
-  desc: string, links: { title: string, url: string }[]
-}>()
+const props = defineProps<{ meta: MetadataParse }>()
 
 const showModal = ref(false)
 const open = () => {
@@ -32,11 +31,11 @@ defineExpose({ open })
 
       <c-card-content>
         <strong>{{ currentDataset?.name }} - {{ currentDataset?.org }}</strong>
-        <div v-html="props.desc"></div>
-        <div v-if="links.length">
+        <div v-html="props.meta.description"></div>
+        <div v-if="props.meta.links.length">
           <strong>{{ t("files") }}:</strong>
           <ul class="metadata-links">
-            <li v-for="link in props.links" :key="link.url">
+            <li v-for="link in props.meta.links" :key="link.url">
               <c-link :href="link.url" target="_blank">{{ link.title }}</c-link>
             </li>
           </ul>

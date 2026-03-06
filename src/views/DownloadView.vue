@@ -2,16 +2,21 @@
 import MapItem from '@/components/MapItem.vue'
 
 import DatasetSelect from '@/components/DatasetSelect.vue'
-import DatasetTabs from '@/components/DatasetTabs.vue'
-import DownloadTab from '@/components/DownloadSelect.vue'
+import DatasetButtons from '@/components/DatasetButtons.vue'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { currentDataset } from '@/modules/datasets'
 
 const { t } = useI18n()
 
 const route = useRoute()
 const dataset_id = computed(() => route.query.data_id as string | undefined)
+
+const label = computed(() => {
+  if (currentDataset.value?.name) return ` — ${currentDataset.value.name}`
+  else return ''
+})
 
 </script>
 
@@ -20,9 +25,16 @@ const dataset_id = computed(() => route.query.data_id as string | undefined)
     <c-side-navigation>
       <c-side-navigation-title>{{ t("select") }}</c-side-navigation-title>
       <DatasetSelect :loadId="dataset_id"/>
-      <DatasetTabs />
+      <div v-if="!currentDataset" class="suggestion">
+        <p>{{ t("suggestion") }}</p>
+      </div>
+      <div v-else>
+        <c-side-navigation-title>{{ t("dataset") + label}}</c-side-navigation-title>
+        <DatasetButtons />
+      </div>
+      <!--DatasetTabs />
       <c-side-navigation-title>{{ t("downloads") }}</c-side-navigation-title>
-      <DownloadTab />
+      <DownloadTab /-->
     </c-side-navigation>
     <MapItem/>
   </div>
@@ -47,11 +59,15 @@ c-side-navigation {
 <i18n>
 {
   "en": {
-    "select": "Select data",
+    "suggestion": "Please select a Producer to start browsing available datasets.",
+    "select": "Select dataset",
+    "dataset": "Dataset",
     "downloads": "Downloads",
   },
   "fi": {
+    "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
     "select": "Valitse aineisto",
+    "dataset": "Aineisto",
     "downloads": "Lataukset",
   }
 }
@@ -71,6 +87,10 @@ c-side-navigation {
 c-side-navigation {
   width: 550px;
   padding-right: 25px;
+}
+
+.suggestion {
+  color: yellow;
 }
 
 </style>
