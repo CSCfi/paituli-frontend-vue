@@ -24,7 +24,7 @@ const label = computed(() => {
 
 <template>
   <div class="wrapper">
-    <c-side-navigation>
+    <nav class="side">
       <c-tabs v-model="menuMode" v-control>
         <c-tab
           value="datasets">
@@ -60,25 +60,13 @@ const label = computed(() => {
 
         </c-tab-items>
       </c-tabs>
-    </c-side-navigation>
+    </nav>
     <MapItem/>
   </div>
 </template>
 
 <style global>
-c-side-navigation {
 
-  c-button {
-    --c-button-background-color: var(--c-info-500);
-    --c-button-background-color-hover: var(--c-info-400);
-    --c-button-disabled-background-color: var(--c-primary-500);
-    --c-button-disabled-text-color: var(--c-tertiary-400);
-
-    --c-button-outlined-background-color: var(--c-primary-600);
-    --c-button-outlined-background-color-hover: var(--c-primary-500);
-    --c-button-outlined-border-color: var(--c-primary-400);
-  }
-}
 </style>
 
 <i18n>
@@ -135,9 +123,24 @@ c-tabs {
   text-align: center;
 }
 
-c-side-navigation {
+nav.side {
   width: 550px;
   padding-right: 25px;
+
+  background-color: var(--c-primary-600);
+  padding: 1.25em 1.75em 1.25em 1.75em;
+
+  /* All buttons on the sidebar and its components */
+  :deep(c-button) {
+      --c-button-background-color: var(--c-info-500);
+      --c-button-background-color-hover: var(--c-info-400);
+      --c-button-disabled-background-color: var(--c-primary-500);
+      --c-button-disabled-text-color: var(--c-tertiary-400);
+
+      --c-button-outlined-background-color: var(--c-primary-600);
+      --c-button-outlined-background-color-hover: var(--c-primary-500);
+      --c-button-outlined-border-color: var(--c-primary-400);
+  }
 }
 
 .suggestion {
