@@ -12,6 +12,7 @@ const router = createRouter({
     },
     {
       path: '/download',
+      meta: { hideFooter: true },
       component: DownloadView,
     },
     {

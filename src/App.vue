@@ -5,8 +5,10 @@ import { useI18n } from 'vue-i18n'
 import { initToasts } from '@/composables/toasts';
 import FooterItem from '@/components/FooterItem.vue';
 import { currentFlag, languageItems } from '@/modules/locale';
+import { useRoute } from 'vue-router';
 
 const { t } = useI18n()
+const route = useRoute()
 
 // Initialize global toasts messages container
 const toasts = ref<HTMLCToastsElement | null>(null)
@@ -40,7 +42,7 @@ onMounted(() => {
     <main>
       <RouterView />
     </main>
-    <FooterItem />
+    <FooterItem v-if="!route.meta.hideFooter"/>
   </div>
   <c-toasts ref="toasts" horizontal="center" vertical="top" />
 </template>
