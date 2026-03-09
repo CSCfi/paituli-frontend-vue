@@ -127,6 +127,9 @@ nav.side {
   width: 550px;
   padding-right: 25px;
 
+  overflow-x: hidden;
+  overflow-y: scroll;
+
   background-color: var(--c-primary-600);
   padding: 1.25em 1.75em 1.25em 1.75em;
 

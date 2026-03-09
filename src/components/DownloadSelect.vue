@@ -120,27 +120,22 @@ watch(selectedFeaturesArray, () => {
         {{ t("shortcut") }}
       </c-button>
     </div>
-    <div v-else class="columns">
-      <div class="documents" v-if="licenseUrl">
-        <p>{{ t("documents") }}</p>
-        <label>
-          <input type="checkbox" v-model="licenseChecked" />
-          <a :href="licenseUrl" target="_blank">{{ t("license") }}</a>
-        </label>
-      </div>
+    <div v-else>
+      <h4>{{ t("documents") }}</h4>
+      <label>
+        <input type="checkbox" v-model="licenseChecked" />
+        <a :href="licenseUrl" target="_blank">{{ t("license") }}</a>
+      </label>
 
-      <div class="files" v-if="selectedFeaturesArray.length">
-        <p>{{ t("files") }}</p>
-        <div
-          v-for="feature in selectedFeaturesArray"
-          :key="feature.getId()"
-          class="file-item"
-        >
+      <div v-if="selectedFeaturesArray.length">
+        <h4>{{ t("files") }}</h4>
+        <div class="files"
+             v-for="feature in selectedFeaturesArray"
+             :key="feature.getId()">
           <label>
             <input
               type="checkbox"
-              v-model="checkboxStates[feature.get('label')]"
-            />
+              v-model="checkboxStates[feature.get('label')]" />
             {{ feature.get('label') }}
           </label>
         </div>
@@ -182,14 +177,9 @@ watch(selectedFeaturesArray, () => {
 .download-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 .warning {
   color: yellow;
-}
-.columns {
-  display: flex;
-  gap: 20px;
 }
 c-button#shortcut {
   --c-button-outlined-text-color: var(--c-white);
@@ -197,18 +187,32 @@ c-button#shortcut {
   --c-button-outlined-disabled-border-color: var(--c-tertiary-500);
 }
 
-.documents,
+h4, label {
+  color: var(--c-white);
+
+  a {
+    margin-left: .25em;
+    color: var(--c-accent-400);
+  }
+  a:hover {
+    background: var(--c-accent-700);
+  }
+}
+h4 {
+  margin-bottom: .75em;
+}
+
 .files {
-  flex: 1;
-  color: white;
+
+  label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+  }
+  label:hover {
+    background: var(--c-primary-500);
+  }
 }
 
-a {
-  color: var(--c-secondary-300);
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-}
 </style>
