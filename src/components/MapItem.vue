@@ -4,6 +4,7 @@ import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
 
+import { mdiClose } from '@mdi/js'
 import type SelectInteraction from 'ol/interaction/Select'
 import type { FeatureLike } from 'ol/Feature'
 import { Fill, Stroke, Style, Text } from 'ol/style'
@@ -302,11 +303,16 @@ watch(toolbarMode, (mode) => {
       :auto-pan="true"
       :auto-pan-animation="{ duration: 250 }">
       <div class="popup">
-        <button class="popup-closer" @click="closePopup">×</button>
-        <div class="popup-content">
-          <p>{{ t("feature") }}</p>
-          <pre>{{ featureInfoPopup.content }}</pre>
-        </div>
+        <c-alert>
+          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+          <div slot="title">{{ t('feature') }}</div>
+          <c-icon-button size="x-small" @click="closePopup">
+            <c-icon :path="mdiClose" />
+          </c-icon-button>
+          <div class="content">
+            <pre>{{ featureInfoPopup.content }}</pre>
+          </div>
+        </c-alert>
       </div>
     </Map.OlOverlay>
   </Map.OlMap>
@@ -328,7 +334,7 @@ watch(toolbarMode, (mode) => {
 <i18n>
 {
   "en": {
-    "feature": "Feature info:",
+    "feature": "Feature info",
     "toasts": {
       "fetching": {
         "index_failed": "Failed to load index map features",
@@ -349,7 +355,7 @@ watch(toolbarMode, (mode) => {
     },
   },
   "fi": {
-    "feature": "Kohteen tiedot:",
+    "feature": "Kohteen tiedot",
     "toasts": {
       "fetching": {
         "index_failed": "Indeksikartan noutaminen epäonnistui",
@@ -373,28 +379,6 @@ watch(toolbarMode, (mode) => {
 </i18n>
 
 <style scoped>
-.popup {
-  position: relative;
-  background-color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  min-width: 160px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-.popup-closer {
-  position: absolute;
-  top: 4px;
-  right: 6px;
-  border: none;
-  background: transparent;
-  font-size: 16px;
-  cursor: pointer;
-}
-.popup-content {
-  margin-top: 10px;
-  font-family: monospace;
-}
 
 .tools {
   position: relative;
@@ -423,6 +407,33 @@ watch(toolbarMode, (mode) => {
 :global(.ol-zoom) {
   /* We have our own zoom buttons */
   display: none;
+}
+
+.popup {
+  position: relative;
+  background-color: var(--c-white);
+  min-width: 200px;
+
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: translateX(-50%);
+  margin-top: 1em;
+
+  c-icon-button {
+    position: absolute;
+    top: .75em;
+    right: .75em;
+    --c-icon-button-text-color: var(--c-primary-500);
+    --c-icon-button-background-color: var(--c-white);
+    --c-icon-button-background-color-hover: var(--c-primary-200);
+  }
+
+  .content {
+    max-height: 500px;
+    overflow-y: scroll;
+    font-family: monospace;
+    font-size: large;
+  }
 }
 
 .debug {
