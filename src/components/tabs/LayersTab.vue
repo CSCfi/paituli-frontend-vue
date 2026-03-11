@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { showLayer } from '@/modules/controls';
 import { dataSource, indexSource } from '@/modules/layers';
+import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n()
+
+// Update data layer switch state when changing datasets
+watch(dataSource, (newSource) => {
+  showLayer.data.value = !!newSource
+}, { immediate: true })
 
 </script>
 
@@ -23,7 +29,6 @@ const { t } = useI18n()
   </c-switch>
   <c-switch v-model="showLayer.data.value"
             :disabled="dataSource == null"
-            :checked="dataSource != null"
             v-control>
     {{ t("data") }}
   </c-switch>
