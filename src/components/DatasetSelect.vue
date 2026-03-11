@@ -129,7 +129,7 @@ watch(datasets, () => {
   selectedScale.value = dataset.scale
   selectedYear.value = dataset.year
   selectedFormat.value = dataset.format
-})
+}, { immediate: true })
 
 // Precomputed dataset count map to be displayed in producer dropdown,
 // indexed with producer id
