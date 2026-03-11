@@ -11,7 +11,7 @@ import type { NominatimResponse } from '@/shared/types';
 import { URLS } from '@/shared/constants';
 import { useToasts } from '@/composables/toasts';
 import { CToastType } from '@cscfi/csc-ui';
-import { selectedOlFeatures, selectSheetsByExtent } from '@/modules/selection';
+import { selectedOlFeatures, selectFeature, selectSheetsByExtent } from '@/modules/selection';
 import { indexSource } from '@/modules/layers';
 import { vHelp } from '@/directives/help';
 import HelpContent from './HelpContent.vue';
@@ -91,7 +91,7 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
     return name.includes(query.toLowerCase());
   })
   if (matches.length > 0) {
-    matches.forEach((f) => selectedOlFeatures.push(f));
+    matches.forEach((feature) => selectFeature(feature))
     return
   }
 
