@@ -12,6 +12,7 @@ import { always } from 'ol/events/condition'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
 import OlMap from 'ol/Map.js'
+import KeyboardZoom from 'ol/interaction/KeyboardZoom'
 
 import { currentDataset, datasets, fetchMetadata } from '@/modules/datasets'
 import { APP_SETTINGS } from '@/shared/constants'
@@ -58,14 +59,20 @@ const { t } = useI18n()
 const olMapRef = ref<{ map: OlMap } | null>(null)
 const mapView = computed(() => olMapRef.value!.map.getView())
 
-// Fetch datasets on mount
 onMounted(async () => {
+  // Fetch datasets on mount
   fetchDatasets()
+  const map = olMapRef.value!.map
+  const olMapElement = map.getTargetElement()
 
   // Add drag-n-drop listeners
-  const olMapElement = olMapRef.value!.map.getTargetElement()
   olMapElement.addEventListener('drop', dragDropHandler)
   olMapElement.addEventListener('dragover', (e) => e.preventDefault())
+
+  // Stop keyboard zooming OL interaction (from intercepting +/- keystrokes)
+  const zoom = map.getInteractions().getArray()
+    .find(i => i instanceof KeyboardZoom) as KeyboardZoom | undefined
+  if (zoom) map.removeInteraction(zoom)
 })
 
 // Fetch datasets again if locale changes, due to the
