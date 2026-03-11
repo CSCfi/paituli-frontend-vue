@@ -11,6 +11,7 @@ import type { DrawEvent } from 'ol/interaction/Draw'
 import { drawBoundingBox, indexSource } from '@/modules/layers'
 import { currentDataset } from './datasets'
 import { toolbarMode } from './controls'
+import type { Geometry } from 'ol/geom'
 
 
 // Selected features managed by OL map element
@@ -31,6 +32,12 @@ selectedOlFeatures.on('remove', (event) => {
   )
 })
 
+// Adds a single feature (sheet) to selection
+export function selectFeature(feature: Feature<Geometry>) {
+  selectedOlFeatures.push(feature)
+  feature.setStyle(selectionStyle(feature))
+}
+
 // Sheets should be automatically selected if there is only one of them
 export const autoSelectSheets =
   computed(() => currentDataset.value?.map_sheets == 1)
@@ -38,10 +45,7 @@ export const autoSelectSheets =
 // Simply selects all mapsheets in the current index source, if any
 // and ensures their style gets updated
 export function selectAll() {
-  indexSource.value?.forEachFeature((feature) => {
-    selectedOlFeatures.push(feature)
-    feature.setStyle(selectionStyle(feature))
-  })
+  indexSource.value?.forEachFeature((feature) => selectFeature(feature))
 }
 
 // Update style for (de)selected features
@@ -61,8 +65,7 @@ export function dragboxEnd(event: DragBoxEvent) {
 
   indexSource.value?.forEachFeatureIntersectingExtent(extent, (feature) => {
     if (!selectedOlFeatures.getArray().includes(feature)) {
-      selectedOlFeatures.push(feature)
-      feature.setStyle(selectionStyle(feature))
+      selectFeature(feature)
     }
   })
 }
@@ -74,8 +77,7 @@ export function polyDrawEnd(event: DrawEvent) {
   indexSource.value?.forEachFeature((feature) => {
     const featureExtent = feature.getGeometry()?.getExtent()
     if (featureExtent && geometry.intersectsExtent(featureExtent)) {
-      selectedOlFeatures.push(feature)
-      feature.setStyle(selectionStyle(feature))
+      selectFeature(feature)
     }
   })
 }
@@ -97,8 +99,7 @@ export function selectSheetsByExtent(
 
   const selection = createEmpty()
   matches.forEach((feature) => {
-    selectedOlFeatures.push(feature)
-    feature.setStyle(selectionStyle(feature))
+    selectFeature(feature)
     extend(selection, feature.getGeometry()!.getExtent())
   })
 
