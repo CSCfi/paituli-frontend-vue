@@ -76,8 +76,9 @@ watch(currentLocale, async () => fetchDatasets())
 // and automatically select mapsheets if we have only one
 watch(currentDataset, async (dataset) => {
 
-  // Clear our highlights at this point
+  // Clear our highlights and popups at this point
   highlightSource.clear()
+  closePopup()
 
   if (!dataset) return
   try {
@@ -211,13 +212,15 @@ const indexStyle = (feature: FeatureLike) => {
   }
 }
 
-// Signal OL to redraw index layer (styles) when we change tool modes
-watch(toolbarMode, () => indexSource.value?.changed())
-
-// Disable selection interaction when we are out of select mode,
-// so user does not accidentally select mapsheets
 const selectInteraction = ref<{ select: SelectInteraction }>()
+
+// When tool mode changes we clear lingering inspect mode popups,
+// and signal OL to redraw index layer (styles). We also disable
+// selection interaction when we are out of select mode so user
+// does not accidentally select mapsheets
 watch(toolbarMode, (mode) => {
+  closePopup()
+  indexSource.value?.changed()
   selectInteraction.value!.select.setActive(mode == 'select')
 })
 
