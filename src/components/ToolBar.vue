@@ -196,7 +196,7 @@ const onFileSelected = (event: Event) => {
       "disabled": "Selection tools are available for datasets with more than one map sheet",
       "basic": {
         "label": "Basic",
-        "tooltip": "Select mapsheets using a simple selection",
+        "tooltip": "Select mapsheets by clicking or drawing a rectangle",
         "help": "Select single map sheets by clicking or drag a rectangular selection to select multiple map sheets. Clicking selected sheets de-selects them.",
       },
       "poly": {
@@ -235,11 +235,11 @@ const onFileSelected = (event: Event) => {
     },
     "select": {
       "label": "Valitse",
-      "tooltip": "Valitase karttalehtiä lataukseen",
+      "tooltip": "Valitse karttalehtiä lataukseen",
       "disabled": "Valintatyökalut ovat käytössä aineistoille, joilla on useampi kuin yksi karttalehti",
       "basic": {
         "label": "Tavallinen",
-        "tooltip": "Valita karttalehtiä yksinkertaisella valinnalla",
+        "tooltip": "Valitse karttalehtiä napsauttamalla tai suorakulmiolla",
         "help": "Valitse yksittäisiä karttalehtiä napsauttamalla tai raahaa suorakulmainen valinta valitaksesi useita karttalehtiä. Valittuja lehtiä napsauttamalla poistat ne valinnasta.",
       },
       "poly": {
