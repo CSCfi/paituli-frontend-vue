@@ -2,7 +2,7 @@
 import { mdiFileDownloadOutline, mdiOpenInNew } from '@mdi/js';
 import { URLS } from '@/shared/constants'
 import { copyToClipboard } from '@/shared/util'
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import CodeBlock from '@/components/CodeBlock.vue';
 import { useI18n } from 'vue-i18n';
@@ -21,6 +21,16 @@ function open(tab: ModalTab)
 }
 
 defineExpose({ open })
+
+const helpUrl = computed(() => {
+  switch (modalTab.value) {
+  case 'FileTransferTab': return '/files'
+  case 'STACTab': return '/stac'
+  case 'StableOGCTab': return '/webservices'
+  case 'NewOGCTab': return '/webservices'
+  default: return '/'
+  }
+})
 
 </script>
 
@@ -47,52 +57,36 @@ defineExpose({ open })
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <c-tab-items slot="items">
             <c-tab-item value="FileTransferTab">
-
               <div v-if="currentDataset.funet">
-
-                <strong>HTTP</strong>
-                <p>
-                  <CodeBlock
-                    :content="URLS.HTTP_LINKS_BASE + currentDataset.funet"
-                  />
+                <h4>HTTP</h4>
+                <CodeBlock :content="URLS.HTTP_LINKS_BASE + currentDataset.funet" />
+                <i18n-t keypath="file_transfer.http.info" tag="p">
                   <c-link :href="URLS.HTTP_LINKS_BASE + currentDataset.funet" target="_blank">
-                    {{ t("file_transfer.link") }}<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18"/>
+                    {{ t("file_transfer.http.link") }}<c-icon :path="mdiOpenInNew" size="18"/>
                   </c-link>
-                  {{ t("file_transfer.info") }}
-                </p>
-
-                <p><strong>FTP</strong></p>
-                <CodeBlock
-                  :content="URLS.FTP_LINKS_BASE + currentDataset.funet"
-                />
-                <p><strong>RSYNC</strong></p>
-                <CodeBlock
-                  :content="URLS.RSYNC_LINKS_BASE + currentDataset.funet"
-                />
-
+                </i18n-t>
+                <h4>FTP</h4>
+                <CodeBlock :content="URLS.FTP_LINKS_BASE + currentDataset.funet" />
+                <h4>rsync</h4>
+                <CodeBlock :content="URLS.RSYNC_LINKS_BASE + currentDataset.funet" />
               </div>
 
+              <h4>GeoPackage</h4>
               <p>
-                <strong>Index map as Geopackage: </strong>
                 <c-link :href="URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id)">
-                  Download<c-icon :path="mdiFileDownloadOutline"></c-icon>
+                  <c-icon :path="mdiFileDownloadOutline" />{{ t('file_transfer.gpkg.download') }}
                 </c-link>
+                <br>{{ t('file_transfer.gpkg.info') }}
               </p>
-
-              <c-link href="/files" target="_blank">
-                {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
-              </c-link>
             </c-tab-item>
 
             <c-tab-item value="STACTab">
               <div v-if="currentDataset.stac_id">
-                <p>
-                  {{ t("stac.info") }}
-                </p>
+                <p>{{ t("stac.info") }}</p>
                 <p>
                   {{ t("stac.catalogued") }}
                   <c-link :href="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id" target="_blank">
-                    {{ t("stac.link") }}<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                    {{ t("stac.link") }}<c-icon :path="mdiOpenInNew" size="18" />
                   </c-link>
                 </p>
                 <c-table>
@@ -129,9 +123,6 @@ defineExpose({ open })
                   {{ t("stac.not_catalogued") }}
                 </p>
               </div>
-              <c-link href="/stac" target="_blank">
-                {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
-              </c-link>
             </c-tab-item>
 
             <c-tab-item value="StableOGCTab">
@@ -202,7 +193,6 @@ defineExpose({ open })
                 </c-table>
 
                 <p>{{ t("apis.instruction") }}</p>
-
                 <c-table>
                   <table>
                     <tbody>
@@ -218,21 +208,14 @@ defineExpose({ open })
                         </td>
                       </tr>
                       <tr :class="{ 'grayed': !currentDataset.data_max_scale }">
-                        <td>max visible scale</td>
+                        <td>Max visible scale</td>
                         <td v-if="currentDataset.data_max_scale">{{ currentDataset.data_max_scale }}</td>
                         <td v-else>{{ t("apis.not_available") }}</td>
                       </tr>
                     </tbody>
                   </table>
                 </c-table>
-
               </div>
-
-              <p>
-                <c-link href="/webservices" target="_blank">
-                  {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
-                </c-link>
-              </p>
             </c-tab-item>
 
             <c-tab-item value="NewOGCTab">
@@ -270,7 +253,7 @@ defineExpose({ open })
                       <tr :class="{ 'grayed': !hasVectorData(currentDataset) }">
                         <td v-if="hasVectorData(currentDataset)">
                           <c-link :href='URLS.OGC_FEATURES_PAITULI_BASE + "/collections/" + currentDataset.data_url' target="_blank">
-                            Features<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
+                            Features<c-icon :path="mdiOpenInNew" size="18" />
                           </c-link>
                         </td>
                         <td v-else>Features</td>
@@ -313,7 +296,7 @@ defineExpose({ open })
                         </td>
                       </tr>
                       <tr :class="{ 'grayed': !currentDataset.data_max_scale }">
-                        <td>max visible scale</td>
+                        <td>Max visible scale</td>
                         <td v-if="currentDataset.data_max_scale">{{ currentDataset.data_max_scale }}</td>
                         <td v-else>{{ t("apis.not_available") }}</td>
                       </tr>
@@ -322,11 +305,6 @@ defineExpose({ open })
                 </c-table>
               </div>
 
-              <p>
-                <c-link href="/webservices" target="_blank">
-                  {{ t("help") }}?<c-icon :path="mdiOpenInNew" color="var(--c-primary-500)" size="18" />
-                </c-link>
-              </p>
             </c-tab-item>
 
           </c-tab-items>
@@ -334,7 +312,10 @@ defineExpose({ open })
 
       </c-card-content>
 
-      <c-card-actions justify="end">
+      <c-card-actions justify="space-between">
+        <c-button id="help" :href="helpUrl" target="_blank">
+          {{ t("help") }}?<c-icon :path="mdiOpenInNew" size="18" />
+        </c-button>
         <c-button @click="showModal = false">
           {{ t("close") }}
         </c-button>
@@ -356,18 +337,24 @@ defineExpose({ open })
     "api": "API",
     "endpoint": "Endpoint",
     "file_transfer": {
-      "link": "HTTP file index",
-      "info": "can be also opened in your browser to view or download dataset contents",
+      "http": {
+        "link": "HTTP file index",
+        "info": "{0} can be also opened in your browser to view or download dataset contents",
+      },
+      "gpkg": {
+        "download": "Download index map as GeoPackage",
+        "info": "The geopackage contains names, paths and geometry of mapsheets.",
+      },
     },
     "stac": {
       "collection": "Collection",
-      "info": "The SpatioTemporal Asset Catalog (STAC) specification provides a common structure for describing and cataloging spatiotemporal assets.",
+      "info": "The SpatioTemporal Asset Catalog (STAC) enables easy search of dataset files (assets) based on their location and time.",
       "catalogued": "This dataset has been catalogued in Paituli STAC, and it's availabie for viewing in",
-      "link": "STAC browsers",
+      "link": "STAC browser",
       "not_catalogued": "This dataset has not been catalogued in Paituli STAC.",
     },
     "apis": {
-      "instruction": "When using the listed APIs, copy the endpoint(s) and the identifier below into your application of choice. Note that some APIs are only available for specific dataset formats.",
+      "instruction": "To use an API, copy an endpoint above and the layer name below into your application of choice. Note that the supported APIs vary between datasets, mainly depending on the data type and format.",
       "not_available": "Not available",
       "not_provided": "This dataset is not provided by Paituli Geoserver APIs",
     },
@@ -386,18 +373,24 @@ defineExpose({ open })
     "api": "Rajapinta",
     "endpoint": "Pääte",
     "file_transfer": {
-      "link": "HTTP-tiedostoindeksin",
-      "info": "voi avata myös selaimessa, jonka kautta voi tarkastella tai ladata aineiston sisältöä.",
+      "http": {
+        "link": "HTTP-tiedostoindeksin",
+        "info": "{0} voi avata myös selaimessa, jonka kautta voi tarkastella tai ladata aineiston sisältöä.",
+      },
+      "gpkg": {
+        "download": "Lataa indeksikartta GeoPackage -muodossa",
+        "info": "Geopackage sisältää karttalehtien nimet, polut sekä geometrian.",
+      },
     },
     "stac": {
       "collection": "Kokoelma",
-      "info": "SpatioTemporal Asset Catalog (STAC) -spesifikaatio tarjoaa yhtenäisen rakenteen spatiotemporaalisten aineistojen kuvaamiseen ja katalogisointiin.",
+      "info": "SpatioTemporal Asset Catalog (STAC) mahdollistaa aineiston tiedostojen (assetien) helpon haun niiden sijainnin ja ajan perusteella.",
       "catalogued": "Tämä aineisto on katalogoitu Paituli STAC:ssa, ja se on nähtävissä",
-      "link": "STAC-selaimissa",
+      "link": "STAC-selaimessa",
       "not_catalogued": "Tätä aineistoa ei ole katalogoitu Paituli STAC:ssa.",
     },
     "apis": {
-      "instruction": "Käyttäessäsi listattuja rajapintoja, kopioi alla olevat päätteet ja tunniste sovellukseesi. Huomaa, että osa rajapinnoista on käytettävissä vain tietyille aineistomuodoille.",
+      "instruction": "Rajapinnan käyttämiseksi kopioi yllä oleva pääte sekä alta tason nimi (Layer) valitsemaasi sovellukseen. Huomaa, että tuettujen rajapintojen valikoima vaihtelee aineistoittain, pääasiassa aineiston tyypin ja tiedostomuodon mukaan.",
       "not_available": "Ei saatavilla",
       "not_provided": "Paitulin Geoserver rajapinnat eivät tarjoa tätä aineistoa",
     },
@@ -414,19 +407,28 @@ c-tabs {
   --c-tab-text-color: var(--c-primary-600);
   --c-tabs-indicator-color: var(--c-primary-900);
 }
+c-link {
+  --c-link-color: var(--c-accent-700);
+}
+c-icon {
+  --c-icon-color: var(--c-accent-700);
+}
 c-tab-item {
   color: var(--c-primary-900);
 }
-c-link {
-  --c-link-color: var(--c-primary-500)
+c-button#help {
+  --c-button-background-color: var(--c-tertiary-700);
+  --c-button-background-color-hover: var(--c-tertiary-500);
+  c-icon {
+    --c-icon-color: var(--c-white);
+  }
 }
 table.c-table .grayed td
 {
   color: var(--c-tertiary-300);
-}
-table.c-table .grayed td c-button
-{
-  display: none;
+  c-button {
+    display: none;
+  }
 }
 a {
   color: var(--c-info-400);
