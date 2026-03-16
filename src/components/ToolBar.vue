@@ -5,6 +5,7 @@ import {
   mdiCursorDefaultOutline,
   mdiCursorMove,
   mdiFileUploadOutline,
+  mdiMagnifyPlus,
   mdiOpenInNew,
   mdiShapePolygonPlus,
   mdiTarget,
@@ -174,6 +175,10 @@ const onFileSelected = (event: Event) => {
             <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
             <div slot="title">{{ t("inspect.zoom.title") }}</div>
             {{ t("inspect.zoom.message") }}
+            <c-link id="zoom">
+              <c-icon :path="mdiMagnifyPlus"/>
+              {{ t("inspect.zoom.button") }}
+            </c-link>
           </c-alert>
         </div>
       </c-tab-item>
@@ -222,8 +227,9 @@ const onFileSelected = (event: Event) => {
       "disabled": "Selected dataset does not have inspectable feature information",
       "help": "Click highlighted map features to display feature information.",
       "zoom": {
-        "title": "Notice",
+        "title": "Data not visible",
         "message": "To use the inspect tool, zoom in until you see the data layer preview.",
+        "button": "Click here to zoom in to necessary level",
       },
     },
   },
@@ -265,8 +271,9 @@ const onFileSelected = (event: Event) => {
       "disabled": "Valitulla aineistolla ei ole tarkasteltavia kohdetietoja",
       "help": "Napsauta korostettuja karttakohteita näyttääksesi kohteen tiedot.",
       "zoom": {
-        "title": "Huomautus",
+        "title": "Data ei näkyvissä",
         "message": "Käyttääksesi tarkastelutyökalua, zoomaa kunnes näet datan esikatselun.",
+        "button": "Napsauta tästä zoomataksesi sopivalle tasolle",
       },
     },
   },
@@ -306,6 +313,10 @@ c-button#trash {
 
 c-link {
   --c-link-color: var(--c-accent-400);
+}
+
+c-link#zoom {
+  --c-link-color: var(--c-info-500);
 }
 
 .c-button--disabled {

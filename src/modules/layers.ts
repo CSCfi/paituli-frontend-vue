@@ -72,9 +72,15 @@ export const dataSource = computed(() => {
   })
 })
 
+// The resolution at which the current dataset should start
+// rendering its data layer.
 export const dataLayerMaxResolution = computed(() => {
   const max_scale = currentDataset.value?.data_max_scale
-  return max_scale ? max_scale / 2835 : 100
+  // We can convert from scale denominators to view resolutions
+  // (px/m) by multiplying with standard OGC pixel size.
+  // For datasets without a max scale we simply use a resolution
+  // which should cover Finland at all at once.
+  return max_scale ? (max_scale * 0.00028) : 4000
 })
 
 // Fetches index data for provided dataset and replaces index layer
