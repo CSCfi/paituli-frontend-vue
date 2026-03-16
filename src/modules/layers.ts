@@ -1,4 +1,4 @@
-import { computed, shallowRef } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 
 import { geojson as FGBGeoJson } from 'flatgeobuf'
 
@@ -16,7 +16,8 @@ import { Stroke, Style } from 'ol/style'
 
 import { LAYER, URLS } from '@/shared/constants'
 import { currentDataset } from '@/modules/datasets'
-
+import type { ImageTile } from 'ol'
+import { currentLocale } from './locale'
 
 // Background map source
 export const osmSource = new TileWMS({
@@ -68,9 +69,26 @@ export const dataSource = computed(() => {
     version: '1.0.0',
     format: 'image/png',
     style: 'default',
-    matrixSet: 'EPSG:3857'
+    matrixSet: 'EPSG:3857',
+
+    // Set a temporary loading image while loading the real image
+    // in the background. After that we request a redraw to display it
+    tileLoadFunction: (tile, url) => {
+      const loader = new Image()
+      loader.src = url
+      const target = (tile as ImageTile).getImage() as HTMLImageElement
+      target.src = `loading_tile_${currentLocale.value}.png`
+      loader.onerror = () => target.src = 'https://cataas.com/cat'
+      loader.onload = () => {
+        target.src = url
+        tileLoadCallback.value?.()
+      }
+    },
   })
 })
+
+// A callback for source redraws upon tile loading
+export const tileLoadCallback = ref<() => void>()
 
 // The resolution at which the current dataset should start
 // rendering its data layer.

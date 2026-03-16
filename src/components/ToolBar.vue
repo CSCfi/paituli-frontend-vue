@@ -16,7 +16,7 @@ import OlMap from 'ol/Map.js'
 import DragPan from 'ol/interaction/DragPan'
 import { useI18n } from 'vue-i18n';
 
-import { dataLayerMaxResolution, dataSource } from '@/modules/layers';
+import { dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
 import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
@@ -40,6 +40,10 @@ onMounted(() => {
   view.on('change:resolution', () => {
     viewResolution.value = view.getResolution() ?? 0
   })
+  // Set callback for data tile rendering updates
+  tileLoadCallback.value = () => {
+    props.map.render()
+  }
 })
 
 watch(dataSource, () => {
