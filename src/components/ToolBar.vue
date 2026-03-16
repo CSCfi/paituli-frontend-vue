@@ -87,6 +87,18 @@ const onFileSelected = (event: Event) => {
   for (const file of files) fileSelectedCallback.value?.(file)
 }
 
+// For the inspect mode button to take us to where data preview loads.
+const zoomToData = () => {
+  const view = props.map.getView()
+  view.animate({
+    duration: 1000,
+    // Since this is the exact resolution beyond which OL starts rendering
+    // the layer and WMTS queries start, we nudge the limit forward just
+    // a bit to avoid landing exactly on the threshold (floating point errors)
+    resolution: dataLayerMaxResolution.value * 0.99,
+  })
+}
+
 </script>
 
 <template>
@@ -179,7 +191,7 @@ const onFileSelected = (event: Event) => {
             <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
             <div slot="title">{{ t("inspect.zoom.title") }}</div>
             {{ t("inspect.zoom.message") }}
-            <c-link id="zoom">
+            <c-link id="zoom" href="#" @click.prevent='zoomToData'>
               <c-icon :path="mdiMagnifyPlus"/>
               {{ t("inspect.zoom.button") }}
             </c-link>
