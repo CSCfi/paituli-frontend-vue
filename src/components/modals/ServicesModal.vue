@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { mdiFileDownloadOutline, mdiOpenInNew } from '@mdi/js';
 import { URLS } from '@/shared/constants'
-import { copyToClipboard } from '@/shared/util'
 import { computed, ref } from 'vue';
 
-import CodeBlock from '@/components/CodeBlock.vue';
 import { useI18n } from 'vue-i18n';
 import { currentDataset, hasRasterData, hasVectorData } from '@/modules/datasets';
+import ServicesModalRow from './ServicesModalRow.vue';
 
 const { t } = useI18n()
 
@@ -19,7 +18,6 @@ function open(tab: ModalTab)
   showModal.value = true;
   modalTab.value = tab;
 }
-
 defineExpose({ open })
 
 const helpUrl = computed(() => {
@@ -57,21 +55,37 @@ const helpUrl = computed(() => {
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <c-tab-items slot="items">
             <c-tab-item value="FileTransferTab">
+              <c-table>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>{{ t("protocol") }}</th>
+                      <th>URL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ServicesModalRow
+                      label="HTTP"
+                      :show-open="true"
+                      :text="URLS.HTTP_LINKS_BASE + currentDataset.funet"/>
+                    <ServicesModalRow
+                      label="FTP"
+                      :text="URLS.FTP_LINKS_BASE + currentDataset.funet"/>
+                    <ServicesModalRow
+                      label="rsync"
+                      :text="URLS.RSYNC_LINKS_BASE + currentDataset.funet"/>
+                  </tbody>
+                </table>
+              </c-table>
               <div v-if="currentDataset.funet">
-                <h4>HTTP</h4>
-                <CodeBlock :content="URLS.HTTP_LINKS_BASE + currentDataset.funet" />
-                <i18n-t keypath="file_transfer.http.info" tag="p">
-                  <c-link :href="URLS.HTTP_LINKS_BASE + currentDataset.funet" target="_blank">
-                    {{ t("file_transfer.http.link") }}<c-icon :path="mdiOpenInNew" size="18"/>
-                  </c-link>
-                </i18n-t>
-                <h4>FTP</h4>
-                <CodeBlock :content="URLS.FTP_LINKS_BASE + currentDataset.funet" />
-                <h4>rsync</h4>
-                <CodeBlock :content="URLS.RSYNC_LINKS_BASE + currentDataset.funet" />
               </div>
 
-              <h4>GeoPackage</h4>
+              <!--i18n-t keypath="file_transfer.http.info" tag="p">
+                <c-link :href="URLS.HTTP_LINKS_BASE + currentDataset.funet" target="_blank">
+                  {{ t("file_transfer.http.link") }}<c-icon :path="mdiOpenInNew" size="18"/>
+                </c-link>
+              </i18n-t>
+              <h4>GeoPackage</h4-->
               <p>
                 <c-link :href="URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id)">
                   <c-icon :path="mdiFileDownloadOutline" />{{ t('file_transfer.gpkg.download') }}
@@ -92,28 +106,13 @@ const helpUrl = computed(() => {
                 <c-table>
                   <table>
                     <tbody>
-                      <tr>
-                        <td>{{ t("endpoint") }}</td>
-                        <td>{{ URLS.STAC_PAITULI_BASE }}</td>
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(URLS.STAC_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>{{ t("stac.collection") }}</td>
-                        <td>{{ currentDataset.stac_id }}</td>
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(currentDataset.stac_id)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
+                      <ServicesModalRow
+                        :label="t('endpoint')"
+                        :show-open="true"
+                        :text="URLS.STAC_PAITULI_BASE" />
+                      <ServicesModalRow
+                        :label="t('stac.collection')"
+                        :text="currentDataset.stac_id" />
                     </tbody>
                   </table>
                 </c-table>
@@ -139,79 +138,35 @@ const helpUrl = computed(() => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>WMS</td>
-                        <td>{{ URLS.WMS_PAITULI_BASE }}</td>
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(URLS.WMS_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>WMTS</td>
-                        <td>{{ URLS.WMTS_PAITULI_BASE_GWC }}</td>
-
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(URLS.WMTS_PAITULI_BASE_GWC)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr :class="{ 'grayed': !hasVectorData(currentDataset) }">
-                        <td>WFS</td>
-                        <td v-if="hasVectorData(currentDataset)">{{ URLS.WFS_PAITULI_BASE }}</td>
-                        <td v-else>{{ t("apis.not_available") }}</td>
-
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(URLS.WFS_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr :class="{ 'grayed': !hasRasterData(currentDataset) }">
-                        <td>WCS</td>
-                        <td v-if="hasRasterData(currentDataset)">{{ URLS.WCS_PAITULI_BASE }}</td>
-                        <td v-else>{{ t("apis.not_available") }}</td>
-
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(URLS.WCS_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
+                      <ServicesModalRow
+                        label="WMS"
+                        :text="URLS.WMS_PAITULI_BASE" />
+                      <ServicesModalRow
+                        label="WMTS"
+                        :text="URLS.WMTS_PAITULI_BASE_GWC" />
+                      <ServicesModalRow
+                        label="WFS"
+                        :unavailable="!hasVectorData(currentDataset)"
+                        :text="URLS.WFS_PAITULI_BASE" />
+                      <ServicesModalRow
+                        label="WCS"
+                        :unavailable="!hasRasterData(currentDataset)"
+                        :text="URLS.WCS_PAITULI_BASE" />
                     </tbody>
                   </table>
                 </c-table>
-
                 <p>{{ t("apis.instruction") }}</p>
                 <c-table>
                   <table>
                     <tbody>
-                      <tr>
-                        <td>Layer</td>
-                        <td>{{ currentDataset.data_url }}</td>
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(currentDataset.data_url)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr :class="{ 'grayed': !currentDataset.data_max_scale }">
-                        <td>Max visible scale</td>
-                        <td v-if="currentDataset.data_max_scale">{{ currentDataset.data_max_scale }}</td>
-                        <td v-else>{{ t("apis.not_available") }}</td>
-                      </tr>
+                      <ServicesModalRow
+                        label="Layer"
+                        :text="currentDataset.data_url" />
+                      <ServicesModalRow
+                        label="Max visible scale"
+                        :unavailable="!currentDataset.data_max_scale"
+                        :show-copy="false"
+                        :text="currentDataset.data_max_scale" />
                     </tbody>
                   </table>
                 </c-table>
@@ -232,74 +187,35 @@ const helpUrl = computed(() => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Maps</td>
-                        <td>{{ URLS.OGC_MAPS_PAITULI_BASE }}</td>
-                        <td>
-                          <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_MAPS_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Tiles</td>
-                        <td>{{ URLS.OGC_TILES_PAITULI_BASE }}</td>
-                        <td>
-                          <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_TILES_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr :class="{ 'grayed': !hasVectorData(currentDataset) }">
-                        <td v-if="hasVectorData(currentDataset)">
-                          <c-link :href='URLS.OGC_FEATURES_PAITULI_BASE + "/collections/" + currentDataset.data_url' target="_blank">
-                            Features<c-icon :path="mdiOpenInNew" size="18" />
-                          </c-link>
-                        </td>
-                        <td v-else>Features</td>
-                        <td v-if="hasVectorData(currentDataset)">{{ URLS.OGC_FEATURES_PAITULI_BASE }}</td>
-                        <td v-else>{{ t("apis.not_available") }}</td>
-                        <td>
-                          <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_FEATURES_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr :class="{ 'grayed': !hasRasterData(currentDataset) }">
-                        <td>Coverages</td>
-                        <td v-if="hasRasterData(currentDataset)">{{ URLS.OGC_COVERAGES_PAITULI_BASE }}</td>
-                        <td v-else>{{ t("apis.not_available") }}</td>
-                        <td>
-                          <c-button ghost size="small" @click="copyToClipboard(URLS.OGC_COVERAGES_PAITULI_BASE)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
+                      <ServicesModalRow
+                        label="Maps"
+                        :text="URLS.OGC_MAPS_PAITULI_BASE" />
+                      <ServicesModalRow
+                        label="Tiles"
+                        :text="URLS.OGC_TILES_PAITULI_BASE" />
+                      <ServicesModalRow
+                        label="Features"
+                        :unavailable="!hasVectorData(currentDataset)"
+                        :text="URLS.OGC_FEATURES_PAITULI_BASE" />
+                      <ServicesModalRow
+                        label="Coverages"
+                        :unavailable="!hasRasterData(currentDataset)"
+                        :text="URLS.OGC_COVERAGES_PAITULI_BASE" />
                     </tbody>
                   </table>
                 </c-table>
-
                 <p>{{ t("apis.instruction") }}</p>
-
                 <c-table>
                   <table>
                     <tbody>
-                      <tr>
-                        <td>Layer</td>
-                        <td>{{ currentDataset.data_url }}</td>
-                        <td>
-                          <c-button ghost
-                                    size="small"
-                                    @click="copyToClipboard(currentDataset.data_url)">
-                            {{ t("copy") }}
-                          </c-button>
-                        </td>
-                      </tr>
-                      <tr :class="{ 'grayed': !currentDataset.data_max_scale }">
-                        <td>Max visible scale</td>
-                        <td v-if="currentDataset.data_max_scale">{{ currentDataset.data_max_scale }}</td>
-                        <td v-else>{{ t("apis.not_available") }}</td>
-                      </tr>
+                      <ServicesModalRow
+                        label="Layer"
+                        :text="currentDataset.data_url" />
+                      <ServicesModalRow
+                        label="Max visible scale"
+                        :unavailable="!currentDataset.data_max_scale"
+                        :show-copy="false"
+                        :text="currentDataset.data_max_scale" />
                     </tbody>
                   </table>
                 </c-table>
@@ -335,6 +251,7 @@ const helpUrl = computed(() => {
       "new_ogc": "New OGC APIs",
     },
     "api": "API",
+    "protocol": "Protocol",
     "endpoint": "Endpoint",
     "file_transfer": {
       "http": {
@@ -355,10 +272,8 @@ const helpUrl = computed(() => {
     },
     "apis": {
       "instruction": "To use an API, copy an endpoint above and the layer name below into your application of choice. Note that the supported APIs vary between datasets, mainly depending on the data type and format.",
-      "not_available": "Not available",
       "not_provided": "This dataset is not provided by Paituli Geoserver APIs",
     },
-    "copy": "Copy",
     "help": "Help",
     "close": "Close",
   },
@@ -371,6 +286,7 @@ const helpUrl = computed(() => {
       "new_ogc": "Uudet OGC APIt",
     },
     "api": "Rajapinta",
+    "protocol": "Protokolla",
     "endpoint": "Pääte",
     "file_transfer": {
       "http": {
@@ -391,10 +307,8 @@ const helpUrl = computed(() => {
     },
     "apis": {
       "instruction": "Rajapinnan käyttämiseksi kopioi yllä oleva pääte sekä alta tason nimi (Layer) valitsemaasi sovellukseen. Huomaa, että tuettujen rajapintojen valikoima vaihtelee aineistoittain, pääasiassa aineiston tyypin ja tiedostomuodon mukaan.",
-      "not_available": "Ei saatavilla",
       "not_provided": "Paitulin Geoserver rajapinnat eivät tarjoa tätä aineistoa",
     },
-    "copy": "Kopioi",
     "help": "Apua",
     "close": "Sulje",
   },
@@ -405,16 +319,10 @@ const helpUrl = computed(() => {
 c-tabs {
   --c-tab-background-color-hover: var(--c-primary-100);
   --c-tab-text-color: var(--c-primary-600);
-  --c-tabs-indicator-color: var(--c-primary-900);
+  --c-tabs-indicator-color: var(--c-primary-700);
 }
 c-link {
   --c-link-color: var(--c-accent-700);
-}
-c-icon {
-  --c-icon-color: var(--c-accent-700);
-}
-c-tab-item {
-  color: var(--c-primary-900);
 }
 c-button#help {
   --c-button-background-color: var(--c-tertiary-700);
@@ -423,15 +331,4 @@ c-button#help {
     --c-icon-color: var(--c-white);
   }
 }
-table.c-table .grayed td
-{
-  color: var(--c-tertiary-300);
-  c-button {
-    display: none;
-  }
-}
-a {
-  color: var(--c-info-400);
-}
-
 </style>
