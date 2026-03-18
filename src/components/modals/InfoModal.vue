@@ -30,7 +30,16 @@ defineExpose({ open })
       </c-card-title>
 
       <c-card-content>
-        <strong>{{ currentDataset?.name }} - {{ currentDataset?.org }}</strong>
+
+        <div v-if="currentDataset?.meta">
+          {{ t("metadata") }}
+          <c-link :href="URLS.ETSIN_METADATA_BASE + currentDataset.meta" target="_blank">
+            {{ t("etsin") }}<c-icon :path="mdiOpenInNew" size="18" />
+          </c-link>
+        </div>
+
+        <h3>{{ currentDataset?.name }} - {{ currentDataset?.org }}</h3>
+
         <div v-html="props.meta.description"></div>
         <div v-if="props.meta.links.length">
           <strong>{{ t("files") }}:</strong>
@@ -41,12 +50,6 @@ defineExpose({ open })
           </ul>
         </div>
 
-        <div v-if="currentDataset?.meta">
-          {{ t("metadata") }}
-          <c-link :href="URLS.ETSIN_METADATA_BASE + currentDataset.meta" target="_blank">
-            {{ t("etsin") }}<c-icon :path="mdiOpenInNew" size="18" />
-          </c-link>
-        </div>
       </c-card-content>
 
       <c-card-actions justify="end">
@@ -76,3 +79,12 @@ defineExpose({ open })
   },
 }
 </i18n>
+
+<style scoped>
+
+h3 {
+  margin-top: 0;
+  margin-bottom: .5em;
+}
+
+</style>
