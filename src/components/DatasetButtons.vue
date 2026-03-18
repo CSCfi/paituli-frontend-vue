@@ -53,13 +53,17 @@ watch(currentDataset, async () => await loadMetadata())
       <c-button
         :disabled="!parsedMetadata"
         :loading="!parsedMetadata"
+        v-tooltip="t('info.tooltip')"
         outlined
         @click="infoModal?.open()">
-        {{ t("info") }}
+        {{ t("info.label") }}
         <c-icon :path="mdiInformationVariantCircleOutline"></c-icon>
       </c-button>
-      <c-button outlined @click="servicesModal.open('FileTransferTab')">
-        {{ t("apis") }}
+      <c-button
+        outlined
+        v-tooltip="t('apis.tooltip')"
+        @click="servicesModal.open('FileTransferTab')">
+        {{ t("apis.label") }}
         <c-icon :path="mdiCloudDownloadOutline"></c-icon>
       </c-button>
       <ServicesModal ref="servicesModal"/>
@@ -75,14 +79,26 @@ watch(currentDataset, async () => await loadMetadata())
 <i18n>
 {
   "en": {
-    "info": "Dataset description",
-    "apis": "Dataset APIs",
+    "info": {
+      "label": "Dataset description",
+      "tooltip": "Metadata and documents describing this dataset",
+    },
+    "apis": {
+      label: "Dataset APIs",
+      "tooltip": "Download data via OGC APIs, STAC or HTTP/FTP/rsync",
+    },
     "download": "Downloads",
     "metafail": "Failed to load dataset metadata. If the problem persists, please try again later.",
   },
   "fi": {
-    "info": "Tietoa aineistosta",
-    "apis": "Aineiston rajapinnat",
+    "info": {
+      "label": "Tietoa aineistosta",
+      "tooltip": "Metatietoa ja dokumentteja, jotka kuvaavat aineiston",
+    },
+    "apis": {
+      label: "Aineiston rajapinnat",
+      "tooltip": "Lataa OGC- tai STAC-rajapintojen kautta tai HTTP/FTP/rsync-yhteyksillä",
+    },
     "download": "Lataukset",
     "metafail": "Aineiston metatietojen lataaminen epäonnistui. Jos ongelma toistuu, yritä uudelleen myöhemmin.",
   },
