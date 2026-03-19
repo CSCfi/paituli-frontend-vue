@@ -179,6 +179,8 @@ const modeName = computed(() => selectMode.value ? 'select' : 'search')
 <style scoped>
 
 div {
+  height: fit-content;
+  width: 340px;
   background-color: white;
   padding: .3em;
   border-radius: .3em;

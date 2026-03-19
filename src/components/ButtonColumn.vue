@@ -102,7 +102,7 @@ button {
   align-items: flex-end;
 
   width: 27px;
-  gap: .5em;
+  gap: .6em;
 
   > * {
     border-radius: .3rem;
@@ -136,13 +136,28 @@ button {
   .layer-menu {
     position: absolute;
     width: 15em;
-    right: 2em;
+    right: .15em;
     padding: 1em;
+    margin-top: 3em;
 
     border-radius: 1em;
     border-top-right-radius: 0;
     color: var(--c-primary-100);
     background-color: var(--c-primary-700);
+
+  }
+
+  .layer-menu::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: 4px;
+    transform: rotate(45deg);
+
+    width: 16px;
+    height: 16px;
+
+    background: inherit;
   }
 }
 

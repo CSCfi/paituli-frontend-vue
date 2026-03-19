@@ -239,13 +239,15 @@ watch(toolbarMode, (mode) => {
              ref="olMapRef"
              @click="handleClickedFeature" >
 
-    <HelpBox />
 
     <!-- Mount tools only after OL has provided us the map ref! -->
     <div class="tools" v-if="olMapRef">
-      <SearchBar id="search" :map="(olMapRef.map as OlMap)" />
-      <ToolBar id="toolbar" :map="(olMapRef.map as OlMap)" />
       <ButtonColumn id="button-column" :map="(olMapRef.map as OlMap)" />
+      <div class="tools-flex">
+        <HelpBox id="help" />
+        <ToolBar id="toolbar" :map="(olMapRef.map as OlMap)" />
+        <SearchBar id="search" :map="(olMapRef.map as OlMap)" />
+      </div>
     </div>
 
     <Map.OlView
@@ -391,27 +393,86 @@ watch(toolbarMode, (mode) => {
 <style scoped>
 
 .tools {
-  position: relative;
-  top: 1.25em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1em;
+  bottom: 0;
+  padding-right: 3.75em;
   z-index: 1;
-
-  #toolbar {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  #search {
-    position: absolute;
-    right: 3em;
-    top: -.25em;
-  }
 
   #button-column {
     position: absolute;
-    right: .65em;
-    top: -.25em;
+    right: 0;
+    margin: 0 1em;
   }
+
+  pointer-events: none;
+
+  #button-column,
+  #help,
+  #toolbar,
+  #search {
+    pointer-events: all;
+  }
+}
+
+.tools-flex {
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  #help {
+    margin-top: -1em;
+  }
+
+  #search {
+    margin-left: auto;
+  }
+
+  #toolbar {
+    position: absolute;
+    top: .25em;
+  }
+
+}
+
+@media (max-width: 1750px) {
+  .tools-flex {
+    #help {
+      position: absolute;
+      bottom: 0;
+    }
+    #toolbar {
+      left: 0;
+      margin-left: 1em;
+    }
+  }
+}
+
+@media (max-width: 1250px) {
+  .tools-flex {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0.4em;
+
+    #toolbar {
+      position: unset;
+      margin: unset;
+      --c-tab-item-padding: 0.3em 0 0 0;
+    }
+
+    #search {
+      margin: unset;
+      width: 450px;
+    }
+
+    :deep(#json-button) {
+      margin-top: .5em;
+    }
+  }
+
 }
 
 :global(.ol-zoom) {

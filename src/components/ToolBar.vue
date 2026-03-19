@@ -172,7 +172,7 @@ const zoomToData = () => {
             <c-icon :path="mdiTrashCanOutline" />
           </c-button>
         </c-tab-buttons>
-        <div id="json" v-if="selectMode == 'json'">
+        <div id="json-button" v-if="selectMode == 'json'">
           <c-button @click="fileInput?.click()">
             {{ t("select.json.open") }}
             <input
@@ -308,7 +308,7 @@ c-tabs {
 c-tab-item {
   color: white;
 
-  #json {
+  #json-button {
     --c-button-background-color: var(--c-secondary-500);
     margin-top: 1em;
     text-align: center;

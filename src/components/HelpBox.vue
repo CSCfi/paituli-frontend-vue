@@ -14,32 +14,39 @@ watch(helpText, (newText: string | undefined) => {
 </script>
 
 <template>
-  <div class="help-button">
-    <c-icon-button
-      ghost
-      @click="setHelp(); helpVisible = true"
-      v-tooltip="t('help.tooltip')"
-      size="small">
-      <c-icon :path="mdiHelpCircleOutline" size="30px"/>
-    </c-icon-button>
-  </div>
-  <div class="help-box" v-if="helpVisible">
-    <h3>Help</h3>
-    <p v-if="helpText" v-html="helpText"></p>
-    <div class="close">
-      <c-icon-button size="small" @click="helpVisible = false">
-        <c-icon size="20px" :path="mdiClose"/>
+  <div class="container">
+    <div class="help-button">
+      <c-icon-button
+        ghost
+        @click="setHelp(); helpVisible = true"
+        v-tooltip="t('help.tooltip')"
+        size="small">
+        <c-icon :path="mdiHelpCircleOutline" size="30px"/>
       </c-icon-button>
+    </div>
+    <div class="help-box" v-if="helpVisible">
+      <h3>Help</h3>
+      <p v-if="helpText" v-html="helpText"></p>
+      <div class="close">
+        <c-icon-button size="small" @click="helpVisible = false">
+          <c-icon size="20px" :path="mdiClose"/>
+        </c-icon-button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.container {
+  width: 350px;
+}
+
 .help-button, .help-box {
-  position: absolute;
+  position: relative;
   left: 0;
 }
 .help-button {
+  position: absolute;
   z-index: 1;
   --c-icon-button-ghost-background-color: var(--c-primary-200);
   --c-icon-button-ghost-background-color-hover: var(--c-primary-300);
@@ -47,8 +54,7 @@ watch(helpText, (newText: string | undefined) => {
 }
 .help-box {
   z-index: 2;
-  width: 400px;
-  padding: 0 1em 0 1em;
+  padding: .25em 1em;
 
   color: var(--c-primary-100);
   background: var(--c-primary-800);

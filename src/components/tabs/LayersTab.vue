@@ -14,7 +14,7 @@ watch(dataSource, (newSource) => {
 </script>
 
 <template>
-  <strong>{{ t("show") }}...</strong>
+  <h3>{{ t("heading") }}</h3>
   <c-switch v-model="showLayer.background.value" v-control>
     {{ t("background") }}
   </c-switch>
@@ -37,7 +37,7 @@ watch(dataSource, (newSource) => {
 <i18n>
 {
   "en": {
-    "show": "Show",
+    "heading": "Layers",
     "background": "Background map",
     "muncipalities": "Muncipalities",
     "catchment": "Catchment areas",
@@ -45,7 +45,7 @@ watch(dataSource, (newSource) => {
     "data": "Data layer",
   },
   "fi": {
-    "show": "Näytä",
+    "heading": "Tasot",
     "background": "Taustakartta",
     "muncipalities": "Kuntarajat",
     "catchment": "Valuma-alueet",
@@ -67,5 +67,10 @@ c-switch {
   --c-switch-border-color-disabled: var(--c-primary-600);
   padding-top: .3em;
   width: 100%;
+}
+h3 {
+  margin-top: 0;
+  margin-bottom: .5em;
+  text-align: center;
 }
 </style>
