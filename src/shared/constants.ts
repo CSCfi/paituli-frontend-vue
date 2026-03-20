@@ -11,7 +11,7 @@ export const URLS = {
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
 
   // Links tab
-  HTTP_LINKS_BASE: 'http://www.nic.funet.fi/index/geodata/',
+  HTTP_LINKS_BASE: 'https://www.nic.funet.fi/index/geodata/',
   FTP_LINKS_BASE: 'ftp://ftp.funet.fi/index/geodata/',
   RSYNC_LINKS_BASE: 'rsync://rsync.nic.funet.fi/ftp/index/geodata/',
 
