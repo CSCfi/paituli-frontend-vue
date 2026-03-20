@@ -79,19 +79,6 @@ const helpUrl = computed(() => {
               </c-table>
               <div v-if="currentDataset.funet">
               </div>
-
-              <!--i18n-t keypath="file_transfer.http.info" tag="p">
-                <c-link :href="URLS.HTTP_LINKS_BASE + currentDataset.funet" target="_blank">
-                  {{ t("file_transfer.http.link") }}<c-icon :path="mdiOpenInNew" size="18"/>
-                </c-link>
-              </i18n-t>
-              <h4>GeoPackage</h4-->
-              <p>
-                <c-link :href="URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id)">
-                  <c-icon :path="mdiFileDownloadOutline" />{{ t('file_transfer.gpkg.download') }}
-                </c-link>
-                <br>{{ t('file_transfer.gpkg.info') }}
-              </p>
             </c-tab-item>
 
             <c-tab-item value="STACTab">
@@ -258,10 +245,6 @@ const helpUrl = computed(() => {
         "link": "HTTP file index",
         "info": "{0} can be also opened in your browser to view or download dataset contents",
       },
-      "gpkg": {
-        "download": "Download index map as GeoPackage",
-        "info": "The geopackage contains names, paths and geometry of mapsheets.",
-      },
     },
     "stac": {
       "collection": "Collection",
@@ -292,10 +275,6 @@ const helpUrl = computed(() => {
       "http": {
         "link": "HTTP-tiedostoindeksin",
         "info": "{0} voi avata myös selaimessa, jonka kautta voi tarkastella tai ladata aineiston sisältöä.",
-      },
-      "gpkg": {
-        "download": "Lataa indeksikartta GeoPackage -muodossa",
-        "info": "Geopackage sisältää karttalehtien nimet, polut sekä geometrian.",
       },
     },
     "stac": {
