@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiFileDownloadOutline, mdiOpenInNew } from '@mdi/js';
+import { mdiOpenInNew } from '@mdi/js';
 import { URLS } from '@/shared/constants'
 import { computed, ref } from 'vue';
 
@@ -38,7 +38,7 @@ const helpUrl = computed(() => {
            v-if="currentDataset"
            dismissable
            disable-backdrop-blur
-           width="800px">
+           width="900px">
     <c-card>
       <c-card-title>
         {{ t("title") }}
@@ -55,7 +55,7 @@ const helpUrl = computed(() => {
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <c-tab-items slot="items">
             <c-tab-item value="FileTransferTab">
-              <c-table>
+              <c-table v-if="currentDataset.funet">
                 <table>
                   <thead>
                     <tr>
@@ -67,6 +67,7 @@ const helpUrl = computed(() => {
                     <ServicesModalRow
                       label="HTTP"
                       :show-open="true"
+                      :trim-http="false"
                       :text="URLS.HTTP_LINKS_BASE + currentDataset.funet"/>
                     <ServicesModalRow
                       label="FTP"
@@ -77,7 +78,8 @@ const helpUrl = computed(() => {
                   </tbody>
                 </table>
               </c-table>
-              <div v-if="currentDataset.funet">
+              <div v-else>
+                <p>{{ t('file_transfer.unavailable') }}</p>
               </div>
             </c-tab-item>
 
@@ -105,9 +107,7 @@ const helpUrl = computed(() => {
                 </c-table>
               </div>
               <div v-else>
-                <p>
-                  {{ t("stac.not_catalogued") }}
-                </p>
+                <p>{{ t("stac.not_catalogued") }}</p>
               </div>
             </c-tab-item>
 
@@ -153,7 +153,7 @@ const helpUrl = computed(() => {
                         label="Max visible scale"
                         :unavailable="!currentDataset.data_max_scale"
                         :show-copy="false"
-                        :text="currentDataset.data_max_scale" />
+                        :text="currentDataset.data_max_scale ?? ''" />
                     </tbody>
                   </table>
                 </c-table>
@@ -202,7 +202,7 @@ const helpUrl = computed(() => {
                         label="Max visible scale"
                         :unavailable="!currentDataset.data_max_scale"
                         :show-copy="false"
-                        :text="currentDataset.data_max_scale" />
+                        :text="currentDataset.data_max_scale ?? ''" />
                     </tbody>
                   </table>
                 </c-table>
@@ -245,11 +245,12 @@ const helpUrl = computed(() => {
         "link": "HTTP file index",
         "info": "{0} can be also opened in your browser to view or download dataset contents",
       },
+      "unavailable": "Alternative file transfer services are unavailable for this dataset.",
     },
     "stac": {
       "collection": "Collection",
       "info": "The SpatioTemporal Asset Catalog (STAC) enables easy search of dataset files (assets) based on their location and time.",
-      "catalogued": "This dataset has been catalogued in Paituli STAC, and it's availabie for viewing in",
+      "catalogued": "This dataset has been catalogued in Paituli STAC and is available for viewing in",
       "link": "STAC browser",
       "not_catalogued": "This dataset has not been catalogued in Paituli STAC.",
     },
@@ -276,11 +277,12 @@ const helpUrl = computed(() => {
         "link": "HTTP-tiedostoindeksin",
         "info": "{0} voi avata myös selaimessa, jonka kautta voi tarkastella tai ladata aineiston sisältöä.",
       },
+      "unavailable": "Vaihtoehtoiset tiedonsiirtopalvelut eivät ole saatavilla tälle aineistolle.",
     },
     "stac": {
       "collection": "Kokoelma",
       "info": "SpatioTemporal Asset Catalog (STAC) mahdollistaa aineiston tiedostojen (assetien) helpon haun niiden sijainnin ja ajan perusteella.",
-      "catalogued": "Tämä aineisto on katalogoitu Paituli STAC:ssa, ja se on nähtävissä",
+      "catalogued": "Tämä aineisto on katalogoitu Paituli STAC:ssa ja se on nähtävissä",
       "link": "STAC-selaimessa",
       "not_catalogued": "Tätä aineistoa ei ole katalogoitu Paituli STAC:ssa.",
     },

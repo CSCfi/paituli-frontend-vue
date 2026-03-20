@@ -2,7 +2,7 @@ export interface Dataset {
   access: number
   coord_sys: string
   data_id: string
-  data_max_scale: number
+  data_max_scale: number | undefined
   data_url: string
   file_size: number
   format: string
