@@ -230,7 +230,8 @@ watch(toolbarMode, (mode) => {
   indexSource.value?.changed()
   selectInteraction.value!.select.setActive(mode == 'select')
 })
-
+// Disable select also initially (after ref exists)
+watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
 </script>
 
