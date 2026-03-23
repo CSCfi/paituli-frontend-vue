@@ -55,28 +55,48 @@ const helpUrl = computed(() => {
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <c-tab-items slot="items">
             <c-tab-item value="FileTransferTab">
-              <c-table v-if="currentDataset.funet">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>{{ t("protocol") }}</th>
-                      <th>URL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <ServicesModalRow
-                      label="HTTP"
-                      :show-open="true"
-                      :text="URLS.HTTP_LINKS_BASE + currentDataset.funet"/>
-                    <ServicesModalRow
-                      label="FTP"
-                      :text="URLS.FTP_LINKS_BASE + currentDataset.funet"/>
-                    <ServicesModalRow
-                      label="rsync"
-                      :text="URLS.RSYNC_LINKS_BASE + currentDataset.funet"/>
-                  </tbody>
-                </table>
-              </c-table>
+              <div v-if="currentDataset.funet">
+                <c-table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>{{ t("protocol") }}</th>
+                        <th>URL</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ServicesModalRow
+                        label="HTTP"
+                        :show-open="true"
+                        :text="URLS.HTTP_LINKS_BASE + currentDataset.funet"/>
+                      <ServicesModalRow
+                        label="FTP"
+                        :text="URLS.FTP_LINKS_BASE + currentDataset.funet"/>
+                      <ServicesModalRow
+                        label="rsync"
+                        :text="URLS.RSYNC_LINKS_BASE + currentDataset.funet"/>
+                    </tbody>
+                  </table>
+                </c-table>
+                <p>
+                  <c-link id="hpc"
+                          target="_blank"
+                          href="https://docs.csc.fi/data/datasets/spatial-data-in-csc-computing-env/">
+                    {{ t("file_transfer.hpc.title") }}<c-icon :path="mdiOpenInNew" size="18" />
+                  </c-link>
+                </p>
+                <c-table>
+                  <table>
+                    <thead>
+                    </thead>
+                    <tbody>
+                      <ServicesModalRow
+                        :label="t('file_transfer.hpc.label')"
+                        :text="URLS.PUHTI_GEO_BASE + currentDataset.funet"/>
+                    </tbody>
+                  </table>
+                </c-table>
+              </div>
               <div v-else>
                 <p>{{ t('file_transfer.unavailable') }}</p>
               </div>
@@ -240,9 +260,9 @@ const helpUrl = computed(() => {
     "protocol": "Protocol",
     "endpoint": "Endpoint",
     "file_transfer": {
-      "http": {
-        "link": "HTTP file index",
-        "info": "{0} can be also opened in your browser to view or download dataset contents",
+      "hpc": {
+        "title": "Puhti Supercomputer",
+        "label": "Path",
       },
       "unavailable": "Alternative file transfer services are unavailable for this dataset.",
     },
@@ -272,9 +292,9 @@ const helpUrl = computed(() => {
     "protocol": "Protokolla",
     "endpoint": "Pääte",
     "file_transfer": {
-      "http": {
-        "link": "HTTP-tiedostoindeksin",
-        "info": "{0} voi avata myös selaimessa, jonka kautta voi tarkastella tai ladata aineiston sisältöä.",
+      "hpc": {
+        "title": "Puhti Supertietokone",
+        "label": "Polku",
       },
       "unavailable": "Vaihtoehtoiset tiedonsiirtopalvelut eivät ole saatavilla tälle aineistolle.",
     },
