@@ -67,7 +67,6 @@ const helpUrl = computed(() => {
                     <ServicesModalRow
                       label="HTTP"
                       :show-open="true"
-                      :trim-http="false"
                       :text="URLS.HTTP_LINKS_BASE + currentDataset.funet"/>
                     <ServicesModalRow
                       label="FTP"

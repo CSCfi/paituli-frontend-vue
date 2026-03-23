@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
   showCopy: true,
   showOpen: false,
   unavailable: false,
-  trimHttp: true,
+  trimHttp: false,
 })
 
 // Removes the protocol from an url (everything before //), if present
