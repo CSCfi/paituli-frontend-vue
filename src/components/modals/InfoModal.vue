@@ -38,7 +38,11 @@ defineExpose({ open })
           </c-link>
         </div>
 
-        <h3>{{ currentDataset?.name }} - {{ currentDataset?.org }}</h3>
+        <div>
+          <h3>{{ currentDataset?.name }} - {{ currentDataset?.org }}</h3>
+          <span id="urn-label">URN: </span>
+          <span id="urn">{{ currentDataset?.meta }}</span>
+        </div>
         <div id="etsin">
           <div v-html="props.meta.description"></div>
           <div v-if="props.meta.links.length">
@@ -97,13 +101,25 @@ defineExpose({ open })
 <style scoped>
 
 h3 {
-  margin-top: 0;
-  margin-bottom: .5em;
+  margin: 0;
+  margin-bottom: 0.25em;
 }
 
 div#etsin {
-  max-height: 750px;
+  max-height: 500px;
   overflow-y: auto;
+}
+
+span#urn-label {
+  user-select: none;
+}
+
+span#urn {
+  user-select: text;
+}
+
+[id^="urn"] {
+  color: var(--c-tertiary-500);
 }
 
 </style>
