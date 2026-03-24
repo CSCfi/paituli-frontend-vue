@@ -99,12 +99,15 @@ watch(selectedFeaturesArray, () => {
 
 <template>
   <div class="download-panel">
-    <c-button :disabled="downloadButtonDisabled" @click="openDownloadModal()">
+    <c-button
+      id="download"
+      :disabled="downloadButtonDisabled"
+      @click="openDownloadModal()">
       <c-icon :path="mdiDownload" />
       {{ t("size", { size: downloadSize }) }}
     </c-button>
     <div class="warning" v-if="downloadSizeExceeded">
-      {{ t("warnings.size", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
+      <p>{{ t("warnings.size", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}</p>
     </div>
 
     <div class="warning" v-if="showSelectWarning">
@@ -120,13 +123,12 @@ watch(selectedFeaturesArray, () => {
         {{ t("shortcut") }}
       </c-button>
     </div>
-    <div v-else>
+    <div v-else class="selection">
       <h4>{{ t("documents") }}</h4>
       <label>
         <input type="checkbox" v-model="licenseChecked" />
         <a :href="licenseUrl" target="_blank">{{ t("license") }}</a>
       </label>
-
       <div v-if="selectedFeaturesArray.length">
         <h4>{{ t("files") }}</h4>
         <div class="files"
@@ -177,9 +179,21 @@ watch(selectedFeaturesArray, () => {
 .download-panel {
   display: flex;
   flex-direction: column;
+
+  flex: 1 1 0;
+  min-height: 0;
+
+}
+.selection {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .warning {
   color: yellow;
+}
+
+c-button#download {
+  margin-bottom: 1.5em;
 }
 c-button#shortcut {
   --c-button-outlined-text-color: var(--c-white);
@@ -200,6 +214,10 @@ h4, label {
 }
 h4 {
   margin-bottom: .75em;
+}
+.warning > p,
+.selection > h4:first-of-type {
+  margin-top: 0;
 }
 
 .files {

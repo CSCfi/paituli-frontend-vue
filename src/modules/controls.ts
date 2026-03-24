@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
-// Side menu mode
+// Side menu tab mode
+// (Tabbing happens only if vertical space is low)
 type MenuMode = 'datasets' | 'download'
 export const menuMode = ref<MenuMode>('datasets')
 

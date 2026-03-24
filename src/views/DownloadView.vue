@@ -4,7 +4,7 @@ import MapItem from '@/components/MapItem.vue'
 import DatasetSelect from '@/components/DatasetSelect.vue'
 import DatasetButtons from '@/components/DatasetButtons.vue'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { currentDataset, datasets } from '@/modules/datasets'
 import DownloadSelect from '@/components/DownloadSelect.vue'
@@ -20,12 +20,43 @@ const label = computed(() => {
   else return ''
 })
 
+// We observe the sidebar height and enter `tabbed` state if
+// the height gets too small.
+const sidebarHeight = ref(0)
+const tabbed = computed(() => sidebarHeight.value < 800)
+const sidebarRef = ref<HTMLElement>()
+onMounted(() => {
+  const observer = new ResizeObserver(entries => {
+    sidebarHeight.value = entries[0].contentRect.height
+  })
+  observer.observe(sidebarRef.value!)
+})
+
+
 </script>
 
 <template>
   <div class="wrapper">
-    <nav class="side">
-      <c-tabs v-model="menuMode" v-control>
+    <nav class="sidebar" ref="sidebarRef">
+      <div v-if="!datasets.length" class="loading">
+        <h4>Loading datasets...</h4>
+        <c-spinner size="50"/>
+      </div>
+      <!-- Side menu tries to display everything at once by default -->
+      <div v-else-if="!tabbed" class="grow">
+        <c-side-navigation-title>{{ t("titles.select") }}</c-side-navigation-title>
+        <DatasetSelect :loadId="dataset_id"/>
+        <div v-if="!currentDataset" class="suggestion">
+          <p>{{ t("suggestion") }}</p>
+        </div>
+        <div v-else class="grow">
+          <c-side-navigation-title>{{ t("titles.dataset") + label}}</c-side-navigation-title>
+          <DatasetButtons :compact="true" />
+          <DownloadSelect />
+        </div>
+      </div>
+      <!-- Side menu tabs itself if vertical space gets too low -->
+      <c-tabs v-else v-model="menuMode" v-control>
         <c-tab
           value="datasets">
           {{ t("tabs.datasets") }}</c-tab>
@@ -36,46 +67,36 @@ const label = computed(() => {
         </c-tab>
         <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
         <c-tab-items slot="items">
-
           <c-tab-item value="datasets">
-            <div class="loading" v-if="!datasets.length">
-              <h4>Loading datasets...</h4>
-              <c-spinner size="50"/>
+            <DatasetSelect :loadId="dataset_id"/>
+            <div v-if="!currentDataset" class="suggestion">
+              <p>{{ t("suggestion") }}</p>
             </div>
             <div v-else>
-              <DatasetSelect :loadId="dataset_id"/>
-              <div v-if="!currentDataset" class="suggestion">
-                <p>{{ t("suggestion") }}</p>
-              </div>
-              <div v-else>
-                <c-side-navigation-title>{{ t("dataset") + label}}</c-side-navigation-title>
-                <DatasetButtons />
-              </div>
+              <c-side-navigation-title>{{ t("titles.dataset") + label}}</c-side-navigation-title>
+              <DatasetButtons :compact="false" />
             </div>
           </c-tab-item>
-
           <c-tab-item value="download">
             <DownloadSelect />
           </c-tab-item>
-
         </c-tab-items>
       </c-tabs>
     </nav>
+    <!-- MapItem contains the whole map view and its controls -->
     <MapItem/>
   </div>
 </template>
-
-<style global>
-
-</style>
 
 <i18n>
 {
   "en": {
     "suggestion": "Please select a Producer to start browsing available datasets.",
-    "select": "Select dataset",
-    "dataset": "Dataset",
-    "downloads": "Downloads",
+    "titles": {
+      "select": "Select dataset",
+      "dataset": "Dataset",
+      "downloads": "Downloads",
+    },
     "tabs": {
       "datasets": "Select dataset",
       "download": "Dataset download",
@@ -83,9 +104,11 @@ const label = computed(() => {
   },
   "fi": {
     "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
-    "select": "Valitse aineisto",
-    "dataset": "Aineisto",
-    "downloads": "Lataukset",
+    "titles": {
+      "select": "Valitse aineisto",
+      "dataset": "Aineisto",
+      "downloads": "Lataukset",
+    },
     "tabs": {
       "datasets": "Valitse aineisto",
       "download": "Aineiston lataus",
@@ -103,6 +126,13 @@ const label = computed(() => {
   width: 100%;
   height: calc(100vh - var(--site-header-height));
   background-color: var(--c-tertiary-100);
+  overflow: hidden;
+}
+
+.grow {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 c-tabs {
@@ -110,6 +140,14 @@ c-tabs {
 
   --c-tab-text-color: white;
   --c-tab-background-color-hover: var(--c-primary-500);
+  /*
+  Some attempt was made to make the download tab
+  scroll in a similar manner to the untabbed DownloadSelect,
+  but it seems like the shadow root of c-tabs makes it
+  impossible, so we make the whole thing scroll
+  */
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .loading {
@@ -123,17 +161,17 @@ c-tabs {
   text-align: center;
 }
 
-nav.side {
-  width: 550px;
-  padding-right: 25px;
+nav.sidebar {
+  display: flex;
+  flex-direction: column;
 
-  overflow-x: hidden;
-  overflow-y: scroll;
+  width: 425px;
+  flex-shrink: 0;
 
   background-color: var(--c-primary-600);
   padding: 1.25em 1.75em 1.25em 1.75em;
 
-  /* All buttons on the sidebar and its components */
+  /* All buttons on the sidebar and inside its components */
   :deep(c-button) {
       --c-button-background-color: var(--c-info-500);
       --c-button-background-color-hover: var(--c-info-400);
