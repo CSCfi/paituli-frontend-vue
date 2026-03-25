@@ -18,7 +18,7 @@ import { useI18n } from 'vue-i18n';
 
 import { dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
 import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
-import { fileSelectedCallback, selectMode, toolbarMode } from '@/modules/controls';
+import { fileSelectedCallback, menuMode, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
 import { vHelp } from '@/directives/help';
 import { currentLocale } from '@/modules/locale';
@@ -62,6 +62,12 @@ watch(toolbarMode, (mode) => {
     'select': '',
     'inspect': 'crosshair',
   }[mode] ?? ''
+
+  // If entering select mode, we take user to download tab,
+  // if the UI is in tab mode
+  if (mode == 'select') {
+    menuMode.value = 'download'
+  }
 })
 
 watch(selectMode, (newMode, oldMode) => {
