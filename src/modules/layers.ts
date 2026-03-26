@@ -78,7 +78,7 @@ export const dataSource = computed(() => {
       loader.src = url
       const target = (tile as ImageTile).getImage() as HTMLImageElement
       target.src = `loading_tile_${currentLocale.value}.png`
-      loader.onerror = () => target.src = 'failed_tile.png'
+      loader.onerror = () => target.src = ''
       loader.onload = () => {
         target.src = url
         tileLoadCallback.value?.()
