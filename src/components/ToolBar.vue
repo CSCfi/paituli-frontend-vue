@@ -33,6 +33,8 @@ const props = defineProps<{ map: OlMap }>()
 const viewResolution = ref<number>(0)
 const dataHidden = computed(() => viewResolution.value > dataLayerMaxResolution.value)
 
+const inspectCursor = computed(() => dataHidden.value ? 'not-allowed' : 'crosshair')
+
 onMounted(() => {
   // Grab initial resolution value and subscribe to future changes
   const view = props.map.getView()
@@ -51,6 +53,13 @@ watch(dataSource, () => {
   toolbarMode.value = 'move'
 })
 
+watch(inspectCursor, (cursor) => {
+  // Update inspect mode cursor state
+  if (toolbarMode.value == 'inspect') {
+    props.map.getTargetElement().style.cursor = cursor
+  }
+})
+
 watch(toolbarMode, (mode) => {
   // When tool mode changes, we only allow drag-pan in 'move'
   dragPan?.setActive(mode == 'move')
@@ -60,7 +69,7 @@ watch(toolbarMode, (mode) => {
   domElement.style.cursor = {
     'move': 'move',
     'select': '',
-    'inspect': 'crosshair',
+    'inspect': inspectCursor.value,
   }[mode] ?? ''
 
   // If entering select mode, we take user to download tab,
