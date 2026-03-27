@@ -76,14 +76,14 @@ function resetZoom() {
   "en": {
     "zoom-in": "Zoom in",
     "zoom-out": "Zoom out",
-    "zoom-reset": "Zoom back to Finland",
-    "layers": "Adjust layer visibility",
+    "zoom-reset": "Zoom to Finland",
+    "layers": "Select visible layers",
   },
   "fi": {
     "zoom-in": "Zoomaa sisään",
     "zoom-out": "Zoomaa ulos",
-    "zoom-reset": "Zoomaa takaisin Suomeen",
-    "layers": "Säädä tasojen näkyvyyttä",
+    "zoom-reset": "Näytä koko Suomi",
+    "layers": "Valitse näkyvät karttatasot",
   },
 }
 </i18n>

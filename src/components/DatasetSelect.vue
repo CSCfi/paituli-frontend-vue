@@ -248,7 +248,7 @@ const datasetCount = computed(() => {
       "toasts": {
         "failed": {
           "title": "Could not load dataset",
-          "message": "Unknown dataset by id {id}",
+          "message": "Unknown dataset id '{id}'",
         },
       },
     },
@@ -264,7 +264,7 @@ const datasetCount = computed(() => {
       "toasts": {
         "failed": {
           "title": "Aineiston lataaminen epäonnistui",
-          "message": "Tuntematon aineisto tunnisteella {id}",
+          "message": "Tuntematon aineisto tunnisteella '{id}'",
         },
       },
     },

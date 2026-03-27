@@ -104,9 +104,7 @@ const helpUrl = computed(() => {
 
             <c-tab-item value="STACTab">
               <div v-if="currentDataset.stac_id">
-                <p>{{ t("stac.info") }}</p>
                 <p>
-                  {{ t("stac.catalogued") }}
                   <c-link :href="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id" target="_blank">
                     {{ t("stac.link") }}<c-icon :path="mdiOpenInNew" size="18" />
                   </c-link>
@@ -166,13 +164,12 @@ const helpUrl = computed(() => {
                   <table>
                     <tbody>
                       <ServicesModalRow
-                        label="Layer"
+                        :label="t('apis.layer')"
                         :text="currentDataset.data_url" />
                       <ServicesModalRow
-                        label="Max visible scale"
-                        :unavailable="!currentDataset.data_max_scale"
+                        :label="t('apis.scale')"
                         :show-copy="false"
-                        :text="currentDataset.data_max_scale ?? ''" />
+                        :text="currentDataset.data_max_scale ?? t('apis.not_limited')" />
                     </tbody>
                   </table>
                 </c-table>
@@ -215,13 +212,12 @@ const helpUrl = computed(() => {
                   <table>
                     <tbody>
                       <ServicesModalRow
-                        label="Layer"
+                        :label="t('apis.layer')"
                         :text="currentDataset.data_url" />
                       <ServicesModalRow
-                        label="Max visible scale"
-                        :unavailable="!currentDataset.data_max_scale"
+                        :label="t('apis.scale')"
                         :show-copy="false"
-                        :text="currentDataset.data_max_scale ?? ''" />
+                        :text="currentDataset.data_max_scale ?? t('apis.not_limited')" />
                     </tbody>
                   </table>
                 </c-table>
@@ -236,7 +232,7 @@ const helpUrl = computed(() => {
 
       <c-card-actions justify="space-between">
         <c-button id="help" :href="helpUrl" target="_blank">
-          {{ t("help") }}?<c-icon :path="mdiOpenInNew" size="18" />
+          {{ t("help") }}<c-icon :path="mdiOpenInNew" size="18" />
         </c-button>
         <c-button @click="showModal = false">
           {{ t("close") }}
@@ -249,7 +245,7 @@ const helpUrl = computed(() => {
 <i18n>
 {
   "en": {
-    "title": "Dataset web services",
+    "title": "Dataset API",
     "tabs": {
       "file_transfer": "File transfer",
       "stac": "STAC",
@@ -261,55 +257,57 @@ const helpUrl = computed(() => {
     "endpoint": "Endpoint",
     "file_transfer": {
       "hpc": {
-        "title": "Puhti Supercomputer",
+        "title": "Puhti supercomputer",
         "label": "Path",
       },
       "unavailable": "Alternative file transfer services are unavailable for this dataset.",
     },
     "stac": {
       "collection": "Collection",
-      "info": "The SpatioTemporal Asset Catalog (STAC) enables easy search of dataset files (assets) based on their location and time.",
-      "catalogued": "This dataset has been catalogued in Paituli STAC and is available for viewing in",
-      "link": "STAC browser",
-      "not_catalogued": "This dataset has not been catalogued in Paituli STAC.",
+      "link": "Open in STAC Browser",
+      "not_catalogued": "This dataset is not in Paituli STAC.",
     },
     "apis": {
       "instruction": "To use an API, copy an endpoint above and the layer name below into your application of choice. Note that the supported APIs vary between datasets, mainly depending on the data type and format.",
-      "not_provided": "This dataset is not provided by Paituli Geoserver APIs",
+      "layer": "Layer",
+      "scale": "Smallest visible scale",
+      "not_provided": "This dataset is not available via OGC APIs.",
+      "not_limited": "Unlimited",
     },
     "help": "Help",
     "close": "Close",
   },
   "fi": {
-    "title": "Aineiston verkkopalvelut",
+    "title": "Aineiston rajapinnat",
     "tabs": {
       "file_transfer": "Tiedostonsiirto",
       "stac": "STAC",
-      "stable_ogc": "Vakaat OGC APIt",
-      "new_ogc": "Uudet OGC APIt",
+      "stable_ogc": "Vakaat OGC API:t",
+      "new_ogc": "Uudet OGC API:t",
     },
     "api": "Rajapinta",
     "protocol": "Protokolla",
-    "endpoint": "Pääte",
+    "endpoint": "Osoite",
     "file_transfer": {
       "hpc": {
-        "title": "Puhti Supertietokone",
+        "title": "Puhti supertietokone",
         "label": "Polku",
       },
       "unavailable": "Vaihtoehtoiset tiedonsiirtopalvelut eivät ole saatavilla tälle aineistolle.",
     },
     "stac": {
       "collection": "Kokoelma",
-      "info": "SpatioTemporal Asset Catalog (STAC) mahdollistaa aineiston tiedostojen (assetien) helpon haun niiden sijainnin ja ajan perusteella.",
-      "catalogued": "Tämä aineisto on katalogoitu Paituli STAC:ssa ja se on nähtävissä",
-      "link": "STAC-selaimessa",
-      "not_catalogued": "Tätä aineistoa ei ole katalogoitu Paituli STAC:ssa.",
+      "link": "Avaa STAC Browser:ssa",
+      "not_catalogued": "Tämä aineisto ei ole Paituli STAC:ssa.",
     },
     "apis": {
-      "instruction": "Rajapinnan käyttämiseksi kopioi yllä oleva pääte sekä alta tason nimi (Layer) valitsemaasi sovellukseen. Huomaa, että tuettujen rajapintojen valikoima vaihtelee aineistoittain, pääasiassa aineiston tyypin ja tiedostomuodon mukaan.",
-      "not_provided": "Paitulin Geoserver rajapinnat eivät tarjoa tätä aineistoa",
+      "instruction": "Rajapinnan käyttämiseksi kopioi yllä oleva osoite sekä alta karttatason nimi valitsemaasi sovellukseen. Huomaa, että tuettujen rajapintojen valikoima vaihtelee aineistoittain, pääasiassa aineiston tyypin ja tiedostomuodon mukaan.",
+      "layer": "Karttataso",
+      "scale": "Pienin näkyvä mittakaava",
+      "not_provided": "Tämä aineisto ei ole saatavilla OGC API -rajapintojen yli.",
+      "not_limited": "Rajoittamaton",
     },
-    "help": "Apua",
+    "help": "Ohjeet",
     "close": "Sulje",
   },
 }

@@ -45,12 +45,12 @@ watch(dataSource, (newSource) => {
     "data": "Data layer",
   },
   "fi": {
-    "heading": "Tasot",
+    "heading": "Karttatasot",
     "background": "Taustakartta",
     "muncipalities": "Kuntarajat",
     "catchment": "Valuma-alueet",
     "index": "Karttalehdet",
-    "data": "Datakerros",
+    "data": "Aineisto",
   },
 }
 </i18n>

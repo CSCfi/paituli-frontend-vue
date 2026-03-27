@@ -84,8 +84,8 @@ watch(currentDataset, async () => await loadMetadata())
 {
   "en": {
     "info": {
-      "label": "Dataset description",
-      "label-compact": "Description",
+      "label": "Dataset metadata",
+      "label-compact": "Metadata",
       "tooltip": "Metadata and documents describing this dataset",
     },
     "apis": {
@@ -94,13 +94,13 @@ watch(currentDataset, async () => await loadMetadata())
       "tooltip": "Download data via OGC APIs, STAC or HTTP/FTP/rsync",
     },
     "download": "Downloads",
-    "metafail": "Failed to load dataset metadata. If the problem persists, please try again later.",
+    "metafail": "Failed to load dataset metadata. If the problem persists, please contact CSC.",
   },
   "fi": {
     "info": {
-      "label": "Tietoa aineistosta",
-      "label-compact": "Tietoa",
-      "tooltip": "Metatietoa ja dokumentteja, jotka kuvaavat aineiston",
+      "label": "Aineiston metatiedot",
+      "label-compact": "Metatiedot",
+      "tooltip": "Metatiedot ja dokumentit, jotka kuvaavat aineiston",
     },
     "apis": {
       label: "Aineiston rajapinnat",
@@ -108,7 +108,7 @@ watch(currentDataset, async () => await loadMetadata())
       "tooltip": "Lataa OGC- tai STAC-rajapintojen kautta tai HTTP/FTP/rsync-yhteyksillä",
     },
     "download": "Lataukset",
-    "metafail": "Aineiston metatietojen lataaminen epäonnistui. Jos ongelma toistuu, yritä uudelleen myöhemmin.",
+    "metafail": "Aineiston metatietojen lataaminen epäonnistui. Jos ongelma toistuu, ota yhteyttä CSC:hen.",
   },
 }
 </i18n>

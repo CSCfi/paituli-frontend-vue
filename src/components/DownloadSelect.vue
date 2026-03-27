@@ -124,13 +124,12 @@ watch(selectedFeaturesArray, () => {
       </c-button>
     </div>
     <div v-else class="selection">
-      <h4>{{ t("documents") }}</h4>
+      <h4>{{ t("files") }}</h4>
       <label>
         <input type="checkbox" v-model="licenseChecked" />
         <a :href="licenseUrl" target="_blank">{{ t("license") }}</a>
       </label>
       <div v-if="selectedFeaturesArray.length">
-        <h4>{{ t("files") }}</h4>
         <div class="files"
              v-for="feature in selectedFeaturesArray"
              :key="feature.getId()">
@@ -153,8 +152,8 @@ watch(selectedFeaturesArray, () => {
   "en": {
     "size": "Download ({size} MB)",
     "warnings": {
-      "size": "Note: You have selected over {size} MB of data, which is over the limit of compressed archive download.",
-      "select": "You must select at least one map sheet to proceed to download. You can do this by using the map view in select mode.",
+      "size": "Note: You have selected over {size} MB of data, which is over the allowed limit of ZIP file download.",
+      "select": "Select at least one map sheet to download data. Click 'Select' from the toolbar to start selecting map sheets.",
     },
     "shortcut": "Change to select mode",
     "documents": "Documents",
@@ -164,13 +163,13 @@ watch(selectedFeaturesArray, () => {
   "fi": {
     "size": "Lataa ({size} MB)",
     "warnings": {
-      "size": "Huom: Olet valinnut yli {size} MB dataa, mikä ylittää pakatun arkistolatauksen kokorajan.",
-      "select": "Sinun täytyy valita vähintään yksi karttalehti jatkaaksesi lataukseen. Voit tehdä näin käyttämällä karttanäkymän valintatilaa.",
+      "size": "Huom: Olet valinnut yli {size} MB dataa, mikä ylittää sallitun ZIP tiedoston kokorajan.",
+      "select": "Ladataksesi tiedostoja, valitse vähintään yksi karttalehti. Napsauta 'Valitse' työkalupalkista aloittaaksesi karttalehtien valitsemisen.",
     },
     "shortcut": "Vaihda valintatilaan",
     "documents": "Asiakirjat",
     "files": "Tiedostot",
-    "license": "Lisenssi",
+    "license": "Käyttöehdot",
   },
 }
 </i18n>
@@ -205,7 +204,6 @@ h4, label {
   color: var(--c-white);
 
   a {
-    margin-left: .25em;
     color: var(--c-accent-400);
   }
   a:hover {

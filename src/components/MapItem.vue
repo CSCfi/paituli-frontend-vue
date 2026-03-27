@@ -350,42 +350,42 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
     "feature": "Feature info",
     "toasts": {
       "fetching": {
-        "index_failed": "Failed to load index map features",
+        "index_failed": "Failed to load map sheets",
         "metadata_failed": "Failed to load datasets",
-        "please_refresh": "Refresh the page to retry. If the problem persists, please try again later. Cause: {error}",
+        "please_refresh": "Refresh the page to retry. If the problem persists, please contact CSC. Cause: {error}",
       },
       "geojson": {
         "loaded": {
-          "title": "Loaded provided GeoJSON",
-          "message": "Mapsheets have been selected using the extents",
+          "title": "Selection by GeoJSON",
+          "message": "Map sheets overlapping GeoJSON polygons have been selected.",
         },
         "invalid": {
           "title": "Invalid GeoJSON",
-          "message": "Could not load valid GeoJSON from {filename}",
+          "message": "Failed to load valid GeoJSON from '{filename}'.",
         },
       },
-      "feature_error": "Failed to load feature information. If the problem persists, please try again later.",
+      "feature_error": "Failed to load feature info. If the problem persists, please contact CSC.",
     },
   },
   "fi": {
     "feature": "Kohteen tiedot",
     "toasts": {
       "fetching": {
-        "index_failed": "Indeksikartan noutaminen epäonnistui",
+        "index_failed": "Karttalehtien noutaminen epäonnistui",
         "metadata_failed": "Aineistojen noutaminen epäonnistui",
-        "please_refresh": "Päivitä sivu yrittääksesi uudelleen. Jos ongelma jatkuu, yritä myöhemmin uudelleen. Syy: {error}",
+        "please_refresh": "Päivitä sivu yrittääksesi uudelleen. Jos ongelma jatkuu, ota yhteyttä CSC:hen. Syy: {error}",
       },
       "geojson": {
         "loaded": {
-          "title": "GeoJSON ladattu",
-          "message": "Karttalehdet valittu rajojen perusteella",
+          "title": "Valinta GeoJSON:lla",
+          "message": "GeoJSON:in polygonien kanssa päällekäiset karttalehdet ovat lisätty valintaan.",
         },
         "invalid": {
-          "title": "Virjeellinen GeoJSON",
-          "message": "Kelvollista GeoJSON:ia ei voitu ladata tiedostosta {filename}",
+          "title": "Virheellinen GeoJSON",
+          "message": "Kelvollista GeoJSON:ia ei voitu ladata tiedostosta '{filename}'.",
         },
       },
-      "feature_error": "Kohdetietojen lataaminen epäonnistui. Jos ongelma jatkuu, yritä myöhemmin uudelleen.",
+      "feature_error": "Kohteen tietojen lataaminen epäonnistui. Jos ongelma jatkuu, ota yhteyttä CSC:hen.",
     },
   },
 }

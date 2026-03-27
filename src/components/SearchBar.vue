@@ -141,37 +141,36 @@ const modeName = computed(() => selectMode.value ? 'select' : 'search')
   "en": {
     "select": {
       "button": "Select",
-      "label": "Mapsheet search",
-      "tooltip": "Select mapsheets with result bounding box",
-      "help": "The bounding box of your search query will be used to select all intersecting map sheets and will be highlighted on the map. Alternatively, you can use the mapsheet search mode to select sheets by label, including any sheet whose label contains your search query.",
-
+      "label": "Map sheet search",
+      "tooltip": "Select map sheets by place name or map sheet label",
+      "help": "Search for a place name to select overlapping map sheets. Alternatively, select map sheets by their label.",
     },
     "search": {
       "button": "Search",
-      "label": "Location search",
-      "tooltip": "Seach for a location and zoom into it",
-      "help": "Search for a geographic location and zoom the map into it.",
+      "label": "Place name search",
+      "tooltip": "Search for a place name and zoom into it",
+      "help": "Search for a place name and zoom into it. For example: muncipalities, postal codes, landmarks and points of interest.",
     },
-    "no_matches": "Search query did not match any location or mapsheet label.",
-    "nothing_found": "Location or address not found. Please double check your spelling.",
+    "no_matches": "The search could not find any place name or map sheet label. Please double-check your spelling.",
+    "nothing_found": "The search could not find any place name. Please double-check your spelling.",
     "api_error": "The search API encountered an error. Please try again later.",
   },
   "fi": {
     "select": {
       "button": "Valitse",
       "label": "Karttalehtihaku",
-      "tooltip": "Valitse karttalehtiä haun tuloksen rajoilla",
-      "help": "Hakusi rajaavaa aluetta käytetään kaikkien risteävien karttalehtien valintaan, joka korostetaan kartalla. Vaihtoehtoisesti voit käyttää karttalehtihakua valitaksesi lehtiä tunnuksen perusteella, mukaan lukien kaikki lehdet, joiden tunnuksessa esiintyy hakusi."
+      "tooltip": "Valitse karttalehtiä paikannimellä tai karttalehden nimellä",
+      "help": "Hae paikannimeä valitaksesi päällekäiset karttalehdet. Vaihtoehtoisesti voit valita karttalehtiä niiden nimen perusteella."
     },
     "search": {
       "button": "Hae",
-      "label": "Sijaintihaku",
-      "tooltip": "Hae sijaintia ja zoomaa tulokseen",
-      "help": "Sijaintihaku zoomaa kartan hakua vastaavaan maantieteelliseen paikkaan",
+      "label": "Paikannimihaku",
+      "tooltip": "Hae paikannimeä ja zoomaa siihen",
+      "help": "Hae paikannimeä ja zoomaa siihen. Esimerkiksi: kunnat, postinumerot, maamerkit ja kiinnostavat kohteet.",
     },
-    "no_matches": "Haku ei vastannut yhtäkään lokaatiota tai karttalehden nimeä.",
-    "nothing_found": "Sijaintia tai osoitetta ei löytynyt. Tarkista kirjoitusasu.",
-    "api_error": "Hakurajapinta kohtasi virheen. Yritä myöhemmin uudelleen.",
+    "no_matches": "Haku ei löytänyt yhtäkään paikannimeä tai karttalehden nimeä. Tarkista oikeinkirjoitus.",
+    "nothing_found": "Haku ei löytänyt yhtäkään paikannimeä. Tarkista oikeinkirjoitus.",
+    "api_error": "Hakurajapinnassa tapahtui virhe. Yritä myöhemmin uudelleen.",
   },
 }
 </i18n>

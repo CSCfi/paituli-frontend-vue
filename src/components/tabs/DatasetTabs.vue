@@ -117,47 +117,6 @@ function parseMetadata(metadata: any): MetadataParse | null {
 
 </template>
 
-<i18n>
-{
-  "en": {
-    "suggestion": "Please select a Producer to start browsing available datasets.",
-    "tabs": {
-      "info": {
-        "label": "Info",
-        "more": "Read more",
-      },
-      "apis": {
-        "label": "APIs",
-      },
-      "layers": {
-        "label": "Layers",
-      },
-    },
-    "toasts": {
-      "metafail": "Failed to load dataset metadata. If the problem persists, please try again later.",
-    },
-  },
-  "fi": {
-    "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
-    "tabs": {
-      "info": {
-        "label": "Tietoa",
-        "more": "Lue lisää",
-      },
-      "apis": {
-        "label": "Rajapinnat",
-      },
-      "layers": {
-        "label": "Tasot",
-      },
-    },
-    "toasts": {
-      "metafail": "Aineiston metatietojen lataaminen epäonnistui. Jos ongelma toistuu, yritä uudelleen myöhemmin.",
-    },
-  },
-}
-</i18n>
-
 <style scoped>
 .extra {
   color: var(--c-white);

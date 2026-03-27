@@ -280,9 +280,9 @@ defineExpose({ open })
     "title": "Download",
     "summary": {
       "header": "Download Summary",
-      "size_warning": "Note: You can download selected data only as a file list, as the selection size exceeds the compressed archive size limit of {size} MB.",
-      "info_zip": "Your download will be a zip archive with and estimated size of {size} MB.",
-      "info_list": "Your download will be a text file.",
+      "size_warning": "Note: You can download selected data only as a file list, as the selection size exceeds the allowed ZIP file size limit of {size} MB.",
+      "info_zip": "Your download will be a ZIP file with and estimated size of {size} MB.",
+      "info_list": "Your download will be a text file, which contains the paths of all selected map sheets.",
     },
     "as_list": "Download as file list",
     "list_tooltip": "Download data paths as a text file for batch download",
@@ -293,7 +293,7 @@ defineExpose({ open })
     "toasts": {
       "network_error": "Failed to contact download service. Check your internet connection. ",
       "something_wrong": "Something went wrong while processing your download. ",
-      "please_retry": "If the problem persists, please try again later. ",
+      "please_retry": "If the problem persists, please contact CSC.",
     },
     "progress": {
       "starting": "(Starting...)",
@@ -305,9 +305,9 @@ defineExpose({ open })
     "title": "Aineiston lataus",
     "summary": {
       "header": "Yhteenveto",
-      "size_warning": "Huom: Voit ladata valitun datan vain tiedostolistana, koska valinnan koko ylittää pakatun arkiston kokorajan {size} MB.",
+      "size_warning": "Huom: Voit ladata valitun datan vain tiedostolistana, koska valinnan koko ylittää sallitun ZIP-tiedoston kokorajan {size} MB.",
       "info_zip": "Latauksesi on ZIP-tiedosto, jonka arvioitu koko on {size} MB.",
-      "info_list": "Latauksesi on tekstitiedosto.",
+      "info_list": "Latauksesi on tekstitiedosto, joka sisältää kaikkien valittujen karttalehtien polut.",
     },
     "as_list": "Lataa tiedostolistana",
     "list_tooltip": "Lataa valinnan polut tekstitiedostona massalatausta varten",
@@ -318,7 +318,7 @@ defineExpose({ open })
     "toasts": {
       "network_error": "Yhteydenotto latauspalveluun epäonnistui. Tarkista internet-yhteytesi. ",
       "something_wrong": "Jotain meni pieleen latauksen käsittelyn aikana. ",
-      "please_retry": "Jos ongelma jatkuu, yritä myöhemmin uudelleen. ",
+      "please_retry": "Jos ongelma jatkuu, ota yhteyttä CSC:hen",
     },
     "progress": {
       "starting": "(Käynnistetään...)",

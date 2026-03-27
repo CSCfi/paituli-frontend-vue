@@ -76,9 +76,9 @@ defineExpose({ open })
 <i18n>
 {
   "en": {
-    "title": "Dataset description",
+    "title": "Dataset metadata",
     "files": "Files describing this dataset",
-    "metadata": "Full metadata available at Fairdata Etsin",
+    "metadata": "All metadata available at Fairdata Etsin",
     "close": "Close",
     "gpkg": {
       "download": "Download index map as GeoPackage",
@@ -86,9 +86,9 @@ defineExpose({ open })
     },
   },
   "fi": {
-    "title": "Tietoa aineistosta",
-    "files": "Tiedostot, jotka kuvaavat tätä aineistoa",
-    "metadata": "Täydet metatiedot saatavilla Fairdata Etsimessä",
+    "title": "Aineiston metatiedot",
+    "files": "Aineistoa kuvaavat tiedostot",
+    "metadata": "Kaikki metatiedot saatavilla Fairdata Etsimessä",
     "close": "Sulje",
     "gpkg": {
       "download": "Lataa indeksikartta GeoPackage -muodossa",
