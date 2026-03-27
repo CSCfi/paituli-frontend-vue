@@ -25,6 +25,7 @@ import { currentLocale } from '@/modules/locale';
 import HelpContent from './HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { currentDataset } from '@/modules/datasets';
+import { sleep } from '@/shared/util';
 
 const { t } = useI18n()
 
@@ -48,9 +49,18 @@ onMounted(() => {
   }
 })
 
-watch(dataSource, () => {
+const selectDisabled = ref(false)
+const inspectDisabled = ref(false)
+
+watch(currentDataset, async () => {
   // Reset selection to 'move' in case inspect becomes unavailable
   toolbarMode.value = 'move'
+
+  // To go around c-tab-buttons bg color bug we wait for
+  // a while before determining which of the buttons are enabled
+  await sleep(10)
+  selectDisabled.value = autoSelectSheets.value
+  inspectDisabled.value = !dataSource.value
 })
 
 watch(inspectCursor, (cursor) => {
@@ -119,7 +129,7 @@ const zoomToData = () => {
 <template>
   <c-tabs v-model="toolbarMode"
           v-control
-          :style="{ display: !currentDataset ? 'none': ''}"
+          v-show="currentDataset"
           disable-animation>
     <c-tab-buttons mandatory>
       <c-button
@@ -130,7 +140,7 @@ const zoomToData = () => {
       </c-button>
       <c-button
         value="select"
-        :disabled="autoSelectSheets"
+        :disabled="selectDisabled"
         v-help="`#${selectMode}-help`"
         v-tooltip="!autoSelectSheets ? t('select.tooltip') : t('select.disabled')">
         {{ t("select.label") }}<c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
@@ -138,7 +148,7 @@ const zoomToData = () => {
       <c-button
         value="inspect"
         v-help="t('inspect.help')"
-        :disabled="currentDataset && !dataSource"
+        :disabled="inspectDisabled"
         v-tooltip="dataSource ? t('inspect.tooltip') : t('inspect.disabled')">
         {{ t("inspect.label") }}<c-icon :path="mdiTarget"/>
       </c-button>
