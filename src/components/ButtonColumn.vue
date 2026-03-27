@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import OlMap from 'ol/Map.js'
 import { APP_SETTINGS } from '@/shared/constants';
 import { computed, ref } from 'vue';
-import LayersTab from './tabs/LayersTab.vue';
+import LayersMenu from './LayersMenu.vue';
 import { currentDataset } from '@/modules/datasets';
 
 const { t } = useI18n()
@@ -64,7 +64,7 @@ function resetZoom() {
         <c-icon :path="mdiLayersTripleOutline" size="27px" />
       </button>
       <div v-if="menuVisible" class="layer-menu">
-        <layers-tab />
+        <LayersMenu />
       </div>
     </div>
   </div>
