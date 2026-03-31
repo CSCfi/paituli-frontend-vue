@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import {
   mdiCheckboxMultipleMarkedOutline,
+  mdiCloseBoxMultipleOutline,
   mdiCursorDefaultOutline,
   mdiCursorMove,
   mdiFileUploadOutline,
@@ -9,7 +10,6 @@ import {
   mdiOpenInNew,
   mdiShapePolygonPlus,
   mdiTarget,
-  mdiTrashCanOutline
 } from '@mdi/js';
 
 import OlMap from 'ol/Map.js'
@@ -194,7 +194,7 @@ const zoomToData = () => {
             </help-content>
           </c-button>
           <c-button value="clear" id="trash" v-tooltip="t('select.clear.tooltip')">
-            <c-icon :path="mdiTrashCanOutline" />
+            <c-icon :path="mdiCloseBoxMultipleOutline" />
           </c-button>
         </c-tab-buttons>
         <div id="json-button" v-if="selectMode == 'json'">
@@ -322,7 +322,7 @@ const zoomToData = () => {
 
 c-tabs {
   --c-tab-buttons-background-color-active: var(--c-primary-500);
-  width: 450px;
+  width: 475px;
   z-index: 1;
 }
 
