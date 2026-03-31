@@ -20,8 +20,6 @@ export interface Dataset {
   stac_id: string
 }
 
-export type DownloadType = 'ZIP' | 'LIST'
-
 export type MetadataParse = {
   description: string,
   links: { title: string, url: string }[]

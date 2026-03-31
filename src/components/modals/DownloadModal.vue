@@ -22,7 +22,6 @@ const zipDownloadDisabled = ref(false)
 
 const filePaths = ref<string[]>([])
 const fileLabels = ref<string[]>([])
-const downloadAsList = ref(false)
 const downloadSize = ref<number>(0)
 
 const fetching = ref(false)
@@ -52,7 +51,7 @@ const open = (paths: string[], labels: string[], size: number) => {
   else if (size > APP_SETTINGS.MAX_ZIP_SIZE)
   {
     zipDownloadDisabled.value = true
-    downloadAsList.value = true
+    downloadType.value = downloadTypeItems.value[1].value
   }
 
   filePaths.value = paths
@@ -69,11 +68,10 @@ const downloadDescription = computed(() => {
 })
 
 const validateForm = () => {
-  // We double check that download form input should not make
-  // the backend angry, and we show error message(s) if it would be so.
+  // We double check that download form input should not make the backend angry
   resetErrors()
   let valid = true
-  if (zipDownloadDisabled.value && !downloadAsList.value)
+  if (zipDownloadDisabled.value && downloadType.value != 'LIST')
   {
     valid = false
   }
@@ -93,7 +91,7 @@ const submit = async () => {
 
   const payload = {
     data_id: current.data_id,
-    downloadType: downloadAsList.value ? 'LIST' : 'ZIP',
+    downloadType: downloadType.value,
     email: '',
     locale: 'en',
     filePaths: filePaths.value,
@@ -211,7 +209,7 @@ const resetErrors = () => {
 const resetForm = () => {
   resetErrors()
   licenseCheckbox.value = false
-  downloadAsList.value = false
+  downloadType.value = downloadTypeItems.value[0].value
   zipDownloadDisabled.value = false
 }
 
@@ -220,32 +218,46 @@ const resetForm = () => {
 const toasts = ref<HTMLCToastsElement | null>(null)
 
 defineExpose({ open })
+
+const downloadTypeItems = computed(() => [
+  { name: t('type.as_zip'), value: 'ZIP', disabled: zipDownloadDisabled.value },
+  { name: t('type.as_list'), value: 'LIST' }
+]);
+
+const downloadType = ref()
+
 </script>
 
 <template>
-  <c-modal v-model="showModal" v-control>
+  <c-modal v-model="showModal" :dismissable="!started" v-control>
     <c-card>
       <c-card-title>{{ t("title") }}</c-card-title>
       <c-card-content>
-        <div class="summary">
-          <strong>{{ t("summary.header") }}:</strong>
-          <p>{{ downloadDescription }}</p>
+        <!-- Download type (zip / file list) option -->
+        <c-radio-group
+          v-control
+          :items="downloadTypeItems"
+          hide-details
+          v-model="downloadType">
+          <strong>{{ t("type.title") }}</strong>
+        </c-radio-group>
 
+        <c-alert>
+          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+          <div slot="title">
+            {{ t("summary.header") }}
+          </div>
+          <p>{{ downloadDescription }}</p>
           <div class="zip-size-warning" v-if="zipDownloadDisabled">
             {{ t("summary.size_warning", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
           </div>
-          <div v-else-if="!downloadAsList">
+          <div v-else-if="downloadType == 'ZIP'">
             {{ t("summary.info_zip", { size: downloadSize }) }}
           </div>
           <div v-else>
             {{ t("summary.info_list") }}
           </div>
-        </div>
-
-        <!-- Download type (zip / file list) option -->
-        <c-switch v-model="downloadAsList" :disabled="zipDownloadDisabled" v-control>
-          {{ t("as_list") }}
-        </c-switch>
+        </c-alert>
 
         <!-- Render the required license checkbox, if we have a license -->
         <div class="form-group" v-if="licenseUrl">
@@ -262,13 +274,25 @@ defineExpose({ open })
         <c-toasts ref="toasts" vertical="bottom" absolute="true" />
       </c-card-content>
 
-      <c-card-actions justify="end">
-        <c-progress-bar v-if="started"
-                        :value="progress"
-                        :label="progressLabel"
-                        :error="downloadError"/>
-        <c-button :loading="fetching" :disabled="fetching" @click="submit">{{ t("confirm") }}</c-button>
-        <c-button @click="showModal = false" variant="light">{{ t("cancel") }}</c-button>
+      <c-card-actions justify="space-between">
+        <c-button
+          @click="showModal = false"
+          :outlined="!started"
+          id="cancel">
+          {{ t("cancel") }}
+        </c-button>
+        <c-progress-bar
+          v-if="started"
+          :value="progress"
+          :label="progressLabel"
+          :error="downloadError"/>
+        <c-button
+          :loading="fetching"
+          :outlined="fetching"
+          :disabled="fetching"
+          @click="submit">
+          {{ t("confirm") }}
+        </c-button>
       </c-card-actions>
     </c-card>
   </c-modal>
@@ -284,7 +308,11 @@ defineExpose({ open })
       "info_zip": "Your download will be a ZIP file with and estimated size of {size} MB.",
       "info_list": "Your download will be a text file, which contains the paths of all selected map sheets.",
     },
-    "as_list": "Download as file list",
+    "type": {
+      "title": "Download type",
+      "as_zip": "ZIP file",
+      "as_list": "File list",
+    },
     "list_tooltip": "Download data paths as a text file for batch download",
     "license_agree": "I agree to the",
     "license": "dataset license",
@@ -309,7 +337,11 @@ defineExpose({ open })
       "info_zip": "Latauksesi on ZIP-tiedosto, jonka arvioitu koko on {size} MB.",
       "info_list": "Latauksesi on tekstitiedosto, joka sisältää kaikkien valittujen karttalehtien polut.",
     },
-    "as_list": "Lataa tiedostolistana",
+    "type": {
+      "title": "Latauksen tyyppi",
+      "as_zip": "ZIP-tiedosto",
+      "as_list": "Tiedostolista",
+    },
     "list_tooltip": "Lataa valinnan polut tekstitiedostona massalatausta varten",
     "license_agree": "Hyväksyn",
     "license": "aineiston lisenssin",
@@ -346,6 +378,16 @@ defineExpose({ open })
   border-radius: 4px;
   white-space: pre-line;
 }
+c-button {
+  --c-button-outlined-background-color: unset !important;
+  --c-button-outlined-background-color-hover: unset !important;
+  --c-button-outlined-border-color: unset !important;
+  --c-button-background-color-hover: var(--c-tertiary-500);
+}
+c-button#cancel {
+  --c-button-background-color: var(--c-warning-500);
+  --c-button-background-color-hover: var(--c-warning-300);
+}
 c-progress-bar {
   width: 100%;
   color: var(--c-tertiary-500);
@@ -357,5 +399,8 @@ c-progress-bar {
 }
 c-link {
   --c-link-color: var(--c-primary-500);
+}
+c-alert p {
+  white-space: pre-wrap;
 }
 </style>
