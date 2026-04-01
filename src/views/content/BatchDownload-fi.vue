@@ -5,235 +5,226 @@ import { APP_SETTINGS } from '@/shared/constants'
 
 </script>
 <template>
-  <h1>Massalataus HTTPS-, FTP- ja rsync-yhteyksien yli</h1>
-  <p>
-    <RouterLink to="/download">Latauspalvelu</RouterLink>
-    -sivu tukee pakattuja (zip) latauksia kokoon
-    {{ APP_SETTINGS.MAX_ZIP_SIZE }} MB asti, joka voi olla rajoittavaa,
-    jos tarvittava aineisto on suurempi.
-    Paitulin aineistot ovat saatavilla myös
-    HTTP-, FTP- ja rsync-protokollien kautta, joiden avulla voi ladata
-    asteittain suuria määriä aineistosisältöä ilman rajaa.
-  </p>
-  <p>Tällä sivulla käydään läpi, kuinka voit:</p>
-  <ul>
-    <li>Ladata koko aineiston.</li>
-    <li>
-      Ladata osan aineistosta tiedostolistan avulla.
-    </li>
-    <li>Mountata aineisto(t) verkkolevyksi</li>
-  </ul>
+<h1>Paitulin aineistojen massalataus HTTPS-, FTP- ja rsync-yhteyksien yli</h1>
+<p>
+Paitulin <RouterLink to="/download">Lataussivu</RouterLink> mahdollistaa aineistojen latauksen .zip tiedostona, kerralla voi ladata max. 3 Gb. Tämä voi isompien aineistojen osalta olla rajoittavaa. 
+Tämä sivu kuvaa miten ladata isompia aineistoja tiedostoina. Vaihtoehtoisesti isompien aineistojen käyttämiseksi sopivat <RouterLink to="/webservices">OGC API-rajapinnat</RouterLink> tai <RouterLink to="/stac">STAC</RouterLink>.
+ </p> 
+ 
+ <p>Vaihtoehdot isompien aineistojen lataamiseksi:</p>
+	<ul>
+	  <li>Lataus tiedostolistauksen mukaisesti. Tiedostolistauksen voi muodostaa <RouterLink to="/download">Lataussivulla</RouterLink>.
+	  </li>	
+	  <li>Hakemiston lataus, mahdollisesti alihakemistojen kanssa. 
+	  </li>
 
-  <p>
-    Näiden toteuttamiseksi tarvitset aineiston
-    <strong>polun</strong>
-    (verkko-osoitteen), jossa se sijaitsee.<br>
-    <RouterLink to="/download" target="_blank">Latauspalvelu</RouterLink>
-    -sivu tarjoaa nämä tiedot:
-  </p>
-  <ol>
-    <li>Valitse sinua kiinnostava aineisto</li>
-    <li>Avaa "Palvelut"-välilehti.</li>
-    <li>Klikkaa "Tiedostonsiirto".</li>
-    <li>Kopioi haluamasi polku sen mukaan, mikä protokolla sopii käyttöösi.</li>
-  </ol>
+	</ul>  
 
-  <h2>Koko aineiston lataaminen</h2>
-  <p>
-    Kokonaisen aineistokansion lataamiseen voidaan käyttää useita eri työkaluja.
-    Jos kohtaat ongelmia, tutustu työkalujen omaan dokumentaatioon.
-    Huomaa myös, että FTP- ja rsync-yhteydet voivat olla estettyjä
-    joissakin organisaatioissa. Tällöin käytä HTTP:tä esimerkiksi wget-työkalulla.
-  </p>
+<p>Tiedostot ovat saatavilla kolmen rajapinnan yli:</p>
+<ul>
+  <li>
+    <strong>HTTPS</strong>:
+    <a href="https://www.nic.funet.fi/index/geodata/" target="_blank"
+      >https://www.nic.funet.fi/index/geodata/</a>
+  </li>
+  <li>
+    <strong>FTP</strong>: ftp://ftp.funet.fi/pub/sci/geo/geodata/
+  </li>
+  <li>
+    <strong>rsync</strong>: rsync://rsync.nic.funet.fi/index/geodata/
+  </li>
+</ul>
 
-  <h3>Graafiset FTP-työkalut</h3>
-  Helpoin ja käyttäjäystävällisin tapa on käyttää
-  <strong>graafista FTP-työkalua</strong>, kuten
-  <a href="https://filezilla-project.org/" target="_blank">FileZilla</a>
-  tai
-  <a href="https://winscp.net/eng/download.php" target="_blank">WinSCP</a>
-  (vain Windows). Seuraavat lyhyet ohjeet koskevat FileZillaa:
-  <ol>
-    <li>Yhdistä FTP-palvelimeen seuraavilla tiedoilla:
-      <ul>
-        <li>host name: ftp.funet.fi</li>
-        <li>protocol: FTP</li>
-        <li>port number: 21</li>
-        <li>Jätä username ja password tyhjiksi, jos niitä kysytään</li>
-      </ul>
-    </li>
-    <li>Siirry oikealla puolella kansioon, jossa aineisto sijaitsee.</li>
-    <li>Valitse vasemmalla puolella kohdekansio omalta koneeltasi.</li>
-    <li>Vedä aineisto oikealta puolelta vasemmalle aloittaaksesi siirron.</li>
-  </ol>
+<p>FTP ja rsync ovat joissakin organisaatioissa rajoitettu pois palomuurin avulla. HTTPS toimii yleensä. </p>
 
-  <h3>rsync</h3>
-  <p>
-    Jos järjestelmäsi tukee rsync-komentorivityökalua,
-    vaihda komennossa korostetut osat tarpeidesi mukaan.
-    Sinun tulee määrittää ladattavan aineiston polku
-    sekä paikallinen kohdekansio. -a -valitsin yhdistää useita asetuksia,
-    kuten rekursiivisen latauksen ja tiedostometatietojen säilyttämisen.
-  </p>
-  <CodeBlock
-    :content="`rsync -a <span style='color:yellow;'>rsync://rsync.nic.funet.fi/ftp/pub/sci/geo/geodata/mml/hallintorajat_milj_tk/2017/</span> <span style='color:cyan;'>local_folder_to_save/</span>`"
-  />
+<p>Valitse sopiva lataustapa riippuen käyttämästäsi käyttöjärjestelmästä, palomuurin rajoituksista ja lataustoiveista:</p>
 
-  <h3>wget</h3>
-  <p>
-    Vaikka wget tukee myös HTTP:tä, käytämme tässä FTP:tä,
-    jotta vältetään ylimääräisten index.*-tiedostojen lataaminen.
-    Työkalulla on runsaasti valitsimia; seuraava yhdistelmä toimii hyvin:
-  </p>
-  <CodeBlock
-    :content="`wget -r -l inf -N -np -nH -x -c --cut-dirs=6 \\
-      <span style='color:yellow;'>ftp://ftp.funet.fi/pub/sci/geo/geodata/mml/hallintorajat_milj_tk/2017/</span> \\
-      -P <span style='color:cyan;'>local_folder_to_save/</span>`"
-  />
-  <ul>
-    <li>-r, rekursiivinen lataus</li>
-    <li>-l inf, rekursion syvyys (oletus 5, tässä ääretön)</li>
-    <li>-N, päivitä vain uudet tiedostot</li>
-    <li>-np, älä lataa ylähakemistoja</li>
-    <li>-nH, poista isäntänimi</li>
-    <li>-x, luo hakemistot kuten Paitulissa</li>
-    <li>-cut-dirs, poistaa tietyn määrän hakemistoja polun alusta</li>
-    <li>-c, jatka keskeytynyttä latausta</li>
-  </ul>
+<table>
+  <tr>
+    <th>Lataustapa</th>
+    <th>Windows</th>
+    <th>Linux, Mac, Windows WSL</th>	
+  </tr>
+  <tr>
+    <td>Tiedostolistauksen avulla</td>
+    <td>Paituli PowerShell skripti (HTTPS)</td>
+    <td>rsync, wget (HTTPS)</td>
+  </tr>  
+  <tr>
+    <td>Hakemisto</td>
+    <td>WinSCP, FileZilla (molemmat FTP)</td>
+    <td>FileZilla (FTP), rsync, wget (FTP tai HTTPS)</td>
+  </tr>
+</table>
 
-  <h2>Tiedostolistan lataaminen</h2>
-  <p>
-    Jos haluat ladata vain tietyt karttalehdet tai yksittäisiä tiedostoja,
-    luo ensin tiedostolista Paitulissa ja lataa sen jälkeen tiedostot
-    komentorivityökalulla.
-  </p>
+<p>Jos haluat ladata hakemiston, mutta olet Windows käyttäjä, eikä FTP:n tai rsync:n käyttö ole mahdollista, sitten sopivia työkaluja hakemiston lataamiseksi valitettavasti ei ole olemassa.
+	Siinä tilanteessa suosittelemme, että luot .txt tiedoston, jossa on vain haluamasi hakemiston nimi ja käytät Paituli PowerShell skriptiä hakemiston lataamiseksi. </p>
 
-  <h3>Tiedostolistan luominen</h3>
-  <ol>
-    <li>
-      Avaa
-      <RouterLink to="/download" target="_blank">Latauspalvelu</RouterLink>
-      -sivu.
-    </li>
-    <li>Valitse haluamasi aineisto.</li>
-    <li>Valitse karttalehdet valintatyökaluilla tai haun avulla.</li>
-    <li>Poista tarvittaessa valintoja latauslistasta ja paina "Lataa".</li>
-    <li>Ota latausikkunassa käyttöön "Lataa tiedostolistana" ennen latauksen aloittamista </li>
-  </ol>
+<h2>Lataus tiedostolistauksen mukaisesti</h2>
 
-  <h3>Listattujen tiedostojen lataaminen</h3>
-  <p>
-    Graafiset työkalut eivät tue lataamista tiedostolistan avulla,
-    mutta se onnistuu komentorivityökaluilla:
-  </p>
+<p>
+  Jos haluat ladata aineistosta vain tiettyjä karttalehtiä, sinun pitää ensin muodostaa tiedostolistaus Paitulin käyttöliittymällä ja sitten ladata tiedostot komentorivityökaluilla.
 
-  <h4>wget</h4>
-  <p>Edelliseen esimerkkiin verrattuna lisätään -i -valitsin tiedostolistan nimeä varten.</p>
+</p>
+
+<h3>Tiedostolistauksen muodostaminen</h3>
+
+<ol>
+  <li>Avaa <RouterLink to="/download">Latauspalvelu</RouterLink>,</li>
+  <li>Valitse haluamasi aineisto</li>
+  <li>Valitse karttalehdet kartalta tai haulla</li>
+  <li>Klikkaa "Lataa tiedostolista" painiketta.</li>
+  <li>Saat tiedostolistauksen sähköpostiisi, lataa listaus omalle koneelle.</li>
+</ol>
+
+<p>
+Vaihtoehtoisesti tiedostolistauksen voi muodostaa hyödyntämällä
+    indeksikartan path-sarakkeen tietoja. Indeksikartta on saatavilla Linkit
+    välilehdeltä
+    <a href="download.html">Latauspalvelu</a> sivulla.
+</p>
+  
+  
+<h3>Lataus tiedostolistauksen mukaisesti</h3>
+
+<p> Valitettavasti graafiset työkalut eivät tue tiedostolistauksen käyttöä, joten tämä on mahdollista vain komentorivityökaluilla. 
+	Windows-käyttäjille tarjoamme lataukseen PowerShell skrtiptin. 
+	Linux- ja Mac-käyttäjät voivat käyttää lataukseen <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget" target="_blank">wget</a> tai <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync" target="_blank">rsync </a> ohjelmia, jotka yleensä ovat oletuksena saatavilla.
+</p>
+
+<h4>Paituli PowerShell skripti Windowsille</h4>
+
+<p>Windows-käyttäjille tarjoamme PowerShell skrtiptin lataukseen HTTPS:n kautta. Tämä toimii AINOASTAAN Windowsilla. 
+	Skripti luo uusia kansioita säilyttäen alkuperäisen kansiorakenteen sekä ohittaa jo ladatut tiedostot. 
+</p>
+
+<p>Askeleet skriptin käyttämiseksi:</p>
+<ol>
+  <li>Lataa tiedostojen lista.</li>
+  <li>Lataa <a href="https://www.nic.funet.fi/index/geodata/download_paituli_data.ps1">Paituli latausskripti</a>.</li>
+  <li>Avaa skripti tekstieditorilla (esim. Muistio) ja muokkaa skriptin alussa olevat polut, jotka on merkitty CHANGE kommentilla. Tallenna.</li>
+  <li>Avaa PowerShell.</li>
+  <li>Menee hakemistoon, johon tallensit skriptin, käytä cd-komentoa.</li>
+  <li>Aja skripti: <div class="codeBlock">.\download_paituli_data.ps1</div></li>
+</ol>
+
+
+<h4>wget</h4>
+
+<p>
+Käytä -i optiota tiedostolistauksen määrittelemiseksi.
+</p>
+
   <CodeBlock
     :content="`wget -i <span style='color:yellow;'>file_list.txt</span>\
       -P <span style='color:cyan;'>local_folder_to_save/</span>`"
   />
+  
+<h4>rsync</h4>
+<p>Ennen latausta, poista tiedostolistauksesta jokaisen rivin alusta 'http://www.nic.funet.fi/index/'.</p>
 
-  <h4>rsync</h4>
-  <p>
-    Huom! rsyncin tapauksessa sinun tulee poistaa
-    'http://www.nic.funet.fi/index/' jokaiselta riviltä tiedostolistassa.
-  </p>
   <CodeBlock
     :content="`rsync -a --files-from=<span style='color:yellow;'>file_list.txt</span>\
     rsync://rsync.nic.funet.fi/ftp/pub/sci/geo <span style='color:cyan;'>local_folder_to_save/</span>`"
   />
 
-  <h4>Start-BitsTransfer Windows PowerShellissa</h4>
-  <p>Start-BitsTransfer vaatii hieman enemmän valmistelua:</p>
-  <ol>
-    <li>Muokkaa tiedostolistaa ja lisää ensimmäiseksi riviksi "Source"</li>
-    <li>Varmista, että kohdehakemisto (esimerkissä local_folder_to_save) on olemassa.</li>
-  </ol>
+
+
+
+<h2>Hakemiston lataus</h2>
+
+<p>
+Tämä on suhteellisen helppo tapa tiedostojen lataamiseksi, jos tarvittavat tiedostot ovat palvelimella samassa hakemistossa. Jokainen Paitulin aineisto on omassa hakemistossaan, joten tämä sopii erittäin hyvin kokonaisen aineiston lataamiseksi.
+</p>
+
+<h3>Hakemiston löytäminen</h3>
+
+<p>Aineiston polku löytyy <RouterLink to="/download">Latauspalvelusta:</RouterLink>:</p>
+<ol>
+  <li>Valitse haluamasi aineisto</li>
+  <li>Napsauta "Rajapinnat" painiketta. Hakemistot kaikille kolmelle protokollalle näkyvät.</li>
+</ol>
+
+<p>  
+  Jokaisen aineiston hakemistossa on Readme-tiedosto,
+  jossa aineiston perustietojen lisäksi on linkki Etsimeen, josta löytyvät
+  laajemmat aineistokuvaukset.
+</p>
+
+<h3>Hakemistossa olevien kaikkien tiedostojen ja alihakemistojen lataus</h3>
+
+<p>
+Hakemiston lataukseen voi käyttää erilaisia ohjelmistoja, linkit työkalujen dokumentaatioon on listattu tämän sivun lopussa.
+Alla olevat esimerkit lataavat koko hakemiston sekä sen alihakemistot, ja tallentavat tiedostot vastaavaan hakemistorakenteeseen paikallisella koneella.
+</p>
+
+<ol>
+  <li>Helppokäyttöisemmät ovat <strong>FTP ohjelmat</strong>, esim. FileZilla tai WinSCP. </li>
+  <li><strong>rsync</strong> tai <strong>wget</strong> komentorivityökalut. Joskus organisaation palomuuri voi estää FTP ja rsync:n käytön. Silloin on parasta käyttää wget työkalua HTTPS:n kanssa.</li>
+</ol>
+
+<h4>FTP ohjelmat</h4>
+<ol>
+  <li>Yhdistä palvelimeen. host name: ftp.funet.fi, protocol: FTP, port number: 21.</li>
+  <li>Jos käyttäjätunnusta tai salasanaa kysytään, jätä kenttä tyhjäksi.</li>
+  <li>Valitse oikealla hakemisto, mihin tarvitsemasi aineisto on tallennettu.</li>  
+  <li>Valitse vasemmalla hakemisto, mihin haluat ladata tiedostot.</li>    
+  <li>Vedää tiedostoja tai hakemistoja oikealta vasemmalle, että niiden lataus käynnistyisi. </li>
+</ol>
+
+<h4>rsync</h4>
+
   <CodeBlock
-    :content="`Import-CSV <span style='color: yellow;'>file_list.txt</span> | Start-BitsTransfer -Destination <span style='color: cyan;'>local_folder_to_save/</span>`"
+    :content="`rsync -a <span style='color:yellow;'>rsync://rsync.nic.funet.fi/ftp/index/geodata/mml/hallintorajat_milj_tk/2017/</span> <span style='color:cyan;'>local_folder_to_save/</span>`"
   />
+  
+<ul>
+  <li>
+    Vaihda komennossa siniset osat vastaamaan valitsemaasi aineistoa ja
+    tallennushakemistoasi.
+  </li>
+  <li>
+    -a käytä arkisto tilaa, mm. säilyttää alkuperäiset aikaleimat ja lataa
+    kaikki alihakemistot
+  </li>
+</ul>
 
-  <p>
-    Tämä komento tallentaa kaikki tiedostot samaan kansioon.
-    Jos haluat säilyttää saman hakemistorakenteen kuin Paitulissa,
-    luo .csv-tiedosto, jossa on tulostepolut (katso
-    <a href="https://www.jesusninoc.com/10/08/start-bitstransfer-examples/"
-       target="_blank"
-    >Start-BitsTransfer, Esimerkki 2</a>).
-    Voit käyttää esimerkiksi Exceliä. Kaikkien alikansioiden on oltava
-    olemassa ennen komennon suorittamista.
-  </p>
+<h4>wget</h4>
 
-  <h2>FTP:n liittäminen paikalliseksi levyksi</h2>
-  <p>
-    FTP-sivusto on mahdollista liittää paikalliseksi levyksi.
-    Tämä mahdollistaa tiedostojen avaamisen suoraan GIS-ohjelmistoista
-    ilman erillistä latausta. Tiedostot kuitenkin ladataan käytön yhteydessä,
-    joten FTP:n kautta avaaminen on hitaampaa kuin paikallisista tiedostoista.
-  </p>
+<p>
+   Joissakin organisaatioissa FTP ja rsync ovat estetty palomuurilla, silloin käytä HTTPS-latausta wget:in kanssa. wget:llä on paljon asetuksia, joista yksi toimiva tapa on seuraava:
+</p>
 
-  <ul>
+  <CodeBlock
+    :content="`wget -r -l inf -N -np -nH -x -c --cut-dirs=4 \\
+      <span style='color:yellow;'>ftp://ftp.funet.fi/index/geodata/mml/hallintorajat_milj_tk/2017/</span> \\
+      -P <span style='color:cyan;'>local_folder_to_save/</span>`"
+  />
+  <CodeBlock
+    :content="`wget -r -l inf -N -np -nH -x -c --cut-dirs=4 \\
+      <span style='color:yellow;'>https://www.nic.funet.fi/index/geodata/mml/hallintorajat_milj_tk/2017/</span> \\
+      -P <span style='color:cyan;'>local_folder_to_save/</span>`"
+  />  
+
+<ul>
+	<li>-r, lataa rekursiivisesti alihakemistot</li>
+	<li>-l inf, miten syvälle rekursiivinen lataus lähtee, oletuksena 5, tässä
+  laitettu loputtomaksi</li>
+	<li>-N, vain päivitys, jo olemassa olevia tiedostoja ei ladata uudestaan, tämä on
+  tärkeä, jos lataus keskeytyy tai jos päivitetään jo aikaisemmin ladattua
+  aineistoa</li>
+	<li>-np, estää ylähakemistojen latautumisen</li>
+	<li>-nH, poistaa palvelimen nimen</li>
+	<li>-x, kopioi hakemistorakenteen</li>
+	<li>-cuts-dirs, leikkaa hakemistoja polun alusta, että hakemistopuu ei olisi liian
+  pitkä, säädä tätä arvoa tarpeen mukaan</li>
+	<li>-c, jatkaa katkennutta latausta</li>  
     <li>
-      Linux-käyttäjät voivat käyttää esimerkiksi
-      <a href="http://curlftpfs.sourceforge.net/" target="_blank">curlFtpFS</a>.
+      Jos mahdollista, käytä ftp palvelua, käyttämällä HTTPS protokollaa, saat
+    ylimääräisiä index.* tiedostoja.
     </li>
-    <li>
-      Windowsille ei vaikuta olevan ilmaista ratkaisua,
-      joka toimisi kohtuullisella suorituskyvyllä.
-    </li>
-  </ul>
+</ul>
 
-  <h2>Yhteenveto työkaluista ja resursseista</h2>
+<p>Jos huomaat ongelmia tai tiedät paremman tavan Windowsilla tiedostojen lataamiseksi, ota yhteyttä CSC:hen.</p>
 
-  <ul>
-    <li>
-      Graafiset FTP-työkalut:
-      <ul>
-        <li><a href="https://filezilla-project.org/" target="_blank">FileZilla</a></li>
-        <li>
-          <a href="https://winscp.net/eng/download.php" target="_blank">WinSCP</a>, vain Windows.
-        </li>
-      </ul>
-    </li>
-    <li>
-      Komentorivityökalut:
-      <ul>
-        <li>
-          <a
-            href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget"
-            target="_blank"
-          >wget</a>
-          tukee sekä HTTPS- että FTP-protokollia ja on
-          <a href="https://eternallybored.org/misc/wget/" target="_blank">
-            saatavilla myös Windowsille
-          </a>.
-        </li>
-        <li>
-          <a
-            href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync"
-            target="_blank"
-          >rsync</a>
-          tukee rsync-protokollaa ja on
-          <a href="https://bobcares.com/blog/rsync-from-windows-to-linux-over-ssh" target="_blank">
-            saatavilla myös Windowsille
-          </a>.
-        </li>
-        <li>
-          rsync ja wget sisältyvät oletuksena useimpiin Linux- ja Mac-jakeluihin.
-          Windowsissa voit käyttää edellä linkitettyjä versioita tai
-          Windows Subsystem for Linuxiä (WSL).
-        </li>
-        <li>
-          <a
-            href="https://docs.microsoft.com/en-us/powershell/module/bitstransfer/start-bitstransfer"
-            target="_blank">
-            Start-BitsTransfer
-          </a>
-          on oletuksena saatavilla Windows PowerShellissa.
-          Sitä ei ole saatavilla Linuxille tai Macille.
-        </li>
-      </ul>
-    </li>
-  </ul>
 </template>

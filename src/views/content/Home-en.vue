@@ -1,272 +1,156 @@
 <template>
   <h1>About</h1>
-  <p>
-    Paituli is a spatial data download service. Paituli's primary users are
-    students and personnel of Finnish universities and polytechnics, but it is
-    open to anyone. The service provides datasets that are important for
-    research and education. Compared to other spatial data services Paituli
-    includes also historical versions of datasets. For many datasets the first
-    version is from 2005, when Paituli started. At the moment datasets from
-    following data providers are available:
-  </p>
-  <ul>
-    <li>
-      <a href="https://dvv.fi" target="_blank">Finnish Digital and Population Data Services Agency</a>
-    </li>
-    <li>
-      <a href="https://www.ruokavirasto.fi/" target="_blank">Finnish Food Agency</a>
-    </li>
-    <li>
-      <a href="http://www.ilmatieteenlaitos.fi" target="_blank">Finnish Meteorological Institute (FMI)</a>
-    </li>
-    <li>
-      <a href="http://www.digiroad.fi" target="_blank">Finnish transport Infrastructure Agency, Digiroad</a>
-    </li>
-    <li>
-      <a href="http://www.kotus.fi" target="_blank">Institute for the Languages of Finland (KOTUS)</a>
-    </li>
-    <li>
-      <a href="http://www.latuviitta.org/" target="_blank">Latuviitta</a>
-    </li>
-    <li>
-      <a href="http://www.maanmittauslaitos.fi" target="_blank">National Land Survey (MML)</a>
-    </li>
-    <li>
-      <a href="https://www.luke.fi/" target="_blank">Natural resource institute Finland (LUKE)</a>
-    </li>
-    <li>
-      <a href="http://www.tilastokeskus.fi/index_en.html" target="_blank">Statistics Finland</a>
-    </li>
-    <li>
-      <a href="https://www.luomus.fi/fi" target="_blank">University of Helsinki, Luomus</a>
-    </li>
-  </ul>
-  <p>
-    Available datasets can be found on the
-    <RouterLink to="/download">Download Data</RouterLink>
-    page. Datasets have different open licenses, most datasets have CC-BY-4.0
-    license. Please remember to read the license terms before downloading the
-    datasets.
-  </p>
-  <p>Paituli provides four different options for downloading the data:</p>
-  <ul>
-    <li>
-      Datasets can be downloaded directly as zip archives from
-      <RouterLink to="/download">Download Data</RouterLink>
-      page. The zip-file size is limited to 3Gb. Download data page provides also
-      preview option for a big part of the datasets.
-    </li>
-    <li>
-      Bigger amounts of data can be download over HTTP,
-      <RouterLink to="/files">FTP and rsync</RouterLink>
-      .
-    </li>
-    <li>
-      Many datasets are also available as OGC
-      <RouterLink to="/webservices">Web Services:</RouterLink>
-      WMS (Maps), WCS (Coverages), WMTS (Tiles) and WFS (Features).
-    </li>
-    <li>
-      <a href="https://research.csc.fi/gis_data_in_csc_computing_env" target="_blank">
-        CSC Puhti supercomputer has open GIS data
-      </a>,
-      which includes a copy of almost all Paituli data, for fast and easy
-      access for Puhti users.
-    </li>
-  </ul>
-  <p>
-    Metadata of Paituli datasets is stored to
-    <a
-      href="https://etsin.fairdata.fi/datasets/paituli?keys=&amp;terms=&amp;p=1&amp;sort=best"
-      target="_blank">
-      Etsin
-    </a>.
-    Metadata includes short description of dataset in Finnish and English,
-    contact information, license terms and if available links to additional
-    documents or web pages. Links to dataset specific pages in Etsin can be
-    found on Metadata page or on Download page's Metadata tab.
-  </p>
-  <p>
-    Students and personnel of universities and polytechnics are welcomed to
-    <RouterLink to="/opendata">Share Your Data</RouterLink>
-    in Paituli.
-  </p>
-  <p>
-    The use of Paituli service is free of charge. Paituli is maintained by
-    <a href="https://www.csc.fi" target="_blank">CSC - IT center for science</a>
-    and financed by
-    <a href="https://minedu.fi/etusivu" target="_blank">Ministy of Education and Culture</a>
-    and Finnish Academy via
-    <a href="https://www.geoportti.fi" target="_blank">Geoportti</a> project.
-    Paituli is provided with best effort service level and availability.
-  </p>
-  <p>
-    Paituli is developed at CSC using open source software, inc:
-    <a href="http://geoserver.org/" target="_blank">Geoserver</a>,
-    <a href="https://openlayers.org/" target="_blank">OpenLayers</a>,
-    <a href="https://postgis.net/" target="_blank">PostGIS</a>,
-    <a href="https://quarkus.io/" target="_blank">Quarkus</a>
-    and
-    <a href="https://vuejs.org/" target="_blank">Vue.js</a>.
-    Paituli source code is available in Github:
-    <a href="https://github.com/CSCfi/paituli-frontend-vue/" target="_blank">front-end</a>
-    and
-    <a href="https://github.com/CSCfi/avaa-paituli-backend" target="_blank">back-end</a>.
-  </p>
-  <p>
-    Paituli 's permanent link:
-    <a href="https://www.csc.fi/paituli">www.csc.fi/paituli</a>
-  </p>
-  <p>
-    <a href="http://www.nic.funet.fi/index/geodata/Paituli_2020.pptx" target="_blank">
-      Paituli's PowerPoint presentation
-    </a>
-    (2020).
-  </p>
+<p>Paituli on suomalainen paikkatietopalvelu. Paituli on ensisijaisesti suunnattu akateemisille käyttäjille, mutta se on avoin kaikille. Palvelun kautta on saatavilla paikkatietoaineistoja, jotka ovat tärkeitä tutkimuksessa ja opetuksessa. Muista paikkatietoaineistopalveluista poiketen Paitulista löydät myös historiallisia vuosiversioita. Useiden aineistojen ensimmäiset versiot ovat vuodelta 2005, jolloin Paituli aloitti toimintansa. Kaikilla aineistoilla on avoin lisenssejä, useimmiten CC-BY-4.0 lisenssi.
+</p>
+
+<p>Suomen akateemisilla käyttäjillä on mahdollisuus myös
+		<RouterLink to="/opendata">jakaa aineistoja</RouterLink>
+		Paitulissa.
+</p>
+<p>
+	<a href="http://www.nic.funet.fi/index/geodata/Paituli_2026.pptx" target="_blank">Paitulin PowerPoint esityskalvot</a>
+	(2026).
+</p>
+
+<h2>Aineistot</h2>
+
+Paituli sisältää seuraavien organisaatioiden tuottamia paikkatietoaineistoja:
+	<ul>
+		<li>
+			<a href="https://dvv.fi" target="_blank">Digi- ja väestötietovirasto</a>
+		</li>
+		<li>
+			<a href="https://www.helsinki.fi/fi" target="_blank">Helsingin yliopisto</a>
+		</li>		
+		<li>
+			<a href="http://www.ilmatieteenlaitos.fi" target="_blank">Ilmatieteen laitos (FMI)</a>
+		</li>
+		<li>
+			<a href="http://www.kotus.fi" target="_blank">Kotimaisten kielten keskus (KOTUS)</a>
+		</li>
+		<li>
+			<a href="https://science.nasa.gov/mission/landsat/" target="_blank">NASA/USGS, Landsat</a>
+		</li>
+		<li>
+			<a href="http://www.luke.fi" target="_blank">Luonnonvarakeskus</a>
+		</li>
+		<li>
+			<a href="http://www.maanmittauslaitos.fi" target="_blank">Maanmittauslaitos (MML)</a>
+		</li>
+		<li>
+			<a href="https://www.ruokavirasto.fi/" target="_blank">Ruokavirasto</a>
+		</li>
+		<li>
+			<a href="https://www.slu.se/en/" target="_blank">Ruotsin maatalousyliopisto</a>
+		</li>			
+		<li>
+			<a href="http://www.tilastokeskus.fi" target="_blank">Tilastokeskus</a>
+		</li>
+		<li>
+			<a href="http://www.digiroad.fi" target="_blank">Väylävirasto, Digiroad</a>
+		</li>
+	</ul>
+</p>
+<p><a href="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli" target="_blank">Tarkka lista saatavilla olevista aineistoista</a> löytyy Fairdata Etsin-palvelusta. Etsimessä, kokeile vapaata tekstihakua tai vasemmalla olevia suodattimia aineistojen löytämiseksi.
+</p>
+
+<h2>Aineistojen käyttö</h2>
+
+<p>Paituli tarjoa aineistojen käyttämiseksi useita mahdollisuuksia:
+
+	<ul>
+		<li>
+			<RouterLink to="/download">Latauspalvelu sivun</RouterLink> mahdollistaa:
+			<ul>	
+				<li>Useiden <b>aineistojen esikatselun</b>, mm. ominaisuustiedon kysely.
+				</li>
+				<li>Kaikkien tai valittujen karttalehtien tiedostojen lataus <b>zip-pakettina</b>, max 3Gb. 
+				</li>
+				<li>Kaikkien tai valittujen karttalehtien tiedostolistauksen lataus. 
+				</li>				
+			</ul>	
+		</li>
+		<li>Isommat aineistokokonaisuudet voi data 
+			<RouterLink to="/files">HTTPS, FTP and rsync</RouterLink>
+			työkalujen avulla.
+		</li>
+		<li>Useat aineistot ovat saatavilla 
+			<RouterLink to="/webservices">OGC API-rajapintojen kautta:</RouterLink>
+			WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
+		</li>
+		<li>Paitulin kaikki rasteriaineistot ovat saatavilla <RouterLink to="/stac">STAC</RouterLink>:in kautta. Paituli STAC sisältää enemmän aineistoja kuin Paitulin latauspalvelu, esimerkiksi Geoportti Geocube aineistot ja useita suomalaisia kaukokartoitus aineistoja.
+		</li>		
+		<li>
+			<a href="https://research.csc.fi/gis_data_in_csc_computing_env" target="_blank">CSC Puhti supertietokoneen avoimet GIS aineistot</a>
+			sisältävät melkein kaikki Paitulin aineistot, jotta näiden käyttö olisi helppoa ja nopea Puhdin käyttäjille.
+		</li>
+	</ul>
+</p>
 
 
-  <h1>News</h1>
-  <c-list>
-    <c-list-item>
-      <c-list-item-title>19.12.2024</c-list-item-title>
-      Statistics Finland: Key figures for municipalities 2022 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>13.9.2024</c-list-item-title>
-      FMI's following 10 km datasets have been updated, so that now data is
-      available for years 1961-2023: Daily average, mean and maximum
-      temperature, precipitation, snow, radiation, sea level pressure,
-      relative humidity, and monthly average temperature and precipitation.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>9.8.2024</c-list-item-title>
-      National Land Survey: Topographic database 2024 in GeoPackage and
-      Shape format added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>8.8.2024</c-list-item-title>
-      Statistics Finland: Population grid data 2023 and population by
-      municipalities 2023 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>24.5.2024</c-list-item-title>
-      Natural Resource institute's (LUKE) estimates of variables in map form
-      from multi-source national forest inventory (MS-NFI) added: 2006 -
-      2021.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>15.4.2024</c-list-item-title>
-      Over 30 000 historic georeferenced maps from National Land Survey
-      archive from years 1863-2020 added. Parish maps, economic maps,
-      topographic maps and basic maps in scales 1:20 000 to 1:500 000.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>9.2.2024</c-list-item-title>
-      Statistics Finland: Road accidents 2022 and Paavo 2024 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>8.2.2024</c-list-item-title>
-      National Land Survey: Administrative borders 2024 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>15.12.2023</c-list-item-title>
-      Natural Resource institute's (LUKE) soil database added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>14.12.2023</c-list-item-title>
-      Sentinel 2A data for growing season 2022 and 2023 added to Paituli
-      STAC.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>21.11.2023</c-list-item-title>
-      National Land Survey's topographical database for years 2005-2018
-      added in GeoPackage format, so that whole Finland is in one file.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>18.9.2023</c-list-item-title>
-      FMI's monthly mean precipitation and temperature predictions and
-      monthly mean precipitation and temperature change predictions
-      1975-2085 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>25.8.2023</c-list-item-title>
-      Paituli GeoServer version update, that caused end-point URL change for
-      STAC and OGC APIs. Now also OGC API Coverages is available.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>22.8.2023</c-list-item-title>
-      Raster datasets from Paituli and GeoPortti GeoCubes datasets added to
-      STAC. In total now 98 datasets available via STAC.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>16.8.2023</c-list-item-title>
-      Helsinki University Finnish museum of natural history's (Luomus) new
-      SPECTRE dataset added. this dataset includes 24 layers describing
-      threats to biodiversity at 1 km resolution for all global terrestrial
-      areas. available data covers threats such as habitat loss,
-      overexploitation, pollution and climate change.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>20.6.2023</c-list-item-title>
-      Natural Resource institute's (LUKE) tree carbon stock and tree carbon
-      stock change datasets added. .
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>19.4.2023</c-list-item-title>
-      Statistics Finland: Educational institutions 2022 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>17.4.2023</c-list-item-title>
-      National Land Survey: Print-color basic map 2023 have been added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>14.4.2023</c-list-item-title>
-      <span>
-        Added <RouterLink to="/stac">STAC API</RouterLink> for searching
-        and downloading spatiotemporal data.
-      </span>
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>10.11.2021</c-list-item-title>
-      Paituli starts supporting new OGC APIs: Maps, Tiles and Features.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>15.12.2020</c-list-item-title>
-      <span>
-        Paituli service was upgraded and moved to a new server. From user's
-        perspective Paituli continues mostly as before. Some changes took
-        place:
-        New Paituli includes only open datasets. The last datasets available only for universities
-        (<a href="https://etsin.fairdata.fi/datasets/SLICES" target="_blank">SLICES</a> and
-        <a href="https://etsin.fairdata.fi/datasets/puustotulkinta" target="_blank">Land use and forest classification 1997</a>)
-        are available from Etsin.
-        NLS orthoimages are not available as WMS and WMTS because of
-        technical reasons.
-        <a href="https://www.maanmittauslaitos.fi/karttakuvapalvelu" target="_blank" >NLS</a> and
-        <a href="https://kartat.kapsi.fi/" target="_blank">Kapsi</a> provide alternative options for this.
-      </span>
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>14.8.2020</c-list-item-title>
-      <span>
-        <a href="https://rapidlasso.com/2012/12/03/lasindex-spatial-indexing-of-lidar-data/" target="_blank">Index files</a>
-        added to NLS lidar data. Also headers of NLS lidar .laz-files fixed, in original NLS data there might be mistakes in bbox or point count values.
-      </span>
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>21.3.2019</c-list-item-title>
-      National Land Board's lidar data, 2m DEM and orthophotos are updated every sunday.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>2019</c-list-item-title>
-      <span>
-        Paituli has included earlier datasets produced by
-        <a href="https://www.syke.fi/fi-FI/Avoin_tieto/Paikkatietoaineistot/Ladattavat_paikkatietoaineistot">Finnish Environment Institute SYKE</a>,
-        <a href="https://hakku.gtk.fi/fi/locations/search" >Finnish Geological survey GTK</a > and
-        <a href="https://www.museovirasto.fi/fi/palvelut-ja-ohjeet/tietojarjestelmat/kulttuuriympariston-tietojarjestelmat/kulttuuriympaeristoen-paikkatietoaineistot" > Finnish Heritage Agency</a >.
-        These datasets are available from data producers own services.
-      </span>
-    </c-list-item>
-  </c-list>
+<h2>Uutiset</h2>
+<table>
+	<tbody>
+		<tr>
+			<th>Päivämäärä</th>
+			<th>Uutinen</th>
+		</tr>		
+		<tr>
+			<td>18.12.2025</td>
+			<td>Lisätty Tilastokeskuksen kuntien avainluvut 2023 ja 2024. </td>
+		</tr>				
+		<tr>
+			<td>25.7.2025</td>
+			<td>Lisätty Tilastokeskuksen väestö kunnittain 2024, väestöruutuaineisto 2024, tieliikenneonnettomuudet 2023 ja Paavo 2025.</td>
+		</tr>	
+		<tr>
+			<td>3.6.2025</td>
+			<td>Ilmatieteenlaitoksen 10 km sääaineistoja päivitetty, nyt saatavilla data vuosille 1961-2024: päivittäinen alin, ylin ja keskilämpötila, sademäärä, lumen syvyys, ilmanpaine, säteily, suhteellinen kosteus, sekä kuukausittainen keskilämpötila ja sademäärä.</td>
+		</tr>
+		<tr>
+			<td>2.6.2025</td>
+			<td>Lisätty Digi- ja väestötietoviraston rakennusten osoitetiedot 2025 Shape-tiedostona.</td>
+		</tr>			
+		<tr>
+			<td>30.5.2025</td>
+			<td>Lisätty Maanmittauslaitoksen aineistoja 2025: maastotietokanta, hallintorajat, kiinteistörajat, painoväri ja taustaväri-peruskartta, maastokartat useissa mittakaavoissa rasterina ja vektorina.</td>
+		</tr>
+	
+		<tr>
+			<td>24.5.2025</td>
+			<td>Lisätty Luonnonvarakeskuksen valtakunnan metsien monilähteisessä inventoinnissa (MVMI) tuotetut karttamuotoiset metsävaratiedot: 2006 - 2021.</td>
+		</tr>				
+		<tr>
+			<td>15.4.2024</td>
+			<td>Lisätty yli 30 000 historiallisia georeferoitua karttaa Maanmittauslaitoksen arkistosta vuosilta 1863-2020. Pitäjäkartat, taloudelliset kartat, topografiset kartat, maastokartat ja peruskartat mittakaavoissa 1:20 000 - 1:500 000. <a href="https://www.maanmittauslaitos.fi/ajankohtaista/yli-30-000-vanhaa-karttaa-jopa-150-vuoden-takaa-nyt-paikkatietona"  target="_blank">Lisätietoja MML:n sivuilta</a>.</td>
+		</tr>					
+		<tr>
+			<td>21.3.2019</td>
+			<td>MML:n laserkeilausaineistoa, 2m DEM ja ortokuva-aineistoja päivitetään Paitulissa joka viikko sunnuntaisin.</td>
+		</tr>
+		
+	</tbody>
+</table>
+	
+<h2>Paituli palvelusta</h2>	
+	
+<p>Paitulin käyttö on käyttäjälle ilmainen. Paitulia ylläpitää
+	<a href="https://www.csc.fi" target="_blank">CSC - Tieteen tietotekniikan keskus</a> ja rahoittavat
+	<a href="https://minedu.fi/etusivu" target="_blank">Opetus- ja kulttuuriministeriö</a> sekä Suomen Akatemia <a href="https://www.geoportti.fi" target="_blank">Geoportti</a> projektin kautta. Paituli tarjotaan "best effort" palvelutasolla ja saavutettavuudella. 
+</p>
+<p>Paituli on kehitetty CSC:llä hyödyntäen avoimen lähdekoodin ohjelmistoja, mm:
+	<a href="http://geoserver.org/" target="_blank">Geoserver</a>,
+	<a href="https://openlayers.org/" target="_blank">OpenLayers</a>,
+	<a href="https://vuejs.org/" target="_blank">Vue</a>,	
+	<a href="https://postgis.net/" target="_blank">PostGIS</a>
+	ja
+	<a href="https://quarkus.io/" target="_blank">Quarkus</a>. 
+	Paitulin lähdekoodi on Githubissa: 
+	<a href="https://github.com/CSCfi/paituli-frontend-vue/" target="_blank">front-end</a> ja 
+	<a href="https://github.com/CSCfi/avaa-paituli-backend"  target="_blank">back-end</a>.
+</p>
+
+<p>Käyttötilastot ovat saatavilla <a href="https://www.nic.funet.fi/index/geodata/yearly_reports/" target="_blank">Paitulin vuosiraporteista</a>. 
+</p>
 
 </template>
