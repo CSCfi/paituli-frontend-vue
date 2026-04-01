@@ -6,8 +6,7 @@ import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
 import { selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
-import { selectMode, toolbarMode } from '@/modules/controls'
-import { vHelp } from '@/directives/help';
+import { CAlertType } from '@cscfi/csc-ui'
 
 const { t } = useI18n()
 
@@ -106,23 +105,13 @@ watch(selectedFeaturesArray, () => {
       <c-icon :path="mdiDownload" />
       {{ t("size", { size: downloadSize }) }}
     </c-button>
-    <div class="warning" v-if="downloadSizeExceeded">
-      <p>{{ t("warnings.size", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}</p>
-    </div>
+    <c-alert :type="CAlertType.Warning" v-if="downloadSizeExceeded">
+      {{ t("warnings.size", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
+    </c-alert>
 
-    <div class="warning" v-if="showSelectWarning">
-      <p>{{ t("warnings.select") }}</p>
-      <!-- Note: The help ID points to a <help-content> in ToolBar.vue -->
-      <c-button
-        id="shortcut"
-        outlined
-        :disabled="toolbarMode == 'select'"
-        @click="toolbarMode = 'select'; selectMode = 'basic'"
-        v-help="'#basic-help'"
-        size="small">
-        {{ t("shortcut") }}
-      </c-button>
-    </div>
+    <c-alert :type="CAlertType.Info" v-if="showSelectWarning">
+      {{ t("warnings.select") }}
+    </c-alert>
     <div v-else class="selection">
       <h4>{{ t("files") }}</h4>
       <label>
@@ -152,10 +141,9 @@ watch(selectedFeaturesArray, () => {
   "en": {
     "size": "Download ({size} MB)",
     "warnings": {
-      "size": "Note: You have selected over {size} MB of data, which is over the allowed limit of ZIP file download.",
-      "select": "Select at least one map sheet to download data. Click 'Select' from the toolbar to start selecting map sheets.",
+      "size": "You have selected over {size} MB of data, which is over the allowed limit of ZIP file download.",
+      "select": "Select at least one map sheet to download data. Click 'Select map sheets' from the toolbar to start selecting map sheets.",
     },
-    "shortcut": "Change to select mode",
     "documents": "Documents",
     "files": "Files",
     "license": "License",
@@ -163,10 +151,9 @@ watch(selectedFeaturesArray, () => {
   "fi": {
     "size": "Lataa ({size} MB)",
     "warnings": {
-      "size": "Huom: Olet valinnut yli {size} MB dataa, mikä ylittää sallitun ZIP tiedoston kokorajan.",
-      "select": "Ladataksesi tiedostoja, valitse vähintään yksi karttalehti. Napsauta 'Valitse' työkalupalkista aloittaaksesi karttalehtien valitsemisen.",
+      "size": "Olet valinnut yli {size} MB dataa, mikä ylittää sallitun ZIP tiedoston kokorajan.",
+      "select": "Ladataksesi tiedostoja, valitse vähintään yksi karttalehti. Napsauta 'Valitse karttalehtiä' työkalupalkista aloittaaksesi karttalehtien valitsemisen.",
     },
-    "shortcut": "Vaihda valintatilaan",
     "documents": "Asiakirjat",
     "files": "Tiedostot",
     "license": "Käyttöehdot",
@@ -187,9 +174,6 @@ watch(selectedFeaturesArray, () => {
   overflow-y: scroll;
   overflow-x: hidden;
 }
-.warning {
-  color: yellow;
-}
 
 c-button#download {
   margin-bottom: 1.5em;
@@ -199,10 +183,12 @@ c-button#shortcut {
   --c-button-outlined-disabled-text-color: var(--c-tertiary-500);
   --c-button-outlined-disabled-border-color: var(--c-tertiary-500);
 }
+c-alert {
+  margin-bottom: 1em;
+}
 
 h4, label {
   color: var(--c-white);
-
   a {
     color: var(--c-accent-400);
   }
@@ -213,13 +199,11 @@ h4, label {
 h4 {
   margin-bottom: .75em;
 }
-.warning > p,
 .selection > h4:first-of-type {
   margin-top: 0;
 }
 
 .files {
-
   label {
     display: flex;
     align-items: center;

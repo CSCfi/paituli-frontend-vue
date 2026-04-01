@@ -20,6 +20,11 @@ a {
   color: var(--c-info-600);
 }
 
+c-alert {
+  background-color: var(--c-white);
+  border-radius: .5em;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: var(--c-info-200);

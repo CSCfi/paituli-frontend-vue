@@ -9,6 +9,7 @@ import { useI18n } from 'vue-i18n'
 import { currentDataset, datasets } from '@/modules/datasets'
 import DownloadSelect from '@/components/DownloadSelect.vue'
 import { menuMode } from '@/modules/controls'
+import { CAlertType } from '@cscfi/csc-ui'
 
 const { t } = useI18n()
 
@@ -46,9 +47,11 @@ onMounted(() => {
       <div v-else-if="!tabbed" class="grow">
         <c-side-navigation-title>{{ t("titles.select") }}</c-side-navigation-title>
         <DatasetSelect :loadId="dataset_id"/>
-        <div v-if="!currentDataset" class="suggestion">
-          <p>{{ t("suggestion") }}</p>
-        </div>
+        <c-alert
+          v-if="!currentDataset"
+          :type="CAlertType.Info">
+          {{ t("suggestion") }}
+        </c-alert>
         <div v-else class="grow">
           <c-side-navigation-title>{{ t("titles.dataset") + label}}</c-side-navigation-title>
           <DatasetButtons :compact="true" />
@@ -59,7 +62,8 @@ onMounted(() => {
       <c-tabs v-else v-model="menuMode" v-control>
         <c-tab
           value="datasets">
-          {{ t("tabs.datasets") }}</c-tab>
+          {{ t("tabs.datasets") }}
+        </c-tab>
         <c-tab
           value="download"
           :disabled="!currentDataset">
@@ -69,9 +73,11 @@ onMounted(() => {
         <c-tab-items slot="items">
           <c-tab-item value="datasets">
             <DatasetSelect :loadId="dataset_id"/>
-            <div v-if="!currentDataset" class="suggestion">
-              <p>{{ t("suggestion") }}</p>
-            </div>
+            <c-alert
+              v-if="!currentDataset"
+              :type="CAlertType.Info">
+              {{ t("suggestion") }}
+            </c-alert>
             <div v-else>
               <c-side-navigation-title>{{ t("titles.dataset") + label}}</c-side-navigation-title>
               <DatasetButtons :compact="false" />
@@ -184,8 +190,9 @@ nav.sidebar {
   }
 }
 
-.suggestion {
-  color: yellow;
+c-alert {
+  display: flex;
+  margin-top: 1em;
 }
 
 </style>
