@@ -322,7 +322,7 @@ const zoomToData = () => {
 
 c-tabs {
   --c-tab-buttons-background-color-active: var(--c-primary-500);
-  width: 475px;
+  width: 480px;
   z-index: 1;
 }
 

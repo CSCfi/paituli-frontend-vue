@@ -444,6 +444,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
     #help {
       position: absolute;
       bottom: 0;
+      left: 0;
     }
     #toolbar {
       left: 0;
@@ -466,7 +467,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
     #search {
       margin: unset;
-      width: 450px;
+      width: 480px;
     }
 
     :deep(#json-button) {
