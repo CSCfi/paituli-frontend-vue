@@ -7,21 +7,21 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 <template>
   <h1>Jaa paikkatietoaineistosi Paitulissa</h1>
   <p>
-    Suomen yliopistojen opiskelijoilla ja henkilökunnalla on mahdollisuus jakaa omia
-    paikkatietoaineistojaan Paitulin kautta. Aineisto voi olla kerätty tieteellistä tutkimusta
-    tai kurssiprojektia varten. Aineisto voi koskea Suomea tai mitä tahansa muuta aluetta maailmassa.
+	Suomen korkeakouluilla ja tutkimuslaitoksilla on mahdollisuus
+	jakaa omia paikkatietoaineistoja Paitulissa ilmaiseksi. Aineistojen julkaisu ei
+	tarkoita aineistoon liittyvien oikeuksien luovuttamista. Aineisto voi olla
+	tuotettu esimerkiksi osana tutkimusprojektia. Aineiston kuvaama alue voi olla Suomesta tai globaali. Jokainen Paitulin aineisto saa myös pysyvän tunnisteen URN-formaatissa.
   </p>
   <p>
     Julkaisun jälkeen kuka tahansa voi ladata aineistosi. Aineistot, jotka soveltuvat
     <a href="http://docs.geoserver.org/latest/en/user/" target="_blank">GeoServeriin</a>,
     voidaan esikatsella lataussivulla ja ne ovat saatavilla myös
     vakiomuotoisina
-    <RouterLink to="/webservices">OGC-verkkopalveluina</RouterLink>.
+    <RouterLink to="/webservices">OGC-verkkopalveluina</RouterLink>. Rasteriaineistot lisätään myös <RouterLink to="/stac">STAC</RouterLink>:iin.
   </p>
   <p>
     CSC laatii vuosittain raportin Paitulin käytöstä, mukaan lukien kunkin aineiston latausmäärät.
-    Raportti toimitetaan kaikille aineistojen tuottajille. Jokaisella Paitulissa olevalla
-    aineistolla on pysyvä tunniste URN-muodossa.
+    Raportti toimitetaan kaikille aineistojen tuottajille. 
   </p>
   <p>CSC julkaisee aineistot maksutta eikä saa niihin mitään oikeuksia.</p>
 
@@ -107,15 +107,14 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiEmailFastOutline" />
       <c-list-item-title>
-        <strong>5. Lähetä aineisto</strong> ja sen kuvaus osoitteeseen
-        <a href="mailto:giscoord@csc.fi" rel="nofollow">giscoord@csc.fi</a>
+        <strong>5. Lähetä aineisto</strong> ja sen kuvaus osoitteeseen giscoord@csc.fi
       </c-list-item-title>
       <span>
         Pienemmät aineistot voi lähettää sähköpostin liitteenä.
         Suurempiin aineistoihin suositellaan
         <a href="https://filesender.funet.fi/" target="_blank">FUNET FileSenderiä</a>,
-        joka tukee jopa 300 GB tiedostoja. Jos aineisto on tätä suurempi tai sijaitsee
-        Allas- tai Puhti-palveluissa, tai jos lataamisessa ilmenee ongelmia,
+        joka tukee jopa 300 GB tiedostoja. Jos aineisto on tätä suurempi ja sijaitsee
+        Allas-palvelussa tai CSC:n superkoneilla, tai jos lataamisessa ilmenee ongelmia,
         ota yhteyttä CSC:hen.
       </span>
     </c-list-item>

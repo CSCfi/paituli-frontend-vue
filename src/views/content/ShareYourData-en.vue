@@ -5,22 +5,23 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 </script>
 
 <template>
-  <h1>Share your spatial data with Paituli</h1>
+  <h1>Share your spatial data in Paituli</h1>
   <p>
-    Students and personnel of Finnish universities have possibility to share their own spatial data
-    with Paituli. It could be data that has been gathered for a scientific study or a course
-    project. This data could be about Finland or any other region in the world.
+    Finnish universities and research institutes have possibility to
+	publish their own spatial data in Paituli. It could be data that has been
+	gathered for a scientific project. This data could be about
+	Finland or global. Each dataset in Paituli has a permanent identifier in URN format. 
   </p>
   <p>
-    After publishing anybody can download your data. Datasets suitable for
+    After publishing, anybody can download your data. Datasets suitable for
     <a href="http://docs.geoserver.org/latest/en/user/" target="_blank">GeoServer</a> can also be
-    previewed on download page and they will be available also as standard
-    <RouterLink to="/webservices">OGC web services</RouterLink>.
+    previewed on download page and they will be available also as 
+    <RouterLink to="/webservices">OGC APIs</RouterLink>. Raster datasets are added to 
+	<RouterLink to="/stac">STAC</RouterLink>.
   </p>
   <p>
     Annually CSC generates a report about Paituli usage, including number of downloads for each
-    dataset. This report will be sent to all data providers. Each dataset in Paituli has a permanent
-    identifier in URN format.
+    dataset. This report will be sent to all data providers. 
   </p>
   <p>CSC publishes data free of charge and will not get any rights for the data.</p>
   <h2>Steps for sharing your data</h2>
@@ -48,7 +49,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
       <span><input type="checkbox"/><label>Heading in Finnish and English</label></span>
       <span><input type="checkbox"/><label>Short description in Finnish and English (ca 5-10 rows)</label></span>
       <span><input type="checkbox"/><label>Longer description can be added as .pdf-file. (Optional)</label></span>
-      <span><input type="checkbox"/><label>Dataset producer: organization, optinally researcher by name and ORCID.</label></span>
+      <span><input type="checkbox"/><label>Dataset producer: organization, optionally researcher by name and ORCID.</label></span>
       <span><input type="checkbox"/><label>Date, when data was gathered</label></span>
       <span><input type="checkbox"/><label>Scale / pixel size</label></span>
       <span><input type="checkbox"/><label>Coordinate system</label></span>
@@ -98,14 +99,13 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiEmailFastOutline" />
       <c-list-item-title>
-        <strong>5. Send the data</strong> and its description to
-        <a href="mailto:giscoord@csc.fi" rel="nofollow">giscoord@csc.fi</a>
+        <strong>5. Send the data</strong> and its description to giscoord@csc.fi
       </c-list-item-title>
       <span>
         Smaller datasets may be sent as attachments, for bigger files
         <a href="https://filesender.funet.fi/" target="_blank">FUNET FileSender</a> is better.
-        FileSender can accept files up to 300 Gb. If your data is bigger or you have data in Allas or
-        Puhti services or if you have problems with uploading, please contact CSC.
+        FileSender can accept files up to 300 Gb. If your data is bigger and you have data in Allas or
+        CSC supercomputers or if you have problems with uploading, please contact CSC.
       </span>
     </c-list-item>
     <c-list-item>
@@ -125,7 +125,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
     <a
       href="https://www.nic.funet.fi/index/geodata/cscfairdata-IDAvsPaituli-241123.pdf"
       target="_blank"
-    >PaITulin and Fairdata comparision table</a
+    >PaITulin and Fairdata comparison table</a
     >.
   </p>
 
