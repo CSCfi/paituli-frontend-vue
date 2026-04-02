@@ -15,14 +15,21 @@ import { URLS } from '@/shared/constants'
     Yhteyden muodostamisen jälkeen käyttäjälle listataan kaikki
     palvelusta saatavilla olevat karttatasot.
   </p>
-  <p>
-    Nähdäksesi karttatasojen tunnisteet sekä mitkä rajapinnat ovat saatavilla
-    dataseteille, ensin valitse datasetti
-    <RouterLink to="/download">Latauspalvelusta</RouterLink>
-    ja sitten Palvelut ➔ OGC APIt.
-  </p>
+<h4>Saatavilla olevat aineistot</h4>
 
-  <h2>Perinteiset OGC standardit</h2>
+<p> Paituli tarjoaa yli 600 aineistoa OGC rajapintojen kautta. Aineistojen tarkat nimet löytyvät <a href="download.html">Latauspalvelusta</a>: valitse aineisto ja sitten klikkaa Rajapinnat.  
+
+<ul> 
+<li>
+<a href="https://paituli.csc.fi/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage">Lista kaikista OGC rajapintojen kautta saatavilla olevista aineistoista</a>
+</li>
+</ul> 
+
+
+ </p>
+<h2>Tuetut OGC API rajapintapalvelut</h2>
+
+<h3>Perinteiset OGC rajapinnat</h3>
   <c-table>
     <table>
       <thead>
@@ -57,14 +64,11 @@ import { URLS } from '@/shared/constants'
     </table>
   </c-table>
 
-  <h2>Uudet OGC standardit</h2>
+  <h2>Uudet OGC API rajapintapalvelut</h2>
   <p>
     Uudet <a href="https://ogcapi.ogc.org/">OGC API standardit</a>
     ovat vielä kehittymässä. Paitulissa OGC API rajapintojen saatavuus
     riippuu GeoServerin tarjottavista mahdollisuuksista.
-    Myös asiakassovellukset ovat vielä kehittymässä,
-    esimerkiksi ArcGIS Pro ja QGIS tukevat täällä hetkellä vain
-    OGC API Features rajapintaa.
   </p>
 
   <c-table>
@@ -101,52 +105,35 @@ import { URLS } from '@/shared/constants'
     </table>
   </c-table>
 
-  <p>
-    WMTS-palvelussa karttatiilit ovat saatavilla vain etukäteen
-    määritetyissä mittakaavoissa ja laajuuksissa.
-    WMS-palvelussa kartan koko ja mittakaava voidaan valita vapaasti.
-    WMTS-palvelu on yleensä nopeampi, sillä karttatiilet ovat usein
-    jo palvelun välimuistissa valmiina.
-    Karttatasosta voidaan pyytä myös vain osa käyttämällä suodattimia,
-    esim. BBOX määrittele pyydettävän maantietteellisen alueen.
-  </p>
-  <p>
-    WMTS-palveluiden ruudukot: ERTS-TM35-FIN (EPSG:3067,
-    <a
-      href="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS180_liite1/JHS180_liite1.html#H7"
-      target="_blank">
-      JHS180
-    </a>)
-    ja Spherical Mercator (EPSG:3857).
-  </p>
+<h3>Käyttövinkkejä</h3>
+<p>
+WMTS-palvelussa karttatiilet ovat saatavilla vain etukäteen määritetyissä mittakaavoissa ja laajuuksissa. WMS-palvelussa kartan koko ja mittakaava voidaan valita vapaasti. WMTS-palvelu on yleensä nopeampi, sillä karttatiilet ovat usein jo palvelun välimuistissa valmiina. Karttatasosta voidaan pyytä myös vain osa käyttämällä suodattimia, esim. BBOX määrittele pyydettävän maantietteellisen alueen.
+</p>
 
-  <p>
-    Lisenssiehdot rajapintojen kautta käytetylle aineistolle on sama
-    kuin Latauspalvelun kautta ladatulle aineistolle.
-    Nähdäksesi aineiston lisenssin, valitse se
-    <RouterLink to="/download">Latauspalvelusta</RouterLink>.
-    Jos käytät edellä listattuja rajapintoja sovelluksessasi,
-    Paituli täytyy mainita niiden ohessa.
-  </p>
+<p>
+  WMTS-palveluiden ruudukot: ERTS-TM35-FIN (EPSG:3067,
+  <a
+    href="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS180_liite1/JHS180_liite1.html#H7" target="_blank"
+    >JHS180</a
+  >) ja Spherical Mercator (EPSG:3857).
+</p>
 
-  <h2>OGC rajapintapalveluiden käyttöohjeita:</h2>
-  <ul>
-    <li>
-      <a href="https://docs.qgis.org/3.16/en/docs/training_manual/online_resources/wms.html">
-        QGIS koulutusohje: Web mapping services</a>
-    </li>
-    <li>
-      <a href="https://pro.arcgis.com/en/pro-app/latest/help/data/services/ogc-services.htm">
-        ArcGIS Pro käyttöohje: About using OGC service layers</a>
-    </li>
-    <li>
-      <a href="https://pro.arcgis.com/en/pro-app/latest/help/data/services/add-ogc-api-services.htm">
-        ArcGIS Pro käyttöohje: Add OGC API services</a>
-    </li>
-    <li>
-      <a href="http://docs.geoserver.org/latest/en/user/services/index.html">
-        GeoServerin käyttöohje</a>
-    </li>
-  </ul>
+<p>
+  Rajapinta-aineistojen lisenssiehdot ovat vastaavat kuin latauspalvelun kautta
+  ladatuissa aineistoissa. Lisenssiehdot löytyvät
+  <a href="download.html">Latauspalvelu</a> sivulta. 
+</p>
+<p>
+  Jos Paitulin rajapintoja käytetään nettisovelluksessa, aineiston tuottaja, nimi (mm vuosi) ja Paituli on mainittava.
+</p>
+
+<h3>OGC rajapintapalveluiden käyttöohjeita</h3>
+<ul> 
+<li><a href="https://docs.qgis.org/latest/en/docs/user_manual/working_with_ogc/ogc_client_support.html#">QGIS manual: Working with OGC / ISO protocols</a>
+<li><a href="https://pro.arcgis.com/en/pro-app/latest/help/data/services/ogc-services.htm">ArcGIS Pro käyttöohje: About using OGC service layers</a>
+<li><a href="https://pro.arcgis.com/en/pro-app/latest/help/data/services/add-ogc-api-services.htm">ArcGIS Pro käyttöohje: Add OGC API services</a>
+<li><a href="http://www.stat.fi/static/media/uploads/org/avoindata/rajapintapalveluiden_kayttoonotto_qgis.pdf">Tilastokeskuksen rajapintapalveluiden käyttöönotto QGIS-ohjelmistossa</a></li>
+<li><a href="http://docs.geoserver.org/latest/en/user/services/index.html">GeoServerin käyttöohje</a></li> 
+</ul> 
 
 </template>
