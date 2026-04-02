@@ -8,7 +8,7 @@ export type Locale = 'en' | 'fi'
 // Internationalization instance
 export const i18n = createI18n({
   legacy: false,
-  locale: 'en',
+  locale: localStorage.getItem('app-locale') || 'en',
   fallbackLocale: 'en',
   messages: {
     // These are global translations. To use these, you need to use global scope:
@@ -38,6 +38,7 @@ export const i18n = createI18n({
 export const currentLocale = computed(() => i18n.global.locale.value);
 export function setLocale(locale: Locale) {
   i18n.global.locale.value = locale
+  localStorage.setItem('app-locale', locale)
   setHelp(undefined)
 }
 
