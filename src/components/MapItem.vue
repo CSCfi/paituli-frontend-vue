@@ -159,7 +159,7 @@ const dragDropHandler = (event: DragEvent) => {
   event.preventDefault()
 
   const files = event.dataTransfer?.files
-  if (!files) return
+  if (!files || !currentDataset) return
   for (const file of files) {
     loadGeoJSONFile(file)
   }
