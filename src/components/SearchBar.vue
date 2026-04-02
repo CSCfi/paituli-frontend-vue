@@ -34,7 +34,7 @@ async function fetchLocationData(query: string): Promise<NominatimResponse[]> {
 }
 
 // Searches either a location to zoom to, or
-// a location which to use for mapsheet selection
+// a location which to use for map sheet selection
 async function search() {
   if (searchStr.value.length === 0) return
 
@@ -60,7 +60,7 @@ async function search() {
     return
   }
 
-  // If set by user, we select mapsheets.
+  // If set by user, we select map sheets.
   if (selectMode.value) {
     selectFeatureSearch(searchStr.value, result.boundingbox);
   }
@@ -101,7 +101,7 @@ function selectFeatureSearch(query: string, bbox: Array<number>) {
   })
 }
 
-// Whether we should select mapsheets instead of location search
+// Whether we should select map sheets instead of location search
 const selectMode = computed(() => toolbarMode.value == 'select')
 const modeName = computed(() => selectMode.value ? 'select' : 'search')
 

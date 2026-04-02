@@ -17,7 +17,7 @@ import type { Geometry } from 'ol/geom'
 // Selected features managed by OL map element
 export const selectedOlFeatures = new Collection<Feature>()
 
-// Mapsheet array, which gets updated based on changes to the above
+// Map sheet array, which gets updated based on changes to the above
 // Honestly I forgot why we need this and the collection separately,
 // must have been some Vue shenanigans?
 export const selectedFeaturesArray = ref<Feature[]>([])
@@ -42,7 +42,7 @@ export function selectFeature(feature: Feature<Geometry>) {
 export const autoSelectSheets =
   computed(() => currentDataset.value?.map_sheets == 1)
 
-// Simply selects all mapsheets in the current index source, if any
+// Simply selects all map sheets in the current index source, if any
 // and ensures their style gets updated
 export function selectAll() {
   indexSource.value?.forEachFeature((feature) => selectFeature(feature))
@@ -82,7 +82,7 @@ export function polyDrawEnd(event: DrawEvent) {
   })
 }
 
-// Selects index mapsheets by the provided extent,
+// Selects index map sheets by the provided extent,
 // and returns whether any sheets were selected.
 // Also draws the extent and zooms to the selection, if any.
 export function selectSheetsByExtent(
@@ -115,7 +115,7 @@ export function selectSheetsByExtent(
   return true
 }
 
-// Style for selected mapsheets,
+// Style for selected map sheets,
 // which is different between inspect mode and other modes
 const selectionStyle = (feature: FeatureLike) => {
   switch (toolbarMode.value) {
@@ -136,6 +136,6 @@ const selectionStyle = (feature: FeatureLike) => {
   }
 }
 
-// Refresh style for selected mapsheets whenever tool modes change
+// Refresh style for selected map sheets whenever tool modes change
 watch(toolbarMode, () =>
   selectedOlFeatures.forEach(f => f.setStyle(selectionStyle(f))))

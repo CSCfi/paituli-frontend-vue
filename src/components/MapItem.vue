@@ -82,7 +82,7 @@ onMounted(async () => {
 watch(currentLocale, async () => fetchDatasets())
 
 // Update index layer whenever the current dataset changes,
-// and automatically select mapsheets if we have only one
+// and automatically select map sheets if we have only one
 watch(currentDataset, async (dataset) => {
 
   // Clear our highlights and popups at this point
@@ -165,7 +165,7 @@ const dragDropHandler = (event: DragEvent) => {
   }
 }
 
-// Loads provided file as GeoJSON to select mapsheets
+// Loads provided file as GeoJSON to select map sheets
 const loadGeoJSONFile = (file: File) => {
   const reader = new FileReader()
   reader.onload = (e) => {
@@ -226,7 +226,7 @@ const selectInteraction = ref<{ select: SelectInteraction }>()
 // When tool mode changes we clear lingering inspect mode popups,
 // and signal OL to redraw index layer (styles). We also disable
 // selection interaction when we are out of select mode so user
-// does not accidentally select mapsheets
+// does not accidentally select map sheets
 watch(toolbarMode, (mode) => {
   closePopup()
   indexSource.value?.changed()

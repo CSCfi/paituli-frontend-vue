@@ -67,7 +67,7 @@ const downloadSize = computed(() => {
 })
 
 const downloadButtonDisabled = computed(() => {
-  // The download button is disabled if the mapsheet selection is empty,
+  // The download button is disabled if the map sheet selection is empty,
   // or if we have selected only the license
   return (filePaths.value.length == 1 && licenseChecked.value)
     || filePaths.value.length == 0

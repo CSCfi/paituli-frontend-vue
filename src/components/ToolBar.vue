@@ -252,12 +252,12 @@ const zoomToData = () => {
       },
       "json": {
         "label": "GeoJSON",
-        "tooltip": "Select mapsheets using GeoJSON file",
+        "tooltip": "Select map sheets using GeoJSON file",
         "help": "Load GeoJSON to select overlapping map sheets. Use the Upload button or drag and drop GeoJSON file onto the map view. 'https://geojson.io' is an interactive editor for creating and adjusting GeoJSON data.",
         "open": "Upload a GeoJSON file",
       },
       "clear": {
-        "tooltip": "Deselect all mapsheets",
+        "tooltip": "Deselect all map sheets",
       },
     },
     "inspect": {

@@ -82,7 +82,7 @@ defineExpose({ open })
     "close": "Close",
     "gpkg": {
       "download": "Download index map as GeoPackage",
-      "info": "The geopackage contains names, paths and geometry of mapsheets.",
+      "info": "The geopackage contains names, paths and geometry of map sheets.",
     },
   },
   "fi": {
