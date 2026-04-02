@@ -62,8 +62,10 @@ const mapView = computed(() => olMapRef.value!.map.getView())
 onMounted(async () => {
   // Fetch datasets on mount
   fetchDatasets()
+
   const map = olMapRef.value!.map
   const olMapElement = map.getTargetElement()
+  olMapElement.tabIndex = 0 // Maintain map focus for arrow key movement
 
   // Add drag-n-drop listeners
   olMapElement.addEventListener('drop', dragDropHandler)
