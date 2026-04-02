@@ -135,6 +135,10 @@ const handleClickedFeature = async (e: unknown) => {
   // and the data layer is visible
   if (toolbarMode.value != 'inspect' || dataHidden.value) return
 
+  const mapEl = olMapRef.value!.map.getTargetElement()
+  const normalCursor = mapEl.style.cursor
+  mapEl.style.cursor = 'wait'
+
   // Fetch the feature info and display it
   try {
     const info = await fetchFeatureInfo(
@@ -153,6 +157,9 @@ const handleClickedFeature = async (e: unknown) => {
     })
     console.error(err)
     featureInfoPopup.value.visible = false
+  }
+  finally {
+    mapEl.style.cursor = normalCursor
   }
 }
 
@@ -493,8 +500,8 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transform: translateX(-50%);
-  margin-top: 1em;
+  transform: translateY(-50%);
+  margin-left: 1em;
 
   c-icon-button {
     position: absolute;
@@ -511,6 +518,18 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
     font-family: monospace;
     font-size: large;
   }
+}
+
+.popup::before {
+  /* Left-pointing triangle */
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -16px;
+  border-top: 18px solid transparent;
+  border-bottom: 18px solid transparent;
+  border-right: 18px solid var(--c-primary-600);
 }
 
 .debug {
