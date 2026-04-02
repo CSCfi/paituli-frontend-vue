@@ -33,6 +33,7 @@ import {
   highlightSource,
   fetchFeatureInfo,
   loadIndexLayer,
+  dataHidden,
 } from '@/modules/layers'
 
 import {
@@ -128,10 +129,11 @@ const closePopup = () => {
 // Displays feature info when clicking features in the inspect mode
 const handleClickedFeature = async (e: unknown) => {
   const event = e as MapBrowserEvent<PointerEvent> // OL typing bug
+  if (event.dragging) return
 
   // We only care about these events if we are in feature info mode
-  if (toolbarMode.value != 'inspect') return
-  if (event.dragging) return
+  // and the data layer is visible
+  if (toolbarMode.value != 'inspect' || dataHidden.value) return
 
   // Fetch the feature info and display it
   try {
@@ -313,7 +315,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
     <!-- Feature info popup -->
     <Map.OlOverlay
-      v-if="featureInfoPopup.visible"
+      v-if="featureInfoPopup.visible && !dataHidden"
       :position="featureInfoPopup.coordinate"
       :auto-pan="true"
       :auto-pan-animation="{ duration: 250 }">

@@ -14,6 +14,9 @@ export const showLayer = {
   data: ref(true),
 }
 
+// Map view resolution
+export const mapViewResolution = ref(0)
+
 // Tool modes
 type ControlMode = 'move' | 'select' | 'inspect'
 type SelectMode = 'basic' | 'poly' | 'json' | 'clear'

@@ -16,9 +16,9 @@ import OlMap from 'ol/Map.js'
 import DragPan from 'ol/interaction/DragPan'
 import { useI18n } from 'vue-i18n';
 
-import { dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
+import { dataHidden, dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
 import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
-import { fileSelectedCallback, menuMode, selectMode, toolbarMode } from '@/modules/controls';
+import { fileSelectedCallback, mapViewResolution, menuMode, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
 import { vHelp } from '@/directives/help';
 import { currentLocale } from '@/modules/locale';
@@ -31,17 +31,14 @@ const { t } = useI18n()
 
 const props = defineProps<{ map: OlMap }>()
 
-const viewResolution = ref<number>(0)
-const dataHidden = computed(() => viewResolution.value > dataLayerMaxResolution.value)
-
 const inspectCursor = computed(() => dataHidden.value ? 'not-allowed' : 'crosshair')
 
 onMounted(() => {
   // Grab initial resolution value and subscribe to future changes
   const view = props.map.getView()
-  viewResolution.value = view.getResolution() ?? 0
+  mapViewResolution.value = view.getResolution() ?? 0
   view.on('change:resolution', () => {
-    viewResolution.value = view.getResolution() ?? 0
+    mapViewResolution.value = view.getResolution() ?? 0
   })
   // Set callback for data tile rendering updates
   tileLoadCallback.value = () => {

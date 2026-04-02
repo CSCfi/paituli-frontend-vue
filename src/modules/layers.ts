@@ -18,6 +18,7 @@ import { LAYER, URLS } from '@/shared/constants'
 import { currentDataset } from '@/modules/datasets'
 import type { ImageTile } from 'ol'
 import { currentLocale } from './locale'
+import { mapViewResolution } from './controls'
 
 // Background map source
 export const osmSource = new TileWMS({
@@ -90,8 +91,7 @@ export const dataSource = computed(() => {
 // A callback for source redraws upon tile loading
 export const tileLoadCallback = ref<() => void>()
 
-// The resolution at which the current dataset should start
-// rendering its data layer.
+// The resolution at which the current dataset should start rendering its data layer.
 export const dataLayerMaxResolution = computed(() => {
   const max_scale = currentDataset.value?.data_max_scale
   // We can convert from scale denominators to view resolutions
@@ -100,6 +100,10 @@ export const dataLayerMaxResolution = computed(() => {
   // which should cover Finland at all at once.
   return max_scale ? (max_scale * 0.00028) : 4000
 })
+
+// Is our map view not zoomed in enough?
+export const dataHidden = computed(() =>
+  mapViewResolution.value > dataLayerMaxResolution.value)
 
 // Fetches index data for provided dataset and replaces index layer
 export async function loadIndexLayer(data_id: string) {
