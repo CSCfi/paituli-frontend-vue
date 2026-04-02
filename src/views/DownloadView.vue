@@ -16,11 +16,6 @@ const { t } = useI18n()
 const route = useRoute()
 const dataset_id = computed(() => route.query.data_id as string | undefined)
 
-const label = computed(() => {
-  if (currentDataset.value?.name) return ` — ${currentDataset.value.name}`
-  else return ''
-})
-
 // We observe the sidebar height and enter `tabbed` state if
 // the height gets too small.
 const sidebarHeight = ref(0)
@@ -53,7 +48,7 @@ onMounted(() => {
           {{ t("suggestion") }}
         </c-alert>
         <div v-else class="grow">
-          <c-side-navigation-title>{{ t("titles.dataset") + label}}</c-side-navigation-title>
+          <c-side-navigation-title>{{ t("titles.dataset") }}</c-side-navigation-title>
           <DatasetButtons :compact="true" />
           <DownloadSelect />
         </div>
@@ -79,7 +74,7 @@ onMounted(() => {
               {{ t("suggestion") }}
             </c-alert>
             <div v-else>
-              <c-side-navigation-title>{{ t("titles.dataset") + label}}</c-side-navigation-title>
+              <c-side-navigation-title>{{ t("titles.dataset") }}</c-side-navigation-title>
               <DatasetButtons :compact="false" />
             </div>
           </c-tab-item>
@@ -100,7 +95,7 @@ onMounted(() => {
     "suggestion": "Please select a Producer to start browsing available datasets.",
     "titles": {
       "select": "Select dataset",
-      "dataset": "Dataset",
+      "dataset": "Dataset information and download",
       "downloads": "Downloads",
     },
     "tabs": {
@@ -112,7 +107,7 @@ onMounted(() => {
     "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
     "titles": {
       "select": "Valitse aineisto",
-      "dataset": "Aineisto",
+      "dataset": "Aineiston tiedot ja lataus",
       "downloads": "Lataukset",
     },
     "tabs": {
