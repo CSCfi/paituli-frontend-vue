@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiLayersTripleOutline, mdiMinusBox, mdiPlusBox } from '@mdi/js'
+import { mdiCopyright, mdiLayersTripleOutline, mdiMinusBox, mdiPlusBox } from '@mdi/js'
 import { useI18n } from 'vue-i18n';
 
 import OlMap from 'ol/Map.js'
@@ -30,6 +30,8 @@ function resetZoom() {
   })
 }
 
+const showModal = ref(false)
+
 </script>
 
 <template>
@@ -56,6 +58,35 @@ function resetZoom() {
         <img :src="'finland.png'" />
       </button>
     </div>
+    <div class="attributions">
+      <button
+        type="button"
+        @click="showModal = true"
+        v-tooltip="t('attributions.tooltip')">
+        <c-icon :path="mdiCopyright" size="27px" />
+      </button>
+      <c-modal v-model="showModal"
+               v-control
+               dismissable
+               disable-backdrop-blur>
+        <c-card>
+          <c-card-title>
+            {{ t('attributions.title') }}
+          </c-card-title>
+          <c-card-content>
+            <strong>{{ t('attributions.header') }}</strong>
+            <div>
+              © <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+              contributors, © Natural Earth Data, © GEBCO Bathymetric Compilation Group 2019,
+              © <a target="_blank" href="https://terrestris.de/en/products/free-osm-wms/">Terrestris</a>
+            </div>
+          </c-card-content>
+          <c-card-actions>
+            <c-button @click="showModal = false">{{ t('close') }}</c-button>
+          </c-card-actions>
+        </c-card>
+      </c-modal>
+    </div>
     <div v-if="currentDataset" class="layers">
       <button
         type="button"
@@ -77,13 +108,25 @@ function resetZoom() {
     "zoom-in": "Zoom in",
     "zoom-out": "Zoom out",
     "zoom-reset": "Zoom to Finland",
+    "attributions": {
+      "tooltip": "Attributions",
+      "title": "Attributions",
+      "header": "Background map",
+    },
     "layers": "Select visible layers",
+    "close": "Close",
   },
   "fi": {
     "zoom-in": "Zoomaa sisään",
     "zoom-out": "Zoomaa ulos",
     "zoom-reset": "Näytä koko Suomi",
+    "attributions": {
+      "tooltip": "Tekijänoikeudet",
+      "title": "Tekijänoikeudet",
+      "header": "Taustakartta",
+    },
     "layers": "Valitse näkyvät karttatasot",
+    "close": "Sulje",
   },
 }
 </i18n>
@@ -128,10 +171,6 @@ button {
 }
 
 .layers {
-  c-icon {
-    color: var(--c-primary-600);
-    padding: .15em;
-  }
 
   .layer-menu {
     position: absolute;
@@ -171,7 +210,14 @@ button {
     height: 100%;
     object-fit: cover;
   }
+}
 
+.layers,
+.attributions {
+  c-icon {
+    color: var(--c-primary-600);
+    padding: .15em;
+  }
 }
 
 </style>

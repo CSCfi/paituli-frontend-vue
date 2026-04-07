@@ -14,7 +14,7 @@ import { GeoJSON } from 'ol/format'
 import OlMap from 'ol/Map.js'
 import KeyboardZoom from 'ol/interaction/KeyboardZoom'
 
-import { currentDataset, datasets, fetchMetadata } from '@/modules/datasets'
+import { currentDataset, fetchMetadata } from '@/modules/datasets'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useToasts } from '@/composables/toasts'
 import { currentLocale } from '@/modules/locale'
@@ -341,18 +341,6 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
     </Map.OlOverlay>
   </Map.OlMap>
 
-  <!-- debug stuff -->
-  <div class="debug">
-    <b>Dev info</b>
-    <div v-if="datasets.length > 0">
-      Fetched {{ datasets.length }} datasets
-      <div v-if="currentDataset">{{ currentDataset.data_id }}</div>
-    </div>
-    <div v-else>No datasets found.</div>
-    <div v-if="dataSource">Data layer source active</div>
-    <div v-if="!indexSource">Waiting for index layer...</div>
-    <div v-else>Index layer source active</div>
-  </div>
 </template>
 
 <i18n>
@@ -450,12 +438,12 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
 }
 
-@media (max-width: 1750px) {
+@media (max-width: 1700px) {
   .tools-flex {
     #help {
       position: absolute;
       bottom: 0;
-      left: 0;
+      right: 0;
     }
     #toolbar {
       left: 0;
@@ -464,7 +452,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   }
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 1325px) {
   .tools-flex {
     flex-direction: column-reverse;
     align-items: center;

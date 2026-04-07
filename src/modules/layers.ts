@@ -27,8 +27,6 @@ export const osmSource = new TileWMS({
     LAYERS: 'OSM-WMS',
     VERSION: '1.1.0',
   },
-  attributions: `Background map: © <a target="_blank" href="https://ows.terrestris.de/dienste.html">terrestris</a>.
-    Data: © <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>`,
 })
 
 // Mapsheet source
