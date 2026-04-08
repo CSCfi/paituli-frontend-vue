@@ -16,6 +16,7 @@ import { indexSource } from '@/modules/layers';
 import { vHelp } from '@/directives/help';
 import HelpContent from './HelpContent.vue';
 import { toolbarMode } from '@/modules/controls';
+import { createEmpty, extend } from 'ol/extent';
 
 const { addToast } = useToasts()
 const { t } = useI18n()
@@ -39,7 +40,7 @@ async function search() {
   if (searchStr.value.length === 0) return
 
   // Fetch location info
-  let result: NominatimResponse
+  let result: NominatimResponse | undefined
   try {
     const results = await fetchLocationData(searchStr.value)
     // We should stop to warn about bad locations only in geographic mode
@@ -59,42 +60,58 @@ async function search() {
     console.error('Nominatim search error: ' + error)
     return
   }
+  finally {
+    // If in map sheet select mode, we select those based on results.
+    if (selectMode.value) {
+      selectFeatureSearch(searchStr.value, result?.boundingbox);
+    }
+    // Otherwise the map is zoomed to found location.
+    else {
+      const projected = transform([result!.lon, result!.lat], 'EPSG:4326', 'EPSG:3857')
+      props.map.getView().animate({
+        center: [projected[0], projected[1]],
+        zoom: searchStr.value.includes(',') ? 16 : 13,
+        duration: 1000,
+      })
+    }
+  }
 
-  // If set by user, we select map sheets.
-  if (selectMode.value) {
-    selectFeatureSearch(searchStr.value, result.boundingbox);
-  }
-  // Otherwise the map is zoomed to found location.
-  else {
-    const projected = transform([result.lon, result.lat], 'EPSG:4326', 'EPSG:3857')
-    props.map.getView().animate({
-      center: [projected[0], projected[1]],
-      zoom: searchStr.value.includes(',') ? 16 : 13,
-      duration: 1000,
-    })
-  }
 }
 
-// Selection by search string
-function selectFeatureSearch(query: string, bbox: Array<number>) {
+// Map sheet selection by search string or extent
+function selectFeatureSearch(query: string, bbox?: Array<number>) {
   if (!indexSource.value || !query) return;
   selectedOlFeatures.clear();
   const features = indexSource.value.getFeatures();
 
-  // First try bounding box
-  const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
-  if (selectSheetsByExtent(extent, props.map.getView())) return
-
-  // If none found, simply select sheets by label
+  // First try sheets by label
   const matches = features.filter((f) => {
     const name = (f.get('label') || f.get('name') || '').toLowerCase();
     return name.includes(query.toLowerCase());
   })
   if (matches.length > 0) {
-    matches.forEach((feature) => selectFeature(feature))
+    // We found some sheets, zoom to combined extent
+    const extent = createEmpty()
+    matches.forEach((feature) => {
+      selectFeature(feature)
+      extend(extent, feature.getGeometry()!.getExtent())
+    })
+    requestAnimationFrame(() => {
+      props.map.getView().fit(extent, {
+        padding: [150, 40, 40, 40],
+        duration: 1500,
+      })
+    })
     return
   }
 
+  // No sheet hits, try bounding box if provided
+  if (bbox) {
+    const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
+    if (selectSheetsByExtent(extent, props.map.getView())) return
+  }
+
+  // Nothing found
   addToast({
     type: CToastType.Warning,
     message: t('no_matches')
