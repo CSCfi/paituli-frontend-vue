@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { showLayer } from '@/modules/controls';
-import { dataSource, indexSource } from '@/modules/layers';
+import { dataHidden, dataSource, indexSource } from '@/modules/layers';
 import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { mdiHelpCircle } from '@mdi/js'
 
 const { t } = useI18n()
 
@@ -28,9 +29,16 @@ watch(dataSource, (newSource) => {
     {{ t("index") }}
   </c-switch>
   <c-switch v-model="showLayer.data.value"
-            :disabled="dataSource == null"
+            :disabled="dataSource == null || dataHidden"
             v-control>
-    {{ t("data") }}
+    <span>
+      {{ t("data") }}
+      <c-icon
+        v-if="dataHidden"
+        :path="mdiHelpCircle"
+        v-tooltip="t('datahidden')"
+        size="20px" />
+    </span>
   </c-switch>
 </template>
 
@@ -43,6 +51,7 @@ watch(dataSource, (newSource) => {
     "catchment": "Catchment areas",
     "index": "Mapsheets",
     "data": "Data layer",
+    "datahidden": "To adjust data layer visibility, zoom in until you see the data layer",
   },
   "fi": {
     "heading": "Karttatasot",
@@ -51,6 +60,7 @@ watch(dataSource, (newSource) => {
     "catchment": "Valuma-alueet",
     "index": "Karttalehdet",
     "data": "Aineisto",
+    "datahidden": "Säätääksesi tätä karttatasoa, zoomaa sisään kunnes näet datan esikatselun.",
   },
 }
 </i18n>
@@ -72,5 +82,10 @@ h3 {
   margin-top: 0;
   margin-bottom: .5em;
   text-align: center;
+}
+span {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
 }
 </style>

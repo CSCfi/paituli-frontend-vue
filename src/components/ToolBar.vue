@@ -306,7 +306,7 @@ const zoomToData = () => {
       "help": "Napsauta karttaa näyttääksesi kohdetietoja. Tämä näyttää vektoriaineiston ominaisuustiedot ja rasteriaineiston pikseliarvot",
       "zoom": {
         "title": "Zoomaa sisään nähdäksesi datan",
-        "message": "Käyttääksesi tarkastelutyökalua, zoomaa kunnes näet datan esikatselun.",
+        "message": "Käyttääksesi tarkastelutyökalua, zoomaa sisään kunnes näet datan esikatselun.",
         "button": "Napsauta tästä zoomataksesi sopivalle tasolle",
       },
     },
