@@ -25,7 +25,7 @@ watch(helpText, (newText: string | undefined) => {
       </c-icon-button>
     </div>
     <div class="help-box" v-if="helpVisible">
-      <h3>Help</h3>
+      <h3>{{ t('help.header') }}</h3>
       <p v-if="helpText" v-html="helpText"></p>
       <div class="close">
         <c-icon-button size="small" @click="helpVisible = false">
