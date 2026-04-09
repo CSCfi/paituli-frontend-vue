@@ -89,13 +89,11 @@ export function selectSheetsByExtent(
   extent: Extent,
   mapView: View,
 ): boolean {
-  if (!indexSource.value) return false
-
-  const matches = indexSource.value.getFeatures().filter((f) => {
+  drawBoundingBox(extent)
+  const matches = indexSource.value?.getFeatures().filter((f) => {
     return f.getGeometry()?.intersectsExtent(extent)
   })
-  if (matches.length == 0) return false
-  drawBoundingBox(extent)
+  if (!matches || matches.length == 0) return false
 
   const selection = createEmpty()
   matches.forEach((feature) => {

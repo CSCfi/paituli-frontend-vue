@@ -108,12 +108,18 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
   // No sheet hits, try bounding box if provided
   if (bbox) {
     const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
-    if (selectSheetsByExtent(extent, props.map.getView())) return
+    if (!selectSheetsByExtent(extent, props.map.getView())) {
+      addToast({
+        type: CToastType.Warning,
+        message: t('no_overlap')
+      })
+    }
+    return
   }
 
   // Nothing found
   addToast({
-    type: CToastType.Warning,
+    type: CToastType.Error,
     message: t('no_matches')
   })
 }
@@ -169,6 +175,7 @@ const modeName = computed(() => selectMode.value ? 'select' : 'search')
       "help": "Search for a place name and zoom into it. For example: muncipalities, postal codes, landmarks and points of interest.",
     },
     "no_matches": "The search could not find any place name or map sheet label. Please double-check your spelling.",
+    "no_overlap": "The found place name does not overlap with any map sheets.",
     "nothing_found": "The search could not find any place name. Please double-check your spelling.",
     "api_error": "The search API encountered an error. Please try again later.",
   },
@@ -186,6 +193,7 @@ const modeName = computed(() => selectMode.value ? 'select' : 'search')
       "help": "Hae paikannimeä ja zoomaa siihen. Esimerkiksi: kunnat, postinumerot, maamerkit ja kiinnostavat kohteet.",
     },
     "no_matches": "Haku ei löytänyt yhtäkään paikannimeä tai karttalehden nimeä. Tarkista oikeinkirjoitus.",
+    "no_overlap": "Löytynyt paikannimi ei ole päällekäin yhdenkään karttalehden kanssa.",
     "nothing_found": "Haku ei löytänyt yhtäkään paikannimeä. Tarkista oikeinkirjoitus.",
     "api_error": "Hakurajapinnassa tapahtui virhe. Yritä myöhemmin uudelleen.",
   },
