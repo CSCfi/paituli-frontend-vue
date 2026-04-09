@@ -4,15 +4,16 @@ import { currentDataset } from '@/modules/datasets';
 import { URLS } from '@/shared/constants';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { MetadataParse } from '@/shared/types';
 import { copyToClipboard } from '@/shared/util';
+import type { MetadataParse } from '@/shared/types'
+import { CAlertType } from '@cscfi/csc-ui'
+import { fetchEtsinMetadata } from '@/modules/etsin'
 
 const { t } = useI18n()
 
-const props = defineProps<{ meta: MetadataParse }>()
-
 const showModal = ref(false)
 const open = () => {
+  loadMetadata()
   showModal.value = true
 }
 
@@ -20,6 +21,23 @@ const etsinLink = computed(() =>
   URLS.ETSIN_METADATA_BASE + currentDataset.value?.meta)
 
 defineExpose({ open })
+
+const parsedMetadata = ref<MetadataParse>();
+const parseFailed = ref(false);
+
+// Fetches and parses the metadata of the current dataset, if any
+async function loadMetadata() {
+  parsedMetadata.value = undefined
+  parseFailed.value = false
+  if (!currentDataset.value) return
+  try {
+    parsedMetadata.value = await fetchEtsinMetadata(currentDataset.value)
+  } catch (err) {
+    parseFailed.value = true
+    console.error(`Failed to parse Etsin metadata: ${(err as Error).message}`)
+  }
+}
+
 </script>
 
 <template>
@@ -35,7 +53,6 @@ defineExpose({ open })
       </c-card-title>
 
       <c-card-content>
-
         <h3>{{ currentDataset?.name }} - {{ currentDataset?.org }}</h3>
         <div id="etsin">
           {{ t("metadata") }}:
@@ -53,16 +70,24 @@ defineExpose({ open })
           </div>
         </div>
 
-        <div id="meta">
-          <div v-html="props.meta.description"></div>
-          <div v-if="props.meta.links.length">
+        <div v-if="parseFailed">
+          <c-alert :type="CAlertType.Warning">
+            {{ t('metafail') }}
+          </c-alert>
+        </div>
+        <div v-else-if="parsedMetadata" id="meta">
+          <div v-html="parsedMetadata.description"></div>
+          <div v-if="parsedMetadata.links.length">
             <strong>{{ t("files") }}:</strong>
             <ul class="metadata-links">
-              <li v-for="link in props.meta.links" :key="link.url">
+              <li v-for="link in parsedMetadata.links" :key="link.url">
                 <c-link :href="link.url" target="_blank">{{ link.title }}</c-link>
               </li>
             </ul>
           </div>
+        </div>
+        <div v-else>
+          <c-loader>{{ t('loading') }}...</c-loader>
         </div>
 
         <p v-if="currentDataset?.data_id">
@@ -91,10 +116,12 @@ defineExpose({ open })
     "metadata": "All metadata available at Fairdata Etsin",
     "close": "Close",
     "copy": "Copy",
+    "loading": "Fetching metadata",
     "gpkg": {
       "download": "Download index map as GeoPackage",
       "info": "The geopackage contains names, paths and geometry of map sheets.",
     },
+    "metafail": "Failed to load dataset metadata. If the problem persists, please contact CSC.",
   },
   "fi": {
     "title": "Aineiston metatiedot",
@@ -102,10 +129,12 @@ defineExpose({ open })
     "metadata": "Kaikki metatiedot saatavilla Fairdata Etsimessä",
     "close": "Sulje",
     "copy": "Kopioi",
+    "loading": "Haetaan metatietoja",
     "gpkg": {
       "download": "Lataa indeksikartta GeoPackage -muodossa",
       "info": "Geopackage sisältää karttalehtien nimet, polut sekä geometrian.",
     },
+    "metafail": "Aineiston metatietojen lataaminen epäonnistui. Jos ongelma toistuu, ota yhteyttä CSC:hen.",
   },
 }
 </i18n>

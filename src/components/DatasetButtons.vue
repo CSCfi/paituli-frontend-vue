@@ -1,62 +1,33 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { ref } from 'vue'
 
 import InfoModal from './modals/InfoModal.vue'
 import ServicesModal from '@/components/modals/ServicesModal.vue';
 
-
 import { mdiCloudDownloadOutline, mdiDownload, mdiInformationVariantCircleOutline } from '@mdi/js'
 
-import type { MetadataParse } from '@/shared/types'
-import { useToasts } from '@/composables/toasts'
-import { CToastType } from '@cscfi/csc-ui'
 import { useI18n } from 'vue-i18n'
-import { currentDataset } from '@/modules/datasets'
-
-import { fetchEtsinMetadata } from '@/modules/etsin'
 import { menuMode } from '@/modules/controls';
 
-const { addToast } = useToasts()
 const { t } = useI18n()
 
 // In compact mode we try to save vertical space, and hide
 // the downloads button as its only shown in non-compact mode
 const props = defineProps<{ compact: boolean }>()
 
-const parsedMetadata = ref<MetadataParse>();
 const infoModal = ref();
 const servicesModal = ref()
 
-// Fetches and parses the metadata of the current dataset, if any
-async function loadMetadata() {
-  if (!currentDataset.value) return
-  try {
-    parsedMetadata.value = await fetchEtsinMetadata(currentDataset.value)
-  } catch (err) {
-    parsedMetadata.value = undefined // Undefining disables the info button
-    addToast({
-      type: CToastType.Warning,
-      message: t('metafail')
-    })
-    console.error(`Failed to parse Etsin metadata: ${(err as Error).message}`)
-  }
-}
-
-// When mounting or selected dataset changes, reload metadata
-onMounted(async () => await loadMetadata())
-watch(currentDataset, async () => await loadMetadata())
 
 </script>
 
 <template>
   <div id="buttons">
-    <div v-if="parsedMetadata">
-      <InfoModal :meta="parsedMetadata" ref="infoModal" />
+    <div>
+      <InfoModal ref="infoModal" />
     </div>
     <div :class="{ compact: props.compact }">
       <c-button
-        :disabled="!parsedMetadata"
-        :loading="!parsedMetadata"
         v-tooltip="t('info.tooltip')"
         outlined
         @click="infoModal?.open()">
@@ -94,7 +65,6 @@ watch(currentDataset, async () => await loadMetadata())
       "tooltip": "Download data via OGC APIs, STAC or HTTP/FTP/rsync",
     },
     "download": "Downloads",
-    "metafail": "Failed to load dataset metadata. If the problem persists, please contact CSC.",
   },
   "fi": {
     "info": {
@@ -108,7 +78,6 @@ watch(currentDataset, async () => await loadMetadata())
       "tooltip": "Lataa OGC- tai STAC-rajapintojen kautta tai HTTP/FTP/rsync-yhteyksillä",
     },
     "download": "Lataukset",
-    "metafail": "Aineiston metatietojen lataaminen epäonnistui. Jos ongelma toistuu, ota yhteyttä CSC:hen.",
   },
 }
 </i18n>
