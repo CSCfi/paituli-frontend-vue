@@ -25,7 +25,7 @@ import { currentLocale } from '@/modules/locale';
 import HelpContent from './HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { currentDataset } from '@/modules/datasets';
-import { sleep } from '@/shared/util';
+import { getMapInteraction, sleep } from '@/shared/util';
 
 const { t } = useI18n()
 
@@ -98,8 +98,7 @@ watch(selectMode, (newMode, oldMode) => {
 
 // Seeminly this interaction is not accessible as a vue3-ol component,
 // but we can dig it up from amongst all current interactions
-const dragPan = props.map.getInteractions().getArray()
-  .find(i => i instanceof DragPan) as DragPan | undefined
+const dragPan = getMapInteraction(props.map, DragPan)
 
 // GeoJSON file handling
 const fileInput = ref<HTMLInputElement | null>(null)

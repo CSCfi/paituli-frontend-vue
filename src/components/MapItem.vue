@@ -52,6 +52,7 @@ import {
   showLayer,
   toolbarMode
 } from '@/modules/controls'
+import { getMapInteraction } from '@/shared/util'
 
 const { addToast } = useToasts()
 const { t } = useI18n()
@@ -64,7 +65,7 @@ onMounted(async () => {
   // Fetch datasets on mount
   fetchDatasets()
 
-  const map = olMapRef.value!.map
+  const map = olMapRef.value!.map as OlMap
   const olMapElement = map.getTargetElement()
   olMapElement.tabIndex = 0 // Maintain map focus for arrow key movement
 
@@ -73,8 +74,7 @@ onMounted(async () => {
   olMapElement.addEventListener('dragover', (e) => e.preventDefault())
 
   // Stop keyboard zooming OL interaction (from intercepting +/- keystrokes)
-  const zoom = map.getInteractions().getArray()
-    .find(i => i instanceof KeyboardZoom) as KeyboardZoom | undefined
+  const zoom = getMapInteraction(map, KeyboardZoom)
   if (zoom) map.removeInteraction(zoom)
 })
 
