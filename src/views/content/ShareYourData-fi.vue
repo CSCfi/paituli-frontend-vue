@@ -7,10 +7,10 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 <template>
   <h1>Jaa paikkatietoaineistosi Paitulissa</h1>
   <p>
-	Suomen korkeakouluilla ja tutkimuslaitoksilla on mahdollisuus
-	jakaa omia paikkatietoaineistoja Paitulissa ilmaiseksi. Aineistojen julkaisu ei
-	tarkoita aineistoon liittyvien oikeuksien luovuttamista. Aineisto voi olla
-	tuotettu esimerkiksi osana tutkimusprojektia. Aineiston kuvaama alue voi olla Suomesta tai globaali. Jokainen Paitulin aineisto saa myös pysyvän tunnisteen URN-formaatissa.
+    Suomen korkeakouluilla ja tutkimuslaitoksilla on mahdollisuus
+    jakaa omia paikkatietoaineistoja Paitulissa ilmaiseksi. Aineistojen julkaisu ei
+    tarkoita aineistoon liittyvien oikeuksien luovuttamista. Aineisto voi olla
+    tuotettu esimerkiksi osana tutkimusprojektia. Aineiston kuvaama alue voi olla Suomesta tai globaali. Jokainen Paitulin aineisto saa myös pysyvän tunnisteen URN-formaatissa.
   </p>
   <p>
     Julkaisun jälkeen kuka tahansa voi ladata aineistosi. Aineistot, jotka soveltuvat
@@ -21,7 +21,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
   </p>
   <p>
     CSC laatii vuosittain raportin Paitulin käytöstä, mukaan lukien kunkin aineiston latausmäärät.
-    Raportti toimitetaan kaikille aineistojen tuottajille. 
+    Raportti toimitetaan kaikille aineistojen tuottajille.
   </p>
   <p>CSC julkaisee aineistot maksutta eikä saa niihin mitään oikeuksia.</p>
 

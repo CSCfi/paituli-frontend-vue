@@ -8,20 +8,20 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
   <h1>Share your spatial data in Paituli</h1>
   <p>
     Finnish universities and research institutes have possibility to
-	publish their own spatial data in Paituli. It could be data that has been
-	gathered for a scientific project. This data could be about
-	Finland or global. Each dataset in Paituli has a permanent identifier in URN format. 
+    publish their own spatial data in Paituli. It could be data that has been
+    gathered for a scientific project. This data could be about
+    Finland or global. Each dataset in Paituli has a permanent identifier in URN format.
   </p>
   <p>
     After publishing, anybody can download your data. Datasets suitable for
     <a href="http://docs.geoserver.org/latest/en/user/" target="_blank">GeoServer</a> can also be
-    previewed on download page and they will be available also as 
-    <RouterLink to="/webservices">OGC APIs</RouterLink>. Raster datasets are added to 
-	<RouterLink to="/stac">STAC</RouterLink>.
+    previewed on download page and they will be available also as
+    <RouterLink to="/webservices">OGC APIs</RouterLink>. Raster datasets are added to
+    <RouterLink to="/stac">STAC</RouterLink>.
   </p>
   <p>
     Annually CSC generates a report about Paituli usage, including number of downloads for each
-    dataset. This report will be sent to all data providers. 
+    dataset. This report will be sent to all data providers.
   </p>
   <p>CSC publishes data free of charge and will not get any rights for the data.</p>
   <h2>Steps for sharing your data</h2>
