@@ -30,6 +30,13 @@ const helpUrl = computed(() => {
   }
 })
 
+const scaleText = computed(() => {
+  let text = t('apis.not_limited')
+  const scale = currentDataset.value?.data_max_scale
+  if (scale) text = `1 : ${scale}`
+  return text
+})
+
 </script>
 
 <template>
@@ -169,7 +176,7 @@ const helpUrl = computed(() => {
                       <ServicesModalRow
                         :label="t('apis.scale')"
                         :show-copy="false"
-                        :text="currentDataset.data_max_scale ?? t('apis.not_limited')" />
+                        :text="scaleText" />
                     </tbody>
                   </table>
                 </c-table>
@@ -217,7 +224,7 @@ const helpUrl = computed(() => {
                       <ServicesModalRow
                         :label="t('apis.scale')"
                         :show-copy="false"
-                        :text="currentDataset.data_max_scale ?? t('apis.not_limited')" />
+                        :text="scaleText" />
                     </tbody>
                   </table>
                 </c-table>
