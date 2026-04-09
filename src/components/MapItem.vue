@@ -8,11 +8,11 @@ import { mdiClose } from '@mdi/js'
 import type SelectInteraction from 'ol/interaction/Select'
 import type { FeatureLike } from 'ol/Feature'
 import { Fill, Stroke, Style, Text } from 'ol/style'
-import { always } from 'ol/events/condition'
+import { always, noModifierKeys } from 'ol/events/condition'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
 import OlMap from 'ol/Map.js'
-import KeyboardZoom from 'ol/interaction/KeyboardZoom'
+import { KeyboardZoom, KeyboardPan } from 'ol/interaction'
 
 import { currentDataset, fetchMetadata } from '@/modules/datasets'
 import { APP_SETTINGS } from '@/shared/constants'
@@ -76,6 +76,15 @@ onMounted(async () => {
   // Stop keyboard zooming OL interaction (from intercepting +/- keystrokes)
   const zoom = getMapInteraction(map, KeyboardZoom)
   if (zoom) map.removeInteraction(zoom)
+
+  // Stop OL view panning interaction from intercepting arrow keys while typing
+  const kb = getMapInteraction(map, KeyboardPan)
+  if (kb) map.removeInteraction(kb)
+  map.addInteraction(new KeyboardPan({
+    condition: (event) =>
+      noModifierKeys(event) &&
+      !(document.activeElement?.matches('c-text-field'))
+  }))
 })
 
 // Fetch datasets again if locale changes, due to the
