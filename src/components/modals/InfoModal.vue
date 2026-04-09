@@ -2,9 +2,10 @@
 import { mdiFileDownloadOutline, mdiOpenInNew } from '@mdi/js';
 import { currentDataset } from '@/modules/datasets';
 import { URLS } from '@/shared/constants';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { MetadataParse } from '@/shared/types';
+import { copyToClipboard } from '@/shared/util';
 
 const { t } = useI18n()
 
@@ -15,6 +16,9 @@ const open = () => {
   showModal.value = true
 }
 
+const etsinLink = computed(() =>
+  URLS.ETSIN_METADATA_BASE + currentDataset.value?.meta)
+
 defineExpose({ open })
 </script>
 
@@ -23,6 +27,7 @@ defineExpose({ open })
   <c-modal v-model="showModal"
            v-control
            dismissable
+           width=750
            disable-backdrop-blur>
     <c-card>
       <c-card-title>
@@ -31,19 +36,24 @@ defineExpose({ open })
 
       <c-card-content>
 
-        <div v-if="currentDataset?.meta">
-          <c-link :href="URLS.ETSIN_METADATA_BASE + currentDataset.meta" target="_blank">
-            {{ t("metadata") }}
-            <c-icon :path="mdiOpenInNew" size="18" />
-          </c-link>
+        <h3>{{ currentDataset?.name }} - {{ currentDataset?.org }}</h3>
+        <div id="etsin">
+          {{ t("metadata") }}:
+          <div id="link" v-if="currentDataset?.meta">
+            <c-link :href="etsinLink" target="_blank">
+              {{ etsinLink }}
+              <c-icon :path="mdiOpenInNew" size="18" />
+            </c-link>
+            <c-button
+              outlined
+              @click="copyToClipboard(etsinLink)"
+              size="small">
+              {{ t('copy') }}
+            </c-button>
+          </div>
         </div>
 
-        <div>
-          <h3>{{ currentDataset?.name }} - {{ currentDataset?.org }}</h3>
-          <span id="urn-label">URN: </span>
-          <span id="urn">{{ currentDataset?.meta }}</span>
-        </div>
-        <div id="etsin">
+        <div id="meta">
           <div v-html="props.meta.description"></div>
           <div v-if="props.meta.links.length">
             <strong>{{ t("files") }}:</strong>
@@ -80,6 +90,7 @@ defineExpose({ open })
     "files": "Files describing this dataset",
     "metadata": "All metadata available at Fairdata Etsin",
     "close": "Close",
+    "copy": "Copy",
     "gpkg": {
       "download": "Download index map as GeoPackage",
       "info": "The geopackage contains names, paths and geometry of map sheets.",
@@ -90,6 +101,7 @@ defineExpose({ open })
     "files": "Aineistoa kuvaavat tiedostot",
     "metadata": "Kaikki metatiedot saatavilla Fairdata Etsimessä",
     "close": "Sulje",
+    "copy": "Kopioi",
     "gpkg": {
       "download": "Lataa indeksikartta GeoPackage -muodossa",
       "info": "Geopackage sisältää karttalehtien nimet, polut sekä geometrian.",
@@ -106,20 +118,34 @@ h3 {
 }
 
 div#etsin {
+  display: flex;
+  flex-direction: column;
+
+  div#link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25em;
+
+    c-link {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    c-button {
+      flex: 0 0 auto;
+    }
+  }
+}
+
+div#meta {
   max-height: 500px;
   overflow-y: auto;
 }
 
-span#urn-label {
-  user-select: none;
-}
-
-span#urn {
-  user-select: text;
-}
-
-[id^="urn"] {
-  color: var(--c-tertiary-500);
+c-button {
+  --c-button-outlined-background-color: var(--c-white) !important;
+  --c-button-outlined-background-color-hover: var(--c-primary-200) !important;
 }
 
 </style>
