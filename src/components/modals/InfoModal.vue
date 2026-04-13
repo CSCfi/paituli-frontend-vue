@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiFileDownloadOutline, mdiOpenInNew } from '@mdi/js';
+import { mdiFileDownloadOutline } from '@mdi/js';
 import { currentDataset } from '@/modules/datasets';
 import { URLS } from '@/shared/constants';
 import { computed, ref } from 'vue';
@@ -8,6 +8,7 @@ import { copyToClipboard } from '@/shared/util';
 import type { MetadataParse } from '@/shared/types'
 import { CAlertType } from '@cscfi/csc-ui'
 import { fetchEtsinMetadata } from '@/modules/etsin'
+import AppLink from '../AppLink.vue';
 
 const { t } = useI18n()
 
@@ -57,10 +58,11 @@ async function loadMetadata() {
         <div id="etsin">
           {{ t("metadata") }}:
           <div id="link" v-if="currentDataset?.meta">
-            <c-link :href="etsinLink" target="_blank">
+            <app-link
+              :to="etsinLink"
+              new-tab>
               {{ etsinLink }}
-              <c-icon :path="mdiOpenInNew" size="18" />
-            </c-link>
+            </app-link>
             <c-button
               outlined
               @click="copyToClipboard(etsinLink)"
@@ -81,7 +83,11 @@ async function loadMetadata() {
             <strong>{{ t("files") }}:</strong>
             <ul class="metadata-links">
               <li v-for="link in parsedMetadata.links" :key="link.url">
-                <c-link :href="link.url" target="_blank">{{ link.title }}</c-link>
+                <app-link
+                  :to="link.url"
+                  new-tab>
+                  {{ link.title }}
+                </app-link>
               </li>
             </ul>
           </div>
@@ -91,9 +97,11 @@ async function loadMetadata() {
         </div>
 
         <p v-if="currentDataset?.data_id">
-          <c-link :href="URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id)">
+          <app-link
+            :to="URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id)">
             <c-icon :path="mdiFileDownloadOutline" />{{ t('gpkg.download') }}
-          </c-link>
+          </app-link>
+
           <br>{{ t('gpkg.info') }}
         </p>
 

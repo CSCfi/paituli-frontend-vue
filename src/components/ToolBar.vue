@@ -7,7 +7,6 @@ import {
   mdiCursorMove,
   mdiFileUploadOutline,
   mdiMagnifyPlus,
-  mdiOpenInNew,
   mdiShapePolygonPlus,
   mdiTarget,
 } from '@mdi/js';
@@ -21,7 +20,6 @@ import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, mapViewResolution, menuMode, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
 import { vHelp } from '@/directives/help';
-import { currentLocale } from '@/modules/locale';
 import HelpContent from './HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { currentDataset } from '@/modules/datasets';
@@ -177,16 +175,7 @@ const zoomToData = () => {
             v-tooltip="t('select.json.tooltip')">
             {{ t("select.json.label") }}<c-icon :path="mdiFileUploadOutline"/>
             <help-content id="json-help">
-              <i18n-t keypath="select.json.help">
-                <c-link
-                  :href="`https://${currentLocale}.wikipedia.org/wiki/GeoJSON`"
-                  target="_blank">
-                  GeoJSON<c-icon :path="mdiOpenInNew" size="18" />
-                </c-link>
-                <c-link href="https://geojson.io/" target="_blank">
-                  geojson.io<c-icon :path="mdiOpenInNew" size="18" />
-                </c-link>
-              </i18n-t>
+              {{ t('select.json.help') }}
             </help-content>
           </c-button>
           <c-button value="clear" id="trash" v-tooltip="t('select.clear.tooltip')">

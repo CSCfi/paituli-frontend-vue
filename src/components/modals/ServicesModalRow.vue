@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { copyToClipboard } from '@/shared/util';
-import { mdiClipboardMultipleOutline, mdiOpenInNew } from '@mdi/js'
+import { mdiClipboardMultipleOutline } from '@mdi/js'
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import AppLink from '../AppLink.vue';
 
 const { t } = useI18n()
 
@@ -40,15 +41,14 @@ const trimmedText = computed(() => {
     <td v-else>{{ trimmedText }}</td>
     <td>
       <div class="buttons">
-        <c-button
+        <app-link
           v-if="showOpen && !unavailable"
-          ghost
-          size="small"
-          :href="props.text">
+          new-tab
+          :to="(props.text as string)"
+          :c-button="{ ghost: true, size: 'small' }">
           <!-- href should be naturally untrimmed -->
           {{ t('open') }}
-          <c-icon :path="mdiOpenInNew" size="18" />
-        </c-button>
+        </app-link>
         <c-button
           v-if="showCopy && !unavailable"
           ghost

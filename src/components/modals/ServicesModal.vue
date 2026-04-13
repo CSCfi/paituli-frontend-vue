@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { mdiOpenInNew } from '@mdi/js';
 import { URLS } from '@/shared/constants'
 import { computed, ref } from 'vue';
 
 import { useI18n } from 'vue-i18n';
 import { currentDataset, hasRasterData, hasVectorData } from '@/modules/datasets';
 import ServicesModalRow from './ServicesModalRow.vue';
+import AppLink from '../AppLink.vue';
 
 const { t } = useI18n()
 
@@ -86,11 +86,11 @@ const scaleText = computed(() => {
                   </table>
                 </c-table>
                 <p>
-                  <c-link id="hpc"
-                          target="_blank"
-                          href="https://docs.csc.fi/data/datasets/spatial-data-in-csc-computing-env/">
-                    {{ t("file_transfer.hpc.title") }}<c-icon :path="mdiOpenInNew" size="18" />
-                  </c-link>
+                  <AppLink
+                    new-tab
+                    to="https://docs.csc.fi/data/datasets/spatial-data-in-csc-computing-env/">
+                    {{ t("file_transfer.hpc.title") }}
+                  </AppLink>
                 </p>
                 <c-table>
                   <table>
@@ -112,9 +112,11 @@ const scaleText = computed(() => {
             <c-tab-item value="STACTab">
               <div v-if="currentDataset.stac_id">
                 <p>
-                  <c-link :href="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id" target="_blank">
-                    {{ t("stac.link") }}<c-icon :path="mdiOpenInNew" size="18" />
-                  </c-link>
+                  <AppLink
+                    new-tab
+                    :to="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id">
+                    {{ t("stac.link") }}
+                  </AppLink>
                 </p>
                 <c-table>
                   <table>
@@ -238,9 +240,12 @@ const scaleText = computed(() => {
       </c-card-content>
 
       <c-card-actions justify="space-between">
-        <c-button id="help" :href="helpUrl" target="_blank">
-          {{ t("help") }}<c-icon :path="mdiOpenInNew" size="18" />
-        </c-button>
+        <AppLink :to="helpUrl"
+                 id="help"
+                 new-tab
+                 c-button>
+          {{ t("help") }}
+        </AppLink>
         <c-button @click="showModal = false">
           {{ t("close") }}
         </c-button>

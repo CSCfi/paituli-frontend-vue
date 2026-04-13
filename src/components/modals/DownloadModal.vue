@@ -8,6 +8,7 @@ import { APP_SETTINGS, URLS } from '@/shared/constants'
 import { sleep } from '@/shared/util'
 import { useToasts } from '@/composables/toasts';
 import { currentDataset } from '@/modules/datasets';
+import AppLink from '../AppLink.vue';
 
 const { addToast } = useToasts()
 const { t } = useI18n()
@@ -266,7 +267,9 @@ const downloadType = ref()
                       :valid="!licenseError"
                       required>
             {{ t("license_agree") }}
-            <c-link :href="licenseUrl" target="_blank" underline>{{ t("license") }}</c-link>
+            <app-link :to="licenseUrl" new-tab>
+              {{ t("license") }}
+            </app-link>
           </c-checkbox>
         </div>
 

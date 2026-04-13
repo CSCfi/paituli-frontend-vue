@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
 import { selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
 import { CAlertType } from '@cscfi/csc-ui'
+import AppLink from './AppLink.vue'
 
 const { t } = useI18n()
 
@@ -116,7 +117,9 @@ watch(selectedFeaturesArray, () => {
       <h4>{{ t("files") }}</h4>
       <label>
         <input type="checkbox" v-model="licenseChecked" />
-        <a :href="licenseUrl" target="_blank">{{ t("license") }}</a>
+        <AppLink :to="licenseUrl!" new-tab>
+          {{ t("license") }}
+        </AppLink>
       </label>
       <div v-if="selectedFeaturesArray.length">
         <div class="files"
@@ -213,6 +216,11 @@ h4 {
   label:hover {
     background: var(--c-primary-500);
   }
+}
+
+c-link {
+  --c-link-color: var(--c-accent-500);
+  --c-link-hover: var(--c-accent-700);
 }
 
 </style>
