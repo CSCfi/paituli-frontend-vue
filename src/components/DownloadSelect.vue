@@ -5,7 +5,7 @@ import DownloadModal from './modals/DownloadModal.vue'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
-import { selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
+import { checkboxStates, selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
 import { CAlertType } from '@cscfi/csc-ui'
 import AppLink from './AppLink.vue'
 
@@ -39,7 +39,6 @@ const fileLabels = computed(() => {
   return labels
 })
 
-const checkboxStates = ref<Record<string, boolean>>({})
 watch(
   selectedFeaturesArray,
   (features) => {
@@ -93,7 +92,7 @@ const showSelectWarning = ref(true)
 watch(currentDataset, () => showSelectWarning.value = true)
 watch(selectedFeaturesArray, () => {
   if (selectedFeaturesArray.value.length) showSelectWarning.value = false
-}, { deep: true })
+}, { deep: true, immediate: true })
 
 </script>
 

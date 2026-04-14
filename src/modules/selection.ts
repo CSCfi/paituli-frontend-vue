@@ -32,6 +32,9 @@ selectedOlFeatures.on('remove', (event) => {
   )
 })
 
+// States used by DownloadSelect
+export const checkboxStates = ref<Record<string, boolean>>({})
+
 // Adds a single feature (sheet) to selection
 export function selectFeature(feature: Feature<Geometry>) {
   selectedOlFeatures.push(feature)
