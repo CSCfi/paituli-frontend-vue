@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { CToastType } from '@cscfi/csc-ui';
+import { ref, computed, onMounted, nextTick } from 'vue'
+import { CAlertType, CToastType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
+import { mdiHelpCircleOutline } from '@mdi/js'
 
 import type { JobResponse } from '@/shared/types';
 import { APP_SETTINGS, URLS } from '@/shared/constants'
@@ -31,8 +32,12 @@ const progress = ref(0)
 const progressLabel = ref('')
 const downloadError = ref(false)
 
-const open = (paths: string[], labels: string[], size: number) => {
+onMounted(async () => {
+  await nextTick()
+  injectTooltip()
+})
 
+const open = (paths: string[], labels: string[], size: number) => {
   if (paths.length == 0)
   {
     console.error('Refusing to open download modal with zero file paths!')
@@ -212,6 +217,7 @@ const resetForm = () => {
   licenseCheckbox.value = false
   downloadType.value = downloadTypeItems.value[0].value
   zipDownloadDisabled.value = false
+  showListHint.value = false
 }
 
 // By default toasts get hidden behind the modal backdrop,
@@ -226,6 +232,16 @@ const downloadTypeItems = computed(() => [
 ]);
 
 const downloadType = ref()
+const showListHint = ref(false)
+
+// Inject a tooltip button into the radio group's shadow DOM
+function injectTooltip() {
+  const group = document.querySelector('c-radio-group') as HTMLElement
+  const container = group.shadowRoot?.querySelector('label#LIST .c-radio__label')
+  const icon = document.createElement('c-icon-button')
+  icon.setAttribute('size', 'x-small')
+  container?.appendChild(icon)
+}
 
 </script>
 
@@ -235,13 +251,30 @@ const downloadType = ref()
       <c-card-title>{{ t("title") }}</c-card-title>
       <c-card-content>
         <!-- Download type (zip / file list) option -->
-        <c-radio-group
-          v-control
-          :items="downloadTypeItems"
-          hide-details
-          v-model="downloadType">
-          <strong>{{ t("type.title") }}</strong>
-        </c-radio-group>
+        <div>
+          <c-radio-group
+            v-control
+            :items="downloadTypeItems"
+            hide-details
+            v-model="downloadType">
+            <div id="group-header">
+              {{ t("type.title") }}
+              <c-icon-button
+                @click="showListHint = true"
+                size="x-small">
+                <c-icon :path="mdiHelpCircleOutline" size="20px" />
+              </c-icon-button>
+            </div>
+          </c-radio-group>
+          <c-alert v-if="showListHint" :type="CAlertType.Info">
+            <span>
+              {{ t('list_hint') }}
+              <app-link to="/files" new-tab>
+                {{ t('list_link') }}
+              </app-link>
+            </span>
+          </c-alert>
+        </div>
 
         <c-alert>
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
@@ -316,7 +349,8 @@ const downloadType = ref()
       "as_zip": "ZIP file",
       "as_list": "File list",
     },
-    "list_tooltip": "Download data paths as a text file for batch download",
+    "list_hint": "File list -option downloads data paths as a text file for ",
+    "list_link": "batch download",
     "license_agree": "I agree to the",
     "license": "dataset license",
     "confirm": "Download",
@@ -345,7 +379,8 @@ const downloadType = ref()
       "as_zip": "ZIP-tiedosto",
       "as_list": "Tiedostolista",
     },
-    "list_tooltip": "Lataa valinnan polut tekstitiedostona massalatausta varten",
+    "list_hint": "Tiedostolista -optio lataa valittujen karttalehtien polut tekstitiedostona, jota käytetään ",
+    "list_link": "massalatauksessa",
     "license_agree": "Hyväksyn",
     "license": "aineiston lisenssin",
     "confirm": "Lataa",
@@ -405,5 +440,18 @@ c-link {
 }
 c-alert p {
   white-space: pre-wrap;
+}
+#group-header {
+  display: inline-flex;
+  font-weight: bold;
+  gap: .5em;
+  align-items: center;
+
+  --c-icon-button-background-color: var(--c-white);
+  --c-icon-button-background-color-hover: var(--c-tertiary-100);
+
+  c-icon {
+    --c-icon-color: var(--c-tertiary-400);
+  }
 }
 </style>
