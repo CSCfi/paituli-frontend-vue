@@ -54,7 +54,10 @@ async function loadMetadata() {
       </c-card-title>
 
       <c-card-content>
-        <h3>{{ currentDataset?.name }} - {{ currentDataset?.org }}</h3>
+        <div>
+          <h3>{{ currentDataset?.name }}, {{ currentDataset?.year }}</h3>
+          <h5>{{ currentDataset?.org }}</h5>
+        </div>
         <div id="etsin">
           {{ t("metadata") }}:
           <div id="link" v-if="currentDataset?.meta">
@@ -123,7 +126,7 @@ async function loadMetadata() {
     "files": "Files describing this dataset",
     "metadata": "All metadata available at Fairdata Etsin",
     "close": "Close",
-    "copy": "Copy",
+    "copy": "Copy PID",
     "loading": "Fetching metadata",
     "gpkg": {
       "download": "Download index map as GeoPackage",
@@ -136,7 +139,7 @@ async function loadMetadata() {
     "files": "Aineistoa kuvaavat tiedostot",
     "metadata": "Kaikki metatiedot saatavilla Fairdata Etsimessä",
     "close": "Sulje",
-    "copy": "Kopioi",
+    "copy": "Kopioi PID",
     "loading": "Haetaan metatietoja",
     "gpkg": {
       "download": "Lataa indeksikartta GeoPackage -muodossa",
@@ -149,7 +152,7 @@ async function loadMetadata() {
 
 <style scoped>
 
-h3 {
+h3, h5 {
   margin: 0;
   margin-bottom: 0.25em;
 }
