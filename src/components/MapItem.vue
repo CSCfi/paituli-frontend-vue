@@ -253,6 +253,17 @@ watch(toolbarMode, (mode) => {
 // Disable select also initially (after ref exists)
 watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
+// We observe the view width to tell some elements to enter
+// a compacted state, if space gets too cramped
+const horizontalSpace = ref(0)
+const toolsContainerRef = ref<HTMLElement>()
+onMounted(() => {
+  const observer = new ResizeObserver(entries => {
+    horizontalSpace.value = entries[0].contentRect.width
+  })
+  observer.observe(toolsContainerRef.value!)
+})
+
 </script>
 
 <template>
@@ -260,14 +271,15 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
              ref="olMapRef"
              @click="handleClickedFeature" >
 
-
-    <!-- Mount tools only after OL has provided us the map ref! -->
-    <div class="tools" v-if="olMapRef">
-      <ButtonColumn id="button-column" :map="(olMapRef.map as OlMap)" />
-      <div class="tools-flex">
-        <HelpBox id="help" />
-        <ToolBar id="toolbar" :map="(olMapRef.map as OlMap)" />
-        <SearchBar id="search" :map="(olMapRef.map as OlMap)" />
+    <div ref="toolsContainerRef">
+      <!-- Mount tools only after OL has provided us the map ref! -->
+      <div class="tools" v-if="olMapRef">
+        <ButtonColumn id="button-column" :map="(olMapRef.map as OlMap)" />
+        <div class="tools-flex">
+          <HelpBox id="help" />
+          <ToolBar id="toolbar" :map="(olMapRef.map as OlMap)" :compact="horizontalSpace < 750" />
+          <SearchBar id="search" :map="(olMapRef.map as OlMap)" :compact="horizontalSpace < 900" />
+        </div>
       </div>
     </div>
 
@@ -427,7 +439,6 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 }
 
 .tools-flex {
-
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -435,16 +446,13 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   #help {
     margin-top: -1em;
   }
-
   #search {
     margin-left: auto;
   }
-
   #toolbar {
-    position: absolute;
-    top: .25em;
+     margin-top: .25em;
+     margin-left: auto;
   }
-
 }
 
 @media (max-width: 1700px) {
@@ -455,34 +463,44 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
       right: 0;
     }
     #toolbar {
-      left: 0;
       margin-left: 1em;
+      --c-tab-item-padding: 0.5em 0 0 0;
     }
   }
 }
 
 @media (max-width: 1325px) {
   .tools-flex {
-    flex-direction: column-reverse;
-    align-items: center;
-    gap: 0.4em;
-
     #toolbar {
-      position: unset;
-      margin: unset;
+      margin-left: auto;
       --c-tab-item-padding: 0.3em 0 0 0;
     }
-
     #search {
-      margin: unset;
-      width: 480px;
+      width: 230px;
+      margin-right: -2.75em;
+      margin-left: auto;
     }
-
     :deep(#json-button) {
       margin-top: .5em;
     }
   }
+  #button-column {
+    top: 4em;
+  }
+}
 
+@media (max-width: 1150px) {
+  .tools-flex {
+    #search {
+      display: none;
+    }
+    #toolbar {
+      margin-top: -0.25em;
+    }
+  }
+  #button-column {
+    top: unset;
+  }
 }
 
 :global(.ol-zoom) {

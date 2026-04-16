@@ -22,8 +22,13 @@ const { addToast } = useToasts()
 const { t } = useI18n()
 
 // Parent map component which we manipulate based on search
-const props = defineProps<{ map: OlMap }>()
+// and mode to take less horizontal space if needed
+const props = defineProps<{ map: OlMap, compact: boolean }>()
 
+// selectMode determines whether we should select map sheets
+// instead of doing a traditional location search
+const selectMode = computed(() => toolbarMode.value == 'select')
+const modeName = computed(() => selectMode.value ? 'select' : 'search')
 const searchStr = ref('')
 
 // Queries Nominatim API for location data
@@ -43,7 +48,7 @@ async function search() {
   let result: NominatimResponse | undefined
   try {
     const results = await fetchLocationData(searchStr.value)
-    // We should stop to warn about bad locations only in geographic mode
+    // We stop to warn about bad locations only in geographic search mode
     if (!selectMode.value && results.length == 0) {
       addToast({
         type: CToastType.Warning,
@@ -75,7 +80,6 @@ async function search() {
       })
     }
   }
-
 }
 
 // Map sheet selection by search string or extent
@@ -104,7 +108,6 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
     })
     return
   }
-
   // No sheet hits, try bounding box if provided
   if (bbox) {
     const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
@@ -116,17 +119,12 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
     }
     return
   }
-
-  // Nothing found
+  // Nothing found, inform user
   addToast({
     type: CToastType.Error,
     message: t('no_matches')
   })
 }
-
-// Whether we should select map sheets instead of location search
-const selectMode = computed(() => toolbarMode.value == 'select')
-const modeName = computed(() => selectMode.value ? 'select' : 'search')
 
 </script>
 
@@ -144,13 +142,21 @@ const modeName = computed(() => selectMode.value ? 'select' : 'search')
                   id="searchbar">
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-icon slot="pre"
+              v-if="!compact"
               :path="selectMode ? mdiSelectSearch : mdiMagnify"
               size="18" />
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-button slot="post"
                 size="small"
                 @click="search()"
-                ghost>{{ t(`${modeName}.button`) }}</c-button>
+                ghost>
+        <span v-if="!compact">
+          {{ t(`${modeName}.button`) }}
+        </span>
+        <span v-else>
+          <c-icon :path="selectMode ? mdiSelectSearch : mdiMagnify" size="18px" />
+        </span>
+      </c-button>
     </c-text-field>
 
     <help-content id="select-help">{{ t('select.help') }}</help-content>
@@ -219,6 +225,13 @@ c-tab-buttons {
 .selectMode {
   --c-button-ghost-background-color: var(--c-secondary-400);
   --c-button-ghost-text-color: white;
+}
+
+c-button {
+  --_c-button-min-width: 0;
+  c-icon {
+    padding-top: 4px;
+  }
 }
 
 </style>

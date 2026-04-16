@@ -27,7 +27,7 @@ import { getMapInteraction, sleep } from '@/shared/util';
 
 const { t } = useI18n()
 
-const props = defineProps<{ map: OlMap }>()
+const props = defineProps<{ map: OlMap, compact: boolean }>()
 
 const inspectCursor = computed(() => dataHidden.value ? 'not-allowed' : 'crosshair')
 
@@ -123,9 +123,12 @@ const zoomToData = () => {
 <template>
   <c-tabs v-model="toolbarMode"
           v-control
+          :key="props.compact"
           v-show="currentDataset"
           disable-animation>
-    <c-tab-buttons mandatory>
+    <c-tab-buttons
+      :size="props.compact ? 'small' : 'default'"
+      mandatory>
       <c-button
         value="move"
         v-help="t('move.help')"
@@ -137,7 +140,8 @@ const zoomToData = () => {
         :disabled="selectDisabled"
         v-help="`#${selectMode}-help`"
         v-tooltip="!autoSelectSheets ? t('select.tooltip') : t('select.disabled')">
-        {{ t("select.label") }}<c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
+        {{ t("select.label") }}
+        <c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
       </c-button>
       <c-button
         value="inspect"

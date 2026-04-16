@@ -19,7 +19,7 @@ const dataset_id = computed(() => route.query.data_id as string | undefined)
 // We observe the sidebar height and enter `tabbed` state if
 // the height gets too small.
 const sidebarHeight = ref(0)
-const tabbed = computed(() => sidebarHeight.value < 800)
+const tabbed = computed(() => sidebarHeight.value < 750)
 const sidebarRef = ref<HTMLElement>()
 onMounted(() => {
   const observer = new ResizeObserver(entries => {
