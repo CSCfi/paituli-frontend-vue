@@ -7,13 +7,13 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 <template>
   <h1>Jaa paikkatietoaineistosi Paitulissa</h1>
   <p>
-    Suomen korkeakouluilla ja tutkimuslaitoksilla on mahdollisuus
-    jakaa omia paikkatietoaineistoja Paitulissa ilmaiseksi. Aineistojen julkaisu ei
+    Suomalaisilla korkeakouluilla ja tutkimuslaitoksilla on mahdollisuus
+    jakaa omia paikkatietoaineistojaan Paitulissa ilmaiseksi. Aineistojen julkaisu ei
     tarkoita aineistoon liittyvien oikeuksien luovuttamista. Aineisto voi olla
     tuotettu esimerkiksi osana tutkimusprojektia. Aineiston kuvaama alue voi olla Suomesta tai globaali. Jokainen Paitulin aineisto saa myös pysyvän tunnisteen URN-formaatissa.
   </p>
   <p>
-    Julkaisun jälkeen kuka tahansa voi ladata aineistosi. Aineistot, jotka soveltuvat
+    Julkaisun jälkeen kuka tahansa voi ladata aineistosi. Aineistoja, jotka soveltuvat
     <a href="http://docs.geoserver.org/latest/en/user/" target="_blank">GeoServeriin</a>,
     voidaan esikatsella lataussivulla ja ne ovat saatavilla myös
     vakiomuotoisina
@@ -69,7 +69,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
       <c-list-item-title>
         <strong>3. Pakkaa aineisto</strong>
       </c-list-item-title>
-      Nämä ovat suosituksia. Jos jokin muu ratkaisu sopii aineistollasi paremmin,
+      Nämä ovat suosituksia. Jos jokin muu ratkaisu sopii aineistollesi paremmin,
       ota yhteyttä CSC:hen.
       <ul>
         <li>
