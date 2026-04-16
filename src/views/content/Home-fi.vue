@@ -1,9 +1,9 @@
 <template>
   <h1>Paitulista</h1>
-  <p>Paituli on suomalainen paikkatietopalvelu. Paituli on ensisijaisesti suunnattu akateemisille käyttäjille, mutta se on avoin kaikille. Palvelun kautta on saatavilla paikkatietoaineistoja, jotka ovat tärkeitä tutkimuksessa ja opetuksessa. Muista paikkatietoaineistopalveluista poiketen Paitulista löydät myös historiallisia vuosiversioita. Useiden aineistojen ensimmäiset versiot ovat vuodelta 2005, jolloin Paituli aloitti toimintansa. Kaikilla aineistoilla on avoin lisenssejä, useimmiten CC-BY-4.0 lisenssi.
+  <p>Paituli on suomalainen paikkatietopalvelu. Paituli on ensisijaisesti suunnattu akateemisille käyttäjille, mutta se on avoin kaikille. Palvelun kautta on saatavilla paikkatietoaineistoja, jotka ovat tärkeitä tutkimuksessa ja opetuksessa. Muista paikkatietoaineistopalveluista poiketen Paitulista löydät myös historiallisia vuosiversioita. Useiden aineistojen ensimmäiset versiot ovat vuodelta 2005, joka oli Paitulin perustamisvuosi. Kaikilla aineistoilla on avoimet lisenssit, useimmiten CC-BY-4.0.
   </p>
 
-  <p>Suomen akateemisilla käyttäjillä on mahdollisuus myös
+  <p>Käyttäjillä joilla on affiliaatio suomalaiseen korkeakouluun on mahdollisuus myös
     <RouterLink to="/opendata">jakaa aineistoja</RouterLink>
     Paitulissa.
   </p>
@@ -41,7 +41,7 @@
       <a href="https://www.ruokavirasto.fi/" target="_blank">Ruokavirasto</a>
     </li>
     <li>
-      <a href="https://www.slu.se/en/" target="_blank">Ruotsin maatalousyliopisto</a>
+      <a href="https://www.slu.se/en/" target="_blank">Ruotsin maataloustieteellinen yliopisto</a>
     </li>
     <li>
       <a href="http://www.tilastokeskus.fi" target="_blank">Tilastokeskus</a>
@@ -50,26 +50,26 @@
       <a href="http://www.digiroad.fi" target="_blank">Väylävirasto, Digiroad</a>
     </li>
   </ul>
-  <p><a href="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli" target="_blank">Tarkka lista saatavilla olevista aineistoista</a> löytyy Fairdata Etsin-palvelusta. Etsimessä, kokeile vapaata tekstihakua tai vasemmalla olevia suodattimia aineistojen löytämiseksi.
+  <p><a href="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli" target="_blank">Tarkka lista saatavilla olevista aineistoista</a> löytyy Fairdata Etsin-palvelusta. Aineistojen löytämiseksi Etsimessä kokeile vapaata tekstihakua tai vasemmalla olevia suodattimia.
   </p>
 
   <h2>Aineistojen käyttö</h2>
 
-  <p>Paituli tarjoa aineistojen käyttämiseksi useita mahdollisuuksia:
+  <p>Paituli tarjoaa aineistojen käyttämiseksi useita mahdollisuuksia:
 
     <ul>
       <li>
-        <RouterLink to="/download">Latauspalvelu sivun</RouterLink> mahdollistaa:
+        <RouterLink to="/download">Latauspalvelu sivun</RouterLink> joka mahdollistaa:
         <ul>
-          <li>Useiden <b>aineistojen esikatselun</b>, mm. ominaisuustiedon kysely.
+          <li>Useiden <b>aineistojen esikatselun</b>, mm. ominaisuustiedon kyselyn.
           </li>
-          <li>Kaikkien tai valittujen karttalehtien tiedostojen lataus <b>zip-pakettina</b>, max 3Gb.
+          <li>Kaikkien tai valittujen karttalehtien tiedostojen latauksen <b>zip-pakettina</b>, max 3Gb.
           </li>
-          <li>Kaikkien tai valittujen karttalehtien tiedostolistauksen lataus.
+          <li>Kaikkien tai valittujen karttalehtien tiedostolistauksen latauksen.
           </li>
         </ul>
       </li>
-      <li>Isommat aineistokokonaisuudet voi data
+      <li>Isommat aineistokokonaisuudet voi ladata
         <RouterLink to="/files">HTTPS, FTP and rsync</RouterLink>
         työkalujen avulla.
       </li>
@@ -77,11 +77,11 @@
         <RouterLink to="/webservices">OGC API-rajapintojen kautta:</RouterLink>
         WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
       </li>
-      <li>Paitulin kaikki rasteriaineistot ovat saatavilla <RouterLink to="/stac">STAC</RouterLink>:in kautta. Paituli STAC sisältää enemmän aineistoja kuin Paitulin latauspalvelu, esimerkiksi Geoportti Geocube aineistot ja useita suomalaisia kaukokartoitus aineistoja.
+      <li>Paitulin kaikki rasteriaineistot ovat saatavilla <RouterLink to="/stac">STAC</RouterLink>:in kautta. Paituli STAC sisältää enemmän aineistoja kuin Paitulin latauspalvelu, esimerkiksi Geoportti Geocube -aineistot ja useita suomalaisia kaukokartoitusaineistoja.
       </li>
       <li>
         <a href="https://research.csc.fi/gis_data_in_csc_computing_env" target="_blank">CSC Puhti supertietokoneen avoimet GIS aineistot</a>
-        sisältävät melkein kaikki Paitulin aineistot, jotta näiden käyttö olisi helppoa ja nopea Puhdin käyttäjille.
+        sisältävät melkein kaikki Paitulin aineistot, jotta näiden käyttö olisi helppoa ja nopeaa Puhdin käyttäjille.
       </li>
     </ul>
   </p>
@@ -133,7 +133,7 @@
 
   <h2>Paituli palvelusta</h2>
 
-  <p>Paitulin käyttö on käyttäjälle ilmainen. Paitulia ylläpitää
+  <p>Paitulin käyttö on käyttäjälle ilmaista. Paitulia ylläpitää
     <a href="https://www.csc.fi" target="_blank">CSC - Tieteen tietotekniikan keskus</a> ja rahoittavat
     <a href="https://minedu.fi/etusivu" target="_blank">Opetus- ja kulttuuriministeriö</a> sekä Suomen Akatemia <a href="https://www.geoportti.fi" target="_blank">Geoportti</a> projektin kautta. Paituli tarjotaan "best effort" palvelutasolla ja saavutettavuudella.
   </p>
