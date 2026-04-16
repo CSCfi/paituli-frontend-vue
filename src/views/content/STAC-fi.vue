@@ -3,14 +3,14 @@
 
   <p>
     <a href="https://stacspec.org/en/" target="_blank">STAC</a> - Spatio Temporal Asset Catalog - on spesifikaatio ajallisen ulottuvuuden omaavan paikkatiedon kuvailemiseksi. Se yksinkertaistaa huomattavasti aineistojen <strong>hakua ja lataamista</strong>.
-    STAC on eniten käytettynä kaukokartoituskuvien ja muun rasteridatan kanssa, mutta sitä voidaan käyttää myös vektori- ja pistepilviaineistojen kanssa. STAC sopii parhaiten aikasarjoja käsitteleviin käyttötapauksiin. Jos STAC yleisesti ei ole tuttu, lue STAC käsitteistä tämän sivun lopussa.
+    STAC:ia käytetään eniten kaukokartoitus- ja muun rasteridatan kanssa, mutta se sopii myös vektori- ja pistepilviaineistoille. STAC sopii parhaiten aikasarjoja käsitteleviin käyttötapauksiin. Jos STAC yleisesti ei ole tuttu, lue STAC käsitteistä tämän sivun lopussa.
   </p>
 
   <h2>Paituli STAC aineistot</h2>
   <p>Paituli STAC sisältää täällä hetkellä ~175 rasteriaineistoa:
 
     <ul>
-      <li><strong>~125 Paitulin aineistoa</strong>. Kaikilla Paitulin aineistoilla on 2 Resurssia - yksi julkinen URL-osoite ja yksi Puhdin paikallinen polku. Puhtin paikallisia polkuja voi ja tulisi käyttää vain, jos työskennellään CSC:n Puhti superkoneella.
+      <li><strong>~125 Paitulin aineistoa</strong>. Kaikilla Paitulin aineistoilla on 2 Resurssia - yksi julkinen URL-osoite ja yksi paikallinen polku CSC:n Puhti superkoneella. Paikallisia polkuja voi ja tulisi käyttää vain, jos työskennellään CSC:n Puhti superkoneella.
       </li>
       <li>ESA:n <a href="http://urn.fi/urn:nbn:fi:fd-e1007ae5-1529-3e5c-8bf2-b218c77e25a5" target="_blank">Sentinel-2-tuotteet</a>,
         prosessoitu tasolle 2A (Surface Reflectance), valikoima pääosin pilvettömiä kuvia Suomesta.
@@ -32,10 +32,10 @@
 
   , katso mitä kokoelmia on saatavilla, etsi tuotteita sekä esikatsele COG-tiedostoja
   <p>
-    STAC:ista datan hakemiseksi ja lataamiseksi on saatavilla useita työkaluja:
+    Datan hakemiseen ja lataamiseen STAC:ista on saatavilla useita työkaluja:
 
     <ul>
-      <li><a href="https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en" target="_blank">STAC Browser </a> sopii parhaiten STAC sisältöihin tutustumisen verkkoselaimella. Se ei vaati asennuksia koneelle. STAC Browser:issa tukee aineistojen hakua otsikon ja kuvauksen mukaan. Lisäksi on mahdollinen datan haku sijainnin ja ajan mukaan. STAC Browseria voidaan käyttää kokoelman tunnisteen ja resurssien nimien löytämiseen muita työkaluja varten.
+      <li><a href="https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en" target="_blank">STAC Browser </a> sopii parhaiten STAC sisältöihin tutustumiseen verkkoselaimella. Se ei vaadi asennuksia koneelle. STAC Browser tukee aineistojen hakua otsikon ja kuvauksen mukaan. Lisäksi on mahdollinen datan haku sijainnin ja ajan mukaan. STAC Browseria voidaan käyttää kokoelman tunnisteen ja resurssien nimien hakuun muita työkaluja varten.
       </li>
       <li> Pythonille, R:lle ja Julialle on kirjastoja STAC-hakuun sekä datan helppoon lataamiseen määriteltyihin datakuutioihin. Nämä soveltuvat parhaiten edistyneempään analyysiin. Työkalut tukevat myös rinnakkaislaskentaa, joten suurten aineistojen käsittely toimii hyvin. CSC on laatinut <strong>esimerkkiskriptejä</strong> <a href="https://www.github.com/csc-training/geocomputing/blob/master/python/STAC" target="_blank">Pythonille</a> ja <a href="https://www.github.com/csc-training/geocomputing/blob/master/R/STAC" target="_blank">R:lle</a>.
       </li>
@@ -71,13 +71,13 @@
   </p>
 
   <p>
-    Etsiessä dataa STAC luetteloista tärkeimmät kriteerit ovat sijainti, aika sekä kokoelman nimi.
-    Tuotteilla voivat olla myös lisätietoja, esimerkiksi kaukokartoituksen optisten kuvien pilvisyyttä, jota voidaan myös sisällyttää hakuehtoihin.
+    Dataa etsiessä STAC luetteloista tärkeimmät kriteerit ovat sijainti, aika sekä kokoelman nimi.
+    Tuotteilla voi olla myös lisätietoja, esimerkiksi kaukokartoituksen optisten kuvien pilvisyys, jota voidaan myös sisällyttää hakuehtoihin.
   </p>
 
 
   <p>
-    Paras tallennusvaihtoehto STAC:ista linkitetylle varsinaiselle datalle on pilvioptimoitu tiedostomuoto: <a href="https://www.cogeo.org/"> Cloud-Optimized GeoTiff (COG)</a> rasteriaineistoille. Pilvioptimoitut tiedostomuodot mahdollistavat aineistojen osittaisen latauksen, että ladataan vain tietty alue tai vain yleistetty versio aineistosta. Myös muita tiedostomuotoja voidaan käyttää, mutta riippuen niiden sisäisistä rakenteista osittainen lataus voi toimia epäoptimaalisesti.
+    Paras tallennusvaihtoehto STAC:ista linkitetylle varsinaiselle datalle on pilvioptimoitu tiedostomuoto: <a href="https://www.cogeo.org/"> Cloud-Optimized GeoTiff (COG)</a> rasteriaineistoille. Pilvioptimoitut tiedostomuodot mahdollistavat aineistojen osittaisen latauksen, niin että ladataan vain tietty alue tai vain yleistetty versio aineistosta. Myös muita tiedostomuotoja voidaan käyttää, mutta osittainen lataus voi toimia epäoptimaalisesti riippuen niiden sisäisistä rakenteista.
   </p>
 
   <p>
