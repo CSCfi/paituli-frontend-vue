@@ -7,8 +7,8 @@ import { APP_SETTINGS } from '@/shared/constants'
 <template>
   <h1>Paitulin aineistojen massalataus HTTPS-, FTP- ja rsync-yhteyksien yli</h1>
   <p>
-    Paitulin <RouterLink to="/download">Lataussivu</RouterLink> mahdollistaa aineistojen latauksen .zip tiedostona, kerralla voi ladata max. 3 Gb. Tämä voi isompien aineistojen osalta olla rajoittavaa.
-    Tämä sivu kuvaa miten ladata isompia aineistoja tiedostoina. Vaihtoehtoisesti isompien aineistojen käyttämiseksi sopivat <RouterLink to="/webservices">OGC API-rajapinnat</RouterLink> tai <RouterLink to="/stac">STAC</RouterLink>.
+    Paitulin <RouterLink to="/download">Lataussivu</RouterLink> mahdollistaa aineistojen latauksen .zip tiedostona. Kerralla voi ladata max. 3 Gb, joka voi isompien aineistojen osalta olla rajoittavaa.
+    Tämä sivu kuvaa miten isompia aineistoja ladataan tiedostoina. Vaihtoehtoisesti isompien aineistojen käyttämiseen sopivat <RouterLink to="/webservices">OGC API-rajapinnat</RouterLink> tai <RouterLink to="/stac">STAC</RouterLink>.
   </p>
 
   <p>Vaihtoehdot isompien aineistojen lataamiseksi:</p>
@@ -36,7 +36,7 @@ import { APP_SETTINGS } from '@/shared/constants'
     </li>
   </ul>
 
-  <p>FTP ja rsync ovat joissakin organisaatioissa rajoitettu pois palomuurin avulla. HTTPS toimii yleensä. </p>
+  <p>FTP ja rsync on joissakin organisaatioissa rajoitettu pois palomuurin avulla. HTTPS toimii yleensä. </p>
 
   <p>Valitse sopiva lataustapa riippuen käyttämästäsi käyttöjärjestelmästä, palomuurin rajoituksista ja lataustoiveista:</p>
 
@@ -58,13 +58,13 @@ import { APP_SETTINGS } from '@/shared/constants'
     </tr>
   </table>
 
-  <p>Jos haluat ladata hakemiston, mutta olet Windows käyttäjä, eikä FTP:n tai rsync:n käyttö ole mahdollista, sitten sopivia työkaluja hakemiston lataamiseksi valitettavasti ei ole olemassa.
-    Siinä tilanteessa suosittelemme, että luot .txt tiedoston, jossa on vain haluamasi hakemiston nimi ja käytät Paituli PowerShell skriptiä hakemiston lataamiseksi. </p>
+  <p>Hakemiston lataaminen Windows käyttäjänä vaatii FTP:n tai rsync:n, niiden lisäksi sopivia työkaluja hakemiston lataamiseksi ei valitettavasti ole olemassa.
+    Tällöin suosittelemme, että luot .txt tiedoston, jossa on vain haluamasi hakemiston nimi ja käytät Paituli PowerShell skriptiä hakemiston lataamiseksi. </p>
 
   <h2>Lataus tiedostolistauksen mukaisesti</h2>
 
   <p>
-    Jos haluat ladata aineistosta vain tiettyjä karttalehtiä, sinun pitää ensin muodostaa tiedostolistaus Paitulin käyttöliittymällä ja sitten ladata tiedostot komentorivityökaluilla.
+    Jos haluat ladata aineistosta vain tiettyjä karttalehtiä, sinun pitää ensin muodostaa tiedostolistaus Paitulin käyttöliittymällä, ja sitten ladata tiedostot komentorivityökaluilla.
 
   </p>
 
@@ -88,14 +88,14 @@ import { APP_SETTINGS } from '@/shared/constants'
 
   <h3>Lataus tiedostolistauksen mukaisesti</h3>
 
-  <p> Valitettavasti graafiset työkalut eivät tue tiedostolistauksen käyttöä, joten tämä on mahdollista vain komentorivityökaluilla.
-    Windows-käyttäjille tarjoamme lataukseen PowerShell skrtiptin.
-    Linux- ja Mac-käyttäjät voivat käyttää lataukseen <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget" target="_blank">wget</a> tai <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync" target="_blank">rsync </a> ohjelmia, jotka yleensä ovat oletuksena saatavilla.
+  <p> Graafiset työkalut eivät valitettavasti tue tiedostolistauksen käyttöä, joten tämä on mahdollista vain komentorivityökaluilla.
+    Windows-käyttäjille tarjoamme lataukseen PowerShell skriptin.
+    Linux- ja Mac-käyttäjät voivat käyttää lataukseen <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget" target="_blank">wget</a> tai <a href="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync" target="_blank">rsync </a> ohjelmia, jotka ovat yleensä oletuksena saatavilla.
   </p>
 
   <h4>Paituli PowerShell skripti Windowsille</h4>
 
-  <p>Windows-käyttäjille tarjoamme PowerShell skrtiptin lataukseen HTTPS:n kautta. Tämä toimii AINOASTAAN Windowsilla.
+  <p>Windows-käyttäjille tarjoamme PowerShell skriptin lataukseen HTTPS:n kautta. Tämä toimii AINOASTAAN Windowsilla.
     Skripti luo uusia kansioita säilyttäen alkuperäisen kansiorakenteen sekä ohittaa jo ladatut tiedostot.
   </p>
 
@@ -170,7 +170,7 @@ import { APP_SETTINGS } from '@/shared/constants'
     <li>Jos käyttäjätunnusta tai salasanaa kysytään, jätä kenttä tyhjäksi.</li>
     <li>Valitse oikealla hakemisto, mihin tarvitsemasi aineisto on tallennettu.</li>
     <li>Valitse vasemmalla hakemisto, mihin haluat ladata tiedostot.</li>
-    <li>Vedää tiedostoja tai hakemistoja oikealta vasemmalle, että niiden lataus käynnistyisi. </li>
+    <li>Vedä tiedostoja tai hakemistoja oikealta vasemmalle, jotta niiden lataus käynnistyisi. </li>
   </ol>
 
   <h4>rsync</h4>
@@ -193,7 +193,7 @@ import { APP_SETTINGS } from '@/shared/constants'
   <h4>wget</h4>
 
   <p>
-    Joissakin organisaatioissa FTP ja rsync ovat estetty palomuurilla, silloin käytä HTTPS-latausta wget:in kanssa. wget:llä on paljon asetuksia, joista yksi toimiva tapa on seuraava:
+    Joissakin organisaatioissa FTP ja rsync on estetty palomuurilla. Käytä silloin HTTPS-latausta wget:in kanssa. wget:llä on paljon asetuksia, joista yksi toimiva tapa on seuraava:
   </p>
 
   <CodeBlock
@@ -211,14 +211,14 @@ import { APP_SETTINGS } from '@/shared/constants'
     <li>-r, lataa rekursiivisesti alihakemistot</li>
     <li>-l inf, miten syvälle rekursiivinen lataus lähtee, oletuksena 5, tässä
       laitettu loputtomaksi</li>
-    <li>-N, vain päivitys, jo olemassa olevia tiedostoja ei ladata uudestaan, tämä on
-      tärkeä, jos lataus keskeytyy tai jos päivitetään jo aikaisemmin ladattua
+    <li>-N, vain päivitys, jo olemassa olevia tiedostoja ei ladata uudestaan. Tämä on
+      tärkeää, jos lataus keskeytyy tai jos päivitetään jo aikaisemmin ladattua
       aineistoa</li>
     <li>-np, estää ylähakemistojen latautumisen</li>
     <li>-nH, poistaa palvelimen nimen</li>
     <li>-x, kopioi hakemistorakenteen</li>
     <li>-cuts-dirs, leikkaa hakemistoja polun alusta, että hakemistopuu ei olisi liian
-      pitkä, säädä tätä arvoa tarpeen mukaan</li>
+      pitkä. Säädä tätä arvoa tarpeen mukaan.</li>
     <li>-c, jatkaa katkennutta latausta</li>
     <li>
       Jos mahdollista, käytä ftp palvelua, käyttämällä HTTPS protokollaa, saat
