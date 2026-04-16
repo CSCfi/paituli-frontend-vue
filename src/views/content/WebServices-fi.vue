@@ -9,7 +9,7 @@ import { URLS } from '@/shared/constants'
     Monet Paitulin aineistot ovat saatavilla OGC:n mukaisista
     rajapintapalveluista: WMS, WCS, WFS, WMTS. Myös uudet OGC API standardit ovat käytettävissä.
     OGC rajapintapalvelut mahdollistavat datan latauksen suoraan netti- tai työpöytäsovellukseen,
-    tai aineiston analyysiskriptiin, näin että dataa ei ladata ensin paikalliselle koneelle tiedostona.
+    tai aineiston analyysiskriptiin, jolloin dataa ei ladata ensin paikalliselle koneelle tiedostona.
     Tämä mahdollistaa aina ajan tasalla olevan datan käytön nopeasti ja helposti.
     Yhteyden muodostamiseksi tarvitaan palvelun URL osoite.
     Yhteyden muodostamisen jälkeen käyttäjälle listataan kaikki
@@ -17,7 +17,7 @@ import { URLS } from '@/shared/constants'
   </p>
   <h4>Saatavilla olevat aineistot</h4>
 
-  <p> Paituli tarjoaa yli 600 aineistoa OGC rajapintojen kautta. Aineistojen tarkat nimet löytyvät <a href="download.html">Latauspalvelusta</a>: valitse aineisto ja sitten klikkaa Rajapinnat.
+  <p> Paituli tarjoaa yli 600 aineistoa OGC rajapintojen kautta. Aineistojen tarkat nimet löytyvät <a href="download.html">Latauspalvelusta</a>: valitse aineisto ja sen jälkeen klikkaa Rajapinnat.
 
     <ul>
       <li>
@@ -68,7 +68,7 @@ import { URLS } from '@/shared/constants'
   <p>
     Uudet <a href="https://ogcapi.ogc.org/">OGC API standardit</a>
     ovat vielä kehittymässä. Paitulissa OGC API rajapintojen saatavuus
-    riippuu GeoServerin tarjottavista mahdollisuuksista.
+    riippuu GeoServeriin tarjottavista mahdollisuuksista.
   </p>
 
   <c-table>
@@ -107,7 +107,7 @@ import { URLS } from '@/shared/constants'
 
   <h3>Käyttövinkkejä</h3>
   <p>
-    WMTS-palvelussa karttatiilet ovat saatavilla vain etukäteen määritetyissä mittakaavoissa ja laajuuksissa. WMS-palvelussa kartan koko ja mittakaava voidaan valita vapaasti. WMTS-palvelu on yleensä nopeampi, sillä karttatiilet ovat usein jo palvelun välimuistissa valmiina. Karttatasosta voidaan pyytä myös vain osa käyttämällä suodattimia, esim. BBOX määrittele pyydettävän maantietteellisen alueen.
+    WMTS-palvelussa karttatiilet ovat saatavilla vain etukäteen määritetyissä mittakaavoissa ja laajuuksissa. WMS-palvelussa kartan koko ja mittakaava voidaan valita vapaasti. WMTS-palvelu on yleensä nopeampi, sillä karttatiilet ovat usein jo palvelun välimuistissa valmiina. Karttatasosta voidaan pyytää myös vain osa käyttämällä suodattimia, esim. BBOX määrittelee pyydettävän maantieteellisen alueen.
   </p>
 
   <p>
