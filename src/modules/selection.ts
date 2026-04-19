@@ -12,6 +12,7 @@ import { drawBoundingBox, indexSource } from '@/modules/layers'
 import { currentDataset } from './datasets'
 import { toolbarMode } from './controls'
 import type { Geometry } from 'ol/geom'
+import { APP_SETTINGS } from '@/shared/constants'
 
 
 // Selected features managed by OL map element
@@ -109,7 +110,7 @@ export function selectSheetsByExtent(
     getArea(selection) > getArea(extent) ? selection : extent
   requestAnimationFrame(() => {
     mapView.fit(biggerExtent, {
-      padding: [150, 40, 40, 40],
+      padding: APP_SETTINGS.MAP_DEFAULT_PADDING,
       duration: 1500,
     })
   })

@@ -23,12 +23,14 @@ function zoom(amount: number) {
 }
 
 function resetZoom() {
-  props.map.getView().animate({
-    center: APP_SETTINGS.MAP_DEFAULT_CENTER,
-    zoom: APP_SETTINGS.MAP_DEFAULT_ZOOM,
+  mapView.value.fit(APP_SETTINGS.MAP_DEFAULT_EXTENT, {
+    padding: APP_SETTINGS.MAP_DEFAULT_PADDING,
     duration: 1000,
   })
 }
+
+// Run now to ensure nice initial zoom
+resetZoom();
 
 const showModal = ref(false)
 
