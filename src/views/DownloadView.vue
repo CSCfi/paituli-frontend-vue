@@ -148,7 +148,7 @@ c-tabs {
   impossible, so we make the whole thing scroll
   */
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .loading {
