@@ -167,7 +167,7 @@ const datasetCount = computed(() => {
         <c-row align="center" justify="space-between">
           {{ producer }}
           <c-tag flat>
-            {{ datasetCount[producer] }} {{ t('labels.data', datasetCount[producer]) }}
+            {{ datasetCount[producer] }}
           </c-tag>
         </c-row>
       </c-option>
