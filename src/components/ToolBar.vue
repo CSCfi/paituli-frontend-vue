@@ -6,7 +6,6 @@ import {
   mdiCursorDefaultOutline,
   mdiCursorMove,
   mdiFileUploadOutline,
-  mdiMagnifyPlus,
   mdiShapePolygonPlus,
   mdiTarget,
 } from '@mdi/js';
@@ -118,6 +117,14 @@ const zoomToData = () => {
   })
 }
 
+const popAlert = ref(false)
+function doPopAlert() {
+  popAlert.value = true
+  setTimeout(() => popAlert.value = false, 200)
+}
+
+defineExpose({ doPopAlert })
+
 </script>
 
 <template>
@@ -202,13 +209,9 @@ const zoomToData = () => {
       <c-tab-item value="inspect">
         <div id="inspect-warning" v-if="dataHidden">
           <c-alert :type="CAlertType.Info">
-            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-            <div slot="title">{{ t("inspect.zoom.title") }}</div>
-            {{ t("inspect.zoom.message") }}
-            <c-link id="zoom" href="#" @click.prevent='zoomToData'>
-              <c-icon :path="mdiMagnifyPlus"/>
-              {{ t("inspect.zoom.button") }}
-            </c-link>
+            <span :class="{ pop: popAlert }">
+              {{ t("inspect.zoom.message") }}
+            </span>
           </c-alert>
         </div>
       </c-tab-item>
@@ -355,6 +358,16 @@ c-link#zoom {
 #inspect-warning {
   background-color: white;
   border-radius: 10px;
+}
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.pop {
+  animation: pop 180ms ease-out;
 }
 
 </style>

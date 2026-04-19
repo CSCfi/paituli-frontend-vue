@@ -136,13 +136,19 @@ const closePopup = () => {
 }
 
 // Displays feature info when clicking features in the inspect mode
+const toolBarRef = ref()
 const handleClickedFeature = async (e: unknown) => {
   const event = e as MapBrowserEvent<PointerEvent> // OL typing bug
   if (event.dragging) return
 
   // We only care about these events if we are in feature info mode
-  // and the data layer is visible
-  if (toolbarMode.value != 'inspect' || dataHidden.value) return
+  if (toolbarMode.value != 'inspect') return
+
+  // If the data is not visible we ensure user sees the warning
+  if (dataHidden.value) {
+    toolBarRef.value.doPopAlert()
+    return
+  }
 
   const mapEl = olMapRef.value!.map.getTargetElement()
   const normalCursor = mapEl.style.cursor
@@ -277,7 +283,10 @@ onMounted(() => {
         <ButtonColumn id="button-column" :map="(olMapRef.map as OlMap)" />
         <div class="tools-flex">
           <HelpBox id="help" />
-          <ToolBar id="toolbar" :map="(olMapRef.map as OlMap)" :compact="horizontalSpace < 750" />
+          <ToolBar id="toolbar"
+                   ref="toolBarRef"
+                   :map="(olMapRef.map as OlMap)"
+                   :compact="horizontalSpace < 750" />
           <SearchBar id="search" :map="(olMapRef.map as OlMap)" :compact="horizontalSpace < 900" />
         </div>
       </div>
