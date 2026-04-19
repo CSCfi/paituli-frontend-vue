@@ -49,7 +49,7 @@ onMounted(() => {
         </c-alert>
         <div v-else class="grow">
           <c-side-navigation-title>{{ t("titles.dataset") }}</c-side-navigation-title>
-          <DatasetButtons :compact="true" />
+          <DatasetButtons :showDownload="false" />
           <DownloadSelect />
         </div>
       </div>
@@ -74,8 +74,7 @@ onMounted(() => {
               {{ t("suggestion") }}
             </c-alert>
             <div v-else>
-              <c-side-navigation-title>{{ t("titles.dataset") }}</c-side-navigation-title>
-              <DatasetButtons :compact="false" />
+              <DatasetButtons :showDownload="true" />
             </div>
           </c-tab-item>
           <c-tab-item value="download">
