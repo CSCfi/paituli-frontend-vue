@@ -42,7 +42,6 @@ async function loadMetadata() {
 </script>
 
 <template>
-
   <c-modal v-model="showModal"
            v-control
            dismissable
@@ -178,7 +177,7 @@ div#etsin {
   }
 }
 
-div#meta {
+c-card-content {
   max-height: 500px;
   overflow-y: auto;
 }
