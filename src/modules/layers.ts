@@ -16,7 +16,7 @@ import { Stroke, Style } from 'ol/style'
 
 import { LAYER, URLS } from '@/shared/constants'
 import { currentDataset } from '@/modules/datasets'
-import type { ImageTile } from 'ol'
+import type { ImageTile, Tile } from 'ol'
 import { currentLocale } from './locale'
 import { mapViewResolution } from './controls'
 
@@ -70,21 +70,24 @@ export const dataSource = computed(() => {
     style: 'default',
     matrixSet: 'EPSG:3857',
 
-    // Set a temporary loading image while loading the real image
-    // in the background. After that we request a redraw to display it
-    tileLoadFunction: (tile, url) => {
-      const loader = new Image()
-      loader.src = url
-      const target = (tile as ImageTile).getImage() as HTMLImageElement
-      target.src = `loading_tile_${currentLocale.value}.png`
-      loader.onerror = () => target.src = ''
-      loader.onload = () => {
-        target.src = url
-        tileLoadCallback.value?.()
-      }
-    },
+    // Disabling this to investigate some tiles failing to load
+    //tileLoadFunction: dataSourceTileLoadFunction
   })
 })
+
+// Set a temporary loading image while loading the real image
+// in the background. After that we request a redraw to display it
+const dataSourceTileLoadFunction = (tile: Tile, url: string) => {
+  const loader = new Image()
+  loader.src = url
+  const target = (tile as ImageTile).getImage() as HTMLImageElement
+  target.src = `loading_tile_${currentLocale.value}.png`
+  loader.onerror = () => target.src = ''
+  loader.onload = () => {
+    target.src = url
+    tileLoadCallback.value?.()
+  }
+}
 
 // A callback for source redraws upon tile loading
 export const tileLoadCallback = ref<() => void>()
