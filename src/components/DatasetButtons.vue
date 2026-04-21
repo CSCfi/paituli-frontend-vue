@@ -29,15 +29,15 @@ const servicesModal = ref()
         v-tooltip="t('info.tooltip')"
         outlined
         @click="infoModal?.open()">
-        {{ t("info.label") }}
         <c-icon :path="mdiInformationVariantCircleOutline"></c-icon>
+        {{ t("info.label") }}
       </c-button>
       <c-button
         outlined
         v-tooltip="t('apis.tooltip')"
         @click="servicesModal.open('FileTransferTab')">
-        {{ t("apis.label") }}
         <c-icon :path="mdiCloudDownloadOutline"></c-icon>
+        {{ t("apis.label") }}
       </c-button>
     </div>
     <ServicesModal ref="servicesModal"/>

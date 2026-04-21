@@ -142,22 +142,24 @@ defineExpose({ doPopAlert })
         value="move"
         v-help="t('move.help')"
         v-tooltip="t('move.tooltip')">
-        {{ t("move.label") }}<c-icon :path="mdiCursorMove"/>
+        <c-icon :path="mdiCursorMove"/>
+        {{ t("move.label") }}
       </c-button>
       <c-button
         value="select"
         :disabled="selectDisabled"
         v-help="`#${selectMode}-help`"
         v-tooltip="!autoSelectSheets ? t('select.tooltip') : t('select.disabled')">
-        {{ t("select.label") }}
         <c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
+        {{ t("select.label") }}
       </c-button>
       <c-button
         value="inspect"
         v-help="t('inspect.help')"
         :disabled="inspectDisabled"
         v-tooltip="dataSource ? t('inspect.tooltip') : t('inspect.disabled')">
-        {{ t("inspect.label") }}<c-icon :path="mdiTarget"/>
+        <c-icon :path="mdiTarget"/>
+        {{ t("inspect.label") }}
       </c-button>
     </c-tab-buttons>
     <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
