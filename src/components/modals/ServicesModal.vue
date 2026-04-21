@@ -7,6 +7,14 @@ import { currentDataset, hasRasterData, hasVectorData } from '@/modules/datasets
 import ServicesModalRow from './ServicesModalRow.vue';
 import AppLink from '../AppLink.vue';
 
+
+import {
+  mdiFileDownloadOutline,
+  mdiFolderMarkerOutline,
+  mdiInformationVariantCircle,
+  mdiToyBrickMarker,
+  mdiToyBrickMarkerOutline } from '@mdi/js'
+
 const { t } = useI18n()
 
 type ModalTab = 'FileTransferTab' | 'STACTab' | 'StableOGCTab' | 'NewOGCTab';
@@ -51,191 +59,193 @@ const scaleText = computed(() => {
         {{ t("title") }}
       </c-card-title>
       <c-card-content>
-        <strong>{{ currentDataset.name }} - {{ currentDataset.org }}</strong>
+        <div>
+          <strong>{{ currentDataset.name }} - {{ currentDataset.org }}</strong>
 
-        <c-tabs v-model="modalTab" v-control>
-          <c-tab value="FileTransferTab">{{ t("tabs.file_transfer") }}</c-tab>
-          <c-tab value="STACTab">{{ t("tabs.stac") }}</c-tab>
-          <c-tab value="StableOGCTab">{{ t("tabs.stable_ogc") }}</c-tab>
-          <c-tab value="NewOGCTab">{{ t("tabs.new_ogc") }}</c-tab>
+          <c-tabs v-model="modalTab" v-control>
+            <c-tab value="FileTransferTab">
+              <c-icon :path="mdiFileDownloadOutline" />
+              {{ t("tabs.file_transfer") }}
+            </c-tab>
+            <c-tab value="STACTab" :disabled="!currentDataset.stac_id">
+              <c-icon :path="mdiFolderMarkerOutline" />
+              {{ t("tabs.stac") }}
+            </c-tab>
+            <c-tab value="StableOGCTab" :disabled="!currentDataset.data_url">
+              <c-icon :path="mdiToyBrickMarkerOutline" />
+              {{ t("tabs.stable_ogc") }}
+            </c-tab>
+            <c-tab value="NewOGCTab" :disabled="!currentDataset.data_url">
+              <c-icon :path="mdiToyBrickMarker" />
+              {{ t("tabs.new_ogc") }}
+            </c-tab>
 
-          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <c-tab-items slot="items">
-            <c-tab-item value="FileTransferTab">
-              <div v-if="currentDataset.funet">
-                <c-table>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>{{ t("protocol") }}</th>
-                        <th>URL</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ServicesModalRow
-                        label="HTTP"
-                        :show-open="true"
-                        :text="URLS.HTTP_LINKS_BASE + currentDataset.funet"/>
-                      <ServicesModalRow
-                        label="FTP"
-                        :text="URLS.FTP_LINKS_BASE + currentDataset.funet"/>
-                      <ServicesModalRow
-                        label="rsync"
-                        :text="URLS.RSYNC_LINKS_BASE + currentDataset.funet"/>
-                    </tbody>
-                  </table>
-                </c-table>
-                <p>
-                  <AppLink
-                    new-tab
-                    to="https://docs.csc.fi/data/datasets/spatial-data-in-csc-computing-env/">
-                    {{ t("file_transfer.hpc.title") }}
-                  </AppLink>
+            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+            <c-tab-items slot="items">
+              <c-tab-item value="FileTransferTab">
+                <div v-if="currentDataset.funet">
+                  <c-table>
+                    <table>
+                      <tbody>
+                        <ServicesModalRow
+                          label="HTTP"
+                          :show-open="true"
+                          :text="URLS.HTTP_LINKS_BASE + currentDataset.funet"/>
+                        <ServicesModalRow
+                          label="FTP"
+                          :text="URLS.FTP_LINKS_BASE + currentDataset.funet"/>
+                        <ServicesModalRow
+                          label="rsync"
+                          :text="URLS.RSYNC_LINKS_BASE + currentDataset.funet"/>
+                      </tbody>
+                    </table>
+                  </c-table>
+                  <p>
+                    <AppLink
+                      new-tab
+                      to="https://docs.csc.fi/data/datasets/spatial-data-in-csc-computing-env/">
+                      {{ t("file_transfer.hpc.title") }}
+                    </AppLink>
+                  </p>
+                  <c-table>
+                    <table>
+                      <thead>
+                      </thead>
+                      <tbody>
+                        <ServicesModalRow
+                          :label="t('file_transfer.hpc.label')"
+                          :text="URLS.PUHTI_GEO_BASE + currentDataset.funet"/>
+                      </tbody>
+                    </table>
+                  </c-table>
+                </div>
+                <div v-else>
+                  <p>{{ t('file_transfer.unavailable') }}</p>
+                </div>
+              </c-tab-item>
+
+              <c-tab-item value="STACTab">
+                <div v-if="currentDataset.stac_id">
+                  <p>
+                    <AppLink
+                      new-tab
+                      :to="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id">
+                      {{ t("stac.link") }}
+                    </AppLink>
+                  </p>
+                  <c-table>
+                    <table>
+                      <tbody>
+                        <ServicesModalRow
+                          :label="t('endpoint')"
+                          :show-open="true"
+                          :text="URLS.STAC_PAITULI_BASE" />
+                        <ServicesModalRow
+                          :label="t('stac.collection')"
+                          :text="currentDataset.stac_id" />
+                      </tbody>
+                    </table>
+                  </c-table>
+                </div>
+                <div v-else>
+                  <p>{{ t("stac.not_catalogued") }}</p>
+                </div>
+              </c-tab-item>
+
+              <c-tab-item value="StableOGCTab">
+                <p v-if="!currentDataset.data_url">
+                  {{ t("apis.not_provided") }}
                 </p>
-                <c-table>
-                  <table>
-                    <thead>
-                    </thead>
-                    <tbody>
-                      <ServicesModalRow
-                        :label="t('file_transfer.hpc.label')"
-                        :text="URLS.PUHTI_GEO_BASE + currentDataset.funet"/>
-                    </tbody>
-                  </table>
-                </c-table>
-              </div>
-              <div v-else>
-                <p>{{ t('file_transfer.unavailable') }}</p>
-              </div>
-            </c-tab-item>
+                <div v-else>
+                  <c-table>
+                    <table>
+                      <tbody>
+                        <ServicesModalRow
+                          label="WMS"
+                          :text="URLS.WMS_PAITULI_BASE" />
+                        <ServicesModalRow
+                          label="WMTS"
+                          :text="URLS.WMTS_PAITULI_BASE_GWC" />
+                        <ServicesModalRow
+                          label="WFS"
+                          :unavailable="!hasVectorData(currentDataset)"
+                          :text="URLS.WFS_PAITULI_BASE" />
+                        <ServicesModalRow
+                          label="WCS"
+                          :unavailable="!hasRasterData(currentDataset)"
+                          :text="URLS.WCS_PAITULI_BASE" />
+                      </tbody>
+                    </table>
+                  </c-table>
+                  <p class="inline-flex">
+                    <c-icon :path="mdiInformationVariantCircle" size="18px" />
+                    {{ t("apis.instruction") }}
+                  </p>
+                  <c-table>
+                    <table>
+                      <tbody>
+                        <ServicesModalRow
+                          :label="t('apis.layer')"
+                          :text="currentDataset.data_url" />
+                        <ServicesModalRow
+                          :label="t('apis.scale')"
+                          :show-copy="false"
+                          :text="scaleText" />
+                      </tbody>
+                    </table>
+                  </c-table>
+                </div>
+              </c-tab-item>
 
-            <c-tab-item value="STACTab">
-              <div v-if="currentDataset.stac_id">
-                <p>
-                  <AppLink
-                    new-tab
-                    :to="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id">
-                    {{ t("stac.link") }}
-                  </AppLink>
+              <c-tab-item value="NewOGCTab">
+                <p v-if="!currentDataset.data_url">
+                  {{ t("apis.not_provided") }}
                 </p>
-                <c-table>
-                  <table>
-                    <tbody>
-                      <ServicesModalRow
-                        :label="t('endpoint')"
-                        :show-open="true"
-                        :text="URLS.STAC_PAITULI_BASE" />
-                      <ServicesModalRow
-                        :label="t('stac.collection')"
-                        :text="currentDataset.stac_id" />
-                    </tbody>
-                  </table>
-                </c-table>
-              </div>
-              <div v-else>
-                <p>{{ t("stac.not_catalogued") }}</p>
-              </div>
-            </c-tab-item>
+                <div v-else>
+                  <c-table>
+                    <table>
+                      <tbody>
+                        <ServicesModalRow
+                          label="Maps"
+                          :text="URLS.OGC_MAPS_PAITULI_BASE" />
+                        <ServicesModalRow
+                          label="Tiles"
+                          :text="URLS.OGC_TILES_PAITULI_BASE" />
+                        <ServicesModalRow
+                          label="Features"
+                          :unavailable="!hasVectorData(currentDataset)"
+                          :text="URLS.OGC_FEATURES_PAITULI_BASE" />
+                        <ServicesModalRow
+                          label="Coverages"
+                          :unavailable="!hasRasterData(currentDataset)"
+                          :text="URLS.OGC_COVERAGES_PAITULI_BASE" />
+                      </tbody>
+                    </table>
+                  </c-table>
+                  <p class="inline-flex">
+                    <c-icon :path="mdiInformationVariantCircle" size="18px" />
+                    {{ t("apis.instruction") }}
+                  </p>
+                  <c-table>
+                    <table>
+                      <tbody>
+                        <ServicesModalRow
+                          :label="t('apis.layer')"
+                          :text="currentDataset.data_url" />
+                        <ServicesModalRow
+                          :label="t('apis.scale')"
+                          :show-copy="false"
+                          :text="scaleText" />
+                      </tbody>
+                    </table>
+                  </c-table>
+                </div>
 
-            <c-tab-item value="StableOGCTab">
-              <p v-if="!currentDataset.data_url">
-                {{ t("apis.not_provided") }}
-              </p>
-              <div v-else>
-                <c-table>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>{{ t("api") }}</th>
-                        <th>{{ t("endpoint") }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ServicesModalRow
-                        label="WMS"
-                        :text="URLS.WMS_PAITULI_BASE" />
-                      <ServicesModalRow
-                        label="WMTS"
-                        :text="URLS.WMTS_PAITULI_BASE_GWC" />
-                      <ServicesModalRow
-                        label="WFS"
-                        :unavailable="!hasVectorData(currentDataset)"
-                        :text="URLS.WFS_PAITULI_BASE" />
-                      <ServicesModalRow
-                        label="WCS"
-                        :unavailable="!hasRasterData(currentDataset)"
-                        :text="URLS.WCS_PAITULI_BASE" />
-                    </tbody>
-                  </table>
-                </c-table>
-                <p>{{ t("apis.instruction") }}</p>
-                <c-table>
-                  <table>
-                    <tbody>
-                      <ServicesModalRow
-                        :label="t('apis.layer')"
-                        :text="currentDataset.data_url" />
-                      <ServicesModalRow
-                        :label="t('apis.scale')"
-                        :show-copy="false"
-                        :text="scaleText" />
-                    </tbody>
-                  </table>
-                </c-table>
-              </div>
-            </c-tab-item>
+              </c-tab-item>
 
-            <c-tab-item value="NewOGCTab">
-              <p v-if="!currentDataset.data_url">
-                {{ t("apis.not_provided") }}
-              </p>
-              <div v-else>
-                <c-table>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>{{ t("api") }}</th>
-                        <th>{{ t("endpoint") }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ServicesModalRow
-                        label="Maps"
-                        :text="URLS.OGC_MAPS_PAITULI_BASE" />
-                      <ServicesModalRow
-                        label="Tiles"
-                        :text="URLS.OGC_TILES_PAITULI_BASE" />
-                      <ServicesModalRow
-                        label="Features"
-                        :unavailable="!hasVectorData(currentDataset)"
-                        :text="URLS.OGC_FEATURES_PAITULI_BASE" />
-                      <ServicesModalRow
-                        label="Coverages"
-                        :unavailable="!hasRasterData(currentDataset)"
-                        :text="URLS.OGC_COVERAGES_PAITULI_BASE" />
-                    </tbody>
-                  </table>
-                </c-table>
-                <p>{{ t("apis.instruction") }}</p>
-                <c-table>
-                  <table>
-                    <tbody>
-                      <ServicesModalRow
-                        :label="t('apis.layer')"
-                        :text="currentDataset.data_url" />
-                      <ServicesModalRow
-                        :label="t('apis.scale')"
-                        :show-copy="false"
-                        :text="scaleText" />
-                    </tbody>
-                  </table>
-                </c-table>
-              </div>
-
-            </c-tab-item>
-
-          </c-tab-items>
-        </c-tabs>
+            </c-tab-items>
+          </c-tabs>
+        </div>
 
       </c-card-content>
 
@@ -280,7 +290,7 @@ const scaleText = computed(() => {
       "not_catalogued": "This dataset is not in Paituli STAC.",
     },
     "apis": {
-      "instruction": "To use an API, copy an endpoint above and the layer name below into your application of choice. Note that the supported APIs vary between datasets, mainly depending on the data type and format.",
+      "instruction": "To use an API, copy an endpoint above and the layer name below into your application of choice.",
       "layer": "Layer",
       "scale": "Smallest visible scale",
       "not_provided": "This dataset is not available via OGC APIs.",
@@ -313,7 +323,7 @@ const scaleText = computed(() => {
       "not_catalogued": "Tämä aineisto ei ole Paituli STAC:ssa.",
     },
     "apis": {
-      "instruction": "Rajapinnan käyttämiseksi kopioi yllä oleva osoite sekä alta karttatason nimi valitsemaasi sovellukseen. Huomaa, että tuettujen rajapintojen valikoima vaihtelee aineistoittain, pääasiassa aineiston tyypin ja tiedostomuodon mukaan.",
+      "instruction": "Rajapinnan käyttämiseksi kopioi yllä oleva osoite sekä alta karttatason nimi valitsemaasi sovellukseen.",
       "layer": "Karttataso",
       "scale": "Pienin näkyvä mittakaava",
       "not_provided": "Tämä aineisto ei ole saatavilla OGC API -rajapintojen yli.",
@@ -339,6 +349,23 @@ c-button#help {
   --c-button-background-color-hover: var(--c-tertiary-500);
   c-icon {
     --c-icon-color: var(--c-white);
+  }
+}
+c-card {
+  --c-card-gap: 1.25em;
+}
+strong {
+  position: relative;
+  bottom: .5em;
+}
+c-icon {
+  margin-right: .5em;
+}
+.inline-flex {
+  display: inline-flex;
+  align-items: center;
+  c-icon {
+    --c-icon-color: var(--c-info-500)
   }
 }
 </style>

@@ -93,4 +93,7 @@ table.c-table .unavailable td
 {
   color: var(--c-tertiary-300);
 }
+table.c-table td {
+  padding: .75em;
+}
 </style>
