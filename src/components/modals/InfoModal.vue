@@ -177,8 +177,11 @@ div#etsin {
   }
 }
 
+c-card {
+  max-height: 95vh;
+}
+
 c-card-content {
-  max-height: 500px;
   overflow-y: auto;
 }
 
