@@ -12,7 +12,7 @@ import { URLS } from '@/shared/constants';
 import { useToasts } from '@/composables/toasts';
 import { CToastType } from '@cscfi/csc-ui';
 import { selectedOlFeatures, selectFeature, selectSheetsByExtent } from '@/modules/selection';
-import { indexSource } from '@/modules/layers';
+import { clearBoundingBox, indexSource } from '@/modules/layers';
 import { vHelp } from '@/directives/help';
 import HelpContent from './HelpContent.vue';
 import { toolbarMode } from '@/modules/controls';
@@ -85,11 +85,13 @@ async function search() {
 // Map sheet selection by search string or extent
 function selectFeatureSearch(query: string, bbox?: Array<number>) {
   if (!indexSource.value || !query) return;
+
+  // Clear previous selection and highlights
   selectedOlFeatures.clear();
-  const features = indexSource.value.getFeatures();
+  clearBoundingBox()
 
   // First try sheets by label
-  const matches = features.filter((f) => {
+  const matches = indexSource.value.getFeatures().filter((f) => {
     const name = (f.get('label') || f.get('name') || '').toLowerCase();
     return name.includes(query.toLowerCase());
   })

@@ -131,15 +131,19 @@ export const highlightSource = new VectorSource<Feature<Geometry>>({
 })
 
 // Uses the highlight source to display an extent polygon
-export function drawBoundingBox(extent: Extent) {
+export function drawBoundingBox(extent: Extent, clearPrevious = true) {
+  if (clearPrevious) clearBoundingBox()
   const feature = new Feature({ geometry: fromExtent(extent) })
   feature.setStyle(new Style({
     stroke: new Stroke({
       color: 'red', width: 2
     })
   }))
-  highlightSource.clear()
   highlightSource.addFeature(feature)
+}
+
+export function clearBoundingBox() {
+  highlightSource.clear()
 }
 
 // Auxiliary WMS source for feature info queries
