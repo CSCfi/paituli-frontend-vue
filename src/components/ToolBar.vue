@@ -14,7 +14,7 @@ import OlMap from 'ol/Map.js'
 import DragPan from 'ol/interaction/DragPan'
 import { useI18n } from 'vue-i18n';
 
-import { dataHidden, dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
+import { clearBoundingBox, dataHidden, dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
 import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, mapViewResolution, menuMode, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
@@ -91,6 +91,8 @@ watch(selectMode, (newMode, oldMode) => {
     selectedOlFeatures.clear()
     selectMode.value = oldMode
   }
+  // We always clear map (search) highlights when mode changes
+  clearBoundingBox()
 })
 
 // Seeminly this interaction is not accessible as a vue3-ol component,
