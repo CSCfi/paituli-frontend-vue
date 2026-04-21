@@ -281,15 +281,17 @@ function injectTooltip() {
           <div slot="title">
             {{ t("summary.header") }}
           </div>
-          <p>{{ downloadDescription }}</p>
-          <div class="zip-size-warning" v-if="zipDownloadDisabled">
-            {{ t("summary.size_warning", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
-          </div>
-          <div v-else-if="downloadType == 'ZIP'">
-            {{ t("summary.info_zip", { size: downloadSize }) }}
-          </div>
-          <div v-else>
-            {{ t("summary.info_list") }}
+          <div>
+            <p>{{ downloadDescription }}</p>
+            <div class="zip-size-warning" v-if="zipDownloadDisabled">
+              {{ t("summary.size_warning", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
+            </div>
+            <div v-else-if="downloadType == 'ZIP'">
+              {{ t("summary.info_zip", { size: downloadSize }) }}
+            </div>
+            <div v-else>
+              {{ t("summary.info_list") }}
+            </div>
           </div>
         </c-alert>
 
@@ -297,6 +299,7 @@ function injectTooltip() {
         <div class="form-group" v-if="licenseUrl">
           <c-checkbox v-control
                       v-model="licenseCheckbox"
+                      :hide-details="!licenseError"
                       :valid="!licenseError"
                       required>
             {{ t("license_agree") }}
@@ -401,20 +404,8 @@ function injectTooltip() {
 
 <style scoped>
 
-.input {
-  display: block;
-  width: 100%;
-  padding: 0.5em;
-  margin-top: 0.25rem;
-}
 .zip-size-warning {
   color: var(--c-warning-600);
-}
-.summary {
-  background-color: var(--c-tertiary-100);
-  padding: 0.5em;
-  border-radius: 4px;
-  white-space: pre-line;
 }
 c-button {
   --c-button-outlined-background-color: unset !important;
@@ -440,6 +431,7 @@ c-link {
 }
 c-alert p {
   white-space: pre-wrap;
+  margin: 0 0 .5em 0;
 }
 #group-header {
   display: inline-flex;
@@ -453,5 +445,8 @@ c-alert p {
   c-icon {
     --c-icon-color: var(--c-tertiary-400);
   }
+}
+c-card {
+  --c-card-gap: 1.25em;
 }
 </style>
