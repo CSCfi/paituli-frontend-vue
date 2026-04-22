@@ -363,7 +363,7 @@ onMounted(() => {
         <c-alert>
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <div slot="title">{{ t('feature') }}</div>
-          <c-icon-button size="x-small" @click="closePopup">
+          <c-icon-button size="x-small" @mousedown.prevent @click="closePopup">
             <c-icon :path="mdiClose" />
           </c-icon-button>
           <div class="content">

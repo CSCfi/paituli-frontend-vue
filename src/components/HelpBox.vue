@@ -28,7 +28,9 @@ watch(helpText, (newText: string | undefined) => {
       <h3>{{ t('help.header') }}</h3>
       <p v-if="helpText" v-html="helpText"></p>
       <div class="close">
-        <c-icon-button size="small" @click="helpVisible = false">
+        <c-icon-button size="small"
+                       @mousedown.prevent
+                       @click="helpVisible = false">
           <c-icon size="20px" :path="mdiClose"/>
         </c-icon-button>
       </div>
