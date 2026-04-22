@@ -67,7 +67,10 @@ onMounted(async () => {
 
   const map = olMapRef.value!.map as OlMap
   const olMapElement = map.getTargetElement()
-  olMapElement.tabIndex = 0 // Maintain map focus for arrow key movement
+
+  // Ensure map is focusable and refocus when pointing
+  olMapElement.tabIndex = 0
+  olMapElement.addEventListener('pointerenter', () => olMapElement.focus())
 
   // Add drag-n-drop listeners
   olMapElement.addEventListener('drop', dragDropHandler)
@@ -273,7 +276,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Map.OlMap style="width: 100%; height: 100%; position: relative;"
+  <Map.OlMap id="map"
              ref="olMapRef"
              @click="handleClickedFeature" >
 
@@ -421,6 +424,16 @@ onMounted(() => {
 </i18n>
 
 <style scoped>
+
+#map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#map:focus {
+  outline: none;
+}
 
 .tools {
   position: absolute;
