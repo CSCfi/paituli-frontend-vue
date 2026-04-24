@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { CAlertType, CToastType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
 import { mdiHelpCircleOutline } from '@mdi/js'
@@ -15,6 +15,7 @@ const { addToast } = useToasts()
 const { t } = useI18n()
 
 const showModal = ref(false)
+const modalRef = ref()
 
 const licenseCheckbox = ref(false)
 const licenseError = ref(false)
@@ -59,6 +60,7 @@ const open = (paths: string[], labels: string[], size: number) => {
   fileLabels.value = labels
   downloadSize.value = size
 
+  started.value = false
   showModal.value = true
 }
 
@@ -229,12 +231,34 @@ const downloadTypeItems = computed(() => [
 const downloadType = ref()
 const showListHint = ref(false)
 
+// c-modals have built-in event which listens ESC, which does not
+// respect the 'dismissable' prop, thus we have to intercept it
+function onKeydown(e: KeyboardEvent) {
+  if (e.key !== 'Escape') return
+  if (started.value) {
+    e.preventDefault()
+    e.stopPropagation()
+    // Let's still nudge the modal
+    const modal = modalRef.value as HTMLElement
+    const dialog = modal.shadowRoot?.querySelector('dialog')
+    if (dialog) {
+      dialog.classList.add('nudging')
+      setTimeout(() => dialog.classList.remove('nudging'), 150);
+    }
+  }
 }
+onMounted(() =>
+  document.addEventListener('keydown', onKeydown, true))
+onBeforeUnmount(() =>
+  document.removeEventListener('keydown', onKeydown, true))
 
 </script>
 
 <template>
-  <c-modal v-model="showModal" :dismissable="!started" v-control>
+  <c-modal v-model="showModal"
+           ref="modalRef"
+           :dismissable="!started"
+           v-control>
     <c-card>
       <c-card-title>{{ t("title") }}</c-card-title>
       <c-card-content>
