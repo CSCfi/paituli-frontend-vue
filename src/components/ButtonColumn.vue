@@ -13,7 +13,10 @@ const { t } = useI18n()
 const props = defineProps<{ map: OlMap }>()
 const mapView = computed(() => props.map.getView())
 
+const showAttribs = ref(false)
 const menuVisible = ref(false)
+const menuEl = ref<HTMLElement | null>(null)
+const buttonEl = ref<HTMLElement | null>(null)
 
 function zoom(amount: number) {
   mapView.value.animate({
@@ -29,10 +32,17 @@ function resetZoom() {
   })
 }
 
-// Run now to ensure nice initial zoom
+// Reset zoom now to ensure nice initial zoom
 resetZoom();
 
-const showModal = ref(false)
+// Close menu when clicking outside of it
+function closeHandler(e: PointerEvent) {
+  const path = e.composedPath()
+  if (!menuEl.value || !buttonEl.value) return
+  if (path.includes(menuEl.value) || path.includes(buttonEl.value)) return
+  menuVisible.value = false
+}
+document.addEventListener('pointerdown', closeHandler)
 
 </script>
 
@@ -63,11 +73,11 @@ const showModal = ref(false)
     <div class="attributions">
       <button
         type="button"
-        @click="showModal = true"
+        @click="showAttribs = true"
         v-tooltip="t('attributions.tooltip')">
         <c-icon :path="mdiCopyright" size="27px" />
       </button>
-      <c-modal v-model="showModal"
+      <c-modal v-model="showAttribs"
                v-control
                dismissable
                disable-backdrop-blur>
@@ -84,7 +94,7 @@ const showModal = ref(false)
             </div>
           </c-card-content>
           <c-card-actions>
-            <c-button @click="showModal = false">{{ t('close') }}</c-button>
+            <c-button @click="showAttribs = false">{{ t('close') }}</c-button>
           </c-card-actions>
         </c-card>
       </c-modal>
@@ -92,11 +102,12 @@ const showModal = ref(false)
     <div v-if="currentDataset" class="layers">
       <button
         type="button"
+        ref="buttonEl"
         @click="menuVisible = !menuVisible"
         v-tooltip="t('layers')">
         <c-icon :path="mdiLayersTripleOutline" size="27px" />
       </button>
-      <div v-if="menuVisible" class="layer-menu">
+      <div v-if="menuVisible" ref="menuEl" class="layer-menu">
         <LayersMenu />
       </div>
     </div>
