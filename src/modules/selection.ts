@@ -123,13 +123,13 @@ const selectionStyle = (feature: FeatureLike) => {
   switch (toolbarMode.value) {
   case 'inspect':
     return new Style({
-      stroke: new Stroke({ color: 'rgba(222, 0, 255, 1.0)', width: 2.5 }),
+      stroke: new Stroke({ color: 'rgba(255, 165, 0, 1.0)', width: 2.5 }),
       zIndex: 50,
     })
   default:
     return new Style({
-      stroke: new Stroke({ color: 'rgba(222, 0, 255, 1.0)', width: 2.5 }),
-      fill: new Fill({ color: 'rgba(200, 0, 255, 0.15)' }),
+      stroke: new Stroke({ color: 'rgba(255, 165, 0, 1.5)', width: 2.5 }),
+      fill: new Fill({ color: 'rgba(255, 200, 0, 0.25)' }),
       text: new Text({
         text: feature.get('label'),
         stroke: new Stroke({ width: 0.6 }) }),
