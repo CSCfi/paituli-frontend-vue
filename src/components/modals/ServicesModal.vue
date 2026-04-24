@@ -60,8 +60,11 @@ const scaleText = computed(() => {
       </c-card-title>
       <c-card-content>
         <div>
-          <strong>{{ currentDataset.name }} - {{ currentDataset.org }}</strong>
-
+          <strong>
+            {{ currentDataset.name }},
+            {{ currentDataset.year }} -
+            {{ currentDataset.org }}
+          </strong>
           <c-tabs v-model="modalTab" v-control>
             <c-tab value="FileTransferTab">
               <c-icon :path="mdiFileDownloadOutline" />
