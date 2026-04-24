@@ -21,11 +21,14 @@ onMounted(() => {
 <template>
   <header>
     <c-toolbar class="site-header">
-      <div class="header-content">
-        <c-csc-logo />
+      <c-navigation-button />
+      <c-csc-logo />
+      <RouterLink to="/">
         <h2>Paituli</h2>
+      </RouterLink>
+      <div class="header-content">
         <nav>
-          <RouterLink to="/">{{ t("home") }}</RouterLink>
+          <RouterLink id="home" to="/">{{ t("home") }}</RouterLink>
           <RouterLink to="/download">{{ t("download") }}</RouterLink>
           <RouterLink to="/webservices">{{ t("webservices") }}</RouterLink>
           <RouterLink to="/files">{{ t("files") }}</RouterLink>
@@ -33,7 +36,7 @@ onMounted(() => {
           <RouterLink to="/opendata">{{ t("opendata") }}</RouterLink>
         </nav>
       </div>
-      <c-menu :items="languageItems">
+      <c-menu id="languages" :items="languageItems">
         <h3>{{ currentFlag }}</h3>
       </c-menu>
     </c-toolbar>
@@ -93,14 +96,19 @@ c-toasts {
   top: 0;
   left: 0;
   nav {
-    width: 100%;
-    max-width: 1450px;
     margin: 0 auto;
     * {
       margin-right: 15px;
       padding: 5px 10px;
     }
   }
+  h2 {
+    margin: 5px;
+  }
+}
+
+#languages {
+  margin-left: auto;
 }
 
 .header-content {
@@ -111,5 +119,28 @@ c-toasts {
 
   font-weight: bold;
   color: var(--c-info-600);
+}
+
+c-navigation-button {
+  display: none;
+}
+
+@media (max-width: 1150px) {
+  .site-header nav * {
+    margin: 0;
+  }
+}
+@media (max-width: 1050px) {
+  c-csc-logo, #home {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .header-content {
+    display: none;
+  }
+  c-navigation-button {
+    display: unset;
+  }
 }
 </style>
