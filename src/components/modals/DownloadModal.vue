@@ -301,6 +301,7 @@ function injectTooltip() {
                       v-model="licenseCheckbox"
                       :hide-details="!licenseError"
                       :valid="!licenseError"
+                      :validation="t('validation')"
                       required>
             {{ t("license_agree") }}
             <app-link :to="licenseUrl" new-tab>
@@ -356,6 +357,7 @@ function injectTooltip() {
     "list_link": "batch download",
     "license_agree": "I agree to the",
     "license": "dataset license",
+    "validation": "This is mandatory",
     "confirm": "Download",
     "cancel": "Cancel",
     "toasts": {
@@ -386,6 +388,7 @@ function injectTooltip() {
     "list_link": "massalatauksessa",
     "license_agree": "Hyväksyn",
     "license": "aineiston lisenssin",
+    "validation": "Pakollinen",
     "confirm": "Lataa",
     "cancel": "Peruuta",
     "toasts": {
