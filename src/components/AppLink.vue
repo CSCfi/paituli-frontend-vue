@@ -1,12 +1,12 @@
 <!--
 Use this component for all app links instead of
 <router-link> or <c-link>, for consistency. Using the new-tab prop
-automatically decorates the link and ensures SPA navigation is respected
+automatically decorates the link and ensures routing is respected
 -->
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { mdiOpenInNew } from '@mdi/js'
+import { useRouter } from 'vue-router';
 
 const router = useRouter()
 
@@ -18,15 +18,7 @@ const props = defineProps<{
 
 const buttonMode = computed(() => props.cButton as boolean)
 const target = computed(() => props.newTab ? '_blank' : undefined)
-const rel = computed(() => props.newTab ? 'noopener noreferrer' : undefined)
 
-// We manually resolve the href using router if the link
-// does not seem to be external, as c-button and c-link
-// cannot use <router-link> to do the resolving.
-const resolvedHref = computed(() => {
-  if (isExternal.value) return props.to
-  return router.resolve(props.to).href
-})
 const isExternal = computed(() =>
   /^https?:\/\//.test(props.to) ||
   props.to.startsWith('mailto:') ||
@@ -41,6 +33,20 @@ const buttonProps = computed(() => {
   return p // Otherwise we have a record which defines the props
 })
 
+// Custom click handler for router-links to ensure we
+// let browser handle new tab / modified clicks
+function onClick(navigate: (e?: MouseEvent) => void, e: MouseEvent) {
+  if (
+    target.value === '_blank' ||
+    e.ctrlKey ||
+    e.metaKey ||
+    e.shiftKey ||
+    e.button !== 0
+  ) return
+  e.preventDefault()
+  navigate()
+}
+
 </script>
 
 <template>
@@ -48,19 +54,17 @@ const buttonProps = computed(() => {
   <c-button
     v-if="buttonMode"
     v-bind="buttonProps"
-    :href="resolvedHref"
-    :target="target"
-    :rel="rel">
+    :href="router.resolve(props.to).href"
+    :target="target">
     <slot />
     <c-icon v-if="newTab" :path="mdiOpenInNew" size="18" />
   </c-button>
 
-  <!-- External link mode -->
+  <!-- link mode -->
   <c-link
     v-else-if="isExternal"
-    :href="resolvedHref"
-    :target="target"
-    :rel="rel">
+    :href="router.resolve(props.to).href"
+    :target="target">
     <slot />
     <c-icon v-if="newTab" :path="mdiOpenInNew" size="18" />
   </c-link>
@@ -72,10 +76,9 @@ const buttonProps = computed(() => {
     custom
     v-slot="{ href, navigate }">
     <c-link
-      @click="navigate"
       :href="href"
       :target="target"
-      :rel="rel">
+      @click="onClick(navigate, $event)">
       <slot />
       <c-icon v-if="newTab" :path="mdiOpenInNew" size="18" />
     </c-link>
