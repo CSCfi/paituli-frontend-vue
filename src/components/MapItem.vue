@@ -357,8 +357,8 @@ onMounted(() => {
     <Map.OlOverlay
       v-if="featureInfoPopup.visible && !dataHidden"
       :position="featureInfoPopup.coordinate"
-      :auto-pan="true"
-      :auto-pan-animation="{ duration: 250 }">
+      :positioning="'center-left'"
+      :auto-pan="{ margin: 100 }">
       <div class="popup">
         <c-alert>
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
@@ -537,7 +537,6 @@ onMounted(() => {
 
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transform: translateY(-50%);
   margin-left: 1em;
 
   c-icon-button {
