@@ -11,7 +11,6 @@ import {
 } from '@mdi/js';
 
 import OlMap from 'ol/Map.js'
-import DragPan from 'ol/interaction/DragPan'
 import { useI18n } from 'vue-i18n';
 
 import { clearBoundingBox, dataHidden, dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
@@ -22,7 +21,7 @@ import { vHelp } from '@/directives/help';
 import HelpContent from './HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { currentDataset } from '@/modules/datasets';
-import { getMapInteraction, sleep } from '@/shared/util';
+import { sleep } from '@/shared/util';
 
 const { t } = useI18n()
 
@@ -65,9 +64,6 @@ watch(inspectCursor, (cursor) => {
 })
 
 watch(toolbarMode, (mode) => {
-  // When tool mode changes, we only allow drag-pan in 'move'
-  dragPan?.setActive(mode == 'move')
-
   // Update cursor
   const domElement = props.map.getTargetElement()
   domElement.style.cursor = {
@@ -95,10 +91,6 @@ watch(selectMode, (newMode, oldMode) => {
   clearBoundingBox()
 })
 
-// Seeminly this interaction is not accessible as a vue3-ol component,
-// but we can dig it up from amongst all current interactions
-const dragPan = getMapInteraction(props.map, DragPan)
-
 // GeoJSON file handling
 const fileInput = ref<HTMLInputElement | null>(null)
 const onFileSelected = (event: Event) => {
@@ -108,6 +100,7 @@ const onFileSelected = (event: Event) => {
 }
 
 // For the inspect mode button to take us to where data preview loads.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const zoomToData = () => {
   const view = props.map.getView()
   view.animate({
