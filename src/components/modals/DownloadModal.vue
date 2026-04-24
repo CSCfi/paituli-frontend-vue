@@ -32,11 +32,6 @@ const progress = ref(0)
 const progressLabel = ref('')
 const downloadError = ref(false)
 
-onMounted(async () => {
-  await nextTick()
-  injectTooltip()
-})
-
 const open = (paths: string[], labels: string[], size: number) => {
   if (paths.length == 0)
   {
@@ -234,13 +229,6 @@ const downloadTypeItems = computed(() => [
 const downloadType = ref()
 const showListHint = ref(false)
 
-// Inject a tooltip button into the radio group's shadow DOM
-function injectTooltip() {
-  const group = document.querySelector('c-radio-group') as HTMLElement
-  const container = group.shadowRoot?.querySelector('label#LIST .c-radio__label')
-  const icon = document.createElement('c-icon-button')
-  icon.setAttribute('size', 'x-small')
-  container?.appendChild(icon)
 }
 
 </script>
@@ -326,6 +314,9 @@ function injectTooltip() {
           :value="progress"
           :label="progressLabel"
           :error="downloadError"/>
+        <div v-else id="download-note">
+          {{ t('note') }}
+        </div>
         <c-button
           :loading="fetching"
           :outlined="fetching"
@@ -365,6 +356,7 @@ function injectTooltip() {
       "something_wrong": "Something went wrong while processing your download. ",
       "please_retry": "If the problem persists, please contact CSC.",
     },
+    "note": "Preparing your download may take a moment. Please wait on this page until the download has started.",
     "progress": {
       "starting": "(Starting...)",
       "processing": "(Processing files...)",
@@ -396,6 +388,7 @@ function injectTooltip() {
       "something_wrong": "Jotain meni pieleen latauksen käsittelyn aikana. ",
       "please_retry": "Jos ongelma jatkuu, ota yhteyttä CSC:hen",
     },
+    "note": "Latauksen valmistelu voi kestää hetken. Odotathan tällä sivulla, kunnes lataus on alkanut.",
     "progress": {
       "starting": "(Käynnistetään...)",
       "processing": "(Käsitellään tiedostoja...)",
@@ -451,5 +444,9 @@ c-alert p {
 }
 c-card {
   --c-card-gap: 1.25em;
+}
+#download-note {
+  font-size: smaller;
+  color: var(--c-tertiary-800)
 }
 </style>
