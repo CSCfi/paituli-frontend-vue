@@ -55,7 +55,7 @@ const yearOptions = computed(() =>
     .filter((d) => d.scale === selectedScale.value)
     .map((d) => d.year)
     .filter(onlyDistinct)
-    .sort((a, b) => Number(b) - Number(a)),
+    .sort((a, b) => Number(b.split('.').at(-1)) - Number(a.split('.').at(-1))),
 )
 const formatOptions = computed(() =>
   datasets.value
@@ -97,6 +97,12 @@ watchEffect(() => {
   if (selectedDataset) {
     setCurrent(selectedDataset.data_id)
   }
+})
+
+// When selected dataset changes, force year to the first index
+// to prevent matching years carrying over to the new selection
+watch(selectedData, () => {
+  selectedYear.value = yearOptions.value[0] ?? ''
 })
 
 // When datasets are fetched, check if we should load one
