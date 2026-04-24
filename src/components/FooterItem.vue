@@ -54,21 +54,20 @@ const { t } = useI18n()
 </i18n>
 
 <style scoped>
-  .footer {
-    height: 7rem;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 1.5rem 0;
+  gap: 2rem;
+  background-color: var(--c-primary-100);
 
-    margin-top: 1rem;
-    padding: 1.5rem 0 1.5rem 0;
-    gap: 2rem;
-
-    background-color: var(--c-primary-100);
-
-    a, img {
-      height: 100%;
-    }
+  img {
+    height: 4rem;
   }
+}
+
 </style>
