@@ -525,10 +525,11 @@ onMounted(() => {
     }
     #toolbar {
       margin-top: -0.25em;
+      margin-right: -2.75em;
     }
   }
   #button-column {
-    top: unset;
+    top: 4.75em;
   }
 }
 
