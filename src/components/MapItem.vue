@@ -488,6 +488,13 @@ onMounted(() => {
       margin-left: 1em;
       --c-tab-item-padding: 0.5em 0 0 0;
     }
+    :deep(.help-button) {
+      position: unset;
+      margin-left: auto;
+    }
+    :deep(.help-box) {
+      position: absolute;
+    }
   }
 }
 

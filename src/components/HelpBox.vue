@@ -40,13 +40,10 @@ watch(helpText, (newText: string | undefined) => {
 
 <style scoped>
 .container {
+  display: flex;
   width: 350px;
 }
 
-.help-button, .help-box {
-  position: relative;
-  left: 0;
-}
 .help-button {
   position: absolute;
   z-index: 1;
@@ -55,6 +52,9 @@ watch(helpText, (newText: string | undefined) => {
   margin: 1.9em;
 }
 .help-box {
+  position: relative;
+  width: 100%;
+  bottom: 0;
   z-index: 2;
   padding: .25em 1em;
 
