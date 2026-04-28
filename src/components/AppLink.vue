@@ -13,6 +13,7 @@ const router = useRouter()
 const props = defineProps<{
   to: string
   newTab?: boolean
+  useRouting?: boolean
   cButton?: boolean | Record<string, unknown>
 }>()
 
@@ -24,6 +25,13 @@ const isExternal = computed(() =>
   props.to.startsWith('mailto:') ||
   props.to.startsWith('tel:')
 )
+
+// We use routing for target href unless it's deemed external,
+// or if we explicitly want to use the router
+const resolvedHref = computed(() => {
+  if (isExternal.value && !props.useRouting) return props.to
+  return router.resolve(props.to).href
+})
 
 // Determines props for c-button mode
 const buttonProps = computed(() => {
@@ -54,7 +62,7 @@ function onClick(navigate: (e?: MouseEvent) => void, e: MouseEvent) {
   <c-button
     v-if="buttonMode"
     v-bind="buttonProps"
-    :href="router.resolve(props.to).href"
+    :href="resolvedHref"
     :target="target">
     <slot />
     <c-icon v-if="newTab" :path="mdiOpenInNew" size="18" />
@@ -63,7 +71,7 @@ function onClick(navigate: (e?: MouseEvent) => void, e: MouseEvent) {
   <!-- link mode -->
   <c-link
     v-else-if="isExternal"
-    :href="router.resolve(props.to).href"
+    :href="resolvedHref"
     :target="target">
     <slot />
     <c-icon v-if="newTab" :path="mdiOpenInNew" size="18" />
