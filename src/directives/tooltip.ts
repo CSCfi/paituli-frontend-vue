@@ -40,6 +40,7 @@ export const vTooltip = {
         const top = rect.top - tooltip.offsetHeight - PADDING
         tooltip.style.left = `${left}px`
         tooltip.style.top = `${top}px`
+        tooltip.style.transition = 'opacity 0.15s ease'
         tooltip.style.opacity = '1'
       }, SHOW_DELAY)
     }
@@ -49,6 +50,10 @@ export const vTooltip = {
         clearTimeout(timer)
         timer = null
       }
+      // We move tooltips back to (0,0) to avoid them overflowing when resizing viewport
+      tooltip.style.left = '0'
+      tooltip.style.top = '0'
+      tooltip.style.transition = 'none'
       tooltip.style.opacity = '0'
     }
 
