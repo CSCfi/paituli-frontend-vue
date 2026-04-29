@@ -92,7 +92,16 @@ onMounted(async () => {
   // Tweak some OL overlay styles which CSS cannot hit
   const overlays = document.querySelector('.ol-overlay-container') as HTMLElement
   overlays.style.pointerEvents = 'none'
+
+  // We observe the view width to tell some elements to enter
+  // a compacted state, if space gets too cramped
+  const observer = new ResizeObserver(entries =>
+    horizontalSpace.value = entries[0].contentRect.width)
+  observer.observe(toolsContainerRef.value!)
 })
+
+const horizontalSpace = ref(0)
+const toolsContainerRef = ref<HTMLElement>()
 
 // Fetch datasets again if locale changes, due to the
 // endpoint returning different descriptions for each locale
@@ -266,16 +275,6 @@ watch(toolbarMode, (mode) => {
 // Disable select also initially (after ref exists)
 watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
-// We observe the view width to tell some elements to enter
-// a compacted state, if space gets too cramped
-const horizontalSpace = ref(0)
-const toolsContainerRef = ref<HTMLElement>()
-onMounted(() => {
-  const observer = new ResizeObserver(entries => {
-    horizontalSpace.value = entries[0].contentRect.width
-  })
-  observer.observe(toolsContainerRef.value!)
-})
 
 </script>
 
