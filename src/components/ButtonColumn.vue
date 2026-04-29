@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiCopyright, mdiLayersTripleOutline, mdiMinusBox, mdiPlusBox } from '@mdi/js'
+import { mdiClose, mdiCopyright, mdiLayersTripleOutline, mdiMinusBox, mdiPlusBox } from '@mdi/js'
 import { useI18n } from 'vue-i18n';
 
 import OlMap from 'ol/Map.js'
@@ -104,8 +104,11 @@ document.addEventListener('pointerdown', closeHandler)
         type="button"
         ref="buttonEl"
         @click="menuVisible = !menuVisible"
-        v-tooltip="t('layers')">
-        <c-icon :path="mdiLayersTripleOutline" size="27px" />
+        :class="{ close: menuVisible }"
+        :key="`${menuVisible}`"
+        v-tooltip="t(menuVisible ? 'close' : 'layers')">
+        <c-icon v-if="menuVisible" :path="mdiClose" size="27px" />
+        <c-icon v-else :path="mdiLayersTripleOutline" size="27px" />
       </button>
       <div v-if="menuVisible" ref="menuEl" class="layer-menu">
         <LayersMenu />
@@ -188,28 +191,22 @@ button {
   .layer-menu {
     position: absolute;
     width: 15em;
-    right: .15em;
+    right: 0;
     padding: 1em;
-    margin-top: 3em;
+    z-index: -1;
 
     border-radius: 1em;
-    border-top-right-radius: 0;
+    border-top-right-radius: .3rem;
     color: var(--c-primary-100);
     background-color: var(--c-primary-700);
-
   }
 
-  .layer-menu::before {
-    content: "";
-    position: absolute;
-    top: -8px;
-    right: 4px;
-    transform: rotate(45deg);
+  button.close {
+    background-color: var(--c-primary-800);
 
-    width: 16px;
-    height: 16px;
-
-    background: inherit;
+    c-icon {
+      color: var(--c-primary-100)
+    }
   }
 }
 
