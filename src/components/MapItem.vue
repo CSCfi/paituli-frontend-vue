@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
@@ -88,6 +88,10 @@ onMounted(async () => {
       noModifierKeys(event) &&
       !(document.activeElement?.matches('c-text-field'))
   }))
+
+  // Tweak some OL overlay styles which CSS cannot hit
+  const overlays = document.querySelector('.ol-overlay-container') as HTMLElement
+  overlays.style.pointerEvents = 'none'
 })
 
 // Fetch datasets again if locale changes, due to the
@@ -129,13 +133,10 @@ async function fetchDatasets() {
 }
 
 // A popup for displaying feature information
-const featureInfoPopup = ref({
-  visible: false,
-  coordinate: [0,0],
-  content: ''
-})
+const featureInfoPos = ref([0,0])
+const featureInfoContent = ref('')
 const closePopup = () => {
-  featureInfoPopup.value.visible = false
+  featureInfoContent.value = ''
 }
 
 // Displays feature info when clicking features in the inspect mode
@@ -153,7 +154,8 @@ const handleClickedFeature = async (e: unknown) => {
     return
   }
 
-  const mapEl = olMapRef.value!.map.getTargetElement()
+  const map = olMapRef.value!.map
+  const mapEl = map.getTargetElement()
   const normalCursor = mapEl.style.cursor
   mapEl.style.cursor = 'wait'
 
@@ -164,9 +166,11 @@ const handleClickedFeature = async (e: unknown) => {
       mapView.value.getResolution(),
       mapView.value.getProjection())
 
-    featureInfoPopup.value.content = info
-    featureInfoPopup.value.coordinate = event.coordinate
-    featureInfoPopup.value.visible = true
+    // For auto-pan to work on first click, we need to wait for
+    // new box height to render before we set the position of the box.
+    featureInfoContent.value = info
+    await nextTick()
+    featureInfoPos.value = event.coordinate
   }
   catch (err) {
     addToast({
@@ -174,7 +178,7 @@ const handleClickedFeature = async (e: unknown) => {
       message: t('toasts.feature_error'),
     })
     console.error(err)
-    featureInfoPopup.value.visible = false
+    closePopup()
   }
   finally {
     mapEl.style.cursor = normalCursor
@@ -355,21 +359,23 @@ onMounted(() => {
 
     <!-- Feature info popup -->
     <Map.OlOverlay
-      v-if="featureInfoPopup.visible && !dataHidden"
-      :position="featureInfoPopup.coordinate"
+      :position="featureInfoPos"
       :positioning="'center-left'"
-      :auto-pan="{ margin: 100 }">
-      <div class="popup">
-        <c-alert>
-          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <div slot="title">{{ t('feature') }}</div>
-          <c-icon-button size="x-small" @mousedown.prevent @click="closePopup">
-            <c-icon :path="mdiClose" />
-          </c-icon-button>
-          <div class="content">
-            <pre>{{ featureInfoPopup.content }}</pre>
-          </div>
-        </c-alert>
+      :auto-pan="{ margin: 30 }">
+      <div class="popup-container" v-show="featureInfoContent">
+        <div class="popup-buffer"></div>
+        <div class="popup">
+          <c-alert>
+            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+            <div slot="title">{{ t('feature') }}</div>
+            <c-icon-button size="x-small" @mousedown.prevent @click="closePopup">
+              <c-icon :path="mdiClose" />
+            </c-icon-button>
+            <div class="content">
+              <pre>{{ featureInfoContent }}</pre>
+            </div>
+          </c-alert>
+        </div>
       </div>
     </Map.OlOverlay>
   </Map.OlMap>
@@ -544,7 +550,7 @@ onMounted(() => {
 
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  margin-left: 1em;
+  pointer-events: auto;
 
   c-icon-button {
     position: absolute;
@@ -556,14 +562,21 @@ onMounted(() => {
   }
 
   .content {
-    max-height: 500px;
+    min-height: 100px;
+    max-height: min(35vh, 350px);
+    max-width: 50vw;
     overflow-y: scroll;
     font-family: monospace;
     font-size: large;
   }
 }
 
-.popup::before {
+.popup-container {
+  position: relative;
+  margin-left: 1em;
+}
+
+.popup-container::before {
   /* Left-pointing triangle */
   content: "";
   position: absolute;
@@ -573,6 +586,13 @@ onMounted(() => {
   border-top: 18px solid transparent;
   border-bottom: 18px solid transparent;
   border-right: 18px solid var(--c-primary-600);
+  z-index: 1;
+}
+
+.popup-buffer {
+  height: 75px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .debug {
