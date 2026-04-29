@@ -453,7 +453,6 @@ onMounted(() => {
   pointer-events: none;
 
   #button-column,
-  #help,
   #toolbar,
   #search {
     pointer-events: all;

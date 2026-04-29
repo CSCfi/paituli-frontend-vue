@@ -42,6 +42,7 @@ watch(helpText, (newText: string | undefined) => {
 .container {
   display: flex;
   width: 350px;
+  pointer-events: none;
 }
 
 .help-button {
@@ -50,6 +51,7 @@ watch(helpText, (newText: string | undefined) => {
   --c-icon-button-ghost-background-color: var(--c-primary-200);
   --c-icon-button-ghost-background-color-hover: var(--c-primary-300);
   margin: 1.9em;
+  pointer-events: auto;
 }
 .help-box {
   position: relative;
@@ -60,6 +62,7 @@ watch(helpText, (newText: string | undefined) => {
 
   color: var(--c-primary-100);
   background: var(--c-primary-800);
+  pointer-events: auto;
 
   .close {
     position: absolute;
