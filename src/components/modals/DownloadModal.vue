@@ -32,6 +32,7 @@ const started = ref(false)
 const progress = ref(0)
 const progressLabel = ref('')
 const downloadError = ref(false)
+const started = ref(false)
 
 const open = (paths: string[], labels: string[], size: number) => {
   if (paths.length == 0)
@@ -261,7 +262,7 @@ onBeforeUnmount(() =>
            v-control>
     <c-card>
       <c-card-title>{{ t("title") }}</c-card-title>
-      <c-card-content>
+      <c-card-content v-if="!started">
         <!-- Download type (zip / file list) option -->
         <div>
           <c-radio-group
@@ -325,23 +326,33 @@ onBeforeUnmount(() =>
         <!-- Separate toasts container because the backdrop obscures global toasts -->
         <c-toasts ref="toasts" vertical="bottom" absolute="true" />
       </c-card-content>
+      <c-card-content v-else>
+        <c-alert :type="CAlertType.Success">
+          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+          <div slot="title">
+            {{ t("started.header") }}
+          </div>
+          {{ t("started.message") }}
+        </c-alert>
+      </c-card-content>
 
       <c-card-actions justify="space-between">
         <c-button
           @click="showModal = false"
           :outlined="!started"
           id="cancel">
-          {{ t("cancel") }}
+          {{ t(started ? "close" : "cancel") }}
         </c-button>
         <c-progress-bar
           v-if="started"
           :value="progress"
           :label="progressLabel"
           :error="downloadError"/>
-        <div v-else id="download-note">
+        <div v-else-if="!started" id="download-note">
           {{ t('note') }}
         </div>
         <c-button
+          v-if="!started"
           :loading="fetching"
           :outlined="fetching"
           :disabled="fetching"
@@ -375,6 +386,7 @@ onBeforeUnmount(() =>
     "validation": "This is mandatory",
     "confirm": "Download",
     "cancel": "Cancel",
+    "close": "Close",
     "toasts": {
       "network_error": "Failed to contact download service. Check your internet connection. ",
       "something_wrong": "Something went wrong while processing your download. ",
@@ -385,6 +397,10 @@ onBeforeUnmount(() =>
       "starting": "(Starting...)",
       "processing": "(Processing files...)",
       "failed": "(Failed!)",
+    },
+    "started": {
+      "header": "Download started",
+      "message": "Thank you for using Paituli. Your download should start soon. If you have any problems with your data, do not hesitate to contact CSC.",
     },
   },
   "fi": {
@@ -407,6 +423,7 @@ onBeforeUnmount(() =>
     "validation": "Pakollinen",
     "confirm": "Lataa",
     "cancel": "Peruuta",
+    "close": "Sulje",
     "toasts": {
       "network_error": "Yhteydenotto latauspalveluun epäonnistui. Tarkista internet-yhteytesi. ",
       "something_wrong": "Jotain meni pieleen latauksen käsittelyn aikana. ",
@@ -417,6 +434,10 @@ onBeforeUnmount(() =>
       "starting": "(Käynnistetään...)",
       "processing": "(Käsitellään tiedostoja...)",
       "failed": "(Epäonnistui!)",
+    },
+    "started": {
+      "header": "Lataus aloitettu",
+      "message": "Kiitos, että käytit Paitulia. Latauksesi pitäisi alkaa pian. Jos sinulla on ongelmia aineiston kanssa, älä epäröi ottaa yhteyttä CSC:hen.",
     },
   },
 }
