@@ -176,8 +176,6 @@ const submit = async () => {
     while (job.progress < 1.0 && !cancel.value)
 
     if (cancel.value) {
-      // Request cancellation of the job
-      progressLabel.value = 'Cancelled'
       fetch(URLS.DOWNLOAD_API + '/cancel/' + job.ID, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -360,7 +358,7 @@ onBeforeUnmount(() =>
         <c-progress-bar
           v-if="processing"
           :value="progress"
-          :label="progressLabel"
+          :label="` — ${progressLabel}`"
           :error="downloadError"/>
         <div v-else-if="!started" id="download-note">
           {{ t('note') }}
@@ -408,9 +406,9 @@ onBeforeUnmount(() =>
     },
     "note": "Preparing your download may take a moment. Please wait on this page until the download has started.",
     "progress": {
-      "starting": "(Starting...)",
-      "processing": "(Processing files...)",
-      "failed": "(Failed!)",
+      "starting": "Starting...",
+      "processing": "Creating your ZIP file...",
+      "failed": "Failed!",
     },
     "started": {
       "header": "Download started",
@@ -445,9 +443,9 @@ onBeforeUnmount(() =>
     },
     "note": "Latauksen valmistelu voi kestää hetken. Odotathan tällä sivulla, kunnes lataus on alkanut.",
     "progress": {
-      "starting": "(Käynnistetään...)",
-      "processing": "(Käsitellään tiedostoja...)",
-      "failed": "(Epäonnistui!)",
+      "starting": "Käynnistetään...",
+      "processing": "ZIP-tiedostoasi luodaan...",
+      "failed": "Epäonnistui!",
     },
     "started": {
       "header": "Lataus aloitettu",
