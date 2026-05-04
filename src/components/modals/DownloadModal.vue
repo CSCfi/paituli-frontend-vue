@@ -28,7 +28,8 @@ const fileLabels = ref<string[]>([])
 const downloadSize = ref<number>(0)
 
 const fetching = ref(false)
-const started = ref(false)
+const processing = ref(false)
+const cancel = ref(false)
 const progress = ref(0)
 const progressLabel = ref('')
 const downloadError = ref(false)
@@ -62,6 +63,8 @@ const open = (paths: string[], labels: string[], size: number) => {
   downloadSize.value = size
 
   started.value = false
+  processing.value = false
+  cancel.value = false
   showModal.value = true
 }
 
@@ -108,7 +111,7 @@ const submit = async () => {
     format: current.format,
   }
 
-  started.value = true
+  processing.value = true
   fetching.value = true
   progress.value = 0
   progressLabel.value = t('progress.starting')
@@ -170,13 +173,24 @@ const submit = async () => {
         progressLabel.value = t('progress.processing')
       }
     }
-    while (job.progress < 1.0)
+    while (job.progress < 1.0 && !cancel.value)
 
-    // Download ready, start it!
-    progress.value = 100
-    progressLabel.value = ''
-    console.log('Starting download for ' + job.ID)
-    downloadJobOutput(URLS.DOWNLOAD_API + '/' + job.ID)
+    if (cancel.value) {
+      // Request cancellation of the job
+      progressLabel.value = 'Cancelled'
+      fetch(URLS.DOWNLOAD_API + '/cancel/' + job.ID, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+    else {
+      // Download ready, start it!
+      processing.value = false
+      progress.value = 100
+      console.log('Starting download for ' + job.ID)
+      downloadJobOutput(URLS.DOWNLOAD_API + '/' + job.ID)
+      started.value = true
+    }
 
   } catch (e) {
     downloadError.value = true
@@ -236,7 +250,7 @@ const showListHint = ref(false)
 // respect the 'dismissable' prop, thus we have to intercept it
 function onKeydown(e: KeyboardEvent) {
   if (e.key !== 'Escape') return
-  if (started.value) {
+  if (processing.value) {
     e.preventDefault()
     e.stopPropagation()
     // Let's still nudge the modal
@@ -258,7 +272,7 @@ onBeforeUnmount(() =>
 <template>
   <c-modal v-model="showModal"
            ref="modalRef"
-           :dismissable="!started"
+           :dismissable="!processing"
            v-control>
     <c-card>
       <c-card-title>{{ t("title") }}</c-card-title>
@@ -338,13 +352,13 @@ onBeforeUnmount(() =>
 
       <c-card-actions justify="space-between">
         <c-button
-          @click="showModal = false"
-          :outlined="!started"
+          @click="cancel = true; showModal = false"
+          :outlined="!processing"
           id="cancel">
           {{ t(started ? "close" : "cancel") }}
         </c-button>
         <c-progress-bar
-          v-if="started"
+          v-if="processing"
           :value="progress"
           :label="progressLabel"
           :error="downloadError"/>
