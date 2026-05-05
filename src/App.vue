@@ -110,6 +110,9 @@ c-toasts {
 
 #languages {
   margin-left: auto;
+  h3 {
+    color: var(--c-tertiary-800);
+  }
 }
 
 .header-content {
@@ -117,9 +120,7 @@ c-toasts {
   flex: auto;
   gap: 30px;
   align-items: center;
-
   font-weight: bold;
-  color: var(--c-info-600);
 }
 
 c-navigation-button {
