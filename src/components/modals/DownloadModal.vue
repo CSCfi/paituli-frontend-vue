@@ -351,8 +351,8 @@ onBeforeUnmount(() =>
       <c-card-actions justify="space-between">
         <c-button
           @click="cancel = true; showModal = false"
-          :outlined="!processing"
-          id="cancel">
+          outlined
+          :id="fetching ? 'cancel': ''">
           {{ t(started ? "close" : "cancel") }}
         </c-button>
         <c-progress-bar
@@ -467,8 +467,8 @@ c-button {
   --c-button-background-color-hover: var(--c-tertiary-500);
 }
 c-button#cancel {
-  --c-button-background-color: var(--c-warning-500);
-  --c-button-background-color-hover: var(--c-warning-300);
+  --c-button-outlined-text-color: var(--c-warning-600);
+  --c-button-outlined-background-color-hover: var(--c-warning-200) !important;
 }
 c-progress-bar {
   width: 100%;
