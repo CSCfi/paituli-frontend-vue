@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiFileDownloadOutline } from '@mdi/js';
+import { mdiClipboardMultipleOutline, mdiFileDownloadOutline } from '@mdi/js';
 import { currentDataset } from '@/modules/datasets';
 import { URLS } from '@/shared/constants';
 import { computed, ref } from 'vue';
@@ -66,10 +66,11 @@ async function loadMetadata() {
               {{ etsinLink }}
             </app-link>
             <c-button
-              outlined
+              ghost
               @click="copyToClipboard(etsinLink)"
               size="small">
               {{ t('copy') }}
+              <c-icon :path="mdiClipboardMultipleOutline" size="18" />
             </c-button>
           </div>
         </div>
