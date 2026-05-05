@@ -320,9 +320,10 @@ c-tab-item {
   color: white;
 
   #json-button {
-    --c-button-background-color: var(--c-secondary-500);
+    --c-button-background-color: var(--c-info-500);
+    --c-button-background-color-hover: var(--c-info-400);
     margin-top: 1em;
-    text-align: center;
+    text-align: right;
   }
 
 }
