@@ -72,7 +72,7 @@ c-switch {
   --c-switch-slider-color: var(--c-primary-700);
   --c-switch-border-color-active: var(--c-primary-100);
   --c-switch-handle-color-active: var(--c-primary-100);
-  --c-switch-slider-color-active: var(--c-secondary-500);
+  --c-switch-slider-color-active: var(--c-accent-700);
   --c-switch-slider-color-disabled: var(--c-primary-700);
   --c-switch-border-color-disabled: var(--c-primary-600);
   padding-top: .3em;

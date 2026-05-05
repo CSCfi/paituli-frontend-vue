@@ -132,6 +132,7 @@ const scaleText = computed(() => {
                   <p>
                     <AppLink
                       new-tab
+                      :c-button="{ ghost: true }"
                       :to="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id">
                       {{ t("stac.link") }}
                     </AppLink>
@@ -289,7 +290,7 @@ const scaleText = computed(() => {
     },
     "stac": {
       "collection": "Collection",
-      "link": "Open in STAC Browser",
+      "link": "Open this dataset in STAC Browser",
       "not_catalogued": "This dataset is not in Paituli STAC.",
     },
     "apis": {

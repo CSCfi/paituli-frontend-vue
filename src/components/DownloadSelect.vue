@@ -218,8 +218,8 @@ h4 {
 }
 
 c-link {
-  --c-link-color: var(--c-accent-500);
-  --c-link-hover: var(--c-accent-700);
+  --c-link-color: var(--c-white);
+  --c-link-hover: var(--c-primary-400);
 }
 
 </style>

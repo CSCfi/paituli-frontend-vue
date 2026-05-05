@@ -351,8 +351,7 @@ onBeforeUnmount(() =>
       <c-card-actions justify="space-between">
         <c-button
           @click="cancel = true; showModal = false"
-          outlined
-          :id="fetching ? 'cancel': ''">
+          outlined>
           {{ t(started ? "close" : "cancel") }}
         </c-button>
         <c-progress-bar
@@ -412,7 +411,7 @@ onBeforeUnmount(() =>
     },
     "started": {
       "header": "Download started",
-      "message": "Thank you for using Paituli. Your download should start soon. If you have any problems with your data, do not hesitate to contact CSC.",
+      "message": "Thank you for using Paituli. If you have any problems with your data, please contact CSC.",
     },
   },
   "fi": {
@@ -449,7 +448,7 @@ onBeforeUnmount(() =>
     },
     "started": {
       "header": "Lataus aloitettu",
-      "message": "Kiitos, että käytit Paitulia. Latauksesi pitäisi alkaa pian. Jos sinulla on ongelmia aineiston kanssa, älä epäröi ottaa yhteyttä CSC:hen.",
+      "message": "Kiitos, että käytit Paitulia. Jos sinulla on ongelmia aineiston kanssa, ota yhteyttä CSC:hen.",
     },
   },
 }
@@ -465,10 +464,6 @@ c-button {
   --c-button-outlined-background-color-hover: unset !important;
   --c-button-outlined-border-color: unset !important;
   --c-button-background-color-hover: var(--c-tertiary-500);
-}
-c-button#cancel {
-  --c-button-outlined-text-color: var(--c-warning-600);
-  --c-button-outlined-background-color-hover: var(--c-warning-200) !important;
 }
 c-progress-bar {
   width: 100%;
