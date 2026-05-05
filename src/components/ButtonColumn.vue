@@ -230,4 +230,9 @@ button {
   }
 }
 
+c-button {
+    --c-button-background-color: var(--c-info-500);
+    --c-button-background-color-hover: var(--c-info-400);
+}
+
 </style>
