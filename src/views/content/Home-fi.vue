@@ -94,6 +94,22 @@
         <th>Päivämäärä</th>
         <th>Uutinen</th>
       </tr>
+	  <tr>
+        <td>15.4.2026</td>
+        <td>Päivitetty Helsingin yliopisto/LUOMUS SPECTRE-aineistoja.</td>
+      </tr>		  
+      <tr>
+        <td>13.3.2026</td>
+        <td>Ilmatieteenlaitoksen 10 km sääaineistoja päivitetty, nyt saatavilla data vuosille 1961-2025: päivittäinen alin, ylin ja keskilämpötila, sademäärä, lumen syvyys, ilmanpaine, säteily, suhteellinen kosteus, sekä kuukausittainen keskilämpötila ja sademäärä.</td>
+      </tr>	
+      <tr>
+        <td>4.3.2026</td>
+        <td>Päivitetty <a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC:in Python-esimerkkejä</a>, uutena käytössä odc-stac-kirjasto.</td>
+      </tr>	
+	  <tr>
+        <td>23.2.2026</td>
+        <td>Lisätty Ruotsin maatalousyliopiston peltomaa Pohjois-Suomessa 1947-1979 aineisto, joka on koneoppimismenetelmiin laskettu historiallisista maastokartoista.</td>
+      </tr>		  
       <tr>
         <td>18.12.2025</td>
         <td>Lisätty Tilastokeskuksen kuntien avainluvut 2023 ja 2024. </td>
@@ -102,10 +118,7 @@
         <td>25.7.2025</td>
         <td>Lisätty Tilastokeskuksen väestö kunnittain 2024, väestöruutuaineisto 2024, tieliikenneonnettomuudet 2023 ja Paavo 2025.</td>
       </tr>
-      <tr>
-        <td>3.6.2025</td>
-        <td>Ilmatieteenlaitoksen 10 km sääaineistoja päivitetty, nyt saatavilla data vuosille 1961-2024: päivittäinen alin, ylin ja keskilämpötila, sademäärä, lumen syvyys, ilmanpaine, säteily, suhteellinen kosteus, sekä kuukausittainen keskilämpötila ja sademäärä.</td>
-      </tr>
+
       <tr>
         <td>2.6.2025</td>
         <td>Lisätty Digi- ja väestötietoviraston rakennusten osoitetiedot 2025 Shape-tiedostona.</td>

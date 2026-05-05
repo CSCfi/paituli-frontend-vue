@@ -93,6 +93,22 @@
         <th>Date</th>
         <th>News</th>
       </tr>
+	  <tr>
+        <td>15.4.2026</td>
+        <td>Helsinki university/LUOMUS SPECTRE-datasets have been updated.</td>
+      </tr>		
+      <tr>
+        <td>13.3.2026</td>
+        <td>FMI's following 10 km datasets have been updated, so that now data is available for years 1961-2025: daily average, mean and maximum temperature, precipitation, snow, radiation, sea level pressure, relative humidity, and monthly average temperature and precipitation. .</td>
+      </tr>	  
+      <tr>
+        <td>4.3.2026</td>
+        <td><a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC Python examples</a> are updated to use odc-stac-library.</td>
+      </tr>	
+	  <tr>
+        <td>23.2.2026</td>
+        <td>Arable land from Norhtern Finland (1947-1979) from Swedish university of agricultural sciences added. It was created using machine learning methods from historical topographic maps.</td>
+      </tr>		  
       <tr>
         <td>18.12.2025</td>
         <td>Statistics Finland: key figures for municipalities 2023 and 2024 added. </td>
@@ -101,10 +117,7 @@
         <td>25.7.2025</td>
         <td>Statistics Finland: population grid data 2024, population by municipalities 2024, road accidents 2023 and Paavo 2025 added.</td>
       </tr>
-      <tr>
-        <td>3.6.2025</td>
-        <td>FMI's following 10 km datasets have been updated, so that now data is available for years 1961-2024: daily average, mean and maximum temperature, precipitation, snow, radiation, sea level pressure, relative humidity, and monthly average temperature and precipitation. .</td>
-      </tr>
+
       <tr>
         <td>2.6.2025</td>
         <td>Digital Agency: Addresses of buildings 2025 added.</td>
