@@ -92,6 +92,10 @@ c-toasts {
   padding-top: var(--site-header-height);
 }
 
+a h2 {
+  color: var(--c-info-600);
+}
+
 .site-header {
   position: fixed;
   top: 0;

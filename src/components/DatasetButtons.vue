@@ -41,7 +41,10 @@ const servicesModal = ref()
       </c-button>
     </div>
     <ServicesModal ref="servicesModal"/>
-    <c-button v-if="props.showDownload" @click="menuMode = 'download'">
+    <c-button
+      v-if="props.showDownload"
+      ghost
+      @click="menuMode = 'download'">
       {{ t("download") }}
       <c-icon :path="mdiDownload"></c-icon>
     </c-button>
@@ -82,8 +85,11 @@ c-button {
   width: 100%;
   margin-bottom: .5em;
 
-  --c-button-outlined-background-color: var(--c-primary-700) !important;
-  --c-button-outlined-text-color: var(--c-primary-200);
+
+  --c-button-outlined-border-color: var(--c-primary-300);
+  --c-button-outlined-background-color: var(--c-primary-700);
+  --c-button-outlined-background-color-hover: var(--c-primary-500);
+  --c-button-outlined-text-color: var(--c-primary-100);
 }
 
 #buttons {

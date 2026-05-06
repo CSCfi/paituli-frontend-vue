@@ -100,6 +100,7 @@ watch(selectedFeaturesArray, () => {
   <div class="download-panel">
     <c-button
       id="download"
+      ghost
       :disabled="downloadButtonDisabled"
       @click="openDownloadModal()">
       <c-icon :path="mdiDownload" />

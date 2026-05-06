@@ -17,7 +17,7 @@ body {
 a {
   text-decoration: none;
   transition: 0.4s;
-  color: var(--c-info-600);
+  color: var(--c-info-700);
 }
 
 c-alert {

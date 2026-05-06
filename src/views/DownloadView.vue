@@ -173,14 +173,15 @@ nav.sidebar {
 
   /* All buttons on the sidebar and inside its components */
   :deep(c-button) {
-      --c-button-background-color: var(--c-info-500);
+
+      --c-button-ghost-background-color: var(--c-info-200);
+      --c-button-ghost-background-color-hover: var(--c-info-300);
+      --c-button-ghost-text-color: var(--c-primary-700);
+
+      --c-button-background-color: var(--c-info-600);
       --c-button-background-color-hover: var(--c-info-400);
       --c-button-disabled-background-color: var(--c-primary-500);
-      --c-button-disabled-text-color: var(--c-tertiary-400);
-
-      --c-button-outlined-background-color: var(--c-primary-600);
-      --c-button-outlined-background-color-hover: var(--c-primary-500);
-      --c-button-outlined-border-color: var(--c-primary-400);
+      --c-button-disabled-text-color: var(--c-tertiary-300);
   }
 }
 

@@ -310,7 +310,8 @@ defineExpose({ doPopAlert })
 
 
 c-tabs {
-  --c-tab-buttons-background-color-active: var(--c-primary-500);
+  --c-tab-buttons-background-color-active: var(--c-primary-600);
+  --c-tab-buttons-border-color: var(--c-primary-800);
   width: 480px;
   height: 100%;
   z-index: 1;

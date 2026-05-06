@@ -172,7 +172,7 @@ button {
     c-icon {
       z-index: 0;
       position: relative;
-      color: var(--c-primary-200);
+      color: var(--c-primary-600);
     }
   }
 }
@@ -182,7 +182,6 @@ button {
   position: absolute;
   margin: .25em;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--c-primary-600);
   z-index: -1;
 }
 

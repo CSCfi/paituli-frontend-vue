@@ -225,7 +225,7 @@ c-tab-buttons {
 }
 
 .selectMode {
-  --c-button-ghost-background-color: var(--c-primary-500);
+  --c-button-ghost-background-color: var(--c-primary-600);
   --c-button-ghost-text-color: white;
 }
 
