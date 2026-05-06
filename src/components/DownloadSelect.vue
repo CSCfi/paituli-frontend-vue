@@ -205,6 +205,16 @@ h4 {
   margin-top: 0;
 }
 
+input {
+  accent-color: var(--c-accent-300);
+  transform: scale(1.25);
+  margin-right: .5em;
+}
+
+label {
+    height: 26px;
+}
+
 .files {
   label {
     display: flex;
