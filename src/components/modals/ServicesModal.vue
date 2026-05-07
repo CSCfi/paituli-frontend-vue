@@ -11,7 +11,7 @@ import AppLink from '../AppLink.vue';
 import {
   mdiFileDownloadOutline,
   mdiFolderMarkerOutline,
-  mdiInformationVariantCircle,
+  mdiInformation,
   mdiToyBrickMarker,
   mdiToyBrickMarkerOutline } from '@mdi/js'
 
@@ -107,6 +107,7 @@ const scaleText = computed(() => {
                     <AppLink
                       new-tab
                       to="https://docs.csc.fi/data/datasets/spatial-data-in-csc-computing-env/">
+                      <c-icon :path="mdiInformation" size="20px" />
                       {{ t("file_transfer.hpc.title") }}
                     </AppLink>
                   </p>
@@ -182,7 +183,7 @@ const scaleText = computed(() => {
                     </table>
                   </c-table>
                   <p class="inline-flex">
-                    <c-icon :path="mdiInformationVariantCircle" size="18px" />
+                    <c-icon :path="mdiInformation" size="20px" />
                     {{ t("apis.instruction") }}
                   </p>
                   <c-table>
@@ -227,7 +228,7 @@ const scaleText = computed(() => {
                     </table>
                   </c-table>
                   <p class="inline-flex">
-                    <c-icon :path="mdiInformationVariantCircle" size="18px" />
+                    <c-icon :path="mdiInformation" size="20px" />
                     {{ t("apis.instruction") }}
                   </p>
                   <c-table>
@@ -345,9 +346,6 @@ c-tabs {
   --c-tab-text-color: var(--c-primary-600);
   --c-tabs-indicator-color: var(--c-primary-700);
 }
-c-link {
-  --c-link-color: var(--c-accent-700);
-}
 c-button#help {
   --c-button-background-color: var(--c-tertiary-700);
   --c-button-background-color-hover: var(--c-tertiary-500);
@@ -365,11 +363,14 @@ strong {
 c-icon {
   margin-right: .5em;
 }
+c-link c-icon {
+  margin-right: 0;
+}
 .inline-flex {
   display: inline-flex;
   align-items: center;
   c-icon {
-    --c-icon-color: var(--c-info-500)
+    --c-icon-color: var(--c-info-700)
   }
 }
 </style>
