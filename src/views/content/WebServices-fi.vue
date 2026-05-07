@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppLink from '@/components/AppLink.vue';
 import { URLS } from '@/shared/constants'
 
 </script>
@@ -17,16 +18,14 @@ import { URLS } from '@/shared/constants'
   </p>
   <h4>Saatavilla olevat aineistot</h4>
 
-  <p> Paituli tarjoaa yli 600 aineistoa OGC rajapintojen kautta. Aineistojen tarkat nimet löytyvät <a href="download.html">Latauspalvelusta</a>: valitse aineisto ja sen jälkeen klikkaa Rajapinnat.
+  <p> Paituli tarjoaa yli 600 aineistoa OGC rajapintojen kautta. Aineistojen tarkat nimet löytyvät <RouterLink to="/download">Latauspalvelusta</RouterLink>: valitse aineisto ja sen jälkeen klikkaa Rajapinnat.  </p>
+  <AppLink
+    new-tab
+    to="https://paituli.csc.fi/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage">
+    Lista kaikista OGC rajapintojen kautta saatavilla olevista aineistoista
+  </AppLink>
+  <br>
 
-    <ul>
-      <li>
-        <a href="https://paituli.csc.fi/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage">Lista kaikista OGC rajapintojen kautta saatavilla olevista aineistoista</a>
-      </li>
-    </ul>
-
-
-  </p>
   <h2>Tuetut OGC API rajapintapalvelut</h2>
 
   <h3>Perinteiset OGC rajapinnat</h3>
@@ -122,7 +121,7 @@ import { URLS } from '@/shared/constants'
   <p>
     Rajapinta-aineistojen lisenssiehdot ovat vastaavat kuin latauspalvelun kautta
     ladatuissa aineistoissa. Lisenssiehdot löytyvät
-    <a href="download.html">Latauspalvelu</a> sivulta.
+    <RouterLink to="/download">Latauspalvelu</RouterLink> sivulta.
   </p>
   <p>
     Jos Paitulin rajapintoja käytetään nettisovelluksessa, aineiston tuottaja, nimi (mm vuosi) ja Paituli on mainittava.

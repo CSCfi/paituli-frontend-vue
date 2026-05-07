@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppLink from '@/components/AppLink.vue';
 import { URLS } from '@/shared/constants'
 
 </script>
@@ -18,11 +19,12 @@ import { URLS } from '@/shared/constants'
 
   <p> Paituli has over 600 data layers available via OGC APIs. The layer names can be found from <RouterLink to="/download">Download Data</RouterLink> page: select the datasets and then click APIs.  </p>
 
-  <ul>
-    <li>
-      <a href="https://paituli.csc.fi/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage">Full list of all OGC API data layers</a>
-    </li>
-  </ul>
+  <AppLink
+    new-tab
+    to="https://paituli.csc.fi/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage">
+    Full list of all OGC API data layers
+  </AppLink>
+  <br>
 
   <h2>Supported OGC APIs</h2>
 
@@ -139,7 +141,7 @@ import { URLS } from '@/shared/constants'
   <p>
     The license terms are the same for data downloaded via web services as via
     download service. The license terms and descriptions can be found from
-    <a href="download.html">Download</a> page.
+    <RouterLink to="/download">Download</RouterLink> page.
   </p>
 
   <p>
