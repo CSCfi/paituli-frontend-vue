@@ -51,16 +51,18 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
         <strong>2. Kuvaile aineisto</strong>.
         Aineistokuvauksen tulee sisältää:
       </c-list-item-title>
-      <span><input type="checkbox"/><label>Otsikko suomeksi ja englanniksi</label></span>
-      <span><input type="checkbox"/><label>Lyhyt kuvaus suomeksi ja englanniksi (noin 5–10 riviä)</label></span>
-      <span><input type="checkbox"/><label>Pidempi kuvaus voidaan lisätä PDF-tiedostona (valinnainen)</label></span>
-      <span><input type="checkbox"/><label>Aineiston tuottaja: organisaatio, tarvittaessa tutkija nimellä ja ORCID-tunnuksella</label></span>
-      <span><input type="checkbox"/><label>Aineiston keräyspäivämäärä</label></span>
-      <span><input type="checkbox"/><label>Mittakaava / pikselikoko</label></span>
-      <span><input type="checkbox"/><label>Koordinaattijärjestelmä</label></span>
-      <span><input type="checkbox"/><label>Lisenssi, esimerkiksi CC-BY-4.0</label></span>
-      <span><input type="checkbox"/><label>Projekti, jossa aineisto tuotettiin: nimi ja verkkosivu (valinnainen)</label></span>
-      <span><input type="checkbox"/><label>DOI-, URN- tai muu pysyvä tunniste, jos aineistolla sellainen jo on (valinnainen)</label></span>
+      <ul>
+        <li>Otsikko suomeksi ja englanniksi</li>
+        <li>Lyhyt kuvaus suomeksi ja englanniksi (noin 5–10 riviä)</li>
+        <li>Pidempi kuvaus voidaan lisätä PDF-tiedostona (valinnainen)</li>
+        <li>Aineiston tuottaja: organisaatio, tarvittaessa tutkija nimellä ja ORCID-tunnuksella</li>
+        <li>Aineiston keräyspäivämäärä</li>
+        <li>Mittakaava / pikselikoko</li>
+        <li>Koordinaattijärjestelmä</li>
+        <li>Lisenssi, esimerkiksi CC-BY-4.0</li>
+        <li>Projekti, jossa aineisto tuotettiin: nimi ja verkkosivu (valinnainen)</li>
+        <li>DOI-, URN- tai muu pysyvä tunniste, jos aineistolla sellainen jo on (valinnainen)</li>
+      </ul>
     </c-list-item>
 
     <c-list-item>

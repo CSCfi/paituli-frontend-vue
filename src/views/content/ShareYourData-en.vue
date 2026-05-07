@@ -46,16 +46,18 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
         <strong>2. Describe the data</strong>.
         The data description should include:
       </c-list-item-title>
-      <span><input type="checkbox"/><label>Heading in Finnish and English</label></span>
-      <span><input type="checkbox"/><label>Short description in Finnish and English (ca 5-10 rows)</label></span>
-      <span><input type="checkbox"/><label>Longer description can be added as .pdf-file. (Optional)</label></span>
-      <span><input type="checkbox"/><label>Dataset producer: organization, optionally researcher by name and ORCID.</label></span>
-      <span><input type="checkbox"/><label>Date, when data was gathered</label></span>
-      <span><input type="checkbox"/><label>Scale / pixel size</label></span>
-      <span><input type="checkbox"/><label>Coordinate system</label></span>
-      <span><input type="checkbox"/><label>License, for example CC-BY-4.0</label></span>
-      <span><input type="checkbox"/><label>Project, where the dataset was produced: name and web-page. (Optional)</label></span>
-      <span><input type="checkbox"/><label>DOI, URN or other PID if the dataset has it already (Optional)</label></span>
+      <ul>
+        <li>Heading in Finnish and English</li>
+        <li>Short description in Finnish and English (ca 5-10 rows)</li>
+        <li>Longer description can be added as .pdf-file. (Optional)</li>
+        <li>Dataset producer: organization, optionally researcher by name and ORCID.</li>
+        <li>Date, when data was gathered</li>
+        <li>Scale / pixel size</li>
+        <li>Coordinate system</li>
+        <li>License, for example CC-BY-4.0</li>
+        <li>Project, where the dataset was produced: name and web-page. (Optional)</li>
+        <li>DOI, URN or other PID if the dataset has it already (Optional)</li>
+      </ul>
     </c-list-item>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
