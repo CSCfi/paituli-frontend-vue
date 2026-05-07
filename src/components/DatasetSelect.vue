@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch } from 'vue'
+import { ref, computed, watchEffect, watch, onMounted } from 'vue'
 
 import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
@@ -12,6 +12,7 @@ import {
   getById,
   setCurrent
 } from '@/modules/datasets';
+import { sleep } from '@/shared/util';
 
 const { addToast } = useToasts();
 const { t } = useI18n()
@@ -149,6 +150,18 @@ const datasetCount = computed(() => {
   return map
 })
 
+// Inject dropdown button styles past their shadow root (sigh)
+onMounted(async () => {
+  await sleep(250)
+  document.querySelectorAll('.dropdowns c-select').forEach((el) => {
+    const button = el.shadowRoot?.querySelector('c-icon-button')
+    if (button) button.style =
+      'color: var(--c-white); \
+      --c-icon-button-text-background-color-hover: var(--c-primary-600);'
+  })
+})
+
+
 </script>
 
 <template>
@@ -158,7 +171,7 @@ const datasetCount = computed(() => {
     vertical="center"
   />
 
-  <div>
+  <div class="dropdowns">
     <c-select
       v-model="selectedProducer"
       v-control
