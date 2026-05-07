@@ -88,61 +88,80 @@
 
 
   <h2>Uutiset</h2>
-  <table>
-    <tbody>
-      <tr>
-        <th>Päivämäärä</th>
-        <th>Uutinen</th>
-      </tr>
-	  <tr>
-        <td>15.4.2026</td>
-        <td>Päivitetty Helsingin yliopisto/LUOMUS SPECTRE-aineistoja.</td>
-      </tr>		  
-      <tr>
-        <td>13.3.2026</td>
-        <td>Ilmatieteenlaitoksen 10 km sääaineistoja päivitetty, nyt saatavilla data vuosille 1961-2025: päivittäinen alin, ylin ja keskilämpötila, sademäärä, lumen syvyys, ilmanpaine, säteily, suhteellinen kosteus, sekä kuukausittainen keskilämpötila ja sademäärä.</td>
-      </tr>	
-      <tr>
-        <td>4.3.2026</td>
-        <td>Päivitetty <a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC:in Python-esimerkkejä</a>, uutena käytössä odc-stac-kirjasto.</td>
-      </tr>	
-	  <tr>
-        <td>23.2.2026</td>
-        <td>Lisätty Ruotsin maatalousyliopiston peltomaa Pohjois-Suomessa 1947-1979 aineisto, joka on koneoppimismenetelmiin laskettu historiallisista maastokartoista.</td>
-      </tr>		  
-      <tr>
-        <td>18.12.2025</td>
-        <td>Lisätty Tilastokeskuksen kuntien avainluvut 2023 ja 2024. </td>
-      </tr>
-      <tr>
-        <td>25.7.2025</td>
-        <td>Lisätty Tilastokeskuksen väestö kunnittain 2024, väestöruutuaineisto 2024, tieliikenneonnettomuudet 2023 ja Paavo 2025.</td>
-      </tr>
+  <c-list>
+    <c-list-item>
+      <c-list-item-title>
+        15.4.2026
+      </c-list-item-title>
+      Päivitetty Helsingin yliopisto/LUOMUS SPECTRE-aineistoja.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        13.3.2026
+      </c-list-item-title>
+      Ilmatieteenlaitoksen 10 km sääaineistoja päivitetty, nyt saatavilla data vuosille 1961-2025: päivittäinen alin, ylin ja keskilämpötila, sademäärä, lumen syvyys, ilmanpaine, säteily, suhteellinen kosteus, sekä kuukausittainen keskilämpötila ja sademäärä.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        4.3.2026
+      </c-list-item-title>
+      <span>
+        Päivitetty <a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC:in Python-esimerkkejä</a>, uutena käytössä odc-stac-kirjasto.
+      </span>
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        23.2.2026
+      </c-list-item-title>
+      Lisätty Ruotsin maatalousyliopiston peltomaa Pohjois-Suomessa 1947-1979 aineisto, joka on koneoppimismenetelmiin laskettu historiallisista maastokartoista.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        18.12.2025
+      </c-list-item-title>
+      Lisätty Tilastokeskuksen kuntien avainluvut 2023 ja 2024.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        25.7.2025
+      </c-list-item-title>
+      Lisätty Tilastokeskuksen väestö kunnittain 2024, väestöruutuaineisto 2024, tieliikenneonnettomuudet 2023 ja Paavo 2025.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        2.6.2025
+      </c-list-item-title>
+      Lisätty Digi- ja väestötietoviraston rakennusten osoitetiedot 2025 Shape-tiedostona.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        30.5.2025
+      </c-list-item-title>
+      Lisätty Maanmittauslaitoksen aineistoja 2025: maastotietokanta, hallintorajat, kiinteistörajat, painoväri ja taustaväri-peruskartta, maastokartat useissa mittakaavoissa rasterina ja vektorina.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        24.5.2025
+      </c-list-item-title>
+      Lisätty Luonnonvarakeskuksen valtakunnan metsien monilähteisessä inventoinnissa (MVMI) tuotetut karttamuotoiset metsävaratiedot: 2006 - 2021.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        15.4.2024
+      </c-list-item-title>
+      <span>
+        Lisätty yli 30 000 historiallisia georeferoitua karttaa Maanmittauslaitoksen arkistosta vuosilta 1863-2020. Pitäjäkartat, taloudelliset kartat, topografiset kartat, maastokartat ja peruskartat mittakaavoissa 1:20 000 - 1:500 000. <a href="https://www.maanmittauslaitos.fi/ajankohtaista/yli-30-000-vanhaa-karttaa-jopa-150-vuoden-takaa-nyt-paikkatietona"  target="_blank">Lisätietoja MML:n sivuilta</a>.
+      </span>
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        21.3.2019
+      </c-list-item-title>
+      MML:n laserkeilausaineistoa, 2m DEM ja ortokuva-aineistoja päivitetään Paitulissa joka viikko sunnuntaisin.
+    </c-list-item>
+  </c-list>
 
-      <tr>
-        <td>2.6.2025</td>
-        <td>Lisätty Digi- ja väestötietoviraston rakennusten osoitetiedot 2025 Shape-tiedostona.</td>
-      </tr>
-      <tr>
-        <td>30.5.2025</td>
-        <td>Lisätty Maanmittauslaitoksen aineistoja 2025: maastotietokanta, hallintorajat, kiinteistörajat, painoväri ja taustaväri-peruskartta, maastokartat useissa mittakaavoissa rasterina ja vektorina.</td>
-      </tr>
 
-      <tr>
-        <td>24.5.2025</td>
-        <td>Lisätty Luonnonvarakeskuksen valtakunnan metsien monilähteisessä inventoinnissa (MVMI) tuotetut karttamuotoiset metsävaratiedot: 2006 - 2021.</td>
-      </tr>
-      <tr>
-        <td>15.4.2024</td>
-        <td>Lisätty yli 30 000 historiallisia georeferoitua karttaa Maanmittauslaitoksen arkistosta vuosilta 1863-2020. Pitäjäkartat, taloudelliset kartat, topografiset kartat, maastokartat ja peruskartat mittakaavoissa 1:20 000 - 1:500 000. <a href="https://www.maanmittauslaitos.fi/ajankohtaista/yli-30-000-vanhaa-karttaa-jopa-150-vuoden-takaa-nyt-paikkatietona"  target="_blank">Lisätietoja MML:n sivuilta</a>.</td>
-      </tr>
-      <tr>
-        <td>21.3.2019</td>
-        <td>MML:n laserkeilausaineistoa, 2m DEM ja ortokuva-aineistoja päivitetään Paitulissa joka viikko sunnuntaisin.</td>
-      </tr>
-
-    </tbody>
-  </table>
 
   <h2>Paituli palvelusta</h2>
 
@@ -166,3 +185,11 @@
   </p>
 
 </template>
+
+<style scoped>
+
+c-list {
+  --c-list-gap: 0;
+}
+
+</style>

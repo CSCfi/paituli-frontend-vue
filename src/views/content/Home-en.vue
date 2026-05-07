@@ -86,61 +86,76 @@
 
 
   <h2>News</h2>
-
-  <table>
-    <tbody>
-      <tr>
-        <th>Date</th>
-        <th>News</th>
-      </tr>
-	  <tr>
-        <td>15.4.2026</td>
-        <td>Helsinki university/LUOMUS SPECTRE-datasets have been updated.</td>
-      </tr>		
-      <tr>
-        <td>13.3.2026</td>
-        <td>FMI's following 10 km datasets have been updated, so that now data is available for years 1961-2025: daily average, mean and maximum temperature, precipitation, snow, radiation, sea level pressure, relative humidity, and monthly average temperature and precipitation. .</td>
-      </tr>	  
-      <tr>
-        <td>4.3.2026</td>
-        <td><a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC Python examples</a> are updated to use odc-stac-library.</td>
-      </tr>	
-	  <tr>
-        <td>23.2.2026</td>
-        <td>Arable land from Norhtern Finland (1947-1979) from Swedish university of agricultural sciences added. It was created using machine learning methods from historical topographic maps.</td>
-      </tr>		  
-      <tr>
-        <td>18.12.2025</td>
-        <td>Statistics Finland: key figures for municipalities 2023 and 2024 added. </td>
-      </tr>
-      <tr>
-        <td>25.7.2025</td>
-        <td>Statistics Finland: population grid data 2024, population by municipalities 2024, road accidents 2023 and Paavo 2025 added.</td>
-      </tr>
-
-      <tr>
-        <td>2.6.2025</td>
-        <td>Digital Agency: Addresses of buildings 2025 added.</td>
-      </tr>
-      <tr>
-        <td>30.5.2025</td>
-        <td>National Land Survey 2025 data update: topographic database, administrative boundaries, cadastral index map, print-color and background-color basic maps, topographic and general maps in several scales as raster and vector.</td>
-      </tr>
-
-      <tr>
-        <td>24.5.2025</td>
-        <td>Natural Resource institute's (LUKE) estimates of variables in map form from multi-source national forest inventory (MS-NFI) added: 2006 - 2021.</td>
-      </tr>
-      <tr>
-        <td>15.4.2024</td>
-        <td>Over 30 000 historic georeferenced maps from National Land Survey archive from years 1863-2020 added. Parish maps, economic maps, topographic maps and basic maps in scales 1:20 000 to 1:500 000.</td>
-      </tr>
-      <tr>
-        <td>21.3.2019</td>
-        <td>National Land Board's lidar data, 2m DEM and orthophotos are updated every Sunday.</td>
-      </tr>
-    </tbody>
-  </table>
+  <c-list>
+    <c-list-item>
+      <c-list-item-title>
+        15.4.2026
+      </c-list-item-title>
+      Helsinki university/LUOMUS SPECTRE-datasets have been updated.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        13.3.2026
+      </c-list-item-title>
+      FMI's following 10 km datasets have been updated, so that now data is available for years 1961-2025: daily average, mean and maximum temperature, precipitation, snow, radiation, sea level pressure, relative humidity, and monthly average temperature and precipitation. .
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        4.3.2026
+      </c-list-item-title>
+      <span>
+        <a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC Python examples</a> are updated to use odc-stac-library.
+      </span>
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        23.2.2026
+      </c-list-item-title>
+      Arable land from Norhtern Finland (1947-1979) from Swedish university of agricultural sciences added. It was created using machine learning methods from historical topographic maps.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        18.12.2025
+      </c-list-item-title>
+      Statistics Finland: key figures for municipalities 2023 and 2024 added.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        25.7.2025
+      </c-list-item-title>
+      Statistics Finland: population grid data 2024, population by municipalities 2024, road accidents 2023 and Paavo 2025 added.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        2.6.2025
+      </c-list-item-title>
+      Digital Agency: Addresses of buildings 2025 added.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        30.5.2025
+      </c-list-item-title>
+      National Land Survey 2025 data update: topographic database, administrative boundaries, cadastral index map, print-color and background-color basic maps, topographic and general maps in several scales as raster and vector.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        24.5.2025
+      </c-list-item-title>
+      Natural Resource institute's (LUKE) estimates of variables in map form from multi-source national forest inventory (MS-NFI) added: 2006 - 2021.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        15.4.2024
+      </c-list-item-title>
+      Over 30 000 historic georeferenced maps from National Land Survey archive from years 1863-2020 added. Parish maps, economic maps, topographic maps and basic maps in scales 1:20 000 to 1:500 000.
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
+        21.3.2019
+      </c-list-item-title>
+      National Land Board's lidar data, 2m DEM and orthophotos are updated every Sunday.
+    </c-list-item>
+  </c-list>
 
   <h2>About Paituli</h2>
 
@@ -165,3 +180,11 @@
   </p>
 
 </template>
+
+<style scoped>
+
+c-list {
+  --c-list-gap: 0;
+}
+
+</style>
