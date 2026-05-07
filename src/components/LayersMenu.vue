@@ -79,6 +79,7 @@ c-switch {
   width: 100%;
 }
 h3 {
+  color: unset;
   margin-top: 0;
   margin-bottom: .5em;
   text-align: center;

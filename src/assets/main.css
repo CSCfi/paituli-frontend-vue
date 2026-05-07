@@ -14,6 +14,10 @@ body {
   margin: 0;
 }
 
+h1, h2, h3 {
+  color: var(--c-tertiary-900);
+}
+
 html,
 body {
   transition:
@@ -25,6 +29,10 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::marker {
+  color: var(--c-tertiary-700);
 }
 
 a {
