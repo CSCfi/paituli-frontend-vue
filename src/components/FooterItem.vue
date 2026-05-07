@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
 
 </script>
 
@@ -26,47 +26,38 @@ const { t } = useI18n()
     <ul>
       <li>
         <RouterLink to="/privacy">
-          {{ t("privacy") }}
+          {{ t("pages.privacy") }}
+        </RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/cookies">
+          {{ t("pages.cookies") }}
         </RouterLink>
       </li>
       <li>
         <RouterLink to="/accessibility">
-          {{ t("accessibility") }}
+          {{ t("pages.accessibility") }}
         </RouterLink>
       </li>
     </ul>
   </div>
 </template>
 
-<i18n>
-{
-  "en": {
-    "contact": "Contact",
-    "privacy": "Privacy",
-    "accessibility": "Accessibility",
-  },
-  "fi": {
-    "contact": "Ota yhteyttä",
-    "privacy": "Tietosuoja",
-    "accessibility": "Saavutettavuus",
-  },
-}
-</i18n>
 
 <style scoped>
-
 .footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-top: 1rem;
-  padding: 1.5rem 0;
-  gap: 2rem;
+  padding: 1rem;
+  gap: .5rem;
   background-color: var(--c-primary-100);
 
   img {
-    height: 4rem;
+    height: 3.5rem;
+    margin: .5em;
   }
 }
 

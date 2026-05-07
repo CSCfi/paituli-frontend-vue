@@ -15,6 +15,7 @@ export const i18n = createI18n({
     // `i18n.global.t(...) // or: const { t } = useI18n({ useScope: 'global' })
     // Component-specific translations are in the components' files.
     'en': {
+      'contact': 'Contact',
       'toasts': {
         'default_title': 'Notice',
       },
@@ -31,10 +32,12 @@ export const i18n = createI18n({
         'stac': 'STAC',
         'shareyourdata': 'Share Your Data',
         'privacy': 'Privacy',
+        'cookies': 'Cookie Policy',
         'accessibility': 'Accessibility',
       },
     },
     'fi': {
+      'contact': 'Ota yhteyttä',
       'toasts': {
         'default_title': 'Huomautus',
       },
@@ -50,7 +53,8 @@ export const i18n = createI18n({
         'batchdownload': 'Massalataus',
         'stac': 'STAC',
         'shareyourdata': 'Jaa aineistosi',
-        'privacy': 'Yksityisyys',
+        'privacy': 'Tietosuoja',
+        'cookies': 'Evästeet',
         'accessibility': 'Saavutettavuus',
       },
     },

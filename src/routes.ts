@@ -44,6 +44,11 @@ const router = createRouter({
       component: LocalizedContentView,
     },
     {
+      path: '/cookies',
+      name: 'Cookies',
+      component: LocalizedContentView,
+    },
+    {
       path: '/accessibility',
       name: 'Accessibility',
       component: LocalizedContentView,
