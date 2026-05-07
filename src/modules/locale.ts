@@ -11,8 +11,8 @@ export const i18n = createI18n({
   locale: localStorage.getItem('app-locale') || 'en',
   fallbackLocale: 'en',
   messages: {
-    // These are global translations. To use these, you need to use global scope:
-    // const { t } = useI18n({ useScope: 'global' })
+    // These are global translations. To use these, import i18n from this module and:
+    // `i18n.global.t(...) // or: const { t } = useI18n({ useScope: 'global' })
     // Component-specific translations are in the components' files.
     'en': {
       'toasts': {
@@ -23,6 +23,16 @@ export const i18n = createI18n({
         'tooltip': 'Show help',
         'header': 'Help',
       },
+      'pages': {
+        'home': 'About',
+        'download': 'Download Data',
+        'webservices': 'Web Services',
+        'batchdownload': 'Batch Download',
+        'stac': 'STAC',
+        'shareyourdata': 'Share Your Data',
+        'privacy': 'Privacy',
+        'accessibility': 'Accessibility',
+      },
     },
     'fi': {
       'toasts': {
@@ -32,6 +42,16 @@ export const i18n = createI18n({
         'default': 'Napsauta jotain saadaksesi siitä apua!',
         'tooltip': 'Näytä ohjeet',
         'header': 'Ohjeet',
+      },
+      'pages': {
+        'home': 'Etusivu',
+        'download': 'Latauspalvelu',
+        'webservices': 'Rajapinnat',
+        'batchdownload': 'Massalataus',
+        'stac': 'STAC',
+        'shareyourdata': 'Jaa aineistosi',
+        'privacy': 'Yksityisyys',
+        'accessibility': 'Saavutettavuus',
       },
     },
   },

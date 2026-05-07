@@ -7,7 +7,7 @@ import FooterItem from '@/components/FooterItem.vue';
 import { currentFlag, languageItems } from '@/modules/locale';
 import { useRoute } from 'vue-router';
 
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
 const route = useRoute()
 
 // Initialize global toasts messages container
@@ -28,12 +28,12 @@ onMounted(() => {
       </RouterLink>
       <div class="header-content">
         <nav>
-          <RouterLink id="home" to="/">{{ t("home") }}</RouterLink>
-          <RouterLink to="/download">{{ t("download") }}</RouterLink>
-          <RouterLink to="/webservices">{{ t("webservices") }}</RouterLink>
-          <RouterLink to="/files">{{ t("files") }}</RouterLink>
-          <RouterLink to="/stac">{{ t("stac") }}</RouterLink>
-          <RouterLink to="/opendata">{{ t("opendata") }}</RouterLink>
+          <RouterLink id="home" to="/">{{ t("pages.home") }}</RouterLink>
+          <RouterLink to="/download">{{ t("pages.download") }}</RouterLink>
+          <RouterLink to="/webservices">{{ t("pages.webservices") }}</RouterLink>
+          <RouterLink to="/files">{{ t("pages.batchdownload") }}</RouterLink>
+          <RouterLink to="/stac">{{ t("pages.stac") }}</RouterLink>
+          <RouterLink to="/opendata">{{ t("pages.shareyourdata") }}</RouterLink>
         </nav>
       </div>
       <c-menu id="languages" :items="languageItems">
@@ -49,27 +49,6 @@ onMounted(() => {
   </div>
   <c-toasts ref="toasts" horizontal="center" vertical="top" />
 </template>
-
-<i18n>
-  {
-    "en": {
-      "home": "Home",
-      "download": "Download Data",
-      "webservices": "Web Services",
-      "files": "Batch Download",
-      "stac": "STAC",
-      "opendata": "Share Your Data",
-    },
-    "fi": {
-      "home": "Koti",
-      "download": "Latauspalvelu",
-      "webservices": "Rajapinnat",
-      "files": "Massalataus",
-      "stac": "STAC",
-      "opendata": "Jaa Aineistosi",
-    },
-  }
-</i18n>
 
 <style scoped>
 .page {

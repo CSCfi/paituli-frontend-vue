@@ -1,6 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocation } from 'vue-router'
 import LocalizedContentView from '@/views/LocalizedContentView.vue'
 import DownloadView from '@/views/DownloadView.vue'
+import { i18n } from './modules/locale'
+import { watch } from 'vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +14,7 @@ const router = createRouter({
     },
     {
       path: '/download',
+      name: 'Download',
       meta: { hideFooter: true },
       component: DownloadView,
     },
@@ -47,5 +50,15 @@ const router = createRouter({
     },
   ],
 })
+
+function updateDocumentTitle(route: RouteLocation) {
+  // Keys for page titles are defined in locale.ts
+  const key = `pages.${route.name?.toString().toLowerCase()}`
+  document.title = `${i18n.global.t(key)} – Paituli`
+}
+
+// Update page title after each routing and if locale changes
+router.afterEach((to) => updateDocumentTitle(to))
+watch(i18n.global.locale, () => updateDocumentTitle(router.currentRoute.value))
 
 export default router
