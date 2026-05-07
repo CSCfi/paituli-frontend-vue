@@ -145,7 +145,7 @@ watch(selectedFeaturesArray, () => {
     "size": "Download ({size} MB)",
     "warnings": {
       "size": "You have selected over {size} MB of data, which is over the allowed limit of ZIP file download.",
-      "select": "Select at least one map sheet to download data. Click 'Select map sheets' from the toolbar to start selecting map sheets.",
+      "select": "Select at least one map sheet to download data. Click 'Select map sheets' from the toolbar to start.",
     },
     "documents": "Documents",
     "files": "Files",
@@ -155,7 +155,7 @@ watch(selectedFeaturesArray, () => {
     "size": "Lataa ({size} MB)",
     "warnings": {
       "size": "Olet valinnut yli {size} MB dataa, mikä ylittää sallitun ZIP tiedoston kokorajan.",
-      "select": "Ladataksesi tiedostoja, valitse vähintään yksi karttalehti. Napsauta 'Valitse karttalehtiä' työkalupalkista aloittaaksesi karttalehtien valitsemisen.",
+      "select": "Ladataksesi tiedostoja, valitse vähintään yksi karttalehti. Napsauta 'Valitse karttalehtiä' työkalupalkista aloittaaksesi.",
     },
     "documents": "Asiakirjat",
     "files": "Tiedostot",
