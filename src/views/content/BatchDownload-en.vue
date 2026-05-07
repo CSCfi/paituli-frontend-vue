@@ -9,7 +9,7 @@ import { APP_SETTINGS } from '@/shared/constants'
   <h1>Bulk download of files from Paituli over HTTPS, FTP and rsync</h1>
 
   <p>
-    Paituli <RouterLink to="/download">Download page</RouterLink> enables downloading data as .zip file max. 3 Gb at a time. This can be limiting, if the needed dataset is bigger. This page describes how to download bigger datasets as files. Alternative options are to use <RouterLink to="/webservices">OGC APIs</RouterLink> or <RouterLink to="/stac">STAC</RouterLink>, to get access to the data.
+    Paituli <RouterLink to="/download">Download page</RouterLink> enables downloading data as .zip file max. {{ APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB at a time. This can be limiting, if the needed dataset is bigger. This page describes how to download bigger datasets as files. Alternative options are to use <RouterLink to="/webservices">OGC APIs</RouterLink> or <RouterLink to="/stac">STAC</RouterLink>, to get access to the data.
   </p>
 
   <p>For bigger downloads, there are two main options:</p>
@@ -42,23 +42,31 @@ import { APP_SETTINGS } from '@/shared/constants'
 
   <p>Choose the right option for you, depending on your operating system, firewall limitations and download interests:</p>
 
-  <table>
-    <tr>
-      <th>Download type</th>
-      <th>Windows</th>
-      <th>Linux, Mac, Windows WSL</th>
-    </tr>
-    <tr>
-      <td>List of files</td>
-      <td>Paituli PowerShell script (HTTPS)</td>
-      <td>rsync, wget (HTTPS)</td>
-    </tr>
-    <tr>
-      <td>Folder</td>
-      <td>WinSCP, FileZilla (both FTP)</td>
-      <td>FileZilla (FTP), rsync, wget (FTP or HTTPS)</td>
-    </tr>
-  </table>
+  <c-table>
+    <table>
+      <thead>
+        <tr>
+          <th>Download type</th>
+          <th>Windows</th>
+          <th>Linux, Mac, Windows WSL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>List of files</td>
+          <td>Paituli PowerShell script (HTTPS)</td>
+          <td>rsync, wget (HTTPS)</td>
+        </tr>
+        <tr>
+          <td>Folder</td>
+          <td>WinSCP, FileZilla (both FTP)</td>
+          <td>FileZilla (FTP), rsync, wget (FTP or HTTPS)</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </c-table>
+
 
   <p>If you want to download a folder, but have Windows and can not use FTP/rsync, then there is not suitable tools to download a folder. As workaround, create a .txt file with the folder name in it and use the Paituli PowerShell script to download the folder. </p>
 

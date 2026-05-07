@@ -7,7 +7,7 @@ import { APP_SETTINGS } from '@/shared/constants'
 <template>
   <h1>Paitulin aineistojen massalataus HTTPS-, FTP- ja rsync-yhteyksien yli</h1>
   <p>
-    Paitulin <RouterLink to="/download">Lataussivu</RouterLink> mahdollistaa aineistojen latauksen .zip tiedostona. Kerralla voi ladata max. 3 Gb, joka voi isompien aineistojen osalta olla rajoittavaa.
+    Paitulin <RouterLink to="/download">Lataussivu</RouterLink> mahdollistaa aineistojen latauksen .zip tiedostona. Kerralla voi ladata max. {{  APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB, joka voi isompien aineistojen osalta olla rajoittavaa.
     Tämä sivu kuvaa miten isompia aineistoja ladataan tiedostoina. Vaihtoehtoisesti isompien aineistojen käyttämiseen sopivat <RouterLink to="/webservices">OGC API-rajapinnat</RouterLink> tai <RouterLink to="/stac">STAC</RouterLink>.
   </p>
 
@@ -40,23 +40,29 @@ import { APP_SETTINGS } from '@/shared/constants'
 
   <p>Valitse sopiva lataustapa riippuen käyttämästäsi käyttöjärjestelmästä, palomuurin rajoituksista ja lataustoiveista:</p>
 
-  <table>
-    <tr>
-      <th>Lataustapa</th>
-      <th>Windows</th>
-      <th>Linux, Mac, Windows WSL</th>
-    </tr>
-    <tr>
-      <td>Tiedostolistauksen avulla</td>
-      <td>Paituli PowerShell skripti (HTTPS)</td>
-      <td>rsync, wget (HTTPS)</td>
-    </tr>
-    <tr>
-      <td>Hakemisto</td>
-      <td>WinSCP, FileZilla (molemmat FTP)</td>
-      <td>FileZilla (FTP), rsync, wget (FTP tai HTTPS)</td>
-    </tr>
-  </table>
+  <c-table>
+    <table>
+      <thead>
+        <tr>
+          <th>Lataustapa</th>
+          <th>Windows</th>
+          <th>Linux, Mac, Windows WSL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tiedostolistauksen avulla</td>
+          <td>Paituli PowerShell skripti (HTTPS)</td>
+          <td>rsync, wget (HTTPS)</td>
+        </tr>
+        <tr>
+          <td>Hakemisto</td>
+          <td>WinSCP, FileZilla (molemmat FTP)</td>
+          <td>FileZilla (FTP), rsync, wget (FTP tai HTTPS)</td>
+        </tr>
+      </tbody>
+    </table>
+  </c-table>
 
   <p>Hakemiston lataaminen Windows käyttäjänä vaatii FTP:n tai rsync:n, niiden lisäksi sopivia työkaluja hakemiston lataamiseksi ei valitettavasti ole olemassa.
     Tällöin suosittelemme, että luot .txt tiedoston, jossa on vain haluamasi hakemiston nimi ja käytät Paituli PowerShell skriptiä hakemiston lataamiseksi. </p>
