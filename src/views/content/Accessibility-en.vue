@@ -57,7 +57,7 @@
     </li>
     <li>
       The latest version of the Chrome browser with assistive technology NVDA on
-      the latest version of the Windows 10 operating system
+      the latest version of the Windows operating system
     </li>
   </ul>
 

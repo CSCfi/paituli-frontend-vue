@@ -46,9 +46,9 @@
   <ul>
     <li>Viimeisin versio Chrome-verkkoselaimesta avustavan VoiceOver-teknologian kanssa käyttöjärjestelmän macOS X viimeisimmällä versiolla
     </li>
-    <li>Viimeisin versio Safari-verkkoselaimesta avustavan VoiceOver-teknologian kanssa käyttöjärjestelmänmacOS X viimeisimmällä versiolla
+    <li>Viimeisin versio Safari-verkkoselaimesta avustavan VoiceOver-teknologian kanssa käyttöjärjestelmän macOS X viimeisimmällä versiolla
     </li>
-    <li>Viimeisin versio Chrome-verkkoselaimesta avustavan NVDA-teknologian kanssa käyttöjärjestelmän Windows 10 viimeisimmällä versiolla
+    <li>Viimeisin versio Chrome-verkkoselaimesta avustavan NVDA-teknologian kanssa käyttöjärjestelmän Windows viimeisimmällä versiolla
     </li>
   </ul>
 
