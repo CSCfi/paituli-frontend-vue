@@ -1,89 +1,71 @@
+<script setup lang="ts">
+import AppLink from '@/components/AppLink.vue';
+import { APP_SETTINGS } from '@/shared/constants';
+import { CAlertType } from '@cscfi/csc-ui';
+
+</script>
+
 <template>
   <h1>About</h1>
-  <p>Paituli is a Finnish spatial data service. Paituli is mainly targeted for academic users, but it is open to anyone. The service provides datasets that are important for research and education. Compared to other spatial data services Paituli includes also historical versions of datasets. For many datasets the first version is from 2005, when Paituli started. All provided datasets have open license, mostly CC-BY-4.0 license.
-
-  </p>
-
-  <p>Finnish academic users are welcomed to <RouterLink to="/opendata">share data</RouterLink> in Paituli.
-  </p>
-
   <p>
-    <a href="http://www.nic.funet.fi/index/geodata/Paituli_2026.pptx" target="_blank">Paituli's PowerPoint presentation</a>
-    (2026).
+    Paituli is a Finnish spatial data service. Paituli is mainly targeted for academic users, but it is open to anyone. The service provides datasets that are important for research and education. Compared to other spatial data services Paituli includes also historical versions of datasets. For many datasets the first version is from 2005, when Paituli started. All provided datasets have open license, mostly CC-BY-4.0 license.
+  </p>
+  <p>
+    Finnish academic users are welcomed to <AppLink to="/opendata">share data</AppLink> in Paituli.
+  </p>
+  <p>
+    <AppLink :new-tab="false" to="http://www.nic.funet.fi/index/geodata/Paituli_2026.pptx"> Paituli's PowerPoint presentation</AppLink> (2026).
   </p>
 
   <h2>Datasets</h2>
-
   <p>
     Paituli includes datasets from following data providers:
     <ul>
-      <li>
-        <a href="https://dvv.fi" target="_blank">Finnish Digital and Population Data Services Agency</a>
-      </li>
-      <li>
-        <a href="https://www.ruokavirasto.fi/" target="_blank">Finnish Food Agency</a>
-      </li>
-      <li>
-        <a href="http://www.ilmatieteenlaitos.fi" target="_blank">Finnish Meteorological Institute (FMI)</a>
-      </li>
-      <li>
-        <a href="http://www.digiroad.fi" target="_blank">Finnish Transport Infrastructure Agency, Digiroad</a>
-      </li>
-      <li>
-        <a href="http://www.kotus.fi" target="_blank">Institute for the Languages of Finland (KOTUS)</a>
-      </li>
-      <li>
-        <a href="https://science.nasa.gov/mission/landsat/" target="_blank">NASA/USGS, Landsat</a>
-      </li>
-      <li>
-        <a href="http://www.maanmittauslaitos.fi" target="_blank">National Land Survey (MML)</a>
-      </li>
-      <li>
-        <a href="https://www.luke.fi/" target="_blank">Natural resource institute Finland (LUKE)</a>
-      </li>
-      <li>
-        <a href="http://www.tilastokeskus.fi/index_en.html" target="_blank">Statistics Finland</a>
-      </li>
-      <li>
-        <a href="https://www.slu.se/en/" target="_blank">Swedish university of agricultural sciences</a>
-      </li>
-      <li>
-        <a href="https://www.helsinki.fi/en" target="_blank">University of Helsinki</a>
-      </li>
+      <li><AppLink to="https://dvv.fi">Finnish Digital and Population Data Services Agency</AppLink></li>
+      <li><AppLink to="https://www.ruokavirasto.fi/">Finnish Food Agency</AppLink></li>
+      <li><AppLink to="http://www.ilmatieteenlaitos.fi">Finnish Meteorological Institute (FMI)</AppLink></li>
+      <li><AppLink to="http://www.digiroad.fi">Finnish Transport Infrastructure Agency, Digiroad</AppLink></li>
+      <li><AppLink to="http://www.kotus.fi">Institute for the Languages of Finland (KOTUS)</AppLink></li>
+      <li><AppLink to="https://science.nasa.gov/mission/landsat/">NASA/USGS, Landsat</AppLink></li>
+      <li><AppLink to="http://www.maanmittauslaitos.fi">National Land Survey (MML)</AppLink></li>
+      <li><AppLink to="https://www.luke.fi/">Natural resource institute Finland (LUKE)</AppLink></li>
+      <li><AppLink to="http://www.tilastokeskus.fi/index_en.html">Statistics Finland</AppLink></li>
+      <li><AppLink to="https://www.slu.se/en/">Swedish university of agricultural sciences</AppLink></li>
+      <li><AppLink to="https://www.helsinki.fi/en">University of Helsinki</AppLink></li>
     </ul>
   </p>
-  <p><a href="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli" target="_blank">Detailed list and metadata of all Paituli datasets</a> can be found from Fairdata Etsin. In Etsin, use the free text search or the filters on the left to specify your interest.
-  </p>
+  <c-alert :type="CAlertType.Info">
+    <span>
+      Detailed list and metadata of all Paituli datasets can be found from <AppLink to="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli">Fairdata Etsin</AppLink>.
+      <br>In Etsin, use the free text search or the filters on the left to specify your interest.
+    </span>
+  </c-alert>
 
   <h2>Data access</h2>
-
   <p>Paituli provides many options for accessing the data:
     <ul>
       <li>
-        <RouterLink to="/download">Download page</RouterLink> enables:
+        <AppLink to="/download">Download page</AppLink> enables:
         <ul>
-          <li><b>Map preview</b> of many datasets, including feature info.
-          </li>
-          <li>Downloaded files of all or selected mapsheets as a <b>zip-file</b>, max 3Gb.
-          </li>
-          <li>Downloaded file list of all or selected mapsheets.
-          </li>
+          <li><b>Map preview</b> of many datasets, including feature info.</li>
+          <li>Downloaded files of all or selected mapsheets as a <b>zip-file</b>, max {{ APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB.</li>
+          <li>Downloaded file list of all or selected mapsheets.</li>
         </ul>
       </li>
-      <li>Bigger amounts of data can be download over <RouterLink to="/files">HTTPS, FTP and rsync</RouterLink>.
-      </li>
-      <li>Many datasets are also available as
-        <RouterLink to="/webservices">OGC APIs:</RouterLink>
-        WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
-      </li>
-      <li>All Paituli raster datasets are available via <RouterLink to="/stac">STAC</RouterLink>. Paituli STAC includes more datasets than Paituli download service, for example Geoportti Geocube and several remote sensing Finnish datasets.
+      <li>
+        Bigger amounts of data can be download over <AppLink to="/files">HTTPS, FTP and rsync</AppLink>.
       </li>
       <li>
-        <a href="https://research.csc.fi/gis_data_in_csc_computing_env" target="_blank">CSC Puhti supercomputer has open GIS data</a>, which includes a copy of almost all Paituli data, for fast and easy access for Puhti users.
+        Many datasets are also available as <AppLink to="/webservices">OGC APIs:</AppLink> WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
+      </li>
+      <li>
+        All Paituli raster datasets are available via <AppLink to="/stac">STAC</AppLink>. Paituli STAC includes more datasets than Paituli download service, for example Geoportti Geocube and several remote sensing Finnish datasets.
+      </li>
+      <li>
+        <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env">CSC Puhti supercomputer has open GIS data</AppLink>, which includes a copy of almost all Paituli data, for fast and easy access for Puhti users.
       </li>
     </ul>
   </p>
-
 
   <h2>News</h2>
   <c-list>
@@ -97,14 +79,14 @@
       <c-list-item-title>
         13.3.2026
       </c-list-item-title>
-      FMI's following 10 km datasets have been updated, so that now data is available for years 1961-2025: daily average, mean and maximum temperature, precipitation, snow, radiation, sea level pressure, relative humidity, and monthly average temperature and precipitation. .
+      FMI's following 10 km datasets have been updated, so that now data is available for years 1961-2025: daily average, mean and maximum temperature, precipitation, snow, radiation, sea level pressure, relative humidity, and monthly average temperature and precipitation.
     </c-list-item>
     <c-list-item>
       <c-list-item-title>
         4.3.2026
       </c-list-item-title>
       <span>
-        <a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC Python examples</a> are updated to use odc-stac-library.
+        <AppLink to="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC Python examples</AppLink> are updated to use odc-stac-library.
       </span>
     </c-list-item>
     <c-list-item>
@@ -159,24 +141,23 @@
 
   <h2>About Paituli</h2>
 
-  <p>The use of Paituli service is free of charge. Paituli is maintained by
-    <a href="https://www.csc.fi" target="_blank">CSC - IT center for science</a> and financed by
-    <a href="https://minedu.fi/etusivu" target="_blank">Ministry of Education and Culture</a> and
-    Finnish Academy via <a href="https://www.geoportti.fi" target="_blank">Geoportti</a> FIRI-project. Paituli is provided with best effort service level and availability.
+  <p>
+    The use of Paituli service is free of charge. Paituli is maintained by <AppLink to="https://www.csc.fi">CSC - IT center for science</AppLink> and financed by <AppLink to="https://minedu.fi/etusivu">Ministry of Education and Culture</AppLink> and
+    Finnish Academy via <AppLink to="https://www.geoportti.fi">Geoportti</AppLink> FIRI-project. Paituli is provided with best effort service level and availability.
   </p>
-
-  <p>Paituli is developed at CSC using open source software, inc:
-    <a href="http://geoserver.org/" target="_blank">Geoserver</a>,
-    <a href="https://openlayers.org/" target="_blank">OpenLayers</a>,
-    <a href="https://vuejs.org/" target="_blank">Vue</a>,
-    <a href="https://postgis.net/" target="_blank">PostGIS</a>
+  <p>
+    Paituli is developed at CSC using open source software, inc:
+    <AppLink to="http://geoserver.org/">Geoserver</AppLink>,
+    <AppLink to="https://openlayers.org/">OpenLayers</AppLink>,
+    <AppLink to="https://vuejs.org/">Vue</AppLink>,
+    <AppLink to="https://postgis.net/">PostGIS</AppLink>
     and
-    <a href="https://quarkus.io/" target="_blank">Quarkus</a>.
+    <AppLink to="https://quarkus.io/" >Quarkus</AppLink>.
     Paituli source code is available in Github:
-    <a href="https://github.com/CSCfi/paituli-frontend-vue/"  target="_blank">front-end</a> and <a href="https://github.com/CSCfi/avaa-paituli-backend"  target="_blank">back-end</a>.
+    <AppLink to="https://github.com/CSCfi/paituli-frontend-vue/">front-end</AppLink> and <AppLink to="https://github.com/CSCfi/avaa-paituli-backend">back-end</AppLink>.
   </p>
-
-  <p>Usage statistics are available in <a href="https://www.nic.funet.fi/index/geodata/yearly_reports/" target="_blank">Paituli yearly reports</a>.
+  <p>
+    Usage statistics are available in <AppLink to="https://www.nic.funet.fi/index/geodata/yearly_reports/">Paituli yearly reports</AppLink>.
   </p>
 
 </template>

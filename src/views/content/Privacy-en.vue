@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import AppLink from '@/components/AppLink.vue';
+
+</script>
+
 <template>
   <h1>Paituli privacy notice</h1>
   <p>
@@ -31,8 +36,7 @@
 
   <h3>4. What are the purposes and lawful bases for processing personal data</h3>
   <p>
-    The processing is based on our legitimate interest in providing a secure and reliable service.
-    We process your data to produce aggregated statistical reports on service usage in order to improve platform performance. The stored aggregated statistics do not include personal data.
+    The processing is based on our legitimate interest in providing a secure and reliable service. We process your data to produce aggregated statistical reports on service usage in order to improve platform performance. The stored aggregated statistics do not include personal data.
   </p>
 
   <h3>5. What data do we process?</h3>
@@ -74,9 +78,8 @@
     <li>Right to data portability</li>
     <li>The data subject can allow automated decision-making (including profiling) with his or her specific consent</li>
   </ul>
-
   <p>
-    If you suspect that your data is not processed according to the legislation, please contact up. You may also complain to the <a href="https://tietosuoja.fi/en/contact-information">Data Protection Ombudsman</a>.
+    If you suspect that your data is not processed according to the legislation, please contact up. You may also complain to the <AppLink to="https://tietosuoja.fi/en/contact-information">Data Protection Ombudsman</AppLink>.
   </p>
 
   <h3>10. Who should I contact?</h3>

@@ -7,7 +7,7 @@
     Paituli website use only necessary cookies. These essential cookies ensure that the website works as intended technically. Cookies are not used for any other purposes. The website connection is always a secure connection (https).
   </p>
   <p>
-    The service providers is CSC – IT Center for Science Ltd.
+    The service provider is CSC – IT Center for Science Ltd.
   </p>
 
   <h2>Essential cookies used on the website</h2>
