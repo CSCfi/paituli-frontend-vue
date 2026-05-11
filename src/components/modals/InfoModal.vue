@@ -101,6 +101,7 @@ async function loadMetadata() {
 
         <p v-if="currentDataset?.data_id">
           <app-link
+            :new-tab="false"
             :to="URLS.GEOPACKAGE_BASE.replace('!id!', currentDataset.data_id)">
             <c-icon :path="mdiFileDownloadOutline" />{{ t('gpkg.download') }}
           </app-link>
@@ -110,7 +111,7 @@ async function loadMetadata() {
 
       </c-card-content>
 
-      <c-card-actions justify="end">
+      <c-card-actions justify="start">
         <c-button @click="showModal = false">
           {{ t("close") }}
         </c-button>
