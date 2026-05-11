@@ -10,12 +10,12 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
+::marker {
+  color: var(--c-tertiary-700);
 }
 
-h1, h2, h3 {
-  color: var(--c-tertiary-900);
+body {
+  margin: 0;
 }
 
 html,
@@ -31,14 +31,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-::marker {
-  color: var(--c-tertiary-700);
+h1, h2, h3 {
+  color: var(--c-tertiary-900);
 }
 
-a {
+a, c-link {
+  --c-link-color: var(--c-info-700);
+  color: var(--c-link-color);
+
   text-decoration: none;
   transition: 0.4s;
-  color: var(--c-info-700);
+
+  /* A hack to make the gap between a c-link and its trailing
+     icon smaller, since --_c-link-icon-gap is not exposed */
+  c-icon.tab-icon {
+    transform: translateX(-30%);
+    margin-right: -.25em;
+  }
+}
+
+@media (hover: hover) {
+  a:hover, c-link:hover {
+    --c-link-hover: var(--c-info-200);
+    background-color: var(--c-link-hover);
+  }
 }
 
 c-alert {
@@ -46,11 +62,6 @@ c-alert {
   border-radius: .5em;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: var(--c-info-200);
-  }
-}
 
 .v-tooltip {
   position: absolute;
