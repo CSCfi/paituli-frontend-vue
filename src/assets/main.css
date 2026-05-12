@@ -31,8 +31,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3 {
-  color: var(--c-tertiary-900);
+p {
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+h1, h2, h3, p {
+  color: var(--c-tertiary-800);
 }
 
 a, c-link {
@@ -60,6 +65,15 @@ a, c-link {
 c-alert {
   background-color: var(--c-white);
   border-radius: .5em;
+}
+
+c-list {
+  --c-list-item-text-color: var(--c-tertiary-800);
+  --c-list-item-title-color: var(--c-tertiary-900);
+
+  c-list-item-title {
+    font-weight: bold;
+  }
 }
 
 
