@@ -16,11 +16,15 @@ const PADDING = 8   // px
 
 export const vTooltip = {
   mounted(el: HTMLElement, binding: DirectiveBinding<string>) {
+    // Initialize the tooltip container inside the site header
     const parent = document.querySelector('header') || document.body
     const tooltip = document.createElement('div')
     tooltip.textContent = binding.value
     tooltip.className = 'v-tooltip'
     parent.appendChild(tooltip)
+
+    // Set aria-label the same as our tooltip text
+    el.ariaLabel = binding.value
 
     let timer: number | null = null
     // Change cursor based on whether the parent c-button is disabled,
@@ -51,10 +55,9 @@ export const vTooltip = {
         timer = null
       }
       // We move tooltips back to (0,0) to avoid them overflowing when resizing viewport
-      tooltip.style.left = '0'
-      tooltip.style.top = '0'
-      tooltip.style.transition = 'none'
+      tooltip.style.left = tooltip.style.top = '0'
       tooltip.style.opacity = '0'
+      tooltip.style.transition = 'none'
     }
 
     el.addEventListener('mouseenter', show)
@@ -67,6 +70,7 @@ export const vTooltip = {
     const state = tooltipState.get(el)
     if (state) {
       state.tooltip.textContent = binding.value
+      el.ariaLabel = binding.value
     }
   },
 
