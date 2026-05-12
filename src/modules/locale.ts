@@ -35,6 +35,9 @@ export const i18n = createI18n({
         'cookies': 'Cookie Policy',
         'accessibility': 'Accessibility',
       },
+      'alt': {
+        'finland': 'Icon of Finland',
+      },
     },
     'fi': {
       'contact': 'Ota yhteyttä',
@@ -56,6 +59,9 @@ export const i18n = createI18n({
         'privacy': 'Tietosuoja',
         'cookies': 'Evästeet',
         'accessibility': 'Saavutettavuus',
+      },
+      'alt': {
+        'finland': 'Suomen kuvake',
       },
     },
   },

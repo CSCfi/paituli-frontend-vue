@@ -7,6 +7,7 @@ import { APP_SETTINGS } from '@/shared/constants';
 import { computed, ref } from 'vue';
 import LayersMenu from './LayersMenu.vue';
 import { currentDataset } from '@/modules/datasets';
+import { i18n } from '@/modules/locale';
 
 const { t } = useI18n()
 
@@ -67,7 +68,7 @@ document.addEventListener('pointerdown', closeHandler)
         type="button"
         @click="resetZoom()"
         v-tooltip="t('zoom-reset')">
-        <img :src="'finland.png'" />
+        <img :src="'finland.png'" :alt="i18n.global.t('alt.finland')" />
       </button>
     </div>
     <div class="attributions">
