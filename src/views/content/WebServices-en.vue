@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLink from '@/components/AppLink.vue';
 import { URLS } from '@/shared/constants'
+import { CAlertType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'global' })
@@ -16,7 +17,11 @@ const { t } = useI18n({ useScope: 'global' })
   <p>
     Paituli has over 600 data layers available via OGC APIs. The layer names can be found from <AppLink to="/download">{{ t('pages.download') }}</AppLink> page: Select a dataset and then click APIs. Note that not all Paituli datasets are supported over OGC APIs.
   </p>
-  <AppLink to="https://paituli.csc.fi/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage">Full list of all OGC API data layers</AppLink>
+  <c-alert :type="CAlertType.Info">
+    <span>
+      <AppLink to="https://paituli.csc.fi/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage">Full list of all OGC API data layers</AppLink>
+    </span>
+  </c-alert>
 
   <h2>Supported OGC APIs</h2>
   <h3>Stable OGC standards</h3>
@@ -92,13 +97,6 @@ const { t } = useI18n({ useScope: 'global' })
       </tbody>
     </table>
   </c-table>
-
-  <p>
-    In WMTS services maps are available only in pre-defined scales and sizes. In WMS services scale and map size can be set without restrictions. WMTS services are faster, because often the map tiles are already cached at the server. For requesting only part of data different filters may be used, for example BBOX that defines the area of interest.
-  </p>
-  <p>
-    WMTS-service's gridsets: ERTS-TM35-FIN (EPSG:3067, <AppLink to="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS180_liite1/JHS180_liite1.html#H7">JHS180</AppLink>) and Spherical Mercator (EPSG:3857).
-  </p>
 
   <h3>Usage notes</h3>
   <p>

@@ -2,7 +2,9 @@
 import AppLink from '@/components/AppLink.vue';
 import { APP_SETTINGS } from '@/shared/constants';
 import { CAlertType } from '@cscfi/csc-ui';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n({ useScope: 'global' })
 </script>
 
 <template>
@@ -45,7 +47,7 @@ import { CAlertType } from '@cscfi/csc-ui';
   <p>Paituli provides many options for accessing the data:
     <ul>
       <li>
-        <AppLink to="/download">Download page</AppLink> enables:
+        <AppLink to="/download">{{ t('pages.download') }}</AppLink> page enables:
         <ul>
           <li><b>Map preview</b> of many datasets, including feature info.</li>
           <li>Downloaded files of all or selected mapsheets as a <b>zip-file</b>, max {{ APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB.</li>

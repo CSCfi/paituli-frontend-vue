@@ -126,9 +126,10 @@ const { t } = useI18n({ useScope: 'global' })
       Move to the folder where you saved the script, use cd command.
     </li>
     <li>
-      Run the script: <CodeBlock content="\download_paituli_data.ps1" />
+      Run the script:
     </li>
   </ol>
+  <CodeBlock content="\download_paituli_data.ps1" />
 
   <h4>wget</h4>
   <p>
