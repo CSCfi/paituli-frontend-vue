@@ -29,6 +29,7 @@ watch(helpText, (newText: string | undefined) => {
       <p v-if="helpText" v-html="helpText"></p>
       <div class="close">
         <c-icon-button size="small"
+                       :aria-label="t('close')"
                        @mousedown.prevent
                        @click="helpVisible = false">
           <c-icon size="20px" :path="mdiClose"/>
