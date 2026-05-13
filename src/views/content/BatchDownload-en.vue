@@ -9,7 +9,7 @@ const { t } = useI18n({ useScope: 'global' })
 </script>
 
 <template>
-  <h1>Bulk download of files from Paituli over HTTPS, FTP and rsync</h1>
+  <h1>Bulk download of files over HTTPS, FTP and rsync</h1>
   <p>
     Paituli <AppLink to="/download">{{ t('pages.download') }}</AppLink> page enables downloading data as .zip file max. {{ APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB at a time. This can be limiting, if the needed dataset is bigger. This page describes how to download bigger datasets as files. Alternative options are to use <AppLink to="/webservices">OGC APIs</AppLink> or <AppLink to="/stac">STAC</AppLink> to get access to the data.
   </p>
