@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { currentLocale } from '@/modules/locale';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'global' })
@@ -8,16 +9,19 @@ const { t } = useI18n({ useScope: 'global' })
 <template>
   <div class="footer">
     <a href="https://www.okm.fi/">
-      <img :src="'okm_logo.png'" />
+      <img :src="'okm_logo.png'"
+           :alt="currentLocale == 'fi'
+             ? 'Opetus- ja Kulttuuriministeriö logo'
+             : 'The Ministry of Education and Culture logo'" />
     </a>
     <a href="https://www.csc.fi">
-      <img :src="'csc.png'" />
+      <img :src="'csc.png'" alt="CSC logo" />
     </a>
     <a href="https://www.geoportti.fi">
-      <img :src="'geoportti.png'" />
+      <img :src="'geoportti.png'" alt="Geoportti logo" />
     </a>
     <a href="https://www.fairdata.fi">
-      <img :src="'fairdata_logo.svg'" />
+      <img :src="'fairdata_logo.svg'" alt="Fairadata logo" />
     </a>
     <div>
       <strong>{{ t("contact") }}<br></strong>
