@@ -5,7 +5,7 @@ import { APP_SETTINGS } from '@/shared/constants'
 
 </script>
 <template>
-  <h1>Paitulin aineistojen massalataus HTTPS-, FTP- ja rsync-yhteyksien yli</h1>
+  <h1>Aineistojen massalataus HTTPS-, FTP- ja rsync-yhteyksien yli</h1>
   <p>
     Paitulin <RouterLink to="/download">Lataussivu</RouterLink> mahdollistaa aineistojen latauksen .zip tiedostona. Kerralla voi ladata max. {{  APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB, joka voi isompien aineistojen osalta olla rajoittavaa.
     Tämä sivu kuvaa miten isompia aineistoja ladataan tiedostoina. Vaihtoehtoisesti isompien aineistojen käyttämiseen sopivat <RouterLink to="/webservices">OGC API-rajapinnat</RouterLink> tai <RouterLink to="/stac">STAC</RouterLink>.
