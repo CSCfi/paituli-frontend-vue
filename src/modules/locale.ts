@@ -1,4 +1,4 @@
-import { computed, type Component } from 'vue';
+import { computed, watch, type Component } from 'vue';
 import { createI18n } from 'vue-i18n'
 import { setHelp } from '@/modules/helpText';
 
@@ -75,6 +75,11 @@ export function setLocale(locale: Locale) {
   localStorage.setItem('app-locale', locale)
   setHelp(undefined)
 }
+
+// Update document lang whenever locale changes
+watch(i18n.global.locale, (locale: Locale) => {
+  document.documentElement.lang = locale;
+}, { immediate: true });
 
 // Flags for visualization
 const flags: Record<string, string> = {
