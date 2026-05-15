@@ -75,7 +75,7 @@ const { t } = useI18n({ useScope: 'global' })
   <h3>Creating the list of files</h3>
   <ol>
     <li>
-      Open the <AppLink :new-tab="true" to="/download">{{ t('pages.download') }}</AppLink> page.
+      Open the <AppLink to="/download">{{ t('pages.download') }}</AppLink> page.
     </li>
     <li>
       Select the dataset you are interested in.
