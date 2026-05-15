@@ -255,15 +255,15 @@ const scaleText = computed(() => {
       </c-card-content>
 
       <c-card-actions justify="space-between">
-        <c-button @click="showModal = false">
-          {{ t("close") }}
-        </c-button>
         <AppLink :to="helpUrl"
                  id="help"
                  new-tab
                  c-button>
           {{ t("help") }}
         </AppLink>
+        <c-button @click="showModal = false">
+          {{ t("close") }}
+        </c-button>
       </c-card-actions>
     </c-card>
   </c-modal>
