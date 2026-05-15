@@ -111,7 +111,7 @@ async function loadMetadata() {
 
       </c-card-content>
 
-      <c-card-actions justify="start">
+      <c-card-actions justify="end">
         <c-button @click="showModal = false">
           {{ t("close") }}
         </c-button>

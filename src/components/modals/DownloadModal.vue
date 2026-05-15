@@ -348,10 +348,13 @@ onBeforeUnmount(() =>
         </c-alert>
       </c-card-content>
 
-      <c-card-actions justify="space-between">
+      <c-card-actions
+        :justify="!started
+          ? 'space-between'
+          : 'end'">
         <c-button
           @click="cancel = true; showModal = false"
-          outlined>
+          :outlined="!started">
           {{ t(started ? "close" : "cancel") }}
         </c-button>
         <c-progress-bar

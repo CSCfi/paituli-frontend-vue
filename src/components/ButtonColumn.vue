@@ -94,7 +94,7 @@ document.addEventListener('pointerdown', closeHandler)
               © <a target="_blank" href="https://terrestris.de/en/products/free-osm-wms/">Terrestris</a>
             </div>
           </c-card-content>
-          <c-card-actions>
+          <c-card-actions justify="end">
             <c-button @click="showAttribs = false">{{ t('close') }}</c-button>
           </c-card-actions>
         </c-card>
