@@ -9,7 +9,7 @@ import { APP_SETTINGS, URLS } from '@/shared/constants'
 import { sleep } from '@/shared/util'
 import { useToasts } from '@/composables/toasts';
 import { currentDataset } from '@/modules/datasets';
-import AppLink from '../AppLink.vue';
+import AppLink from '@/components/common/AppLink.vue';
 
 const { addToast } = useToasts()
 const { t } = useI18n()

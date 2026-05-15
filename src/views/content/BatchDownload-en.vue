@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CodeBlock from '@/components/CodeBlock.vue';
-import AppLink from '@/components/AppLink.vue';
+import CodeBlock from '@/components/common/CodeBlock.vue';
+import AppLink from '@/components/common/AppLink.vue';
 
 import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n';

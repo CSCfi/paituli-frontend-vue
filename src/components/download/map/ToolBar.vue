@@ -18,7 +18,7 @@ import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, mapViewResolution, menuMode, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
 import { vHelp } from '@/directives/help';
-import HelpContent from './HelpContent.vue';
+import HelpContent from '@/components/download/help/HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { currentDataset } from '@/modules/datasets';
 import { sleep } from '@/shared/util';

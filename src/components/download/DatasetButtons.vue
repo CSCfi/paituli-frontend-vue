@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 import InfoModal from './modals/InfoModal.vue'
-import ServicesModal from '@/components/modals/ServicesModal.vue';
+import ServicesModal from '@/components/download/modals/ServicesModal.vue'
 
 import { mdiCloudDownloadOutline, mdiDownload, mdiInformationVariantCircleOutline } from '@mdi/js'
 

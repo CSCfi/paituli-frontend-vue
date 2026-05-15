@@ -8,7 +8,7 @@ import { copyToClipboard } from '@/shared/util';
 import type { MetadataParse } from '@/shared/types'
 import { CAlertType } from '@cscfi/csc-ui'
 import { fetchEtsinMetadata } from '@/modules/etsin'
-import AppLink from '../AppLink.vue';
+import AppLink from '@/components/common/AppLink.vue';
 
 const { t } = useI18n()
 

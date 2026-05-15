@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppLink from '@/components/AppLink.vue';
+import AppLink from '@/components/common/AppLink.vue';
 import { URLS } from '@/shared/constants'
 import { CAlertType } from '@cscfi/csc-ui';
 </script>

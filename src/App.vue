@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
 
 import { initToasts } from '@/composables/toasts';
-import FooterItem from '@/components/FooterItem.vue';
+import FooterItem from '@/components/common/FooterItem.vue';
 import { currentFlag, languageItems } from '@/modules/locale';
 import { useRoute } from 'vue-router';
 

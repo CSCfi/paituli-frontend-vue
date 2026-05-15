@@ -3,7 +3,7 @@ import { copyToClipboard } from '@/shared/util';
 import { mdiClipboardMultipleOutline } from '@mdi/js'
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import AppLink from '../AppLink.vue';
+import AppLink from '@/components/common/AppLink.vue';
 
 const { t } = useI18n()
 

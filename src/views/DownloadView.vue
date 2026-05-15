@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import MapItem from '@/components/MapItem.vue'
+import MapItem from '@/components/download/map/MapItem.vue'
 
-import DatasetSelect from '@/components/DatasetSelect.vue'
-import DatasetButtons from '@/components/DatasetButtons.vue'
+import DatasetSelect from '@/components/download/DatasetSelect.vue'
+import DatasetButtons from '@/components/download/DatasetButtons.vue'
+import DownloadSelect from '@/components/download/DownloadSelect.vue'
+
 import { useRoute } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { currentDataset, datasets } from '@/modules/datasets'
-import DownloadSelect from '@/components/DownloadSelect.vue'
 import { menuMode } from '@/modules/controls'
 import { CAlertType } from '@cscfi/csc-ui'
 

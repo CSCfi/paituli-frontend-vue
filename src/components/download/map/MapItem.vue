@@ -18,10 +18,11 @@ import { currentDataset, fetchMetadata } from '@/modules/datasets'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useToasts } from '@/composables/toasts'
 import { currentLocale } from '@/modules/locale'
-import SearchBar from '@/components/SearchBar.vue'
-import ToolBar from '@/components/ToolBar.vue'
-import HelpBox from '@/components/HelpBox.vue'
-import ButtonColumn from '@/components/ButtonColumn.vue'
+
+import SearchBar from './SearchBar.vue'
+import ToolBar from './ToolBar.vue'
+import ButtonColumn from './ButtonColumn.vue'
+import HelpBox from '../help/HelpBox.vue'
 
 import {
   indexSource,
