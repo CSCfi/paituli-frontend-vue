@@ -28,6 +28,12 @@ app.directive('help', vHelp);
   // causing them to render empty or not function correctly.
   await nextTick();
 
+  // Register fairdata Matomo analytics
+  const meta = document.createElement('meta');
+  meta.name = 'fdwe-environment';
+  meta.content = import.meta.env.VITE_MATOMO_TAG
+  document.head.appendChild(meta);
+
   app.mount('#app');
 
 })();
