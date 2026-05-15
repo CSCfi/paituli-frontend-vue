@@ -62,8 +62,16 @@ function updateDocumentTitle(route: RouteLocation) {
   document.title = `${i18n.global.t(key)} – Paituli`
 }
 
-// Update page title after each routing and if locale changes
-router.afterEach((to) => updateDocumentTitle(to))
+// Fairdata Matomo analytics API (see index.html/fdwe.js)
+declare const fdweRecordEvent: () => void
+
+// Update page title and Matomo after each routing
+router.afterEach((to) => {
+  updateDocumentTitle(to)
+  fdweRecordEvent()
+})
+
+// Update page title also if locale changes
 watch(i18n.global.locale, () => updateDocumentTitle(router.currentRoute.value))
 
 export default router

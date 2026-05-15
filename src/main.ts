@@ -27,7 +27,6 @@ app.directive('help', vHelp);
   // Not ideal, but without the nextTick() those web components may not exist yet,
   // causing them to render empty or not function correctly.
   await nextTick();
-
   app.mount('#app');
 
 })();
