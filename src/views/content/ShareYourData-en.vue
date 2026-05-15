@@ -9,7 +9,7 @@ import {
   mdiCalendarClock
 } from '@mdi/js';
 
-import AppLink from '@/components/AppLink.vue';
+import AppLink from '@/components/common/AppLink.vue';
 
 </script>
 

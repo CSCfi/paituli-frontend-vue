@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
 import { checkboxStates, selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
 import { CAlertType } from '@cscfi/csc-ui'
-import AppLink from './AppLink.vue'
+import AppLink from '@/components/common/AppLink.vue'
 
 const { t } = useI18n()
 

@@ -5,7 +5,7 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { currentDataset, hasRasterData, hasVectorData } from '@/modules/datasets';
 import ServicesModalRow from './ServicesModalRow.vue';
-import AppLink from '../AppLink.vue';
+import AppLink from '@/components/common/AppLink.vue';
 
 
 import {

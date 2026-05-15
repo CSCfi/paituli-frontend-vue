@@ -14,7 +14,7 @@ import { CToastType } from '@cscfi/csc-ui';
 import { selectedOlFeatures, selectFeature, selectSheetsByExtent } from '@/modules/selection';
 import { clearBoundingBox, indexSource } from '@/modules/layers';
 import { vHelp } from '@/directives/help';
-import HelpContent from './HelpContent.vue';
+import HelpContent from '@/components/download/help/HelpContent.vue';
 import { toolbarMode } from '@/modules/controls';
 import { createEmpty, extend } from 'ol/extent';
 
