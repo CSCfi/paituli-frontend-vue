@@ -44,7 +44,7 @@ ul, ol {
   line-height: 1.7;
 }
 
-h1, h2, h3, p, ul, ol, c-alert span {
+h1, h2, h3, h4, p, i, ul, ol, c-alert span {
   color: var(--c-tertiary-800);
 }
 
