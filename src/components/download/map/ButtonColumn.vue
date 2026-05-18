@@ -8,6 +8,7 @@ import { computed, ref } from 'vue';
 import LayersMenu from './LayersMenu.vue';
 import { currentDataset } from '@/modules/datasets';
 import { i18n } from '@/modules/locale';
+import AppLink from '@/components/common/AppLink.vue';
 
 const { t } = useI18n()
 
@@ -89,9 +90,9 @@ document.addEventListener('pointerdown', closeHandler)
           <c-card-content>
             <strong>{{ t('attributions.header') }}</strong>
             <div>
-              © <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+              © <AppLink to="https://www.openstreetmap.org/copyright">OpenStreetMap</AppLink>
               contributors, © Natural Earth Data, © GEBCO Bathymetric Compilation Group 2019,
-              © <a target="_blank" href="https://terrestris.de/en/products/free-osm-wms/">Terrestris</a>
+              © <AppLink to="https://terrestris.de/en/products/free-osm-wms/">Terrestris</AppLink>
             </div>
           </c-card-content>
           <c-card-actions justify="end">
