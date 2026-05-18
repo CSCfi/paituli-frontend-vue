@@ -36,11 +36,15 @@ p {
   margin-bottom: 22px;
 }
 
+br {
+  margin-bottom: 11px;
+}
+
 ul, ol {
   line-height: 1.7;
 }
 
-h1, h2, h3, p, ul, ol {
+h1, h2, h3, p, ul, ol, c-alert span {
   color: var(--c-tertiary-800);
 }
 
