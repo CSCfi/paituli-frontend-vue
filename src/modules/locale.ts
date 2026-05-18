@@ -34,6 +34,7 @@ export const i18n = createI18n({
         'privacy': 'Privacy',
         'cookies': 'Cookie Policy',
         'accessibility': 'Accessibility',
+        'notfound': 'Page not found',
       },
       'alt': {
         'finland': 'Icon of Finland',
@@ -60,6 +61,7 @@ export const i18n = createI18n({
         'privacy': 'Tietosuoja',
         'cookies': 'Evästeet',
         'accessibility': 'Saavutettavuus',
+        'notfound': 'Sivua ei löytynyt',
       },
       'alt': {
         'finland': 'Suomen kuvake',

@@ -53,6 +53,11 @@ const router = createRouter({
       name: 'Accessibility',
       component: LocalizedContentView,
     },
+    {
+      path: '/:pathMatch(.*)*', // Matches all other routes for a 404 view
+      name: 'NotFound',
+      component: LocalizedContentView,
+    },
   ],
 })
 
