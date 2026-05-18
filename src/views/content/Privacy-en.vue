@@ -79,7 +79,7 @@ import AppLink from '@/components/common/AppLink.vue';
     <li>The data subject can allow automated decision-making (including profiling) with his or her specific consent</li>
   </ul>
   <p>
-    If you suspect that your data is not processed according to the legislation, please contact up. You may also complain to the <AppLink to="https://tietosuoja.fi/en/contact-information">Data Protection Ombudsman</AppLink>.
+    If you suspect that your data is not processed according to the legislation, please contact us. You may also complain to the <AppLink to="https://tietosuoja.fi/en/contact-information">Data Protection Ombudsman</AppLink>.
   </p>
 
   <h3>10. Who should I contact?</h3>
