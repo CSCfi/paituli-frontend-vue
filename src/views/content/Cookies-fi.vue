@@ -21,6 +21,6 @@
   </p>
 
   <i>
-    Viimeksi päivitetty 15.5.2026
+    Viimeksi päivitetty 18.5.2026
   </i>
 </template>
