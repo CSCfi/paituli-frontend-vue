@@ -21,5 +21,49 @@ const Content = computed(() => {
 </script>
 
 <template>
-  <component :is="Content" />
+  <div class="textual">
+    <component :is="Content" />
+  </div>
 </template>
+
+<style>
+/*
+Plaintext page styling, designed for legibility. You might also want to check main.css.
+Do not make this block scoped, so it can reach child components as-is.
+*/
+
+.textual {
+
+  ::marker {
+    color: var(--c-tertiary-700);
+  }
+
+  p {
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+
+  ul, ol {
+    line-height: 1.7;
+  }
+
+  --c-text-body: var(--c-tertiary-800);
+
+  h1, h2, h3, h4, h5, h6,
+  p, i,
+  ul, ol,
+  c-alert span {
+    color: var(--c-text-body);
+  }
+
+  c-list {
+    --c-list-item-text-color: var(--c-tertiary-800);
+    --c-list-item-title-color: var(--c-tertiary-900);
+
+    c-list-item-title {
+      font-weight: bold;
+    }
+  }
+
+}
+</style>

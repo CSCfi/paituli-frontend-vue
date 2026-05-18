@@ -45,9 +45,6 @@ watch(helpText, (newText: string | undefined) => {
   width: 350px;
   pointer-events: none;
 }
-h3, p {
-  color: unset;
-}
 .help-button {
   position: absolute;
   z-index: 1;

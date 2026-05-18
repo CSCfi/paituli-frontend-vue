@@ -1,5 +1,11 @@
 @import url('@cscfi/csc-ui/css/theme.css');
 
+/*
+Global styles across the whole app.
+For text page content styles, see LocalizedContentView.vue.
+For download view styles, see DownloadView.vue and its components' scoped styles.
+*/
+
 :root {
   --site-header-height: 60px;
 }
@@ -8,10 +14,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-::marker {
-  color: var(--c-tertiary-700);
 }
 
 body {
@@ -31,22 +33,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-p {
-  line-height: 1.5;
-  margin-bottom: 22px;
-}
-
-br {
-  margin-bottom: 11px;
-}
-
-ul, ol {
-  line-height: 1.7;
-}
-
-h1, h2, h3, h4, p, i, ul, ol, c-alert span {
-  color: var(--c-tertiary-800);
-}
 
 a, c-link {
   --c-link-color: var(--c-info-700);
@@ -74,16 +60,6 @@ c-alert {
   background-color: var(--c-white);
   border-radius: .5em;
 }
-
-c-list {
-  --c-list-item-text-color: var(--c-tertiary-800);
-  --c-list-item-title-color: var(--c-tertiary-900);
-
-  c-list-item-title {
-    font-weight: bold;
-  }
-}
-
 
 .v-tooltip {
   position: absolute;

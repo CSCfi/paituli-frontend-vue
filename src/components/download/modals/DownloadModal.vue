@@ -477,9 +477,6 @@ c-progress-bar {
     --c-progress-bar-color: var(--c-error-600);
   }
 }
-c-link {
-  --c-link-color: var(--c-primary-500);
-}
 c-alert p {
   white-space: pre-wrap;
   margin: 0 0 .5em 0;
