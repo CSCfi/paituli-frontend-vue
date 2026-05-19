@@ -39,12 +39,21 @@ Do not make this block scoped, so it can reach child components as-is.
   }
 
   p {
+    margin-bottom: 20px;
+  }
+
+  p, c-alert, li {
     line-height: 1.5;
-    margin-bottom: 22px;
   }
 
   ul, ol {
-    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    gap: .2em;
+
+    ul {
+      margin-top: .2em;
+    }
   }
 
   --c-text-body: var(--c-tertiary-800);
@@ -57,8 +66,7 @@ Do not make this block scoped, so it can reach child components as-is.
   }
 
   c-list {
-    --c-list-item-text-color: var(--c-tertiary-800);
-    --c-list-item-title-color: var(--c-tertiary-900);
+    --c-list-item-text-color: var(--c-text-body);
 
     c-list-item-title {
       font-weight: bold;
