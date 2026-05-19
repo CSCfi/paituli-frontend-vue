@@ -29,7 +29,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
   <c-list>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiHandHeartOutline" />
+      <c-icon slot="pre" :path="mdiHandHeartOutline" />
       <c-list-item-title>
         <strong>1. Varmista, että aineisto voidaan julkaista</strong>
       </c-list-item-title>
@@ -46,7 +46,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiFormatListBulletedType" />
+      <c-icon slot="pre" :path="mdiFormatListBulletedType" />
       <c-list-item-title>
         <strong>2. Kuvaile aineisto</strong>.
         Aineistokuvauksen tulee sisältää:
@@ -67,7 +67,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiPackageVariantClosed" />
+      <c-icon slot="pre" :path="mdiPackageVariantClosed" />
       <c-list-item-title>
         <strong>3. Pakkaa aineisto</strong>
       </c-list-item-title>
@@ -92,7 +92,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiMap" />
+      <c-icon slot="pre" :path="mdiMap" />
       <c-list-item-title>
         <strong>4. Aineiston visualisointi</strong> (valinnainen)
       </c-list-item-title>
@@ -107,7 +107,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiEmailFastOutline" />
+      <c-icon slot="pre" :path="mdiEmailFastOutline" />
       <c-list-item-title>
         <strong>5. Lähetä aineisto</strong> ja sen kuvaus osoitteeseen giscoord@csc.fi
       </c-list-item-title>
@@ -123,7 +123,7 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
 
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiCalendarClock" />
+      <c-icon slot="pre" :path="mdiCalendarClock" />
       <c-list-item-title>
         <strong>6. CSC julkaisee aineistosi Paituliin</strong>
       </c-list-item-title>
@@ -145,9 +145,9 @@ import { mdiFormatListBulletedType, mdiHandHeartOutline, mdiPackageVariantClosed
   <p>Jos sinulla on kysyttävää, ota yhteyttä CSC:hen: giscoord@csc.fi</p>
 </template>
 
-<style>
+<style scoped>
 
-c-list-item label {
-  margin-left: 5px;
+c-icon {
+  color: var(--c-info-700);
 }
 </style>

@@ -32,7 +32,7 @@ import AppLink from '@/components/common/AppLink.vue';
   <c-list>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiHandHeartOutline" />
+      <c-icon slot="pre" :path="mdiHandHeartOutline" />
       <c-list-item-title>
         <strong>1. Make sure the data can be published</strong>
       </c-list-item-title>
@@ -42,7 +42,7 @@ import AppLink from '@/components/common/AppLink.vue';
     </c-list-item>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiFormatListBulletedType" />
+      <c-icon slot="pre" :path="mdiFormatListBulletedType" />
       <c-list-item-title>
         <strong>2. Describe the data</strong>. The data description should include:
       </c-list-item-title>
@@ -61,7 +61,7 @@ import AppLink from '@/components/common/AppLink.vue';
     </c-list-item>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiPackageVariantClosed" />
+      <c-icon slot="pre" :path="mdiPackageVariantClosed" />
       <c-list-item-title>
         <strong>3. Package your data</strong>
       </c-list-item-title>
@@ -80,7 +80,7 @@ import AppLink from '@/components/common/AppLink.vue';
     </c-list-item>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiMap" />
+      <c-icon slot="pre" :path="mdiMap" />
       <c-list-item-title>
         <strong>4. Data visualization</strong> (optional)
       </c-list-item-title>
@@ -90,7 +90,7 @@ import AppLink from '@/components/common/AppLink.vue';
     </c-list-item>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiEmailFastOutline" />
+      <c-icon slot="pre" :path="mdiEmailFastOutline" />
       <c-list-item-title>
         <strong>5. Send the data</strong> and its description to giscoord@csc.fi
       </c-list-item-title>
@@ -100,7 +100,7 @@ import AppLink from '@/components/common/AppLink.vue';
     </c-list-item>
     <c-list-item>
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-      <c-icon slot="pre" color="var(--c-primary-600)" :path="mdiCalendarClock" />
+      <c-icon slot="pre" :path="mdiCalendarClock" />
       <c-list-item-title>
         <strong>6. CSC will publish your data to Paituli</strong>
       </c-list-item-title>
@@ -115,3 +115,10 @@ import AppLink from '@/components/common/AppLink.vue';
     If you have any questions, please contact CSC, giscoord@csc.fi
   </p>
 </template>
+
+<style scoped>
+
+c-icon {
+  color: var(--c-info-700);
+}
+</style>
