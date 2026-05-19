@@ -44,30 +44,31 @@ const { t } = useI18n({ useScope: 'global' })
   </c-alert>
 
   <h2>Data access</h2>
-  <p>Paituli provides many options for accessing the data:
-    <ul>
-      <li>
-        <AppLink to="/download">{{ t('pages.download') }}</AppLink> page enables:
-        <ul>
-          <li><b>Map preview</b> of many datasets, including feature info.</li>
-          <li>Downloaded files of all or selected mapsheets as a <b>zip-file</b>, max {{ APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB.</li>
-          <li>Downloaded file list of all or selected mapsheets.</li>
-        </ul>
-      </li>
-      <li>
-        Bigger amounts of data can be download over <AppLink to="/files">HTTPS, FTP and rsync</AppLink>.
-      </li>
-      <li>
-        Many datasets are also available as <AppLink to="/webservices">OGC APIs:</AppLink> WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
-      </li>
-      <li>
-        All Paituli raster datasets are available via <AppLink to="/stac">STAC</AppLink>. Paituli STAC includes more datasets than Paituli download service, for example Geoportti Geocube and several remote sensing Finnish datasets.
-      </li>
-      <li>
-        <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env">CSC Puhti supercomputer has open GIS data</AppLink>, which includes a copy of almost all Paituli data, for fast and easy access for Puhti users.
-      </li>
-    </ul>
+  <p>
+    Paituli provides many options for accessing the data:
   </p>
+  <ul>
+    <li>
+      <AppLink to="/download">{{ t('pages.download') }}</AppLink> page enables:
+      <ul>
+        <li><b>Map preview</b> of many datasets, including feature info.</li>
+        <li>Downloaded files of all or selected mapsheets as a <b>zip-file</b>, max {{ APP_SETTINGS.MAX_ZIP_SIZE / 1000 }} GB.</li>
+        <li>Downloaded file list of all or selected mapsheets.</li>
+      </ul>
+    </li>
+    <li>
+      Bigger amounts of data can be download over <AppLink to="/files">HTTPS, FTP and rsync</AppLink>.
+    </li>
+    <li>
+      Many datasets are also available as <AppLink to="/webservices">OGC APIs:</AppLink> WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
+    </li>
+    <li>
+      All Paituli raster datasets are available via <AppLink to="/stac">STAC</AppLink>. Paituli STAC includes more datasets than Paituli download service, for example Geoportti Geocube and several remote sensing Finnish datasets.
+    </li>
+    <li>
+      <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env">CSC Puhti supercomputer has open GIS data</AppLink>, which includes a copy of almost all Paituli data, for fast and easy access for Puhti users.
+    </li>
+  </ul>
 
   <h2>News</h2>
   <c-list>
