@@ -21,39 +21,17 @@ import { CAlertType } from '@cscfi/csc-ui';
     Paituli sisältää seuraavien organisaatioiden tuottamia paikkatietoaineistoja:
   </p>
   <ul>
-    <li>
-      <AppLink to="https://dvv.fi" target="_blank">Digi- ja väestötietovirasto</AppLink>
-    </li>
-    <li>
-      <AppLink to="https://www.helsinki.fi/fi" target="_blank">Helsingin yliopisto</AppLink>
-    </li>
-    <li>
-      <AppLink to="http://www.ilmatieteenlaitos.fi" target="_blank">Ilmatieteen laitos (FMI)</AppLink>
-    </li>
-    <li>
-      <AppLink to="http://www.kotus.fi" target="_blank">Kotimaisten kielten keskus (KOTUS)</AppLink>
-    </li>
-    <li>
-      <AppLink to="https://science.nasa.gov/mission/landsat/" target="_blank">NASA/USGS, Landsat</AppLink>
-    </li>
-    <li>
-      <AppLink to="http://www.luke.fi" target="_blank">Luonnonvarakeskus</AppLink>
-    </li>
-    <li>
-      <AppLink to="http://www.maanmittauslaitos.fi" target="_blank">Maanmittauslaitos (MML)</AppLink>
-    </li>
-    <li>
-      <AppLink to="https://www.ruokavirasto.fi/" target="_blank">Ruokavirasto</AppLink>
-    </li>
-    <li>
-      <AppLink to="https://www.slu.se/en/" target="_blank">Ruotsin maataloustieteellinen yliopisto</AppLink>
-    </li>
-    <li>
-      <AppLink to="http://www.tilastokeskus.fi" target="_blank">Tilastokeskus</AppLink>
-    </li>
-    <li>
-      <AppLink to="http://www.digiroad.fi" target="_blank">Väylävirasto, Digiroad</AppLink>
-    </li>
+    <li><AppLink to="https://dvv.fi" target="_blank">Digi- ja väestötietovirasto</AppLink></li>
+    <li><AppLink to="https://www.helsinki.fi/fi" target="_blank">Helsingin yliopisto</AppLink></li>
+    <li><AppLink to="http://www.ilmatieteenlaitos.fi" target="_blank">Ilmatieteen laitos (FMI)</AppLink></li>
+    <li><AppLink to="http://www.kotus.fi" target="_blank">Kotimaisten kielten keskus (KOTUS)</AppLink></li>
+    <li><AppLink to="https://science.nasa.gov/mission/landsat/" target="_blank">NASA/USGS, Landsat</AppLink></li>
+    <li><AppLink to="http://www.luke.fi" target="_blank">Luonnonvarakeskus</AppLink></li>
+    <li><AppLink to="http://www.maanmittauslaitos.fi" target="_blank">Maanmittauslaitos (MML)</AppLink></li>
+    <li><AppLink to="https://www.ruokavirasto.fi/" target="_blank">Ruokavirasto</AppLink></li>
+    <li><AppLink to="https://www.slu.se/en/" target="_blank">Ruotsin maataloustieteellinen yliopisto</AppLink></li>
+    <li><AppLink to="http://www.tilastokeskus.fi" target="_blank">Tilastokeskus</AppLink></li>
+    <li><AppLink to="http://www.digiroad.fi" target="_blank">Väylävirasto, Digiroad</AppLink></li>
   </ul>
   <c-alert :type="CAlertType.Info">
     <span>
