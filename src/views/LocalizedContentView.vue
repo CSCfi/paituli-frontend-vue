@@ -73,5 +73,9 @@ Do not make this block scoped, so it can reach child components as-is.
     }
   }
 
+  code {
+    font-size: large;
+  }
+
 }
 </style>

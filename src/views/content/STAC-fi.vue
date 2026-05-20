@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
+import { URLS } from '@/shared/constants';
+import { copyToClipboard } from '@/shared/util';
 import { CAlertType } from '@cscfi/csc-ui';
-
+import { mdiClipboardMultipleOutline } from '@mdi/js'
 </script>
 
 <template>
@@ -56,8 +58,14 @@ import { CAlertType } from '@cscfi/csc-ui';
     Jokaisella STAC-katalogilla on oma osoite (end-point), joka annetaan työkaluille, jotta ne löytävät katalogin.
   </p>
   <p>
-    Paitulin STAC rajapinnan osoite on: <code>https://paituli.csc.fi/geoserver/ogc/stac/v1</code>
+    <span>
+      Paitulin STAC rajapinnan osoite on: <code>{{ URLS.STAC_PAITULI_BASE }}</code>
+      <c-button ghost @click="copyToClipboard(URLS.STAC_PAITULI_BASE)" size="small">
+        Kopioi <c-icon :path="mdiClipboardMultipleOutline" size="18" />
+      </c-button>
+    </span>
   </p>
+
 
   <h2>STAC käsitteet</h2>
   <span>
@@ -94,3 +102,10 @@ import { CAlertType } from '@cscfi/csc-ui';
   </p>
 
 </template>
+
+<style scoped>
+
+c-button {
+  margin-left: 1em;
+}
+</style>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
 import { URLS } from '@/shared/constants'
+import { copyToClipboard } from '@/shared/util';
 import { CAlertType } from '@cscfi/csc-ui';
+import { mdiClipboardMultipleOutline } from '@mdi/js'
 </script>
 
 <template>
@@ -56,7 +58,15 @@ import { CAlertType } from '@cscfi/csc-ui';
     Each STAC catalog has its own STAC endpoint, which should be given to the tools, so that they can find the catalog.
   </p>
   <p>
-    Paituli STAC API endpoint is: <AppLink :to="URLS.STAC_PAITULI_BASE">{{ URLS.STAC_PAITULI_BASE }}</AppLink>
+  </p>
+
+  <p>
+    <span>
+      Paituli STAC API endpoint is: <code>{{ URLS.STAC_PAITULI_BASE }}</code>
+      <c-button ghost @click="copyToClipboard(URLS.STAC_PAITULI_BASE)" size="small">
+        Copy <c-icon :path="mdiClipboardMultipleOutline" size="18" />
+      </c-button>
+    </span>
   </p>
 
   <h2>STAC concepts</h2>
@@ -93,3 +103,10 @@ import { CAlertType } from '@cscfi/csc-ui';
   </p>
 
 </template>
+
+<style scoped>
+
+c-button {
+  margin-left: 1em;
+}
+</style>
