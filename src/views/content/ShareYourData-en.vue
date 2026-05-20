@@ -85,7 +85,7 @@ import AppLink from '@/components/common/AppLink.vue';
         <strong>4. Data visualization</strong> (optional)
       </c-list-item-title>
       <span>
-        If you want to use a specific <strong>map style</strong> for visualizing your data in WMS and WMTS services, make a style description file in <AppLink to="http://docs.geoserver.org/latest/en/user/styling/sld-cookbook/" >SLD</AppLink> format and add it to the data package. If you are not familiar with SLD, also styles suitable for ArcGIS or QGIS may be submitted.
+        If you want to use a specific <strong>map style</strong> for visualizing your data in WMS and WMTS services, make a style description file in <AppLink to="http://docs.geoserver.org/latest/en/user/styling/sld-cookbook/" >SLD</AppLink> format and add it to the data package.
       </span>
     </c-list-item>
     <c-list-item>
