@@ -22,20 +22,20 @@ const { t } = useI18n({ useScope: 'global' })
   <h2>Datasets</h2>
   <p>
     Paituli includes datasets from following data providers:
-    <ul>
-      <li><AppLink to="https://dvv.fi">Finnish Digital and Population Data Services Agency</AppLink></li>
-      <li><AppLink to="https://www.ruokavirasto.fi/">Finnish Food Agency</AppLink></li>
-      <li><AppLink to="http://www.ilmatieteenlaitos.fi">Finnish Meteorological Institute (FMI)</AppLink></li>
-      <li><AppLink to="http://www.digiroad.fi">Finnish Transport Infrastructure Agency, Digiroad</AppLink></li>
-      <li><AppLink to="http://www.kotus.fi">Institute for the Languages of Finland (KOTUS)</AppLink></li>
-      <li><AppLink to="https://science.nasa.gov/mission/landsat/">NASA/USGS, Landsat</AppLink></li>
-      <li><AppLink to="http://www.maanmittauslaitos.fi">National Land Survey (MML)</AppLink></li>
-      <li><AppLink to="https://www.luke.fi/">Natural resource institute Finland (LUKE)</AppLink></li>
-      <li><AppLink to="http://www.tilastokeskus.fi/index_en.html">Statistics Finland</AppLink></li>
-      <li><AppLink to="https://www.slu.se/en/">Swedish university of agricultural sciences</AppLink></li>
-      <li><AppLink to="https://www.helsinki.fi/en">University of Helsinki</AppLink></li>
-    </ul>
   </p>
+  <ul>
+    <li><AppLink to="https://dvv.fi">Finnish Digital and Population Data Services Agency</AppLink></li>
+    <li><AppLink to="https://www.ruokavirasto.fi/">Finnish Food Agency</AppLink></li>
+    <li><AppLink to="http://www.ilmatieteenlaitos.fi">Finnish Meteorological Institute (FMI)</AppLink></li>
+    <li><AppLink to="http://www.digiroad.fi">Finnish Transport Infrastructure Agency, Digiroad</AppLink></li>
+    <li><AppLink to="http://www.kotus.fi">Institute for the Languages of Finland (KOTUS)</AppLink></li>
+    <li><AppLink to="https://science.nasa.gov/mission/landsat/">NASA/USGS, Landsat</AppLink></li>
+    <li><AppLink to="http://www.maanmittauslaitos.fi">National Land Survey (MML)</AppLink></li>
+    <li><AppLink to="https://www.luke.fi/">Natural resource institute Finland (LUKE)</AppLink></li>
+    <li><AppLink to="http://www.tilastokeskus.fi/index_en.html">Statistics Finland</AppLink></li>
+    <li><AppLink to="https://www.slu.se/en/">Swedish university of agricultural sciences</AppLink></li>
+    <li><AppLink to="https://www.helsinki.fi/en">University of Helsinki</AppLink></li>
+  </ul>
   <c-alert :type="CAlertType.Info">
     <span>
       Detailed list and metadata of all Paituli datasets can be found from <AppLink to="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli">Fairdata Etsin</AppLink>.
