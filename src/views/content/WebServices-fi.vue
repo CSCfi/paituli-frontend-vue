@@ -47,7 +47,7 @@ import { CAlertType } from '@cscfi/csc-ui';
         </tr>
         <tr>
           <td><b>WFS</b>, Web Feature Service</td>
-          <td>Vectoriaineisto</td>
+          <td>Vektoriaineisto</td>
           <td>{{ URLS.WFS_PAITULI_BASE }}</td>
         </tr>
         <tr>

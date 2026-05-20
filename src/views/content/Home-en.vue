@@ -93,7 +93,7 @@ const { t } = useI18n({ useScope: 'global' })
       <c-list-item-title>
         23.2.2026
       </c-list-item-title>
-      Arable land from Norhtern Finland (1947-1979) from Swedish university of agricultural sciences added. It was created using machine learning methods from historical topographic maps.
+      Arable land from Northern Finland (1947-1979) from Swedish university of agricultural sciences added. It was created using machine learning methods from historical topographic maps.
     </c-list-item>
     <c-list-item>
       <c-list-item-title>

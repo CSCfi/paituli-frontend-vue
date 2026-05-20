@@ -161,9 +161,7 @@ const { t } = useI18n({ useScope: 'global' })
     <li>Click the "APIs" button. The paths for all 3 protocols are displayed. </li>
   </ol>
   <p>
-    In the folder of each dataset is a Readme-file,
-    that includes the basic infomartion and link to Etsin, where full dataset
-    descriptions are available.
+    In the folder of each dataset is a Readme-file, that includes the basic information and link to Etsin, where full dataset descriptions are available.
   </p>
 
   <h3>Tools for downloading a folder</h3>
