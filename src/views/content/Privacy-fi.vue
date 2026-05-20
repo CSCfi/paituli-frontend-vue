@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import AppLink from '@/components/common/AppLink.vue';
+
+</script>
+
 <template>
   <h1>Paitulin tietosuojaseloste</h1>
   <p>
@@ -79,8 +84,7 @@
   </ul>
 
   <p>
-
-    Mikäli epäilet tietojasi käsiteltävän voimassaolevan lain vastaisesti, toivomme sinun ottamavan meihin yhteyttä. Voit myös tehdä valituksen <a href="https://tietosuoja.fi/yhteystiedot">tietosuojavaltuutetun toimistoon</a>.
+    Mikäli epäilet tietojasi käsiteltävän voimassaolevan lain vastaisesti, toivomme sinun ottamavan meihin yhteyttä. Voit myös tehdä valituksen <AppLink to="https://tietosuoja.fi/yhteystiedot">tietosuojavaltuutetun toimistoon</AppLink>.
   </p>
 
   <h3>10. Kehen voit olla yhteydessä?</h3>

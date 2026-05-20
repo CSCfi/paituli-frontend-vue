@@ -1,91 +1,99 @@
+<script setup lang="ts">
+import AppLink from '@/components/common/AppLink.vue';
+import { CAlertType } from '@cscfi/csc-ui';
+
+</script>
+
 <template>
   <h1>Paitulista</h1>
-  <p>Paituli on suomalainen paikkatietopalvelu. Paituli on ensisijaisesti suunnattu akateemisille käyttäjille, mutta se on avoin kaikille. Palvelun kautta on saatavilla paikkatietoaineistoja, jotka ovat tärkeitä tutkimuksessa ja opetuksessa. Muista paikkatietoaineistopalveluista poiketen Paitulista löydät myös historiallisia vuosiversioita. Useiden aineistojen ensimmäiset versiot ovat vuodelta 2005, joka oli Paitulin perustamisvuosi. Kaikilla aineistoilla on avoimet lisenssit, useimmiten CC-BY-4.0.
-  </p>
-
-  <p>Käyttäjillä joilla on affiliaatio suomalaiseen korkeakouluun on mahdollisuus myös
-    <RouterLink to="/opendata">jakaa aineistoja</RouterLink>
-    Paitulissa.
+  <p>
+    Paituli on suomalainen paikkatietopalvelu. Paituli on ensisijaisesti suunnattu akateemisille käyttäjille, mutta se on avoin kaikille. Palvelun kautta on saatavilla paikkatietoaineistoja, jotka ovat tärkeitä tutkimuksessa ja opetuksessa. Muista paikkatietoaineistopalveluista poiketen Paitulista löydät myös historiallisia vuosiversioita. Useiden aineistojen ensimmäiset versiot ovat vuodelta 2005, joka oli Paitulin perustamisvuosi. Kaikilla aineistoilla on avoimet lisenssit, useimmiten CC-BY-4.0.
   </p>
   <p>
-    <a href="http://www.nic.funet.fi/index/geodata/Paituli_2026.pptx" target="_blank">Paitulin PowerPoint esityskalvot</a>
-    (2026).
+    Käyttäjillä joilla on affiliaatio suomalaiseen korkeakouluun on mahdollisuus myös <AppLink to="/opendata">jakaa aineistoja</AppLink> Paitulissa.
+  </p>
+  <p>
+    <AppLink to="http://www.nic.funet.fi/index/geodata/Paituli_2026.pptx" target="_blank">Paitulin PowerPoint esityskalvot</AppLink> (2026).
   </p>
 
   <h2>Aineistot</h2>
-
-  Paituli sisältää seuraavien organisaatioiden tuottamia paikkatietoaineistoja:
+  <p>
+    Paituli sisältää seuraavien organisaatioiden tuottamia paikkatietoaineistoja:
+  </p>
   <ul>
     <li>
-      <a href="https://dvv.fi" target="_blank">Digi- ja väestötietovirasto</a>
+      <AppLink to="https://dvv.fi" target="_blank">Digi- ja väestötietovirasto</AppLink>
     </li>
     <li>
-      <a href="https://www.helsinki.fi/fi" target="_blank">Helsingin yliopisto</a>
+      <AppLink to="https://www.helsinki.fi/fi" target="_blank">Helsingin yliopisto</AppLink>
     </li>
     <li>
-      <a href="http://www.ilmatieteenlaitos.fi" target="_blank">Ilmatieteen laitos (FMI)</a>
+      <AppLink to="http://www.ilmatieteenlaitos.fi" target="_blank">Ilmatieteen laitos (FMI)</AppLink>
     </li>
     <li>
-      <a href="http://www.kotus.fi" target="_blank">Kotimaisten kielten keskus (KOTUS)</a>
+      <AppLink to="http://www.kotus.fi" target="_blank">Kotimaisten kielten keskus (KOTUS)</AppLink>
     </li>
     <li>
-      <a href="https://science.nasa.gov/mission/landsat/" target="_blank">NASA/USGS, Landsat</a>
+      <AppLink to="https://science.nasa.gov/mission/landsat/" target="_blank">NASA/USGS, Landsat</AppLink>
     </li>
     <li>
-      <a href="http://www.luke.fi" target="_blank">Luonnonvarakeskus</a>
+      <AppLink to="http://www.luke.fi" target="_blank">Luonnonvarakeskus</AppLink>
     </li>
     <li>
-      <a href="http://www.maanmittauslaitos.fi" target="_blank">Maanmittauslaitos (MML)</a>
+      <AppLink to="http://www.maanmittauslaitos.fi" target="_blank">Maanmittauslaitos (MML)</AppLink>
     </li>
     <li>
-      <a href="https://www.ruokavirasto.fi/" target="_blank">Ruokavirasto</a>
+      <AppLink to="https://www.ruokavirasto.fi/" target="_blank">Ruokavirasto</AppLink>
     </li>
     <li>
-      <a href="https://www.slu.se/en/" target="_blank">Ruotsin maataloustieteellinen yliopisto</a>
+      <AppLink to="https://www.slu.se/en/" target="_blank">Ruotsin maataloustieteellinen yliopisto</AppLink>
     </li>
     <li>
-      <a href="http://www.tilastokeskus.fi" target="_blank">Tilastokeskus</a>
+      <AppLink to="http://www.tilastokeskus.fi" target="_blank">Tilastokeskus</AppLink>
     </li>
     <li>
-      <a href="http://www.digiroad.fi" target="_blank">Väylävirasto, Digiroad</a>
+      <AppLink to="http://www.digiroad.fi" target="_blank">Väylävirasto, Digiroad</AppLink>
     </li>
   </ul>
-  <p><a href="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli" target="_blank">Tarkka lista saatavilla olevista aineistoista</a> löytyy Fairdata Etsin-palvelusta. Aineistojen löytämiseksi Etsimessä kokeile vapaata tekstihakua tai vasemmalla olevia suodattimia.
-  </p>
+  <c-alert :type="CAlertType.Info">
+    <span>
+      Tarkka lista saatavilla olevista aineistoista löytyy <AppLink to="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli" target="_blank"> Fairdata Etsin -palvelusta</AppLink>.
+      <br>Aineistojen löytämiseksi Etsimessä kokeile vapaata tekstihakua tai vasemmalla olevia suodattimia.
+    </span>
+  </c-alert>
 
   <h2>Aineistojen käyttö</h2>
-
-  <p>Paituli tarjoaa aineistojen käyttämiseksi useita mahdollisuuksia:
-
-    <ul>
-      <li>
-        <RouterLink to="/download">Latauspalvelu sivun</RouterLink> joka mahdollistaa:
-        <ul>
-          <li>Useiden <b>aineistojen esikatselun</b>, mm. ominaisuustiedon kyselyn.
-          </li>
-          <li>Kaikkien tai valittujen karttalehtien tiedostojen latauksen <b>zip-pakettina</b>, max 3Gb.
-          </li>
-          <li>Kaikkien tai valittujen karttalehtien tiedostolistauksen latauksen.
-          </li>
-        </ul>
-      </li>
-      <li>Isommat aineistokokonaisuudet voi ladata
-        <RouterLink to="/files">HTTPS, FTP and rsync</RouterLink>
-        työkalujen avulla.
-      </li>
-      <li>Useat aineistot ovat saatavilla
-        <RouterLink to="/webservices">OGC API-rajapintojen kautta:</RouterLink>
-        WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
-      </li>
-      <li>Paitulin kaikki rasteriaineistot ovat saatavilla <RouterLink to="/stac">STAC</RouterLink>:in kautta. Paituli STAC sisältää enemmän aineistoja kuin Paitulin latauspalvelu, esimerkiksi Geoportti Geocube -aineistot ja useita suomalaisia kaukokartoitusaineistoja.
-      </li>
-      <li>
-        <a href="https://research.csc.fi/gis_data_in_csc_computing_env" target="_blank">CSC Puhti supertietokoneen avoimet GIS aineistot</a>
-        sisältävät melkein kaikki Paitulin aineistot, jotta näiden käyttö olisi helppoa ja nopeaa Puhdin käyttäjille.
-      </li>
-    </ul>
+  <p>
+    Paituli tarjoaa aineistojen käyttämiseksi useita mahdollisuuksia:
   </p>
-
+  <ul>
+    <li>
+      <AppLink to="/download">Latauspalvelu</AppLink>, joka mahdollistaa:
+      <ul>
+        <li>
+          Useiden <b>aineistojen esikatselun</b>, mm. ominaisuustiedon kyselyn.
+        </li>
+        <li>
+          Kaikkien tai valittujen karttalehtien tiedostojen latauksen <b>zip-pakettina</b>, max 3Gb.
+        </li>
+        <li>
+          Kaikkien tai valittujen karttalehtien tiedostolistauksen latauksen.
+        </li>
+      </ul>
+    </li>
+    <li>
+      Isommat aineistokokonaisuudet voi ladata <AppLink to="/files">HTTPS, FTP and rsync</AppLink> työkalujen avulla.
+    </li>
+    <li>
+      Useat aineistot ovat saatavilla <AppLink to="/webservices">OGC API-rajapintojen kautta</AppLink>: WMS / Maps, WCS / Coverages, WMTS / Tiles and WFS / Features.
+    </li>
+    <li>
+      Paitulin kaikki rasteriaineistot ovat saatavilla <AppLink to="/stac">STAC</AppLink>:in kautta. Paituli STAC sisältää enemmän aineistoja kuin Paitulin latauspalvelu, esimerkiksi Geoportti Geocube -aineistot ja useita suomalaisia kaukokartoitusaineistoja.
+    </li>
+    <li>
+      <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env" target="_blank">CSC Puhti supertietokoneen avoimet GIS aineistot</AppLink> sisältävät melkein kaikki Paitulin aineistot, jotta näiden käyttö olisi helppoa ja nopeaa Puhdin käyttäjille.
+    </li>
+  </ul>
 
   <h2>Uutiset</h2>
   <c-list>
@@ -106,7 +114,7 @@
         4.3.2026
       </c-list-item-title>
       <span>
-        Päivitetty <a href="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC:in Python-esimerkkejä</a>, uutena käytössä odc-stac-kirjasto.
+        Päivitetty <AppLink to="https://github.com/csc-training/geocomputing/tree/master/python/STAC" target="_blanc">STAC:in Python-esimerkkejä</AppLink>, uutena käytössä odc-stac-kirjasto.
       </span>
     </c-list-item>
     <c-list-item>
@@ -150,7 +158,7 @@
         15.4.2024
       </c-list-item-title>
       <span>
-        Lisätty yli 30 000 historiallisia georeferoitua karttaa Maanmittauslaitoksen arkistosta vuosilta 1863-2020. Pitäjäkartat, taloudelliset kartat, topografiset kartat, maastokartat ja peruskartat mittakaavoissa 1:20 000 - 1:500 000. <a href="https://www.maanmittauslaitos.fi/ajankohtaista/yli-30-000-vanhaa-karttaa-jopa-150-vuoden-takaa-nyt-paikkatietona"  target="_blank">Lisätietoja MML:n sivuilta</a>.
+        Lisätty yli 30 000 historiallisia georeferoitua karttaa Maanmittauslaitoksen arkistosta vuosilta 1863-2020. Pitäjäkartat, taloudelliset kartat, topografiset kartat, maastokartat ja peruskartat mittakaavoissa 1:20 000 - 1:500 000. <AppLink to="https://www.maanmittauslaitos.fi/ajankohtaista/yli-30-000-vanhaa-karttaa-jopa-150-vuoden-takaa-nyt-paikkatietona"  target="_blank">Lisätietoja MML:n sivuilta</AppLink>.
       </span>
     </c-list-item>
     <c-list-item>
@@ -161,27 +169,25 @@
     </c-list-item>
   </c-list>
 
-
-
   <h2>Paituli palvelusta</h2>
-
-  <p>Paitulin käyttö on käyttäjälle ilmaista. Paitulia ylläpitää
-    <a href="https://www.csc.fi" target="_blank">CSC - Tieteen tietotekniikan keskus</a> ja rahoittavat
-    <a href="https://minedu.fi/etusivu" target="_blank">Opetus- ja kulttuuriministeriö</a> sekä Suomen Akatemia <a href="https://www.geoportti.fi" target="_blank">Geoportti</a> projektin kautta. Paituli tarjotaan "best effort" palvelutasolla ja saavutettavuudella.
+  <p>
+    Paitulin käyttö on käyttäjälle ilmaista. Paitulia ylläpitää <AppLink to="https://www.csc.fi" target="_blank">CSC - Tieteen tietotekniikan keskus</AppLink> ja rahoittavat <AppLink to="https://minedu.fi/etusivu" target="_blank">Opetus- ja kulttuuriministeriö</AppLink> sekä Suomen Akatemia <AppLink to="https://www.geoportti.fi" target="_blank">Geoportti</AppLink> projektin kautta. Paituli tarjotaan "best effort" palvelutasolla ja saavutettavuudella.
   </p>
-  <p>Paituli on kehitetty CSC:llä hyödyntäen avoimen lähdekoodin ohjelmistoja, mm:
-    <a href="http://geoserver.org/" target="_blank">Geoserver</a>,
-    <a href="https://openlayers.org/" target="_blank">OpenLayers</a>,
-    <a href="https://vuejs.org/" target="_blank">Vue</a>,
-    <a href="https://postgis.net/" target="_blank">PostGIS</a>
+  <p>
+    Paituli on kehitetty CSC:llä hyödyntäen avoimen lähdekoodin ohjelmistoja, mm:
+    <AppLink to="http://geoserver.org/" target="_blank">Geoserver</AppLink>,
+    <AppLink to="https://openlayers.org/" target="_blank">OpenLayers</AppLink>,
+    <AppLink to="https://vuejs.org/" target="_blank">Vue</AppLink>,
+    <AppLink to="https://postgis.net/" target="_blank">PostGIS</AppLink>
     ja
-    <a href="https://quarkus.io/" target="_blank">Quarkus</a>.
+    <AppLink to="https://quarkus.io/" target="_blank">Quarkus</AppLink>.
     Paitulin lähdekoodi on Githubissa:
-    <a href="https://github.com/CSCfi/paituli-frontend-vue/" target="_blank">front-end</a> ja
-    <a href="https://github.com/CSCfi/avaa-paituli-backend"  target="_blank">back-end</a>.
+    <AppLink to="https://github.com/CSCfi/paituli-frontend-vue/" target="_blank">front-end</AppLink> ja
+    <AppLink to="https://github.com/CSCfi/avaa-paituli-backend"  target="_blank">back-end</AppLink>.
   </p>
 
-  <p>Käyttötilastot ovat saatavilla <a href="https://www.nic.funet.fi/index/geodata/yearly_reports/" target="_blank">Paitulin vuosiraporteista</a>.
+  <p>
+    Käyttötilastot ovat saatavilla <AppLink to="https://www.nic.funet.fi/index/geodata/yearly_reports/" target="_blank">Paitulin vuosiraporteista</AppLink>.
   </p>
 
 </template>

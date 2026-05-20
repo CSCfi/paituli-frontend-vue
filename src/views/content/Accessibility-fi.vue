@@ -1,14 +1,17 @@
+<script setup lang="ts">
+import AppLink from '@/components/common/AppLink.vue';
+
+</script>
+
 <template>
   <h1>Paituli - Saavutettavuusseloste</h1>
   <p>
-    Tämä on Paituli-palvelun saavutettavuusseloste. Verkkopalvelun
-    saavutettavuusvaatimukset perustuvat kansalliseen lakiin digitaalisten
-    palveluiden tarjoamisesta (306/2019).
+    Tämä on Paituli-palvelun saavutettavuusseloste. Verkkopalvelun saavutettavuusvaatimukset perustuvat kansalliseen lakiin digitaalisten palveluiden tarjoamisesta (306/2019).
   </p>
+
   <h3>Toimenpiteet saavutettavuuden tukemiseksi</h3>
   <p>
-    CSC – Tieteen tietotekniikan keskus Oy varmistaa saavutettavuuden seuraavilla
-    toimenpiteillä:
+    CSC – Tieteen tietotekniikan keskus Oy varmistaa saavutettavuuden seuraavilla toimenpiteillä:
   </p>
   <ul>
     <li>Saavutettavuus kuuluu toiminta-ajatukseemme</li>
@@ -17,15 +20,8 @@
 
   <h3>Verkkopalvelun saavutettavuuden tila</h3>
   <p>
-    <a href="https://www.w3.org/WAI/standards-guidelines/wcag/"
-    >Verkkosisällön saavutettavuusohjeet (WCAG)</a
-    >
-    määrittelevät, kuinka verkkosisällöstä tehdään saavutettavuudeltaan parempaa
-    henkilöille, joilla on vammoja tai rajoitteita. Se määrittelee
-    saavutettavuuden noudattamiselle kolme tasoa: A (matalin), AA ja AAA
-    (korkein). Itsearvioinnin perusteella Paituli-palvelu noudattaa osittain WCAG
-    2.1 tasoa AA. Osittain noudattaminen tarkoittaa, että osa sisällöistä ei
-    noudata kaikilta osin saavutettavuusstandardia.
+    <AppLink to="https://www.w3.org/WAI/standards-guidelines/wcag/" >Verkkosisällön saavutettavuusohjeet (WCAG)</AppLink>
+    määrittelevät, kuinka verkkosisällöstä tehdään saavutettavuudeltaan parempaa henkilöille, joilla on vammoja tai rajoitteita. Se määrittelee saavutettavuuden noudattamiselle kolme tasoa: A (matalin), AA ja AAA (korkein). Itsearvioinnin perusteella Paituli-palvelu noudattaa osittain WCAG 2.1 tasoa AA. Osittain noudattaminen tarkoittaa, että osa sisällöistä ei noudata kaikilta osin saavutettavuusstandardia.
   </p>
 
   <h3>Ei-saavutettava sisältö</h3>
@@ -39,16 +35,18 @@
   </ul>
 
   <h3>Yhteensopivuus eri selainten ja avustavan teknologian kanssa</h3>
-
-  <p>Paituli-palvelu on suunniteltu yhteensopivaksi seuraavien avustavien teknologioiden kanssa:
+  <p>
+    Paituli-palvelu on suunniteltu yhteensopivaksi seuraavien avustavien teknologioiden kanssa:
   </p>
-
   <ul>
-    <li>Viimeisin versio Chrome-verkkoselaimesta avustavan VoiceOver-teknologian kanssa käyttöjärjestelmän macOS X viimeisimmällä versiolla
+    <li>
+      Viimeisin versio Chrome-verkkoselaimesta avustavan VoiceOver-teknologian kanssa käyttöjärjestelmän macOS X viimeisimmällä versiolla
     </li>
-    <li>Viimeisin versio Safari-verkkoselaimesta avustavan VoiceOver-teknologian kanssa käyttöjärjestelmän macOS X viimeisimmällä versiolla
+    <li>
+      Viimeisin versio Safari-verkkoselaimesta avustavan VoiceOver-teknologian kanssa käyttöjärjestelmän macOS X viimeisimmällä versiolla
     </li>
-    <li>Viimeisin versio Chrome-verkkoselaimesta avustavan NVDA-teknologian kanssa käyttöjärjestelmän Windows viimeisimmällä versiolla
+    <li>
+      Viimeisin versio Chrome-verkkoselaimesta avustavan NVDA-teknologian kanssa käyttöjärjestelmän Windows viimeisimmällä versiolla
     </li>
   </ul>
 
@@ -61,35 +59,23 @@
     <li>CSS</li>
     <li>Javascript</li>
   </ul>
-
-  <p>Saavutettavuusstandardien noudattamisessa tukeudutaan näihin teknologioihin.
+  <p>
+    Saavutettavuusstandardien noudattamisessa tukeudutaan näihin teknologioihin.
   </p>
 
   <h3>Saavutettavuuspalaute</h3>
-
-  <p>Toivomme palautetta Paituli-palvelun saavutettavuudessa. Otathan yhteyttä, jos kohtaat saavutettavuusesteitä Paituli-palvelussa:
+  <p>
+    Toivomme palautetta Paituli-palvelun saavutettavuudessa. Otathan yhteyttä, jos kohtaat saavutettavuusesteitä Paituli-palvelussa:
   </p>
-
   <ul>
     <li>Puhelin: +358 9 457 2821</li>
     <li>Sähköposti: servicedesk@csc.fi</li>
-    <li>Palautelomake:
-      <a href="https://research.csc.fi/support"
-      >https://research.csc.fi/support</a
-      >
-    </li>
+    <li>Palautelomake: <AppLink to="https://research.csc.fi/support">https://research.csc.fi/support</AppLink></li>
   </ul>
 
   <h3>Valvontaviranomainen</h3>
-
   <p>
-    Jos huomaat verkkopalvelussa saavutettavuusongelmia, anna palautetta ensin meille, eli verkkopalvelun ylläpitäjälle. Vastaamme yhteydenottoosi 14 päivän kuluessa.
-    Jos et ole tyytyväinen meiltä saamaasi vastaukseen, tai vastauksemme ei saavu 14 päivän kuluessa, voit tehdä ilmoituksen Etelä-Suomen aluehallintavirastoon.
-
-    <a
-      href="https://www.saavutettavuusvaatimukset.fi/oikeutesi/ilmoita-ongelmasta-saavutettavuudessa/"
-    >https://www.saavutettavuusvaatimukset.fi/oikeutesi/ilmoita-ongelmasta-saavutettavuudessa/</a
-    >
+    Jos huomaat verkkopalvelussa saavutettavuusongelmia, anna palautetta ensin meille, eli verkkopalvelun ylläpitäjälle. Vastaamme yhteydenottoosi 14 päivän kuluessa. Jos et ole tyytyväinen meiltä saamaasi vastaukseen, tai vastauksemme ei saavu 14 päivän kuluessa, <AppLink to="https://www.saavutettavuusvaatimukset.fi/oikeutesi/ilmoita-ongelmasta-saavutettavuudessa/">voit tehdä ilmoituksen</AppLink> Etelä-Suomen aluehallintavirastoon.
   </p>
 
   <h3>Valvontaviranomaisen yhteystiedot</h3>
