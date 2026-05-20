@@ -15,9 +15,6 @@ const { t } = useI18n({ useScope: 'global' })
   <p>
     Finnish academic users are welcomed to <AppLink to="/opendata">share data</AppLink> in Paituli.
   </p>
-  <p>
-    <AppLink :new-tab="false" to="http://www.nic.funet.fi/index/geodata/Paituli_2026.pptx"> Paituli's PowerPoint presentation</AppLink> (2026).
-  </p>
 
   <h2>Datasets</h2>
   <p>
@@ -161,6 +158,9 @@ const { t } = useI18n({ useScope: 'global' })
   </p>
   <p>
     Usage statistics are available in <AppLink to="https://www.nic.funet.fi/index/geodata/yearly_reports/">Paituli yearly reports</AppLink>.
+  </p>
+  <p>
+    <AppLink to="http://www.nic.funet.fi/index/geodata/Paituli_2026.pdf"> Paituli presentation slides in Finnish</AppLink> (2026).
   </p>
 
 </template>

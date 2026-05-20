@@ -12,9 +12,6 @@ import { CAlertType } from '@cscfi/csc-ui';
   <p>
     Käyttäjillä joilla on affiliaatio suomalaiseen korkeakouluun on mahdollisuus myös <AppLink to="/opendata">jakaa aineistoja</AppLink> Paitulissa.
   </p>
-  <p>
-    <AppLink to="http://www.nic.funet.fi/index/geodata/Paituli_2026.pptx" target="_blank">Paitulin PowerPoint esityskalvot</AppLink> (2026).
-  </p>
 
   <h2>Aineistot</h2>
   <p>
@@ -166,6 +163,9 @@ import { CAlertType } from '@cscfi/csc-ui';
 
   <p>
     Käyttötilastot ovat saatavilla <AppLink to="https://www.nic.funet.fi/index/geodata/yearly_reports/" target="_blank">Paitulin vuosiraporteista</AppLink>.
+  </p>
+  <p>
+    <AppLink to="http://www.nic.funet.fi/index/geodata/Paituli_2026.pdf" target="_blank">Paitulin esityskalvot</AppLink> (2026).
   </p>
 
 </template>
