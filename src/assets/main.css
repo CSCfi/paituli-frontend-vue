@@ -1,0 +1,75 @@
+@import url('@cscfi/csc-ui/css/theme.css');
+
+/*
+Global styles across the whole app.
+For text page content styles, see LocalizedContentView.vue.
+For download view styles, see DownloadView.vue and its components' scoped styles.
+*/
+
+:root {
+  --site-header-height: 60px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+html,
+body {
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  font-family:
+    museo-sans,
+    sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+a, c-link {
+  --c-link-color: var(--c-info-700);
+  color: var(--c-link-color);
+
+  text-decoration: none;
+  transition: 0.4s;
+
+  /* A hack to make the gap between a c-link and its trailing
+     icon smaller, since --_c-link-icon-gap is not exposed */
+  c-icon.tab-icon {
+    transform: translateX(-30%);
+    margin-right: -.25em;
+  }
+}
+
+@media (hover: hover) {
+  a:hover, c-link:hover {
+    --c-link-hover: var(--c-info-200);
+    background-color: var(--c-link-hover);
+  }
+}
+
+c-alert {
+  background-color: var(--c-white);
+  border-radius: .5em;
+}
+
+.v-tooltip {
+  position: absolute;
+  background: var(--c-info-900);
+  color: var(--c-primary-100);
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
+}
