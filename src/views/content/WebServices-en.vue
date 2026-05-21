@@ -103,7 +103,7 @@ const { t } = useI18n({ useScope: 'global' })
     In WMTS services maps are available only in pre-defined scales and sizes. In WMS services scale and map size can be set without restrictions. WMTS services are faster, because often the map tiles are already cached at the server. For requesting only part of data different filters may be used, for example BBOX that defines the area of interest.
   </p>
   <p>
-    WMTS-service's gridsets: ERTS-TM35-FIN (EPSG:3067, <AppLink to="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS180_liite1/JHS180_liite1.html#H7">JHS180</AppLink>) and Spherical Mercator (EPSG:3857).
+    WMTS-service's gridsets: ERTS-TM35-FIN (EPSG:3067, <AppLink to="https://docs.google.com/document/d/1CT173PSOLf_6EQJuHbWtkx6P0zqxySxX/edit">JHS180</AppLink>) and Spherical Mercator (EPSG:3857).
   </p>
   <p>
     The license terms are the same for data downloaded via web services as via download service. The license terms and descriptions can be found from <AppLink to="/download">{{ t('pages.download') }}</AppLink> page.

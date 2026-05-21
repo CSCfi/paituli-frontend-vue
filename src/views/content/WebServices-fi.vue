@@ -103,7 +103,7 @@ import { CAlertType } from '@cscfi/csc-ui';
     WMTS-palvelussa karttatiilet ovat saatavilla vain etukäteen määritetyissä mittakaavoissa ja laajuuksissa. WMS-palvelussa kartan koko ja mittakaava voidaan valita vapaasti. WMTS-palvelu on yleensä nopeampi, sillä karttatiilet ovat usein jo palvelun välimuistissa valmiina. Karttatasosta voidaan pyytää myös vain osa käyttämällä suodattimia, esim. BBOX määrittelee pyydettävän maantieteellisen alueen.
   </p>
   <p>
-    WMTS-palveluiden ruudukot: ERTS-TM35-FIN (EPSG:3067, <AppLink to="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS180_liite1/JHS180_liite1.html#H7">JHS180</AppLink>) ja Spherical Mercator (EPSG:3857).
+    WMTS-palveluiden ruudukot: ERTS-TM35-FIN (EPSG:3067, <AppLink to="https://docs.google.com/document/d/1CT173PSOLf_6EQJuHbWtkx6P0zqxySxX/edit">JHS180</AppLink>) ja Spherical Mercator (EPSG:3857).
   </p>
   <p>
     Rajapinta-aineistojen lisenssiehdot ovat vastaavat kuin latauspalvelun kautta ladatuissa aineistoissa. Lisenssiehdot löytyvät <AppLink to="/download">Latauspalvelu</AppLink> -sivulta.
