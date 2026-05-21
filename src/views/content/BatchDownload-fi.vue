@@ -99,7 +99,7 @@ import { APP_SETTINGS } from '@/shared/constants'
 
   <h3>Lataus tiedostolistauksen mukaisesti</h3>
   <p>
-    Graafiset työkalut eivät valitettavasti tue tiedostolistauksen käyttöä, joten tämä on mahdollista vain komentorivityökaluilla.  Windows-käyttäjille tarjoamme lataukseen PowerShell skriptin. Linux- ja Mac-käyttäjät voivat käyttää lataukseen <AppLink to="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget">wget</AppLink> tai <AppLink to="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync">rsync</AppLink> ohjelmia, jotka ovat yleensä oletuksena saatavilla.
+    Graafiset työkalut eivät valitettavasti tue tiedostolistauksen käyttöä, joten tämä on mahdollista vain komentorivityökaluilla.  Windows-käyttäjille tarjoamme lataukseen PowerShell skriptin. Linux- ja Mac-käyttäjät voivat käyttää lataukseen <AppLink to="https://rsync.samba.org/">rsync</AppLink> tai <AppLink to="https://www.gnu.org/software/wget/">wget</AppLink> ohjelmia, jotka ovat yleensä oletuksena saatavilla.
   </p>
 
   <h4>Paituli PowerShell skripti Windowsille</h4>

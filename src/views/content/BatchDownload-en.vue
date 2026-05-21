@@ -173,7 +173,7 @@ const { t } = useI18n({ useScope: 'global' })
       The easiest is <strong>a graphical FTP tool</strong> like <AppLink to="https://filezilla-project.org/">FileZilla</AppLink> or <AppLink to="https://winscp.net/eng/download.php">WinSCP</AppLink> (only for Windows).
     </li>
     <li>
-      <AppLink to="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=rsync">rsync</AppLink> or <AppLink to="http://www.linuxguide.it/command_line/linux-manpage/do.php?file=wget">wget</AppLink> provide more options and can continue interrupted download without downloading everything again. rsync and wget are included in most Linux and Mac distributions by default. In Windows you could use Windows Subsystem for Linux.
+      <AppLink to="https://rsync.samba.org/">rsync</AppLink> or <AppLink to="https://www.gnu.org/software/wget/">wget</AppLink> provide more options and can continue interrupted download without downloading everything again. rsync and wget are included in most Linux and Mac distributions by default. In Windows you could use Windows Subsystem for Linux.
     </li>
   </ol>
 
