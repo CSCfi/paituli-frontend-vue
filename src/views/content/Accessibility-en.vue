@@ -85,7 +85,7 @@ import AppLink from '@/components/common/AppLink.vue';
 
   <h3>Supervisory authority</h3>
   <p>
-    If you encounter any problems with accessibility on the website, first send your feedback to us, the website administrator. We will respond to your feedback within 14 days. If you are not satisfied with the response you have received from us, or if our response does not arrive within 14 days, you may <AppLink to="https://www.saavutettavuusvaatimukset.fi/oikeutesi/ilmoita-ongelmasta-saavutettavuudessa/" >file a complaint</AppLink> with the Regional State Administrative Agency for Southern Finland.
+    If you notice accessibility problems on the website, start by giving feedback to us, that is, the website administrator. Receiving a response may take 14 days. If you are not satisfied with the response from us or if you do not receive any response within two weeks, <AppLink to="https://www.saavutettavuusvaatimukset.fi/en/submit-complaint-web-accessibility-or-request-clarification">you may file a report with the Finnish Transport and Communications Agency Traficom</AppLink>. The agency website has detailed instructions on how to file a complaint and how the issue will be processed.
   </p>
 
   <h3>Contact details of the supervisory authority</h3>
@@ -99,7 +99,7 @@ import AppLink from '@/components/common/AppLink.vue';
 
   <h3>Release and update information</h3>
   <p>
-    This accessibility statement was updated on 28 March 2025.
+    This accessibility statement was updated on 21 May 2026.
   </p>
   <p>
     The updated Paituli service was launched on 14 December 2020.

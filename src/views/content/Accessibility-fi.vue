@@ -75,7 +75,7 @@ import AppLink from '@/components/common/AppLink.vue';
 
   <h3>Valvontaviranomainen</h3>
   <p>
-    Jos huomaat verkkopalvelussa saavutettavuusongelmia, anna palautetta ensin meille, eli verkkopalvelun ylläpitäjälle. Vastaamme yhteydenottoosi 14 päivän kuluessa. Jos et ole tyytyväinen meiltä saamaasi vastaukseen, tai vastauksemme ei saavu 14 päivän kuluessa, <AppLink to="https://www.saavutettavuusvaatimukset.fi/oikeutesi/ilmoita-ongelmasta-saavutettavuudessa/">voit tehdä ilmoituksen</AppLink> Etelä-Suomen aluehallintavirastoon.
+    Jos huomaat sivustolla saavutettavuusongelmia, anna ensin palautetta meille eli sivuston ylläpitäjälle. Vastauksessa voi mennä 14 päivää. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, <AppLink to="https://www.saavutettavuusvaatimukset.fi/fi/kayttajan-oikeudet/tee-saavutettavuuskantelu-tai-pyyda-selvitysta">voit tehdä ilmoituksen Liikenne- ja viestintävirasto Traficomille</AppLink>. Traficomin sivulla kerrotaan tarkasti, miten ilmoituksen voi tehdä ja miten asia käsitellään.
   </p>
 
   <h3>Valvontaviranomaisen yhteystiedot</h3>
@@ -88,7 +88,7 @@ import AppLink from '@/components/common/AppLink.vue';
   </p>
 
   <h3>Julkaisu- ja päivitystiedot</h3>
-  <p>Tämä saavutettavuusseloste on päivitetty 28.3.2025.</p>
+  <p>Tämä saavutettavuusseloste on päivitetty 21.5.2026.</p>
   <p>Uudistettu Paituli-palvelu avattiin käyttäjille 14.12.2020.</p>
 
 </template>
