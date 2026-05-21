@@ -87,7 +87,7 @@ import {
         <strong>4. Aineiston visualisointi</strong> (valinnainen)
       </c-list-item-title>
       <span>
-        Jos haluat käyttää tiettyä <strong>karttatyyliä</strong> aineiston visualisointiin WMS- ja WMTS-palveluissa, laadi tyylikuvaus <AppLink to="http://docs.geoserver.org/latest/en/user/styling/sld-cookbook/">SLD</AppLink> -muodossa ja lisää se aineistopakettiin.
+        Jos haluat käyttää tiettyä <strong>karttatyyliä</strong> aineiston visualisointiin WMS- ja WMTS-palveluissa, laadi tyylikuvaus <AppLink to="https://docs.geoserver.org/latest/en/user/styling/sld/">SLD</AppLink> -muodossa ja lisää se aineistopakettiin.
       </span>
     </c-list-item>
 
