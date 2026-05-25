@@ -1,6 +1,6 @@
 {
   "name": "front",
-  "version": "0.0.0",
+  "version": "3.9.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -25,7 +25,8 @@
     "vue3-openlayers": "^12.2.2"
   },
   "engines": {
-    "node": ">=22.13"
+    "node": ">=22.13",
+    "npm": ">=10.11"
   },
   "overrides": {
     "swiper": ">12.1.1",
