@@ -49,6 +49,16 @@ const scaleOptions = computed(() =>
     .filter(onlyDistinct)
     .sort(),
 )
+const dateToYear = (date: string) =>  {
+  // Trims all whitespace and then returns the last number amongst all found numbers.
+  // This returns the (last) year from strings such as `01.01.2000` or `1980-2026`.
+  // Numbers in parantheses are not matched and plain years return as-is.
+  return date
+    .replace(/\s/g, '')
+    .match(/(?<!\()\d+(?!\))/g)
+    ?.map(Number)
+    .at(-1);
+}
 const yearOptions = computed(() =>
   datasets.value
     .filter((d) => d.org === selectedProducer.value)
@@ -56,7 +66,7 @@ const yearOptions = computed(() =>
     .filter((d) => d.scale === selectedScale.value)
     .map((d) => d.year)
     .filter(onlyDistinct)
-    .sort((a, b) => Number(b.split('.').at(-1)) - Number(a.split('.').at(-1))),
+    .sort((a, b) => dateToYear(b)! - dateToYear(a)!),
 )
 const formatOptions = computed(() =>
   datasets.value
