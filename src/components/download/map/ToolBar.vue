@@ -10,7 +10,7 @@ import {
   mdiTarget,
 } from '@mdi/js';
 
-import OlMap from 'ol/Map.js'
+import type Map from 'ol/Map.js'
 import { useI18n } from 'vue-i18n';
 
 import { clearBoundingBox, dataHidden, dataLayerMaxResolution, dataSource, tileLoadCallback } from '@/modules/layers';
@@ -25,7 +25,7 @@ import { sleep } from '@/shared/util';
 
 const { t } = useI18n()
 
-const props = defineProps<{ map: OlMap, compact: boolean }>()
+const props = defineProps<{ map: Map, compact: boolean }>()
 
 const inspectCursor = computed(() => dataHidden.value ? 'not-allowed' : 'crosshair')
 
