@@ -41,13 +41,21 @@ const dataOptions = computed(() =>
     .filter(onlyDistinct)
     .sort(),
 )
+const scaleToNumber = (scale: string) => {
+  // Trims all whitespace and then multiplies all found numbers
+  // with each other. This should make all scales sortable, such as:
+  // 1:20 000, 2m x 2m, 0.5p/m2, etc.
+  const numbers = scale.replace(/\s/g, '')
+    .match(/\d*\.?\d+/g)?.map(Number) || [];
+  return numbers.reduce((acc, n) => acc * n, 1);
+}
 const scaleOptions = computed(() =>
   datasets.value
     .filter((d) => d.org === selectedProducer.value)
     .filter((d) => d.name === selectedData.value)
     .map((d) => d.scale)
     .filter(onlyDistinct)
-    .sort(),
+    .sort((a, b) => scaleToNumber(a) - scaleToNumber(b)),
 )
 const dateToYear = (date: string) =>  {
   // Trims all whitespace and then returns the last number amongst all found numbers.
