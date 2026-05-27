@@ -71,6 +71,14 @@ const { t } = useI18n({ useScope: 'global' })
   <c-list>
     <c-list-item>
       <c-list-item-title>
+        29.5.2026
+      </c-list-item-title>
+      <span>
+        Major update to the Paituli web service. The new Paituli provides mostly the same functionality as the previous version. New features include map sheet selection by GeoJSON and place name, as well as improved visibility of all data transfer links, including APIs related to specific datasets. The old Metadata page is no longer available; use <AppLink to="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli">Fairdata Etsin</AppLink> to find datasets.
+      </span>
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
         15.4.2026
       </c-list-item-title>
       Helsinki university/LUOMUS SPECTRE-datasets have been updated.

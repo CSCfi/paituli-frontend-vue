@@ -74,6 +74,14 @@ import { CAlertType } from '@cscfi/csc-ui';
   <c-list>
     <c-list-item>
       <c-list-item-title>
+        29.5.2026
+      </c-list-item-title>
+      <span>
+        Paituli-verkkopalvelun laaja päivitys. Uusi Paituli tarjoaa pääosin samat toiminnot kuin aiempi versio. Uusia ominaisuuksia ovat karttalehtien valinta GeoJSONin ja paikannimen perusteella sekä kaikkien aineistojen tiedonsiirtolinkkien, mukaan lukien tiettyihin aineistoihin liittyvien rajapintojen, aiempaa parempi näkyvyys. Vanha Metadata-sivu ei ole enää käytettävissä; käytä <AppLink to="https://etsin.fairdata.fi/datasets?facet_keyword=Paituli">Fairdata Etsin</AppLink> -palvelua aineistojen löytämiseen.
+      </span>
+    </c-list-item>
+    <c-list-item>
+      <c-list-item-title>
         15.4.2026
       </c-list-item-title>
       Päivitetty Helsingin yliopisto/LUOMUS SPECTRE-aineistoja.
