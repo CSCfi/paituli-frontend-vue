@@ -36,6 +36,14 @@ selectedOlFeatures.on('remove', (event) => {
 // States used by DownloadSelect
 export const checkboxStates = ref<Record<string, boolean>>({})
 
+// Hide sheets unchecked in DownloadSelect
+// without removing them from the selection list itself
+watch(checkboxStates, (states) =>
+  selectedOlFeatures.forEach(f =>
+    f.setStyle(states[f.get('label')] ? selectionStyle(f) : undefined)
+  ), { deep: true }
+)
+
 // Adds a single feature (sheet) to selection
 export function selectFeature(feature: Feature<Geometry>) {
   selectedOlFeatures.push(feature)
@@ -59,7 +67,15 @@ export function featureSelected(event: SelectEvent) {
   })
 
   event.deselected.forEach((feature) => {
-    feature.setStyle(undefined) // revert to layer default
+    const label = feature.get('label')
+    if (checkboxStates.value[label] === false) {
+      // Clicking an unchecked sheet re-checks it rather than removing it
+      selectedOlFeatures.push(feature)
+      checkboxStates.value[label] = true
+      feature.setStyle(selectionStyle(feature))
+    } else {
+      feature.setStyle(undefined)
+    }
   })
 }
 
@@ -140,4 +156,6 @@ const selectionStyle = (feature: FeatureLike) => {
 
 // Refresh style for selected map sheets whenever tool modes change
 watch(toolbarMode, () =>
-  selectedOlFeatures.forEach(f => f.setStyle(selectionStyle(f))))
+  selectedOlFeatures.forEach(f =>
+    f.setStyle(checkboxStates.value[f.get('label')] ? selectionStyle(f) : undefined)
+  ))
