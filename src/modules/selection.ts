@@ -26,6 +26,8 @@ export const selectedFeaturesArray = ref<Feature[]>([])
 // Update our selection array based on collection changes
 selectedOlFeatures.on('add', (event) => {
   selectedFeaturesArray.value.push(event.element)
+  selectedFeaturesArray.value.sort((a, b) =>
+    a.get('label').localeCompare(b.get('label')))
 })
 selectedOlFeatures.on('remove', (event) => {
   selectedFeaturesArray.value = selectedFeaturesArray.value.filter(
