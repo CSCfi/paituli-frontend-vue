@@ -180,7 +180,7 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
       "button": "Search",
       "label": "Place name search",
       "tooltip": "Search for a place name and zoom into it",
-      "help": "Search for a place name and zoom into it. For example: muncipalities, postal codes, landmarks and points of interest.",
+      "help": "Search for a place name and zoom into it. For example: municipalities, postal codes, landmarks and points of interest.",
     },
     "no_matches": "The search could not find any place name or map sheet label. Please double-check your spelling.",
     "no_overlap": "The found place name does not overlap with any map sheets.",

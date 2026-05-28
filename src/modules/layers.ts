@@ -33,7 +33,7 @@ export const osmSource = new TileWMS({
 export const indexSource = shallowRef<VectorSource | null>(null)
 
 // Utility layers WMS sources
-export const muncipalitiesSource = new TileWMS({
+export const municipalitiesSource = new TileWMS({
   url: URLS.WMS_PAITULI_BASE,
   params: {
     LAYERS: LAYER.MUNICIPALITIES_LAYER,

@@ -33,7 +33,7 @@ import {
   osmSource,
   dataSource,
   dataLayerMaxResolution,
-  muncipalitiesSource,
+  municipalitiesSource,
   catchmentSource,
   highlightSource,
   fetchFeatureInfo,
@@ -327,8 +327,8 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
       :visible="showLayer.data.value"
     />
     <OlTileLayer
-      :source="muncipalitiesSource"
-      :visible="showLayer.muncipalities.value"
+      :source="municipalitiesSource"
+      :visible="showLayer.municipalities.value"
     />
     <OlTileLayer
       :source="catchmentSource"
