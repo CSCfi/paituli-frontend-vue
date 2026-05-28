@@ -11,7 +11,6 @@ import { get as getProjection, type ProjectionLike } from 'ol/proj'
 import type { GeoJSONFeatureCollection } from 'ol/format/GeoJSON'
 import type { Geometry } from 'ol/geom'
 import Feature from 'ol/Feature'
-import { fromExtent } from 'ol/geom/Polygon'
 import { Stroke, Style } from 'ol/style'
 
 import { LAYER, URLS } from '@/shared/constants'
@@ -130,10 +129,10 @@ export const highlightSource = new VectorSource<Feature<Geometry>>({
   features: []
 })
 
-// Uses the highlight source to display an extent polygon
-export function drawBoundingBox(extent: Extent, clearPrevious = true) {
+// Uses the highlight source to display a geometry
+export function drawGeometry(geometry: Geometry, clearPrevious = true) {
   if (clearPrevious) clearBoundingBox()
-  const feature = new Feature({ geometry: fromExtent(extent) })
+  const feature = new Feature({ geometry })
   feature.setStyle(new Style({
     stroke: new Stroke({
       color: 'red', width: 2

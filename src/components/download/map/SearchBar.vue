@@ -11,8 +11,9 @@ import type { NominatimResponse } from '@/shared/types';
 import { URLS } from '@/shared/constants';
 import { useToasts } from '@/composables/toasts';
 import { CToastType } from '@cscfi/csc-ui';
-import { selectedOlFeatures, selectFeature, selectSheetsByExtent } from '@/modules/selection';
+import { selectedOlFeatures, selectFeature, selectSheetsByGeometry } from '@/modules/selection';
 import { clearBoundingBox, indexSource } from '@/modules/layers';
+import { fromExtent } from 'ol/geom/Polygon';
 import { vHelp } from '@/directives/help';
 import HelpContent from '@/components/download/help/HelpContent.vue';
 import { toolbarMode } from '@/modules/controls';
@@ -113,7 +114,7 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
   // No sheet hits, try bounding box if provided
   if (bbox) {
     const extent = transformExtent([bbox[2], bbox[0], bbox[3], bbox[1]], 'EPSG:4326', 'EPSG:3857')
-    if (!selectSheetsByExtent(extent, props.map.getView())) {
+    if (!selectSheetsByGeometry(fromExtent(extent), props.map.getView())) {
       addToast({
         type: CToastType.Warning,
         message: t('no_overlap')
