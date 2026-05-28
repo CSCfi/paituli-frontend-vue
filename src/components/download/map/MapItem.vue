@@ -33,7 +33,7 @@ import {
   osmSource,
   dataSource,
   dataLayerMaxResolution,
-  muncipalitiesSource,
+  municipalitiesSource,
   catchmentSource,
   highlightSource,
   fetchFeatureInfo,
@@ -44,7 +44,7 @@ import {
 import {
   selectedOlFeatures,
   featureSelected,
-  selectSheetsByExtent,
+  selectSheetsByGeometry,
   dragboxEnd,
   polyDrawEnd,
   autoSelectSheets,
@@ -223,8 +223,7 @@ const loadGeoJSONFile = (file: File) => {
         { featureProjection: mapView.value.getProjection() }
       )
       for (const feature of features) {
-        const extent = feature.getGeometry()!.getExtent()
-        selectSheetsByExtent(extent, mapView.value)
+        selectSheetsByGeometry(feature.getGeometry()!, mapView.value)
       }
       addToast({
         type: CToastType.Success,
@@ -327,8 +326,8 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
       :visible="showLayer.data.value"
     />
     <OlTileLayer
-      :source="muncipalitiesSource"
-      :visible="showLayer.muncipalities.value"
+      :source="municipalitiesSource"
+      :visible="showLayer.municipalities.value"
     />
     <OlTileLayer
       :source="catchmentSource"

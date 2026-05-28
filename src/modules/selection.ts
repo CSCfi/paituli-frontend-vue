@@ -5,10 +5,10 @@ import type { DragBoxEvent } from 'ol/interaction/DragBox'
 import type { SelectEvent } from 'ol/interaction/Select'
 import { Fill, Stroke, Style, Text } from 'ol/style'
 import type { FeatureLike } from 'ol/Feature'
-import { createEmpty, extend, getArea, type Extent } from 'ol/extent'
+import { createEmpty, extend, getArea } from 'ol/extent'
 import type { DrawEvent } from 'ol/interaction/Draw'
 
-import { drawBoundingBox, indexSource } from '@/modules/layers'
+import { drawGeometry, indexSource } from '@/modules/layers'
 import { currentDataset } from './datasets'
 import { toolbarMode } from './controls'
 import type { Geometry } from 'ol/geom'
@@ -36,6 +36,14 @@ selectedOlFeatures.on('remove', (event) => {
 // States used by DownloadSelect
 export const checkboxStates = ref<Record<string, boolean>>({})
 
+// Hide sheets unchecked in DownloadSelect
+// without removing them from the selection list itself
+watch(checkboxStates, (states) =>
+  selectedOlFeatures.forEach(f =>
+    f.setStyle(states[f.get('label')] ? selectionStyle(f) : undefined)
+  ), { deep: true }
+)
+
 // Adds a single feature (sheet) to selection
 export function selectFeature(feature: Feature<Geometry>) {
   selectedOlFeatures.push(feature)
@@ -59,7 +67,15 @@ export function featureSelected(event: SelectEvent) {
   })
 
   event.deselected.forEach((feature) => {
-    feature.setStyle(undefined) // revert to layer default
+    const label = feature.get('label')
+    if (checkboxStates.value[label] === false) {
+      // Clicking an unchecked sheet re-checks it rather than removing it
+      selectedOlFeatures.push(feature)
+      checkboxStates.value[label] = true
+      feature.setStyle(selectionStyle(feature))
+    } else {
+      feature.setStyle(undefined)
+    }
   })
 }
 
@@ -86,16 +102,18 @@ export function polyDrawEnd(event: DrawEvent) {
   })
 }
 
-// Selects index map sheets by the provided extent,
+// Selects index map sheets by the provided geometry,
 // and returns whether any sheets were selected.
-// Also draws the extent and zooms to the selection, if any.
-export function selectSheetsByExtent(
-  extent: Extent,
+// Also draws the geometry and zooms to the selection, if any.
+export function selectSheetsByGeometry(
+  geometry: Geometry,
   mapView: View,
 ): boolean {
-  drawBoundingBox(extent)
+  drawGeometry(geometry)
+  const extent = geometry.getExtent()
   const matches = indexSource.value?.getFeatures().filter((f) => {
-    return f.getGeometry()?.intersectsExtent(extent)
+    const featureExtent = f.getGeometry()?.getExtent()
+    return featureExtent && geometry.intersectsExtent(featureExtent)
   })
   if (!matches || matches.length == 0) return false
 
@@ -105,9 +123,7 @@ export function selectSheetsByExtent(
     extend(selection, feature.getGeometry()!.getExtent())
   })
 
-  // We zoom so that both extents stay in view
-  const biggerExtent =
-    getArea(selection) > getArea(extent) ? selection : extent
+  const biggerExtent = getArea(selection) > getArea(extent) ? selection : extent
   requestAnimationFrame(() => {
     mapView.fit(biggerExtent, {
       padding: APP_SETTINGS.MAP_DEFAULT_PADDING,
@@ -140,4 +156,6 @@ const selectionStyle = (feature: FeatureLike) => {
 
 // Refresh style for selected map sheets whenever tool modes change
 watch(toolbarMode, () =>
-  selectedOlFeatures.forEach(f => f.setStyle(selectionStyle(f))))
+  selectedOlFeatures.forEach(f =>
+    f.setStyle(checkboxStates.value[f.get('label')] ? selectionStyle(f) : undefined)
+  ))

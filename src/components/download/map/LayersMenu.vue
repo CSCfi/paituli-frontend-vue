@@ -19,8 +19,8 @@ watch(dataSource, (newSource) => {
   <c-switch v-model="showLayer.background.value" v-control>
     {{ t("background") }}
   </c-switch>
-  <c-switch v-model="showLayer.muncipalities.value" v-control>
-    {{ t("muncipalities") }}
+  <c-switch v-model="showLayer.municipalities.value" v-control>
+    {{ t("municipalities") }}
   </c-switch>
   <c-switch v-model="showLayer.catchment.value" v-control>
     {{ t("catchment") }}
@@ -47,7 +47,7 @@ watch(dataSource, (newSource) => {
   "en": {
     "heading": "Layers",
     "background": "Background map",
-    "muncipalities": "Muncipalities",
+    "municipalities": "Municipalities",
     "catchment": "Catchment areas",
     "index": "Mapsheets",
     "data": "Data layer",
@@ -56,7 +56,7 @@ watch(dataSource, (newSource) => {
   "fi": {
     "heading": "Karttatasot",
     "background": "Taustakartta",
-    "muncipalities": "Kuntarajat",
+    "municipalities": "Kuntarajat",
     "catchment": "Valuma-alueet",
     "index": "Karttalehdet",
     "data": "Aineisto",
