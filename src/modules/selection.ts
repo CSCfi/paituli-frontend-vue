@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref, shallowRef, toRaw, triggerRef, watch } from 'vue'
 
 import { Collection, Feature, View } from 'ol'
 import type { DragBoxEvent } from 'ol/interaction/DragBox'
@@ -21,11 +21,14 @@ export const selectedOlFeatures = new Collection<Feature>()
 // Map sheet array, which gets updated based on changes to the above
 // Honestly I forgot why we need this and the collection separately,
 // must have been some Vue shenanigans?
-export const selectedFeaturesArray = ref<Feature[]>([])
+export const selectedFeaturesArray = shallowRef<Feature[]>([])
 
 // Update our selection array based on collection changes
 selectedOlFeatures.on('add', (event) => {
   selectedFeaturesArray.value.push(event.element)
+  selectedFeaturesArray.value.sort((a, b) =>
+    a.get('label').localeCompare(b.get('label')))
+  triggerRef(selectedFeaturesArray)
 })
 selectedOlFeatures.on('remove', (event) => {
   selectedFeaturesArray.value = selectedFeaturesArray.value.filter(
@@ -46,6 +49,7 @@ watch(checkboxStates, (states) =>
 
 // Adds a single feature (sheet) to selection
 export function selectFeature(feature: Feature<Geometry>) {
+  if (selectedOlFeatures.getArray().includes(feature)) return
   selectedOlFeatures.push(feature)
   feature.setStyle(selectionStyle(feature))
 }
@@ -84,9 +88,7 @@ export function dragboxEnd(event: DragBoxEvent) {
   const extent = event.target.getGeometry().getExtent()
 
   indexSource.value?.forEachFeatureIntersectingExtent(extent, (feature) => {
-    if (!selectedOlFeatures.getArray().includes(feature)) {
-      selectFeature(feature)
-    }
+    selectFeature(feature)
   })
 }
 
@@ -131,6 +133,22 @@ export function selectSheetsByGeometry(
     })
   })
   return true
+}
+
+export function hoverFeature(feature: Feature<Geometry>) {
+  const f = toRaw(feature)
+  f.setStyle(new Style({
+    stroke: new Stroke({ color: 'rgba(255, 0, 255, 0.9)', width: 3 }),
+    fill: new Fill({ color: 'rgba(255, 0, 255, 0.2)' }),
+    text: new Text({ text: f.get('label'), stroke: new Stroke({ width: 0.6 }) }),
+    zIndex: 60,
+  }))
+}
+
+export function unhoverFeature(feature: Feature<Geometry>) {
+  const f = toRaw(feature)
+  const label = f.get('label')
+  f.setStyle(checkboxStates.value[label] ? selectionStyle(f) : undefined)
 }
 
 // Style for selected map sheets,
