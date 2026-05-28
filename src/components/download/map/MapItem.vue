@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { Map, Layers, MapControls, Interactions } from 'vue3-openlayers'
 import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
+
+import { OlMap, OlOverlay, OlView } from 'vue3-openlayers/map';
+import { OlTileLayer, OlVectorLayer } from 'vue3-openlayers/layers';
+import { OlOverviewMapControl } from 'vue3-openlayers/controls';
+import { OlInteractionSelect, OlInteractionDraw, OlInteractionDragBox } from 'vue3-openlayers/interactions';
+import type Map from 'ol/Map.js'
 
 import { mdiClose } from '@mdi/js'
 import type SelectInteraction from 'ol/interaction/Select'
@@ -11,7 +16,6 @@ import { Fill, Stroke, Style, Text } from 'ol/style'
 import { always, noModifierKeys } from 'ol/events/condition'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
-import OlMap from 'ol/Map.js'
 import { KeyboardZoom, KeyboardPan } from 'ol/interaction'
 
 import { currentDataset, fetchMetadata } from '@/modules/datasets'
@@ -59,14 +63,14 @@ const { addToast } = useToasts()
 const { t } = useI18n()
 
 // The map instance exposed (dynamically) by OL
-const olMapRef = ref<{ map: OlMap } | null>(null)
+const olMapRef = ref<{ map: Map } | null>(null)
 const mapView = computed(() => olMapRef.value!.map.getView())
 
 onMounted(async () => {
   // Fetch datasets on mount
   fetchDatasets()
 
-  const map = olMapRef.value!.map as OlMap
+  const map = olMapRef.value!.map as Map
   const olMapElement = map.getTargetElement()
 
   // Ensure map is focusable and refocus when pointing
@@ -280,85 +284,85 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 </script>
 
 <template>
-  <Map.OlMap id="map"
-             ref="olMapRef"
-             @click="handleClickedFeature" >
+  <OlMap id="map"
+         ref="olMapRef"
+         @click="handleClickedFeature" >
 
     <div ref="toolsContainerRef">
       <!-- Mount tools only after OL has provided us the map ref! -->
       <div class="tools" v-if="olMapRef">
-        <ButtonColumn id="button-column" :map="(olMapRef.map as OlMap)" />
+        <ButtonColumn id="button-column" :map="(olMapRef.map as Map)" />
         <div class="tools-flex">
           <HelpBox id="help" />
           <ToolBar id="toolbar"
                    ref="toolBarRef"
-                   :map="(olMapRef.map as OlMap)"
+                   :map="(olMapRef.map as Map)"
                    :compact="horizontalSpace < 750" />
-          <SearchBar id="search" :map="(olMapRef.map as OlMap)" :compact="horizontalSpace < 900" />
+          <SearchBar id="search" :map="(olMapRef.map as Map)" :compact="horizontalSpace < 900" />
         </div>
       </div>
     </div>
 
-    <Map.OlView
+    <OlView
       :center="APP_SETTINGS.MAP_DEFAULT_CENTER"
       :zoom="APP_SETTINGS.MAP_DEFAULT_ZOOM"
       projection="EPSG:3857" />
 
     <!--Layers-->
 
-    <Layers.OlTileLayer
+    <OlTileLayer
       :source="osmSource"
       :visible="showLayer.background.value"
     />
-    <Layers.OlVectorLayer
+    <OlVectorLayer
       v-if="indexSource"
       :source="indexSource"
       :style="indexStyle"
       :visible="showLayer.index.value"
     />
-    <Layers.OlTileLayer
+    <OlTileLayer
       v-if="dataSource"
       :source="dataSource"
       :max-resolution="dataLayerMaxResolution"
       :visible="showLayer.data.value"
     />
-    <Layers.OlTileLayer
+    <OlTileLayer
       :source="muncipalitiesSource"
       :visible="showLayer.muncipalities.value"
     />
-    <Layers.OlTileLayer
+    <OlTileLayer
       :source="catchmentSource"
       :visible="showLayer.catchment.value"
     />
-    <Layers.OlVectorLayer
+    <OlVectorLayer
       :source="highlightSource"
     />
 
     <!-- Controls and interactions -->
 
-    <Interactions.OlInteractionSelect
+    <OlInteractionSelect
       ref="selectInteraction"
       @select="featureSelected"
       :features="selectedOlFeatures"
       :toggle-condition="always"
     />
-    <Interactions.OlInteractionDragbox
+    <OlInteractionDragBox
       v-if="toolbarMode == 'select' && selectMode == 'basic'"
       @boxend="dragboxEnd"
     />
-    <Interactions.OlInteractionDraw
+    <OlInteractionDraw
       v-if="toolbarMode == 'select' && selectMode == 'poly'"
       type="Polygon"
       @drawend="polyDrawEnd"
       :stop-click="true"
     />
-    <MapControls.OlOverviewmapControl :collapsed="true">
-      <Layers.OlTileLayer :source="osmSource" />
-    </MapControls.OlOverviewmapControl>
+    <OlOverviewMapControl :collapsed="true">
+      <OlTileLayer :source="osmSource" />
+    </OlOverviewMapControl>
 
 
     <!-- Feature info popup -->
-    <Map.OlOverlay
+    <OlOverlay
       :position="featureInfoPos"
       :positioning="'center-left'"
       :auto-pan="{ margin: 30 }">
@@ -377,8 +381,8 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
           </c-alert>
         </div>
       </div>
-    </Map.OlOverlay>
-  </Map.OlMap>
+    </OlOverlay>
+  </OlMap>
 
 </template>
 

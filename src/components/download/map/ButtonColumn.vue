@@ -2,7 +2,7 @@
 import { mdiClose, mdiCopyright, mdiLayersTripleOutline, mdiMinusBox, mdiPlusBox } from '@mdi/js'
 import { useI18n } from 'vue-i18n';
 
-import OlMap from 'ol/Map.js'
+import type Map from 'ol/Map.js'
 import { APP_SETTINGS } from '@/shared/constants';
 import { computed, ref } from 'vue';
 import LayersMenu from './LayersMenu.vue';
@@ -12,7 +12,7 @@ import AppLink from '@/components/common/AppLink.vue';
 
 const { t } = useI18n()
 
-const props = defineProps<{ map: OlMap }>()
+const props = defineProps<{ map: Map }>()
 const mapView = computed(() => props.map.getView())
 
 const showAttribs = ref(false)

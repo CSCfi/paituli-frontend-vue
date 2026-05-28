@@ -1,5 +1,8 @@
 import './assets/main.css'
 
+import 'ol/ol.css';
+import 'vue3-openlayers/vue3-openlayers.css';
+
 import { createApp, nextTick } from 'vue'
 import { defineCustomElements } from '@cscfi/csc-ui/loader'
 import { vControl } from '@cscfi/csc-ui-vue'

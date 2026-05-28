@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import OlMap from 'ol/Map.js'
+import type Map from 'ol/Map.js'
 import { transform, transformExtent } from 'ol/proj'
 import { useI18n } from 'vue-i18n';
 
@@ -23,7 +23,7 @@ const { t } = useI18n()
 
 // Parent map component which we manipulate based on search
 // and mode to take less horizontal space if needed
-const props = defineProps<{ map: OlMap, compact: boolean }>()
+const props = defineProps<{ map: Map, compact: boolean }>()
 
 // selectMode determines whether we should select map sheets
 // instead of doing a traditional location search
