@@ -5,7 +5,7 @@ import DownloadModal from './modals/DownloadModal.vue'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n'
 import { currentDataset } from '@/modules/datasets'
-import { checkboxStates, selectedFeaturesArray, selectedOlFeatures } from '@/modules/selection'
+import { checkboxStates, selectedFeaturesArray, selectedOlFeatures, hoverFeature, unhoverFeature } from '@/modules/selection'
 import { CAlertType } from '@cscfi/csc-ui'
 import AppLink from '@/components/common/AppLink.vue'
 
@@ -124,7 +124,9 @@ watch(selectedFeaturesArray, () => {
       <div v-if="selectedFeaturesArray.length">
         <div class="files"
              v-for="feature in selectedFeaturesArray"
-             :key="feature.getId()">
+             :key="feature.getId()"
+             @mouseenter="hoverFeature(feature)"
+             @mouseleave="unhoverFeature(feature)">
           <label>
             <input
               type="checkbox"
