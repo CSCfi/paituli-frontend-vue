@@ -41,14 +41,32 @@ const dataOptions = computed(() =>
     .filter(onlyDistinct)
     .sort(),
 )
+const scaleToNumber = (scale: string) => {
+  // Trims all whitespace and then multiplies all found numbers
+  // with each other. This should make all scales sortable, such as:
+  // 1:20 000, 2m x 2m, 0.5p/m2, etc.
+  const numbers = scale.replace(/\s/g, '')
+    .match(/\d*\.?\d+/g)?.map(Number) || [];
+  return numbers.reduce((acc, n) => acc * n, 1);
+}
 const scaleOptions = computed(() =>
   datasets.value
     .filter((d) => d.org === selectedProducer.value)
     .filter((d) => d.name === selectedData.value)
     .map((d) => d.scale)
     .filter(onlyDistinct)
-    .sort(),
+    .sort((a, b) => scaleToNumber(a) - scaleToNumber(b)),
 )
+const dateToYear = (date: string) =>  {
+  // Trims all whitespace and then returns the last number amongst all found numbers.
+  // This returns the (last) year from strings such as `01.01.2000` or `1980-2026`.
+  // Numbers in parantheses are not matched and plain years return as-is.
+  return date
+    .replace(/\s/g, '')
+    .match(/(?<!\()\d+(?!\))/g)
+    ?.map(Number)
+    .at(-1);
+}
 const yearOptions = computed(() =>
   datasets.value
     .filter((d) => d.org === selectedProducer.value)
@@ -56,7 +74,7 @@ const yearOptions = computed(() =>
     .filter((d) => d.scale === selectedScale.value)
     .map((d) => d.year)
     .filter(onlyDistinct)
-    .sort((a, b) => Number(b.split('.').at(-1)) - Number(a.split('.').at(-1))),
+    .sort((a, b) => dateToYear(b)! - dateToYear(a)!),
 )
 const formatOptions = computed(() =>
   datasets.value
