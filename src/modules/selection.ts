@@ -48,6 +48,7 @@ watch(checkboxStates, (states) =>
 
 // Adds a single feature (sheet) to selection
 export function selectFeature(feature: Feature<Geometry>) {
+  if (selectedOlFeatures.getArray().includes(feature)) return
   selectedOlFeatures.push(feature)
   feature.setStyle(selectionStyle(feature))
 }
@@ -86,9 +87,7 @@ export function dragboxEnd(event: DragBoxEvent) {
   const extent = event.target.getGeometry().getExtent()
 
   indexSource.value?.forEachFeatureIntersectingExtent(extent, (feature) => {
-    if (!selectedOlFeatures.getArray().includes(feature)) {
-      selectFeature(feature)
-    }
+    selectFeature(feature)
   })
 }
 
