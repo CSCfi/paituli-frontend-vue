@@ -17,6 +17,9 @@ const { t } = useI18n()
 const showModal = ref(false)
 const modalRef = ref()
 
+const etsinLink = computed(() =>
+  URLS.ETSIN_METADATA_BASE + currentDataset.value?.meta)
+
 const licenseCheckbox = ref(false)
 const licenseError = ref(false)
 const licenseUrl = computed(() => currentDataset.value?.license_url)
@@ -339,13 +342,20 @@ onBeforeUnmount(() =>
         <c-toasts ref="toasts" vertical="bottom" absolute="true" />
       </c-card-content>
       <c-card-content v-else>
-        <c-alert :type="CAlertType.Success">
-          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <div slot="title">
-            {{ t("started.header") }}
-          </div>
-          {{ t("started.message") }}
-        </c-alert>
+        <div>
+          <c-alert :type="CAlertType.Success">
+            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+            <div slot="title">
+              {{ t("started.header") }}
+            </div>
+            {{ t("started.message") }}
+          </c-alert>
+          <h4>{{ t("started.citing_header") }}</h4>
+          <p v-if="currentDataset?.meta">
+            {{ t("started.citing") }}
+            <app-link :to="etsinLink" new-tab>{{ etsinLink }}</app-link>
+          </p>
+        </div>
       </c-card-content>
 
       <c-card-actions
@@ -415,6 +425,8 @@ onBeforeUnmount(() =>
     "started": {
       "header": "Download started",
       "message": "Thank you for using Paituli. If you have any problems with your data, please contact CSC.",
+      "citing_header": "Citations",
+      "citing": "Please cite this dataset when using it. Citation information is available on Etsin:",
     },
   },
   "fi": {
@@ -452,6 +464,8 @@ onBeforeUnmount(() =>
     "started": {
       "header": "Lataus aloitettu",
       "message": "Kiitos, että käytit Paitulia. Jos sinulla on ongelmia aineiston kanssa, ota yhteyttä CSC:hen.",
+      "citing_header": "Lähdeviitteet",
+      "citing": "Muistathan viittaukset käyttäessäsi tätä aineistoa. Viittaustiedot löytyvät Etsimestä:",
     },
   },
 }
