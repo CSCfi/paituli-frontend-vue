@@ -343,6 +343,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
       ref="selectInteraction"
       @select="featureSelected"
       :features="selectedOlFeatures"
+      :multi="true"
       :toggle-condition="always"
     />
     <OlInteractionDragBox
