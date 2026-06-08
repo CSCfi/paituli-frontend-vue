@@ -11,8 +11,12 @@ import { useI18n } from 'vue-i18n'
 import { currentDataset, datasets } from '@/modules/datasets'
 import { menuMode } from '@/modules/controls'
 import { CAlertType } from '@cscfi/csc-ui'
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 
 const { t } = useI18n()
+
+// Sidebar can be collapsed, mainly to give the map more room on mobile.
+const sidebarOpen = ref(true)
 
 const route = useRoute()
 const dataset_id = computed(() => route.query.data_id as string | undefined)
@@ -34,7 +38,7 @@ onMounted(() => {
 
 <template>
   <div class="wrapper">
-    <nav class="sidebar" ref="sidebarRef">
+    <nav class="sidebar" ref="sidebarRef" v-show="sidebarOpen">
       <div v-if="!datasets.length" class="loading">
         <h4>Loading datasets...</h4>
         <c-spinner size="50"/>
@@ -84,6 +88,16 @@ onMounted(() => {
         </c-tab-items>
       </c-tabs>
     </nav>
+    <!-- Drawer-style tab; extends from the sidebar edge, or sits on the
+         viewport's left edge once the sidebar is collapsed -->
+    <button
+      class="sidebar-tab"
+      :class="{ closed: !sidebarOpen }"
+      :aria-label="sidebarOpen ? t('sidebar.close') : t('sidebar.open')"
+      @click="sidebarOpen = !sidebarOpen"
+    >
+      <c-icon :key="sidebarOpen" :path="sidebarOpen ? mdiChevronLeft : mdiChevronRight" />
+    </button>
     <!-- MapItem contains the whole map view and its controls -->
     <MapItem/>
   </div>
@@ -93,6 +107,10 @@ onMounted(() => {
 {
   "en": {
     "suggestion": "Please select a Producer to start browsing available datasets.",
+    "sidebar": {
+      "open": "Datasets",
+      "close": "Hide",
+    },
     "titles": {
       "select": "Select dataset",
       "dataset": "Dataset information and download",
@@ -105,6 +123,10 @@ onMounted(() => {
   },
   "fi": {
     "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
+    "sidebar": {
+      "open": "Aineistot",
+      "close": "Piilota",
+    },
     "titles": {
       "select": "Valitse aineisto",
       "dataset": "Aineiston tiedot ja lataus",
@@ -120,6 +142,8 @@ onMounted(() => {
 
 <style scoped>
 .wrapper {
+  --sidebar-width: min(425px, 85vw);
+
   display: flex;
   position: absolute;
   top: var(--site-header-height);
@@ -166,7 +190,7 @@ nav.sidebar {
   display: flex;
   flex-direction: column;
 
-  width: 425px;
+  width: var(--sidebar-width);
   flex-shrink: 0;
 
   background-color: var(--c-primary-600);
@@ -189,6 +213,38 @@ nav.sidebar {
 c-alert {
   display: flex;
   margin-top: 1em;
+}
+
+.sidebar-tab {
+  position: absolute;
+  top: 50%;
+  left: var(--sidebar-width);
+  transform: translateY(-50%);
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 64px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+
+  color: var(--c-white);
+  background-color: var(--c-primary-600);
+  border-radius: 0 8px 8px 0;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.3);
+
+  transition: left 0.2s ease, background-color 0.15s ease;
+}
+
+.sidebar-tab.closed {
+  left: 0;
+}
+
+.sidebar-tab:hover {
+  background-color: var(--c-primary-500);
 }
 
 </style>
