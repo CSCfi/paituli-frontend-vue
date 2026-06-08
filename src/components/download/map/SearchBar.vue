@@ -18,13 +18,18 @@ import { vHelp } from '@/directives/help';
 import HelpContent from '@/components/download/help/HelpContent.vue';
 import { toolbarMode } from '@/modules/controls';
 import { createEmpty, extend } from 'ol/extent';
+import { useCompactness } from '@/composables/compactness';
 
 const { addToast } = useToasts()
 const { t } = useI18n()
 
-// Parent map component which we manipulate based on search
-// and mode to take less horizontal space if needed
-const props = defineProps<{ map: Map, compact: boolean }>()
+const props = defineProps<{ map: Map }>()
+
+// useCompactness allows us to adapt to the space this component takes
+// Below thish width we drop the search icon/label to take less space.
+const compactWidth = 950 // px
+const rootRef = ref<HTMLElement>()
+const { width } = useCompactness(rootRef)
 
 // selectMode determines whether we should select map sheets
 // instead of doing a traditional location search
@@ -132,7 +137,7 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
 </script>
 
 <template>
-  <div :class="{selectMode: selectMode}">
+  <div :class="{selectMode: selectMode}" ref="rootRef">
     <c-text-field v-model="searchStr"
                   @keypress.enter="search"
                   :key="selectMode"
@@ -145,7 +150,7 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
                   id="searchbar">
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
       <c-icon slot="pre"
-              v-if="!compact"
+              v-if="width >= compactWidth"
               :path="selectMode ? mdiSelectSearch : mdiMagnify"
               size="18" />
       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
@@ -153,7 +158,7 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
                 size="small"
                 @click="search()"
                 ghost>
-        <span v-if="!compact">
+        <span v-if="width >= compactWidth">
           {{ t(`${modeName}.button`) }}
         </span>
         <span v-else>

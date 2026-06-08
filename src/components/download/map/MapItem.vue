@@ -97,16 +97,7 @@ onMounted(async () => {
   // Tweak some OL overlay styles which CSS cannot hit
   const overlays = document.querySelector('.ol-overlay-container') as HTMLElement
   overlays.style.pointerEvents = 'none'
-
-  // We observe the view width to tell some elements to enter
-  // a compacted state, if space gets too cramped
-  const observer = new ResizeObserver(entries =>
-    horizontalSpace.value = entries[0].contentRect.width)
-  observer.observe(toolsContainerRef.value!)
 })
-
-const horizontalSpace = ref(0)
-const toolsContainerRef = ref<HTMLElement>()
 
 // Fetch datasets again if locale changes, due to the
 // endpoint returning different descriptions for each locale
@@ -287,7 +278,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
          ref="olMapRef"
          @click="handleClickedFeature" >
 
-    <div ref="toolsContainerRef">
+    <div class="tools-container">
       <!-- Mount tools only after OL has provided us the map ref! -->
       <div class="tools" v-if="olMapRef">
         <ButtonColumn id="button-column" :map="(olMapRef.map as Map)" />
@@ -295,9 +286,8 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
           <HelpBox id="help" />
           <ToolBar id="toolbar"
                    ref="toolBarRef"
-                   :map="(olMapRef.map as Map)"
-                   :compact="horizontalSpace < 750" />
-          <SearchBar id="search" :map="(olMapRef.map as Map)" :compact="horizontalSpace < 900" />
+                   :map="(olMapRef.map as Map)" />
+          <SearchBar id="search" :map="(olMapRef.map as Map)" />
         </div>
       </div>
     </div>
@@ -445,6 +435,18 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   outline: none;
 }
 
+/*
+  Cover #map and act as the query container for the tool overlay, so the
+  breakpoints below respond to the actual map width (which now varies with
+  the collapsible sidebar) rather than the viewport width.
+*/
+.tools-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  container-type: inline-size;
+}
+
 .tools {
   position: absolute;
   left: 0;
@@ -486,7 +488,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   }
 }
 
-@media (max-width: 1700px) {
+@container (max-width: 1275px) {
   .tools-flex {
     #help {
       position: absolute;
@@ -507,10 +509,9 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   }
 }
 
-@media (max-width: 1325px) {
+@container (max-width: 900px) {
   .tools-flex {
     #toolbar {
-      margin-left: auto;
       --c-tab-item-padding: 0.3em 0 0 0;
     }
     #search {
@@ -527,18 +528,33 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   }
 }
 
-@media (max-width: 1150px) {
+@container (max-width: 750px) {
   .tools-flex {
     #search {
       display: none;
     }
     #toolbar {
       margin-top: -0.25em;
-      margin-right: -2.75em;
     }
   }
   #button-column {
-    top: 4.75em;
+    top: -0.25em;
+  }
+}
+
+@container (max-width: 275px) {
+  .tools {
+    padding-right: 1em;
+  }
+  #button-column {
+    display: none;
+  }
+}
+
+@container (max-width: 230px)
+{
+  .tools-flex {
+    display: none;
   }
 }
 

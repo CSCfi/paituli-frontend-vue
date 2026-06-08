@@ -22,10 +22,24 @@ import HelpContent from '@/components/download/help/HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { currentDataset } from '@/modules/datasets';
 import { sleep } from '@/shared/util';
+import { useCompactness } from '@/composables/compactness';
 
 const { t } = useI18n()
+const props = defineProps<{ map: Map }>()
 
-const props = defineProps<{ map: Map, compact: boolean }>()
+// useCompactness allows us to adapt to the space this component takes
+const rootRef = ref<HTMLElement>()
+const { width, widthBetween } = useCompactness(rootRef)
+
+// Compactness breakpoints in px
+enum Width {
+  Compact = 500,
+  VeryCompact = 400,
+  SuperCompact = 300,
+}
+
+// Icons show everywhere except the medium compactness (very-compact) band
+const showIcons = computed(() => !widthBetween(Width.SuperCompact, Width.VeryCompact))
 
 const inspectCursor = computed(() => dataHidden.value ? 'not-allowed' : 'crosshair')
 
@@ -124,35 +138,47 @@ defineExpose({ doPopAlert })
 
 <template>
   <c-tabs v-model="toolbarMode"
+          ref="rootRef"
           v-control
-          :key="props.compact"
+          :key="width < Width.Compact"
           v-show="currentDataset"
           disable-animation>
     <c-tab-buttons
-      :size="props.compact ? 'small' : 'default'"
       mandatory>
       <c-button
         value="move"
         v-help="t('move.help')"
         v-tooltip="t('move.tooltip')">
-        <c-icon :path="mdiCursorMove"/>
-        {{ t("move.label") }}
+        <span v-show="width >= Width.SuperCompact">
+          {{ t("move.label") }}
+        </span>
+        <span v-show="showIcons">
+          <c-icon :path="mdiCursorMove"/>
+        </span>
       </c-button>
       <c-button
         value="select"
         :disabled="selectDisabled"
         v-help="`#${selectMode}-help`"
         v-tooltip="!autoSelectSheets ? t('select.tooltip') : t('select.disabled')">
-        <c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
-        {{ t("select.label") }}
+        <span v-show="width >= Width.SuperCompact">
+          {{ t("select.label" + (width < Width.Compact ? "_compact" : "")) }}
+        </span>
+        <span v-show="showIcons">
+          <c-icon :path="mdiCheckboxMultipleMarkedOutline"/>
+        </span>
       </c-button>
       <c-button
         value="inspect"
         v-help="t('inspect.help')"
         :disabled="inspectDisabled"
         v-tooltip="dataSource ? t('inspect.tooltip') : t('inspect.disabled')">
-        <c-icon :path="mdiTarget"/>
-        {{ t("inspect.label") }}
+        <span v-show="width >= Width.SuperCompact">
+          {{ t("inspect.label") }}
+        </span>
+        <span v-show="showIcons">
+          <c-icon :path="mdiTarget"/>
+        </span>
       </c-button>
     </c-tab-buttons>
     <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
@@ -167,21 +193,36 @@ defineExpose({ doPopAlert })
             value="basic"
             v-help
             v-tooltip="t('select.basic.tooltip')">
-            {{ t("select.basic.label") }}<c-icon :path="mdiCursorDefaultOutline"/>
+            <span v-show="width >= Width.SuperCompact">
+              {{ t("select.basic.label" + (width < Width.Compact ? "_compact":"")) }}
+            </span>
+            <span v-show="showIcons">
+              <c-icon :path="mdiCursorDefaultOutline"/>
+            </span>
             <help-content id="basic-help">{{ t('select.basic.help') }}</help-content>
           </c-button>
           <c-button
             value="poly"
             v-help
             v-tooltip="t('select.poly.tooltip')">
-            {{ t("select.poly.label") }}<c-icon :path="mdiShapePolygonPlus"/>
+            <span v-show="width >= Width.SuperCompact">
+              {{ t("select.poly.label") }}
+            </span>
+            <span v-show="showIcons">
+              <c-icon :path="mdiShapePolygonPlus"/>
+            </span>
             <help-content id="poly-help">{{ t('select.poly.help') }}</help-content>
           </c-button>
           <c-button
             value="json"
             v-help
             v-tooltip="t('select.json.tooltip')">
-            {{ t("select.json.label") }}<c-icon :path="mdiFileUploadOutline"/>
+            <span v-show="width >= Width.SuperCompact">
+              {{ t("select.json.label") }}
+            </span>
+            <span v-show="showIcons">
+              <c-icon :path="mdiFileUploadOutline"/>
+            </span>
             <help-content id="json-help">
               {{ t('select.json.help') }}
             </help-content>
@@ -192,7 +233,7 @@ defineExpose({ doPopAlert })
         </c-tab-buttons>
         <div id="json-button" v-if="selectMode == 'json'">
           <c-button @click="fileInput?.click()">
-            {{ t("select.json.open") }}
+            {{ t("select.json.open" + (width < Width.SuperCompact ? "_compact":"")) }}
             <input
               ref="fileInput"
               type="file"
@@ -227,10 +268,12 @@ defineExpose({ doPopAlert })
     },
     "select": {
       "label": "Select map sheets",
+      "label_compact": "Select",
       "tooltip": "Select map sheets for download",
       "disabled": "Selection tools are available for datasets with more than one map sheet",
       "basic": {
         "label": "Basic",
+        "label_compact": "Basic",
         "tooltip": "Select map sheets by clicking or by dragging a rectangle",
         "help": "Select map sheets by clicking or drag a rectangular selection. Clicking a selected map sheet deselects it.",
       },
@@ -244,6 +287,7 @@ defineExpose({ doPopAlert })
         "tooltip": "Select map sheets using GeoJSON file",
         "help": "Load GeoJSON to select overlapping map sheets. Use the Upload button or drag and drop GeoJSON file onto the map view. 'https://geojson.io' is an interactive editor for creating and adjusting GeoJSON data.",
         "open": "Upload a GeoJSON file",
+        "open_compact": "Upload GeoJSON",
       },
       "clear": {
         "tooltip": "Deselect all map sheets",
@@ -269,15 +313,17 @@ defineExpose({ doPopAlert })
     },
     "select": {
       "label": "Valitse karttalehtiä",
+      "label_compact": "Valitse",
       "tooltip": "Valitse karttalehtiä lataukseen",
       "disabled": "Valintatyökalut ovat käytössä aineistoille, joilla on useampi kuin yksi karttalehti",
       "basic": {
         "label": "Perusvalinta",
+        "label_compact": "Perus",
         "tooltip": "Valitse karttalehtiä napsauttamalla tai raahaa suorakulmainen valinta",
         "help": "Valitse karttalehtiä napsauttamalla tai raahaa suorakulmainen valinta. Napstauttamalla valittua karttalehteä poistat sen valinnasta.",
       },
       "poly": {
-        "label": "Monikulmio",
+        "label": "Polygoni",
         "tooltip": "Valitse karttalehtiä monikulmiovalinnalla",
         "help": "Napsauta aloittaaksesi monikulmion piirtämisen karttalehtien valitsemiseksi. Sulje monikulmio joko napsauttamalla aloituspistettä tai kaksoisnapsauttamalla.",
       },
@@ -286,6 +332,7 @@ defineExpose({ doPopAlert })
         "tooltip": "Valitse karttalehtiä GeoJSON-tiedoston avulla",
         "help": "Valitse karttalehtiä GeoJSON-tiedoston avulla. Käytä Valitse-painiketta tai pudota GeoJSON-tiedostoja karttanäkymään. 'https://geojson.io' on interaktiivinen käyttöliittymä GeoJSON datan luomiseen ja muokkaamiseen.",
         "open": "Valitse GeoJSON-tiedosto",
+        "open_compact": "Valitse GeoJSON",
       },
       "clear": {
         "tooltip": "Poista kaikki karttalehdet valinnasta",
