@@ -1,14 +1,29 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
 
 import { initToasts } from '@/composables/toasts';
 import FooterItem from '@/components/common/FooterItem.vue';
 import { currentFlag, languageItems } from '@/modules/locale';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { navLinks } from '@/routes';
 
 const { t } = useI18n({ useScope: 'global' })
 const route = useRoute()
+const router = useRouter()
+
+// Label for a nav route, by convention `pages.<name lowercased>`.
+const pageLabel = (name: string) => t(`pages.${name.toLowerCase()}`)
+
+// Mobile dropdown items derived from the same nav links as the header. Localized
+// (hence computed); each navigates on select (the { name, action } shape the
+// language dropdown uses).
+const navItems = computed(() =>
+  navLinks.map(link => ({
+    name: pageLabel(link.name),
+    action: () => router.push(link.path),
+  })),
+)
 
 // Initialize global toasts messages container
 const toasts = ref<HTMLCToastsElement | null>(null)
@@ -21,19 +36,21 @@ onMounted(() => {
 <template>
   <header>
     <c-toolbar class="site-header">
-      <c-navigation-button />
+      <c-menu id="nav-menu" :items="navItems" custom>
+        <c-navigation-button />
+      </c-menu>
       <c-csc-logo />
       <RouterLink to="/">
         <h2>Paituli</h2>
       </RouterLink>
       <div class="header-content">
         <nav>
-          <RouterLink id="home" to="/">{{ t("pages.home") }}</RouterLink>
-          <RouterLink to="/download">{{ t("pages.download") }}</RouterLink>
-          <RouterLink to="/webservices">{{ t("pages.webservices") }}</RouterLink>
-          <RouterLink to="/files">{{ t("pages.batchdownload") }}</RouterLink>
-          <RouterLink to="/stac">{{ t("pages.stac") }}</RouterLink>
-          <RouterLink to="/opendata">{{ t("pages.shareyourdata") }}</RouterLink>
+          <RouterLink
+            v-for="link in navLinks"
+            :key="link.path"
+            :id="link.name.toLowerCase()"
+            :to="link.path"
+          >{{ pageLabel(link.name) }}</RouterLink>
         </nav>
       </div>
       <c-menu id="languages" :items="languageItems">
@@ -106,7 +123,7 @@ a h2 {
   font-weight: bold;
 }
 
-c-navigation-button {
+#nav-menu {
   display: none;
 }
 
@@ -124,7 +141,7 @@ c-navigation-button {
   .header-content {
     display: none;
   }
-  c-navigation-button {
+  #nav-menu {
     display: unset;
   }
 }
