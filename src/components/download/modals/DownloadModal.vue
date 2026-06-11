@@ -424,7 +424,7 @@ onBeforeUnmount(() =>
     },
     "started": {
       "header": "Download started",
-      "message": "Thank you for using Paituli. If you have any problems with your data, please contact CSC.",
+      "message": "Thank you for using Paituli. Your download should begin automatically. If you can't find it, check your browser's downloads folder. If you have any problems with your data, please contact CSC.",
       "citing_header": "Citations",
       "citing": "Please cite this dataset when using it. Citation information is available on Etsin:",
     },
@@ -463,7 +463,7 @@ onBeforeUnmount(() =>
     },
     "started": {
       "header": "Lataus aloitettu",
-      "message": "Kiitos, että käytit Paitulia. Jos sinulla on ongelmia aineiston kanssa, ota yhteyttä CSC:hen.",
+      "message": "Kiitos, että käytit Paitulia. Lataus alkaa automaattisesti. Jos et löydä tiedostoa, tarkista selaimesi lataukset-kansio. Jos sinulla on ongelmia aineiston kanssa, ota yhteyttä CSC:hen.",
       "citing_header": "Lähdeviitteet",
       "citing": "Muistathan viittaukset käyttäessäsi tätä aineistoa. Viittaustiedot löytyvät Etsimestä:",
     },
