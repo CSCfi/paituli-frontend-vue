@@ -34,29 +34,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
-    <c-toolbar class="site-header">
-      <c-menu id="nav-menu" :items="navItems" custom>
-        <c-navigation-button />
-      </c-menu>
-      <c-csc-logo />
-      <RouterLink to="/">
-        <h2>Paituli</h2>
-      </RouterLink>
-      <div class="header-content">
-        <nav>
-          <RouterLink
-            v-for="link in navLinks"
-            :key="link.path"
-            :id="link.name.toLowerCase()"
-            :to="link.path"
-          >{{ pageLabel(link.name) }}</RouterLink>
-        </nav>
-      </div>
-      <c-menu id="languages" :items="languageItems">
-        <h3>{{ currentFlag }}</h3>
-      </c-menu>
-    </c-toolbar>
+  <header class="site-header">
+    <c-menu id="nav-menu" :items="navItems" custom>
+      <c-navigation-button />
+    </c-menu>
+    <c-csc-logo />
+    <RouterLink to="/">
+      <h2>Paituli</h2>
+    </RouterLink>
+    <div class="header-content">
+      <nav>
+        <RouterLink
+          v-for="link in navLinks"
+          :key="link.path"
+          :id="link.name.toLowerCase()"
+          :to="link.path"
+        >{{ pageLabel(link.name) }}</RouterLink>
+      </nav>
+    </div>
+    <c-menu id="languages" :items="languageItems">
+      <h3>{{ currentFlag }}</h3>
+    </c-menu>
   </header>
   <div class="page">
     <main>
@@ -92,10 +90,25 @@ a h2 {
   color: var(--c-info-600);
 }
 
+/* A plain fixed flex bar in place of c-toolbar, whose shadow root had an
+   unreachable ~440px min-width that overflowed narrow viewports. */
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  height: var(--site-header-height);
+  padding-left: 16px;
+
+  background: var(--c-white);
+  color: var(--c-text-system);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.16);
+
   nav {
     margin: 0 auto;
     * {
