@@ -125,7 +125,7 @@ async function loadMetadata() {
   "en": {
     "title": "Dataset metadata",
     "files": "Files describing this dataset",
-    "metadata": "All metadata available at Fairdata Etsin",
+    "metadata": "All metadata and citing information available at Fairdata Etsin",
     "close": "Close",
     "copy": "Copy PID",
     "loading": "Fetching metadata",
@@ -138,7 +138,7 @@ async function loadMetadata() {
   "fi": {
     "title": "Aineiston metatiedot",
     "files": "Aineistoa kuvaavat tiedostot",
-    "metadata": "Kaikki metatiedot saatavilla Fairdata Etsimessä",
+    "metadata": "Kaikki metatiedot sekä viittaustiedot saatavilla Fairdata Etsimessä",
     "close": "Sulje",
     "copy": "Kopioi PID",
     "loading": "Haetaan metatietoja",
@@ -169,12 +169,13 @@ div#etsin {
     gap: 0.25em;
 
     c-link {
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       min-width: 0;
     }
 
     c-button {
       flex: 0 0 auto;
+      margin-left: auto;
     }
   }
 }

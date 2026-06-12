@@ -1,64 +1,78 @@
-import { createRouter, createWebHistory, type RouteLocation } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocation, type RouteRecordRaw } from 'vue-router'
 import LocalizedContentView from '@/views/LocalizedContentView.vue'
 import DownloadView from '@/views/DownloadView.vue'
 import { i18n } from './modules/locale'
 import { watch } from 'vue'
 
+// `meta.nav: true` marks routes shown in the main navigation.
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    meta: { nav: true },
+    component: LocalizedContentView,
+  },
+  {
+    path: '/download',
+    name: 'Download',
+    meta: { nav: true, hideFooter: true },
+    component: DownloadView,
+  },
+  {
+    path: '/webservices',
+    name: 'WebServices',
+    meta: { nav: true },
+    component: LocalizedContentView,
+  },
+  {
+    path: '/files',
+    name: 'BatchDownload',
+    meta: { nav: true },
+    component: LocalizedContentView,
+  },
+  {
+    path: '/stac',
+    name: 'STAC',
+    meta: { nav: true },
+    component: LocalizedContentView,
+  },
+  {
+    path: '/opendata',
+    name: 'ShareYourData',
+    meta: { nav: true },
+    component: LocalizedContentView,
+  },
+  {
+    path: '/privacy',
+    name: 'Privacy',
+    component: LocalizedContentView,
+  },
+  {
+    path: '/cookies',
+    name: 'Cookies',
+    component: LocalizedContentView,
+  },
+  {
+    path: '/accessibility',
+    name: 'Accessibility',
+    component: LocalizedContentView,
+  },
+  {
+    path: '/:pathMatch(.*)*', // Matches all other routes for a 404 view
+    name: 'NotFound',
+    component: LocalizedContentView,
+  },
+]
+
+// Main navigation in route order. Each label is the i18n key
+// `pages.<name lowercased>` (same convention as the document title below).
+export const navLinks = routes
+  .filter(route => route.meta?.nav)
+  .map(route => ({ path: route.path, name: String(route.name) }))
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'Home',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/download',
-      name: 'Download',
-      meta: { hideFooter: true },
-      component: DownloadView,
-    },
-    {
-      path: '/webservices',
-      name: 'WebServices',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/files',
-      name: 'BatchDownload',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/stac',
-      name: 'STAC',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/opendata',
-      name: 'ShareYourData',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/privacy',
-      name: 'Privacy',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/cookies',
-      name: 'Cookies',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/accessibility',
-      name: 'Accessibility',
-      component: LocalizedContentView,
-    },
-    {
-      path: '/:pathMatch(.*)*', // Matches all other routes for a 404 view
-      name: 'NotFound',
-      component: LocalizedContentView,
-    },
-  ],
+  routes,
 })
 
 function updateDocumentTitle(route: RouteLocation) {

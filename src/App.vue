@@ -1,14 +1,29 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
 
 import { initToasts } from '@/composables/toasts';
 import FooterItem from '@/components/common/FooterItem.vue';
 import { currentFlag, languageItems } from '@/modules/locale';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { navLinks } from '@/routes';
 
 const { t } = useI18n({ useScope: 'global' })
 const route = useRoute()
+const router = useRouter()
+
+// Label for a nav route, by convention `pages.<name lowercased>`.
+const pageLabel = (name: string) => t(`pages.${name.toLowerCase()}`)
+
+// Mobile dropdown items derived from the same nav links as the header. Localized
+// (hence computed); each navigates on select (the { name, action } shape the
+// language dropdown uses).
+const navItems = computed(() =>
+  navLinks.map(link => ({
+    name: pageLabel(link.name),
+    action: () => router.push(link.path),
+  })),
+)
 
 // Initialize global toasts messages container
 const toasts = ref<HTMLCToastsElement | null>(null)
@@ -19,27 +34,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
-    <c-toolbar class="site-header">
+  <header class="site-header">
+    <c-menu id="nav-menu" :items="navItems" custom>
       <c-navigation-button />
-      <c-csc-logo />
-      <RouterLink to="/">
-        <h2>Paituli</h2>
-      </RouterLink>
-      <div class="header-content">
-        <nav>
-          <RouterLink id="home" to="/">{{ t("pages.home") }}</RouterLink>
-          <RouterLink to="/download">{{ t("pages.download") }}</RouterLink>
-          <RouterLink to="/webservices">{{ t("pages.webservices") }}</RouterLink>
-          <RouterLink to="/files">{{ t("pages.batchdownload") }}</RouterLink>
-          <RouterLink to="/stac">{{ t("pages.stac") }}</RouterLink>
-          <RouterLink to="/opendata">{{ t("pages.shareyourdata") }}</RouterLink>
-        </nav>
-      </div>
-      <c-menu id="languages" :items="languageItems">
-        <h3>{{ currentFlag }}</h3>
-      </c-menu>
-    </c-toolbar>
+    </c-menu>
+    <c-csc-logo />
+    <RouterLink to="/">
+      <h2>Paituli</h2>
+    </RouterLink>
+    <div class="header-content">
+      <nav>
+        <RouterLink
+          v-for="link in navLinks"
+          :key="link.path"
+          :id="link.name.toLowerCase()"
+          :to="link.path"
+        >{{ pageLabel(link.name) }}</RouterLink>
+      </nav>
+    </div>
+    <c-menu id="languages" :items="languageItems">
+      <h3>{{ currentFlag }}</h3>
+    </c-menu>
   </header>
   <div class="page">
     <main>
@@ -75,10 +90,25 @@ a h2 {
   color: var(--c-info-600);
 }
 
+/* A plain fixed flex bar in place of c-toolbar, whose shadow root had an
+   unreachable ~440px min-width that overflowed narrow viewports. */
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  height: var(--site-header-height);
+  padding-left: 16px;
+
+  background: var(--c-white);
+  color: var(--c-text-system);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.16);
+
   nav {
     margin: 0 auto;
     * {
@@ -106,7 +136,7 @@ a h2 {
   font-weight: bold;
 }
 
-c-navigation-button {
+#nav-menu {
   display: none;
 }
 
@@ -124,7 +154,7 @@ c-navigation-button {
   .header-content {
     display: none;
   }
-  c-navigation-button {
+  #nav-menu {
     display: unset;
   }
 }

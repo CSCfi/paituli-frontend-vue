@@ -6,35 +6,52 @@ import DatasetButtons from '@/components/download/DatasetButtons.vue'
 import DownloadSelect from '@/components/download/DownloadSelect.vue'
 
 import { useRoute } from 'vue-router'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { currentDataset, datasets } from '@/modules/datasets'
 import { menuMode } from '@/modules/controls'
 import { CAlertType } from '@cscfi/csc-ui'
+import { mdiBackburger, mdiForwardburger } from '@mdi/js'
+import { useCompactness } from '@/composables/compactness'
+import { vTooltip } from '@/directives/tooltip'
 
 const { t } = useI18n()
 
 const route = useRoute()
 const dataset_id = computed(() => route.query.data_id as string | undefined)
 
-// We observe the sidebar height and enter `tabbed` state if
-// the height gets too small.
-const sidebarHeight = ref(0)
-const tabbed = computed(() => sidebarHeight.value < 750)
 const sidebarRef = ref<HTMLElement>()
-onMounted(() => {
-  const observer = new ResizeObserver(entries => {
-    sidebarHeight.value = entries[0].contentRect.height
-  })
-  observer.observe(sidebarRef.value!)
-})
+const { width, height } = useCompactness(sidebarRef)
 
+// Sidebar can be collapsed, mainly to give the map more room on mobile.
+const sidebarOpen = ref(true)
+
+// Below this width an open sidebar fills the screen,
+// so the close button moves inside the nav instead
+const inlineToggle = computed(() => width.value < 450 && sidebarOpen.value)
+
+// The sidebar tabs its content when vertical room runs low.
+const tabbed = computed(() => height.value < 770)
+
+const toggleLabel = computed(() =>
+  sidebarOpen.value ? t('sidebar.hide') : t('sidebar.show'))
 
 </script>
 
 <template>
   <div class="wrapper">
-    <nav class="sidebar" ref="sidebarRef">
+    <nav class="sidebar" ref="sidebarRef" v-show="sidebarOpen">
+      <!-- When too narrow for the external tab, the close button lives here,
+           pinned to the corner so it costs no vertical space -->
+      <button
+        v-if="inlineToggle"
+        class="sidebar-close-inline"
+        :class="{ 'in-flow': tabbed }"
+        @click="sidebarOpen = false"
+      >
+        <c-icon :path="mdiBackburger" />
+        {{ t('sidebar.showMap') }}
+      </button>
       <div v-if="!datasets.length" class="loading">
         <h4>Loading datasets...</h4>
         <c-spinner size="50"/>
@@ -84,6 +101,17 @@ onMounted(() => {
         </c-tab-items>
       </c-tabs>
     </nav>
+    <!-- Drawer-style tab; Opens and closes the sidebar -->
+    <button
+      v-if="!inlineToggle"
+      class="sidebar-tab"
+      :class="{ closed: !sidebarOpen }"
+      :aria-label="toggleLabel"
+      v-tooltip="toggleLabel"
+      @click="sidebarOpen = !sidebarOpen"
+    >
+      <c-icon :key="sidebarOpen" :path="sidebarOpen ? mdiBackburger : mdiForwardburger" />
+    </button>
     <!-- MapItem contains the whole map view and its controls -->
     <MapItem/>
   </div>
@@ -93,6 +121,11 @@ onMounted(() => {
 {
   "en": {
     "suggestion": "Please select a Producer to start browsing available datasets.",
+    "sidebar": {
+      "show": "Show sidebar",
+      "hide": "Hide sidebar",
+      "showMap": "Show map",
+    },
     "titles": {
       "select": "Select dataset",
       "dataset": "Dataset information and download",
@@ -105,6 +138,11 @@ onMounted(() => {
   },
   "fi": {
     "suggestion": "Valitse yksi tuottajista selatakseksi saatavilla olevia aineistoja.",
+    "sidebar": {
+      "show": "Näytä sivupalkki",
+      "hide": "Piilota sivupalkki",
+      "showMap": "Näytä kartta",
+    },
     "titles": {
       "select": "Valitse aineisto",
       "dataset": "Aineiston tiedot ja lataus",
@@ -120,6 +158,8 @@ onMounted(() => {
 
 <style scoped>
 .wrapper {
+  --sidebar-width: min(425px, 100vw);
+
   display: flex;
   position: absolute;
   top: var(--site-header-height);
@@ -165,8 +205,9 @@ c-tabs {
 nav.sidebar {
   display: flex;
   flex-direction: column;
+  position: relative;
 
-  width: 425px;
+  width: var(--sidebar-width);
   flex-shrink: 0;
 
   background-color: var(--c-primary-600);
@@ -189,6 +230,67 @@ nav.sidebar {
 c-alert {
   display: flex;
   margin-top: 1em;
+}
+
+/* For opening and closing the sidebar */
+.sidebar-tab {
+  position: absolute;
+  top: 50%;
+  left: var(--sidebar-width);
+  transform: translateY(-50%);
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  width: 32px;
+  height: 64px;
+  border: none;
+  cursor: pointer;
+
+  color: var(--c-white);
+  background-color: var(--c-primary-600);
+  border-radius: 0 8px 8px 0;
+  box-shadow: 4px 0 6px -2px rgba(0, 0, 0, 0.3);
+
+  transition: left 0.2s ease, background-color 0.15s ease;
+}
+
+.sidebar-tab.closed {
+  left: 0;
+}
+
+.sidebar-tab:hover {
+  background-color: var(--c-primary-500);
+}
+
+/* In narrow viewports the sidebar close button is pinned
+   to the top-right corner of the sidebar. */
+.sidebar-close-inline {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  z-index: 1;
+
+  display: inline-flex;
+  gap: 0.25em;
+  padding: 0.5em;
+
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--c-white);
+  font: inherit;
+}
+
+/* In the tabbed (short) layout the menu starts at the very top, so flow the
+   button into the column normally */
+.sidebar-close-inline.in-flow {
+  position: static;
+  align-self: flex-end;
+}
+
+.sidebar-close-inline:hover {
+  background-color: var(--c-primary-500);
 }
 
 </style>
