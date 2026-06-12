@@ -423,10 +423,10 @@ onBeforeUnmount(() =>
       "failed": "Failed!",
     },
     "started": {
-      "header": "Download started",
-      "message": "Thank you for using Paituli. Your download should begin automatically. If you can't find it, check your browser's downloads folder. If you have any problems with your data, please contact CSC.",
-      "citing_header": "Citations",
-      "citing": "Please cite this dataset when using it. Citation information is available on Etsin:",
+      "header": "Thank you for using Paituli",
+      "message": "The file download has started. If you can't find it, check your browser's Downloads folder. If you have any problems, please contact CSC.",
+      "citing_header": "Citation",
+      "citing": "If you use the dataset for a publication, please cite according to the citation information is available on Etsin:",
     },
   },
   "fi": {
@@ -462,10 +462,10 @@ onBeforeUnmount(() =>
       "failed": "Epäonnistui!",
     },
     "started": {
-      "header": "Lataus aloitettu",
-      "message": "Kiitos, että käytit Paitulia. Lataus alkaa automaattisesti. Jos et löydä tiedostoa, tarkista selaimesi lataukset-kansio. Jos sinulla on ongelmia aineiston kanssa, ota yhteyttä CSC:hen.",
+      "header": "Kiitos, että käytit Paitulia",
+      "message": "Lataus alkoi automaattisesti. Jos et löydä tiedostoa, tarkista selaimesi lataukset-kansio. Jos sinulla on ongelmia, ota yhteyttä CSC:hen.",
       "citing_header": "Lähdeviitteet",
-      "citing": "Muistathan viittaukset käyttäessäsi tätä aineistoa. Viittaustiedot löytyvät Etsimestä:",
+      "citing": "Jos käytät aineistoa julkaisuun, muistathan lisätä viittauksen aineistoon. Viittaustiedot löytyvät Etsimestä:",
     },
   },
 }
