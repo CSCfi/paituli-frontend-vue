@@ -18,7 +18,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   </p>
   <ul>
     <li>
-      Around <strong>125 datasets from Paituli</strong>. All Paituli datasets have 2 assets - one with public URL-link to data and one Puhti specific path. Puhti specific paths can and should be used ONLY when working on CSC supercomputer Puhti.
+      Around <strong>125 datasets from Paituli</strong>. All Paituli datasets have 2 assets - one with public URL-link to data and one Roihu specific path. Roihu specific paths can and should be used ONLY when working on CSC supercomputer Roihu.
     </li>
     <li>
       ESA, <AppLink to="http://urn.fi/urn:nbn:fi:fd-e1007ae5-1529-3e5c-8bf2-b218c77e25a5">Sentinel-2 products</AppLink>, processed to Level-2A (Surface Reflectance), a selection of mostly cloud-free products from Finland. Downloaded to CSC Allas by Maria Yli-Heikkilä (LUKE), Arttu Kivimäki (NLS/FGI) and Matias Heino (Aalto).

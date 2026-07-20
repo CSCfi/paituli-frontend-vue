@@ -47,8 +47,8 @@ export const URLS = {
     import.meta.env.VITE_ETSIN_BASE +
     '/rest/datasets?format=json&preferred_identifier=',
 
-  // Puhti
-  PUHTI_GEO_BASE: '/appl/data/geo/'
+  // Roihu
+  ROIHU_GEO_BASE: '/appl/data/geo/'
 
 } as const
 
