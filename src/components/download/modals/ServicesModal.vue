@@ -118,7 +118,7 @@ const scaleText = computed(() => {
                       <tbody>
                         <ServicesModalRow
                           :label="t('file_transfer.hpc.label')"
-                          :text="URLS.PUHTI_GEO_BASE + currentDataset.funet"/>
+                          :text="URLS.ROIHU_GEO_BASE + currentDataset.funet"/>
                       </tbody>
                     </table>
                   </c-table>
@@ -284,7 +284,7 @@ const scaleText = computed(() => {
     "endpoint": "Endpoint",
     "file_transfer": {
       "hpc": {
-        "title": "Puhti supercomputer",
+        "title": "Roihu supercomputer",
         "label": "Path",
       },
       "unavailable": "Alternative file transfer services are unavailable for this dataset.",
@@ -317,7 +317,7 @@ const scaleText = computed(() => {
     "endpoint": "Osoite",
     "file_transfer": {
       "hpc": {
-        "title": "Puhti supertietokone",
+        "title": "Roihu supertietokone",
         "label": "Polku",
       },
       "unavailable": "Vaihtoehtoiset tiedonsiirtopalvelut eivät ole saatavilla tälle aineistolle.",

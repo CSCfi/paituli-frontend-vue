@@ -18,7 +18,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   </p>
   <ul>
     <li>
-      <strong>~125 Paitulin aineistoa</strong>. Kaikilla Paitulin aineistoilla on 2 Resurssia - yksi julkinen URL-osoite ja yksi paikallinen polku CSC:n Puhti superkoneella. Paikallisia polkuja voi ja tulisi käyttää vain, jos työskennellään CSC:n Puhti superkoneella.
+      <strong>~125 Paitulin aineistoa</strong>. Kaikilla Paitulin aineistoilla on 2 Resurssia - yksi julkinen URL-osoite ja yksi paikallinen polku CSC:n Roihu superkoneella. Paikallisia polkuja voi ja tulisi käyttää vain, jos työskennellään CSC:n Roihu superkoneella.
     </li>
     <li>
       ESA:n <AppLink to="http://urn.fi/urn:nbn:fi:fd-e1007ae5-1529-3e5c-8bf2-b218c77e25a5">Sentinel-2-tuotteet</AppLink>, prosessoitu tasolle 2A (Surface Reflectance), valikoima pääosin pilvettömiä kuvia Suomesta. Ladattu CSC Allakseen: Maria Yli-Heikkilä (LUKE), Arttu Kivimäki (MML/FGI) ja Matias Heino (Aalto).

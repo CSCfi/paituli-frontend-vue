@@ -66,7 +66,7 @@ import { CAlertType } from '@cscfi/csc-ui';
       Paitulin kaikki rasteriaineistot ovat saatavilla <AppLink to="/stac">STAC</AppLink>:in kautta. Paituli STAC sisältää enemmän aineistoja kuin Paitulin latauspalvelu, esimerkiksi Geoportti Geocube -aineistot ja useita suomalaisia kaukokartoitusaineistoja.
     </li>
     <li>
-      <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env">CSC Puhti supertietokoneen avoimet GIS aineistot</AppLink> sisältävät melkein kaikki Paitulin aineistot, jotta näiden käyttö olisi helppoa ja nopeaa Puhdin käyttäjille.
+      <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env">CSC Roihu supertietokoneen avoimet GIS aineistot</AppLink> sisältävät melkein kaikki Paitulin aineistot, jotta näiden käyttö olisi helppoa ja nopeaa Puhdin käyttäjille.
     </li>
   </ul>
 

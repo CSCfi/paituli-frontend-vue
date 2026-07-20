@@ -63,7 +63,7 @@ const { t } = useI18n({ useScope: 'global' })
       All Paituli raster datasets are available via <AppLink to="/stac">STAC</AppLink>. Paituli STAC includes more datasets than Paituli download service, for example Geoportti Geocube and several remote sensing Finnish datasets.
     </li>
     <li>
-      <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env">CSC Puhti supercomputer has open GIS data</AppLink>, which includes a copy of almost all Paituli data, for fast and easy access for Puhti users.
+      <AppLink to="https://research.csc.fi/gis_data_in_csc_computing_env">CSC Roihu supercomputer has open GIS data</AppLink>, which includes a copy of almost all Paituli data, for fast and easy access for Roihu users.
     </li>
   </ul>
 
