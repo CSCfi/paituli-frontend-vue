@@ -48,7 +48,7 @@ export const URLS = {
     '/rest/datasets?format=json&preferred_identifier=',
 
   // Roihu
-  ROIHU_GEO_BASE: '/appl/data/geo/'
+  ROIHU_GEO_BASE: '/dataset/project_2019680'
 
 } as const
 
