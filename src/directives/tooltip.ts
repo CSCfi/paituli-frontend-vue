@@ -14,10 +14,24 @@ const PADDING = 8   // px
 // change the cursor depending on the button's state. If you are reading this
 // and know how to do that with CSS, please do that instead - seems impossible?
 
+// Shared host for all tooltips, appended to <body>.
+let tooltipLayer: HTMLElement | null = null
+
+const getTooltipLayer = () => {
+  if (!tooltipLayer?.isConnected) {
+    tooltipLayer = document.querySelector('#tooltip-layer')
+  }
+  if (!tooltipLayer) {
+    tooltipLayer = document.createElement('div')
+    tooltipLayer.id = 'tooltip-layer'
+    document.body.appendChild(tooltipLayer)
+  }
+  return tooltipLayer
+}
+
 export const vTooltip = {
   mounted(el: HTMLElement, binding: DirectiveBinding<string>) {
-    // Initialize the tooltip container inside the site header
-    const parent = document.querySelector('header') || document.body
+    const parent = getTooltipLayer()
     const tooltip = document.createElement('div')
     tooltip.textContent = binding.value
     tooltip.className = 'v-tooltip'
