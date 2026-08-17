@@ -59,15 +59,26 @@ onMounted(() => {
 const selectDisabled = ref(false)
 const inspectDisabled = ref(false)
 
+// Which toolbar modes the current dataset supports? Used when dataset changes to
+// determine whether to retain currently selected mode or defaulting to 'Move'
+const modeUnavailable = computed<Record<typeof toolbarMode.value, boolean>>(() => ({
+  move: false,
+  select: autoSelectSheets.value,
+  inspect: !dataSource.value,
+}))
+
 watch(currentDataset, async () => {
-  // Reset selection to 'move' in case inspect becomes unavailable
-  toolbarMode.value = 'move'
+  // Keep the selected tool across dataset changes, unless the new
+  // dataset doesn't support it. If so, default to 'Move' 
+  if (modeUnavailable.value[toolbarMode.value]) {
+    toolbarMode.value = 'move'
+  }
 
   // To go around c-tab-buttons bg color bug we wait for
   // a while before determining which of the buttons are enabled
   await sleep(10)
-  selectDisabled.value = autoSelectSheets.value
-  inspectDisabled.value = !dataSource.value
+  selectDisabled.value = modeUnavailable.value.select
+  inspectDisabled.value = modeUnavailable.value.inspect
 })
 
 watch(inspectCursor, (cursor) => {
