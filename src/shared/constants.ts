@@ -54,6 +54,11 @@ export const URLS = {
 
 } as const
 
+// Datasets that are not available on the Roihu supercomputer.
+export const ROIHU_BLACKLIST: RegExp[] = [
+  /^mml_ortho/,
+]
+
 export const APP_SETTINGS = {
   MAP_DEFAULT_ZOOM: 5.7,
   MAP_DEFAULT_CENTER: [2900000, 9950000],
