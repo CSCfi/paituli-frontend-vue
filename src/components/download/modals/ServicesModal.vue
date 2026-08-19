@@ -3,7 +3,7 @@ import { URLS } from '@/shared/constants'
 import { computed, ref } from 'vue';
 
 import { useI18n } from 'vue-i18n';
-import { currentDataset, hasRasterData, hasVectorData } from '@/modules/datasets';
+import { currentDataset, hasRasterData, hasVectorData, isOnRoihu } from '@/modules/datasets';
 import ServicesModalRow from './ServicesModalRow.vue';
 import AppLink from '@/components/common/AppLink.vue';
 
@@ -118,6 +118,7 @@ const scaleText = computed(() => {
                       <tbody>
                         <ServicesModalRow
                           :label="t('file_transfer.hpc.label')"
+                          :unavailable="!isOnRoihu(currentDataset)"
                           :text="URLS.ROIHU_GEO_BASE + currentDataset.funet"/>
                       </tbody>
                     </table>
