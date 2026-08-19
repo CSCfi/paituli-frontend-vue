@@ -5,6 +5,7 @@ import { i18n } from './modules/locale'
 import { watch } from 'vue'
 
 // `meta.nav: true` marks routes shown in the main navigation.
+// `meta.noindex: true` keeps a route out of search engine indexes.
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -60,6 +61,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*', // Matches all other routes for a 404 view
     name: 'NotFound',
+    meta: { noindex: true },
     component: LocalizedContentView,
   },
 ]
@@ -81,12 +83,28 @@ function updateDocumentTitle(route: RouteLocation) {
   document.title = `${i18n.global.t(key)} – Paituli`
 }
 
+// Ask crawlers not to index routes with `meta.noindex`.
+function updateRobotsMeta(route: RouteLocation) {
+  let tag = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]')
+  if (route.meta.noindex) {
+    if (!tag) {
+      tag = document.createElement('meta')
+      tag.name = 'robots'
+      document.head.appendChild(tag)
+    }
+    tag.content = 'noindex'
+  } else {
+    tag?.remove()
+  }
+}
+
 // Fairdata Matomo analytics API (see index.html/fdwe.js)
 declare const fdweRecordEvent: () => void
 
-// Update page title and Matomo after each routing
+// Update page title, robots meta and Matomo after each routing
 router.afterEach((to) => {
   updateDocumentTitle(to)
+  updateRobotsMeta(to)
   fdweRecordEvent()
 })
 
