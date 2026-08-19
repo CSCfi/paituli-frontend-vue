@@ -16,8 +16,12 @@ npm run type-check   # vue-tsc type validation only
 npm run lint         # ESLint with auto-fix
 npm run build-test   # build with --mode test
 ```
-
 There is no test suite. Node ≥ 22.13 is required.
+Node and npm are unavailable in the Claude Code environment, so these commands cannot be run there.
+
+## Code style
+
+Don't make formatting-only edits — reindentation, reflowing tags or arguments across lines, moving whitespace. Formatting is the linter's job.
 
 ## Environment Variables
 
