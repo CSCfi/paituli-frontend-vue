@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 
 import type { Dataset } from '@/shared/types'
-import { URLS } from '@/shared/constants'
+import { ROIHU_BLACKLIST, URLS } from '@/shared/constants'
 import { currentLocale } from '@/modules/locale'
 
 // Fetches datasets for the current locale from the backend.
@@ -33,4 +33,7 @@ export function hasRasterData(dataset: Dataset): boolean {
 export function hasVectorData(dataset: Dataset): boolean {
   const formats = ['SHAPE', 'GEOPACKAGE']
   return formats.some(f => dataset.format.toUpperCase().includes(f))
+}
+export function isOnRoihu(dataset: Dataset): boolean {
+  return !ROIHU_BLACKLIST.some(r => r.test(dataset.funet) || r.test(dataset.data_id))
 }
