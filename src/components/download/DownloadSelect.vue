@@ -131,7 +131,9 @@ watch(selectedFeaturesArray, () => {
             <input
               type="checkbox"
               v-model="checkboxStates[feature.get('label')]" />
-            {{ feature.get('label') }}
+            <span class="sheet-name" :title="feature.get('label')">
+              {{ feature.get('label') }}
+            </span>
           </label>
         </div>
       </div>
@@ -227,6 +229,16 @@ label {
   }
   label:hover {
     background: var(--c-primary-500);
+  }
+  input {
+    flex: none;
+  }
+  .sheet-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
