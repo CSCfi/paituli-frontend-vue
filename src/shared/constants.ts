@@ -48,7 +48,9 @@ export const URLS = {
     '/rest/datasets?format=json&preferred_identifier=',
 
   // Roihu
-  ROIHU_GEO_BASE: '/dataset/project_2019680/'
+  ROIHU_GEO_BASE: '/dataset/project_2019680/',
+  GITHUB_FRONTEND: 'https://github.com/CSCfi/paituli-frontend-vue',
+  GITHUB_BACKEND: 'https://github.com/CSCfi/avaa-paituli-backend'
 
 } as const
 
@@ -62,4 +64,11 @@ export const APP_SETTINGS = {
   MAX_ZIP_SIZE: 3000, // MB
   SHOW_BUILD_INFO: import.meta.env.VITE_SHOW_BUILD_INFO === 'true',
   BUILD_TIME: __BUILD_TIME__,
+
+  MATOMO_TAG: import.meta.env.VITE_MATOMO_TAG,
+  GIT_BRANCH: __GIT_BRANCH__,
+  ENV_EMOJI: ({
+    development: '🛠️',
+    test: '🔍',
+  } as Record<string, string>)[import.meta.env.MODE] ?? '',
 }

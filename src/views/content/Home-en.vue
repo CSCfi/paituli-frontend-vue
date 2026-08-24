@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
-import { APP_SETTINGS } from '@/shared/constants';
+import { APP_SETTINGS, URLS } from '@/shared/constants';
 import { CAlertType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
 
@@ -162,7 +162,7 @@ const { t } = useI18n({ useScope: 'global' })
     and
     <AppLink to="https://quarkus.io/" >Quarkus</AppLink>.
     Paituli source code is available in Github:
-    <AppLink to="https://github.com/CSCfi/paituli-frontend-vue/">front-end</AppLink> and <AppLink to="https://github.com/CSCfi/avaa-paituli-backend">back-end</AppLink>.
+    <AppLink :to="URLS.GITHUB_FRONTEND">front-end</AppLink> and <AppLink :to="URLS.GITHUB_BACKEND">back-end</AppLink>.
   </p>
   <p>
     Usage statistics are available in <AppLink to="https://www.nic.funet.fi/index/geodata/yearly_reports/">Paituli yearly reports</AppLink>.
