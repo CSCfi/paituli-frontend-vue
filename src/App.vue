@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 
 import { initToasts } from '@/composables/toasts';
 import FooterItem from '@/components/common/FooterItem.vue';
+import BuildInfo from '@/components/common/BuildInfo.vue';
+import { APP_SETTINGS } from '@/shared/constants';
 import { currentFlag, languageItems } from '@/modules/locale';
 import { useRoute, useRouter } from 'vue-router';
 import { navLinks } from '@/routes';
@@ -52,6 +54,7 @@ onMounted(() => {
         >{{ pageLabel(link.name) }}</RouterLink>
       </nav>
     </div>
+    <BuildInfo v-if="APP_SETTINGS.SHOW_BUILD_INFO" />
     <c-menu id="languages" :items="languageItems">
       <h3>{{ currentFlag }}</h3>
     </c-menu>

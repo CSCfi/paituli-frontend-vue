@@ -39,6 +39,9 @@ export const i18n = createI18n({
       'alt': {
         'finland': 'Icon of Finland',
       },
+      'build': {
+        'updated_ago': 'updated {time} ago',
+      },
       'close': 'Close',
     },
     'fi': {
@@ -65,6 +68,9 @@ export const i18n = createI18n({
       },
       'alt': {
         'finland': 'Suomen kuvake',
+      },
+      'build': {
+        'updated_ago': 'päivitetty {time} sitten',
       },
       'close': 'Sulje',
     },
