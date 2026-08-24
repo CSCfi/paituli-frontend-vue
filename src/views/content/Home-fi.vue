@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
+import { URLS } from '@/shared/constants';
 import { CAlertType } from '@cscfi/csc-ui';
 
 </script>
@@ -165,8 +166,8 @@ import { CAlertType } from '@cscfi/csc-ui';
     ja
     <AppLink to="https://quarkus.io/">Quarkus</AppLink>.
     Paitulin lähdekoodi on Githubissa:
-    <AppLink to="https://github.com/CSCfi/paituli-frontend-vue/">front-end</AppLink> ja
-    <AppLink to="https://github.com/CSCfi/avaa-paituli-backend" >back-end</AppLink>.
+    <AppLink :to="URLS.GITHUB_FRONTEND">front-end</AppLink> ja
+    <AppLink :to="URLS.GITHUB_BACKEND">back-end</AppLink>.
   </p>
 
   <p>
