@@ -32,7 +32,8 @@ Vite automatically loads `.env.[mode]` based on the build mode. All three files 
 - `VITE_DOWNLOAD_API` — download job API endpoint
 - `VITE_ETSIN_BASE` — Etsin research data catalog base URL
 - `VITE_MATOMO_TAG` — Matomo analytics environment tag (`DEV`/`TEST`/`PRODUCTION`)
-- `VITE_BASE_PATH` — optional base path override; only set in `.env.test` (`/v4/`)
+- `VITE_BASE_PATH` — optional base path override
+- `VITE_SHOW_BUILD_INFO` — `true` shows an "updated hh:mm:ss ago" build timestamp in the app header 
 
 ## Architecture
 

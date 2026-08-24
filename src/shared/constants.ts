@@ -59,5 +59,7 @@ export const APP_SETTINGS = {
   MAP_DEFAULT_PADDING: [150, 40, 40, 40],
   MAP_ZOOM_STEP: 0.65,
   APP_NAME: 'Paituli',
-  MAX_ZIP_SIZE: 3000 // MB
+  MAX_ZIP_SIZE: 3000, // MB
+  SHOW_BUILD_INFO: import.meta.env.VITE_SHOW_BUILD_INFO === 'true',
+  BUILD_TIME: __BUILD_TIME__,
 }
