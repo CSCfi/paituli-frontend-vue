@@ -22,6 +22,7 @@ export const i18n = createI18n({
         'default': 'Click something for help!',
         'tooltip': 'Show help',
         'header': 'Help',
+        'header_labeled': 'Help – {label}',
       },
       'pages': {
         'home': 'About',
@@ -52,6 +53,7 @@ export const i18n = createI18n({
         'default': 'Napsauta jotain saadaksesi siitä apua!',
         'tooltip': 'Näytä ohjeet',
         'header': 'Ohjeet',
+        'header_labeled': 'Ohjeet – {label}',
       },
       'pages': {
         'home': 'Etusivu',

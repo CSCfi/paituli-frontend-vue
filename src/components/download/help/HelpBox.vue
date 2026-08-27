@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiClose, mdiHelpCircleOutline } from '@mdi/js'
-import { helpVisible, helpText } from '@/modules/helpText';
+import { helpLabel, helpVisible, helpText } from '@/modules/helpText';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
@@ -9,6 +9,11 @@ const { t } = useI18n({ useScope: 'global' })
 // The box defaults until something gives it contents. Note that the contents
 // live outside the component, so they survive it being unmounted.
 const content = computed(() => helpText.value || t('help.default'))
+
+// Each help source labels its contents, telling what they are about
+const header = computed(() => helpLabel.value
+  ? t('help.header_labeled', { label: helpLabel.value })
+  : t('help.header'))
 </script>
 
 <template>
@@ -23,7 +28,7 @@ const content = computed(() => helpText.value || t('help.default'))
       </c-icon-button>
     </div>
     <div class="help-box" v-if="helpVisible">
-      <h3>{{ t('help.header') }}</h3>
+      <h3>{{ header }}</h3>
       <p v-html="content"></p>
       <div class="close">
         <c-icon-button size="small"
@@ -61,6 +66,10 @@ const content = computed(() => helpText.value || t('help.default'))
   color: var(--c-primary-100);
   background: var(--c-primary-800);
   pointer-events: auto;
+
+  h3 {
+    font-size: 1em;
+  }
 
   .close {
     position: absolute;

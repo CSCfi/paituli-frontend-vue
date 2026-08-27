@@ -167,8 +167,8 @@ function selectFeatureSearch(query: string, bbox?: Array<number>) {
       </c-button>
     </c-text-field>
 
-    <help-content id="select-help">{{ t('select.help') }}</help-content>
-    <help-content id="search-help">{{ t('search.help') }}</help-content>
+    <help-content id="select-help" :label="t('select.label')">{{ t('select.help') }}</help-content>
+    <help-content id="search-help" :label="t('search.label')">{{ t('search.help') }}</help-content>
   </div>
 
 </template>
