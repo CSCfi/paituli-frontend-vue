@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { mdiClose, mdiHelpCircleOutline } from '@mdi/js'
-import { helpVisible, helpText, setHelp } from '@/modules/helpText';
+import { helpVisible, helpText, openHelp } from '@/modules/helpText';
 import { useI18n } from 'vue-i18n';
-import { watch } from 'vue';
+import { computed } from 'vue';
 
 const { t } = useI18n({ useScope: 'global' })
 
-// Default the box initially and if it gets reset (e.g. locale change)
-helpText.value = t('help.default')
-watch(helpText, (newText: string | undefined) => {
-  if (!newText) helpText.value = t('help.default')
-})
+// The box defaults until something gives it contents. Note that the contents
+// live outside the component, so they survive it being unmounted.
+const content = computed(() => helpText.value || t('help.default'))
 </script>
 
 <template>
@@ -18,7 +16,7 @@ watch(helpText, (newText: string | undefined) => {
     <div class="help-button">
       <c-icon-button
         ghost
-        @click="setHelp(); helpVisible = true"
+        @click="openHelp()"
         v-tooltip="t('help.tooltip')"
         size="small">
         <c-icon :path="mdiHelpCircleOutline" size="30px"/>
@@ -26,7 +24,7 @@ watch(helpText, (newText: string | undefined) => {
     </div>
     <div class="help-box" v-if="helpVisible">
       <h3>{{ t('help.header') }}</h3>
-      <p v-if="helpText" v-html="helpText"></p>
+      <p v-html="content"></p>
       <div class="close">
         <c-icon-button size="small"
                        :aria-label="t('close')"

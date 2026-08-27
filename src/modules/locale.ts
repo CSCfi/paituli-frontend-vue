@@ -1,6 +1,5 @@
 import { computed, watch, type Component } from 'vue';
 import { createI18n } from 'vue-i18n'
-import { setHelp } from '@/modules/helpText';
 
 // Available locales
 export type Locale = 'en' | 'fi'
@@ -81,7 +80,6 @@ export const currentLocale = computed(() => i18n.global.locale.value);
 export function setLocale(locale: Locale) {
   i18n.global.locale.value = locale
   localStorage.setItem('app-locale', locale)
-  setHelp(undefined)
 }
 
 // Update document lang whenever locale changes
