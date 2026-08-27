@@ -37,6 +37,10 @@ const progressLabel = ref('')
 const downloadError = ref(false)
 const started = ref(false)
 
+// Large files can sit at 0 % for a long while, which reads as a stuck download.
+// Show the progress-agnostic bar until the job reports actual progress.
+const indeterminateProgress = computed(() => progress.value === 0 && !downloadError.value)
+
 const open = (paths: string[], labels: string[], size: number) => {
   if (paths.length == 0)
   {
@@ -170,10 +174,7 @@ const submit = async () => {
       job = await request.json()
       assertJob(job, t('toasts.something_wrong'))
       progress.value = Math.ceil(job.progress * 100)
-      if (progress.value > 0)
-      {
-        progressLabel.value = t('progress.processing')
-      }
+      progressLabel.value = t('progress.processing')
     }
     while (job.progress < 1.0 && !cancel.value)
 
@@ -359,11 +360,18 @@ onBeforeUnmount(() =>
           :outlined="!started">
           {{ t(started ? "close" : "cancel") }}
         </c-button>
-        <c-progress-bar
-          v-if="processing"
-          :value="progress"
-          :label="` — ${progressLabel}`"
-          :error="downloadError"/>
+        <div v-if="processing" id="download-progress">
+          <c-progress-bar
+            :value="progress"
+            :indeterminate="indeterminateProgress"
+            :label="` — ${progressLabel}`"
+            :error="downloadError"/>
+          <div
+            v-if="indeterminateProgress"
+            id="download-progress-label">
+            {{ progressLabel }}
+          </div>
+        </div>
         <div v-else-if="!started" id="download-note">
           {{ t('note') }}
         </div>
@@ -473,6 +481,15 @@ c-button {
   --c-button-outlined-background-color-hover: unset !important;
   --c-button-outlined-border-color: unset !important;
   --c-button-background-color-hover: var(--c-tertiary-500);
+}
+#download-progress {
+  width: 100%;
+}
+#download-progress-label {
+  font-size: 14px;
+  margin-top: 2px;
+  text-align: end;
+  color: var(--c-tertiary-500);
 }
 c-progress-bar {
   width: 100%;
