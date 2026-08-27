@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiClose, mdiHelpCircleOutline } from '@mdi/js'
-import { helpVisible, helpText, openHelp } from '@/modules/helpText';
+import { helpVisible, helpText } from '@/modules/helpText';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
@@ -16,7 +16,7 @@ const content = computed(() => helpText.value || t('help.default'))
     <div class="help-button">
       <c-icon-button
         ghost
-        @click="openHelp()"
+        @click="helpVisible = true"
         v-tooltip="t('help.tooltip')"
         size="small">
         <c-icon :path="mdiHelpCircleOutline" size="30px"/>
