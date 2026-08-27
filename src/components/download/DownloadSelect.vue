@@ -107,7 +107,12 @@ watch(selectedFeaturesArray, () => {
       {{ t("size", { size: downloadSize }) }}
     </c-button>
     <c-alert :type="CAlertType.Warning" v-if="downloadSizeExceeded">
-      {{ t("warnings.size", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
+      <span>
+        {{ t("warnings.size", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
+        <AppLink to="/files" new-tab>
+          {{ t("warnings.size_link") }}
+        </AppLink>
+      </span>
     </c-alert>
 
     <c-alert :type="CAlertType.Info" v-if="showSelectWarning">
@@ -148,7 +153,8 @@ watch(selectedFeaturesArray, () => {
   "en": {
     "size": "Download ({size} MB)",
     "warnings": {
-      "size": "You have selected over {size} MB of data, which is over the allowed limit of ZIP file download.",
+      "size": "Downloads over {size} MB are only available through ",
+      "size_link": "batch download",
       "select": "Select at least one map sheet to download data. Click 'Select map sheets' from the toolbar to start.",
     },
     "documents": "Documents",
@@ -158,7 +164,8 @@ watch(selectedFeaturesArray, () => {
   "fi": {
     "size": "Lataa ({size} MB)",
     "warnings": {
-      "size": "Olet valinnut yli {size} MB dataa, mikä ylittää sallitun ZIP tiedoston kokorajan.",
+      "size": "Yli {size} MB:n lataukset ovat saatavilla vain ",
+      "size_link": "massalatauksena",
       "select": "Ladataksesi tiedostoja, valitse vähintään yksi karttalehti. Napsauta 'Valitse karttalehtiä' työkalupalkista aloittaaksesi.",
     },
     "documents": "Asiakirjat",
@@ -245,6 +252,11 @@ label {
 c-link {
   --c-link-color: var(--c-white);
   --c-link-hover: var(--c-primary-400);
+}
+
+c-alert c-link {
+  --c-link-color: var(--c-info-700);
+  --c-link-hover: var(--c-info-200);
 }
 
 </style>

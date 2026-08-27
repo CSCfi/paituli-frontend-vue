@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { CAlertType, CToastType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
-import { mdiHelpCircleOutline } from '@mdi/js'
 
 import type { JobResponse } from '@/shared/types';
 import { APP_SETTINGS, URLS } from '@/shared/constants'
@@ -230,7 +229,6 @@ const resetForm = () => {
   licenseCheckbox.value = false
   downloadType.value = downloadTypeItems.value[0].value
   zipDownloadDisabled.value = false
-  showListHint.value = false
 }
 
 // By default toasts get hidden behind the modal backdrop,
@@ -245,7 +243,6 @@ const downloadTypeItems = computed(() => [
 ]);
 
 const downloadType = ref()
-const showListHint = ref(false)
 
 // c-modals have built-in event which listens ESC, which does not
 // respect the 'dismissable' prop, thus we have to intercept it
@@ -287,14 +284,9 @@ onBeforeUnmount(() =>
             v-model="downloadType">
             <div id="group-header">
               {{ t("type.title") }}
-              <c-icon-button
-                @click="showListHint = true"
-                size="x-small">
-                <c-icon :path="mdiHelpCircleOutline" size="20px" />
-              </c-icon-button>
             </div>
           </c-radio-group>
-          <c-alert v-if="showListHint" :type="CAlertType.Info">
+          <c-alert v-if="downloadType == 'LIST'" class="list-hint" :type="CAlertType.Info">
             <span>
               {{ t('list_hint') }}
               <app-link to="/files" new-tab>
@@ -496,17 +488,11 @@ c-alert p {
   margin: 0 0 .5em 0;
 }
 #group-header {
-  display: inline-flex;
   font-weight: bold;
-  gap: .5em;
-  align-items: center;
-
-  --c-icon-button-background-color: var(--c-white);
-  --c-icon-button-background-color-hover: var(--c-tertiary-100);
-
-  c-icon {
-    --c-icon-color: var(--c-tertiary-400);
-  }
+}
+.list-hint {
+  display: block;
+  margin-top: .5em;
 }
 c-card {
   --c-card-gap: 1.25em;
