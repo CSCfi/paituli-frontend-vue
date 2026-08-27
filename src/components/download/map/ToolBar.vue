@@ -18,6 +18,7 @@ import { autoSelectSheets, selectedOlFeatures, } from '@/modules/selection';
 import { fileSelectedCallback, mapViewResolution, menuMode, selectMode, toolbarMode } from '@/modules/controls';
 import { vTooltip } from '@/directives/tooltip';
 import { vHelp } from '@/directives/help';
+import { introduceHelp, setHelp } from '@/modules/helpText';
 import HelpContent from '@/components/download/help/HelpContent.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { currentDataset } from '@/modules/datasets';
@@ -66,6 +67,14 @@ const modeUnavailable = computed<Record<typeof toolbarMode.value, boolean>>(() =
   select: autoSelectSheets.value,
   inspect: !dataSource.value,
 }))
+
+// The help box introduces itself when the toolbar first appears, i.e. when a
+// dataset gets selected. 'Move' is always the initial tool, so we show its help.
+// Setting the contents through a callback keeps them localized on locale change.
+const moveHelp = () => setHelp(t('move.help'), moveHelp)
+watch(currentDataset, (dataset) => {
+  if (dataset) introduceHelp(moveHelp)
+}, { immediate: true })
 
 watch(currentDataset, async () => {
   // Keep the selected tool across dataset changes, unless the new
