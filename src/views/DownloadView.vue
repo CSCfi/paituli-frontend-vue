@@ -31,7 +31,7 @@ const sidebarOpen = ref(true)
 const inlineToggle = computed(() => width.value < 450 && sidebarOpen.value)
 
 // The sidebar tabs its content when vertical room runs low.
-const tabbed = computed(() => height.value < 770)
+const tabbed = computed(() => height.value < 870)
 
 const toggleLabel = computed(() =>
   sidebarOpen.value ? t('sidebar.hide') : t('sidebar.show'))
