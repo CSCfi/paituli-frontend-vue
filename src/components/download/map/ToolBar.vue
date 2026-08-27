@@ -71,7 +71,7 @@ const modeUnavailable = computed<Record<typeof toolbarMode.value, boolean>>(() =
 // The help box introduces itself when the toolbar first appears, i.e. when a
 // dataset gets selected. 'Move' is always the initial tool, so we show its help.
 // Setting the contents through a callback keeps them localized on locale change.
-const moveHelp = () => setHelp(t('move.help'), moveHelp)
+const moveHelp = () => setHelp({ text: t('move.help'), label: t('move.help_label') }, moveHelp)
 watch(currentDataset, (dataset) => {
   if (dataset) introduceHelp(moveHelp)
 }, { immediate: true })
@@ -167,7 +167,7 @@ defineExpose({ doPopAlert })
       mandatory>
       <c-button
         value="move"
-        v-help="t('move.help')"
+        v-help="{ text: t('move.help'), label: t('move.help_label') }"
         v-tooltip="t('move.tooltip')">
         <span v-show="width >= Width.SuperCompact">
           {{ t("move.label") }}
@@ -190,7 +190,7 @@ defineExpose({ doPopAlert })
       </c-button>
       <c-button
         value="inspect"
-        v-help="t('inspect.help')"
+        v-help="{ text: t('inspect.help'), label: t('inspect.help_label') }"
         :disabled="inspectDisabled"
         v-tooltip="dataSource ? t('inspect.tooltip') : t('inspect.disabled')">
         <span v-show="width >= Width.SuperCompact">
@@ -225,7 +225,7 @@ defineExpose({ doPopAlert })
             <span v-show="showIcons">
               <c-icon :path="mdiCursorDefaultOutline"/>
             </span>
-            <help-content id="basic-help">{{ t('select.basic.help') }}</help-content>
+            <help-content id="basic-help" :label="t('select.basic.help_label')">{{ t('select.basic.help') }}</help-content>
           </c-button>
           <c-button
             value="poly"
@@ -237,7 +237,7 @@ defineExpose({ doPopAlert })
             <span v-show="showIcons">
               <c-icon :path="mdiShapePolygonPlus"/>
             </span>
-            <help-content id="poly-help">{{ t('select.poly.help') }}</help-content>
+            <help-content id="poly-help" :label="t('select.poly.help_label')">{{ t('select.poly.help') }}</help-content>
           </c-button>
           <c-button
             value="json"
@@ -249,7 +249,7 @@ defineExpose({ doPopAlert })
             <span v-show="showIcons">
               <c-icon :path="mdiFileUploadOutline"/>
             </span>
-            <help-content id="json-help">
+            <help-content id="json-help" :label="t('select.json.help_label')">
               {{ t('select.json.help') }}
             </help-content>
           </c-button>
@@ -290,6 +290,7 @@ defineExpose({ doPopAlert })
     "move": {
       "label": "Move",
       "tooltip": "Pan the map view",
+      "help_label": "Moving",
       "help": "Click and drag to move the map view. Zoom in and out by scrolling or using the zoom buttons. Alternatively, double-click to zoom in and double-click while holding Shift to zoom out. To zoom into an area, hold Shift while dragging.",
       "zoom": {
         "message": "Zoom in to see the data layer.",
@@ -304,16 +305,19 @@ defineExpose({ doPopAlert })
         "label": "Basic",
         "label_compact": "Basic",
         "tooltip": "Select map sheets by clicking or by dragging a rectangle",
+        "help_label": "Basic select",
         "help": "Select map sheets by clicking or drag a rectangular selection. Clicking a selected map sheet deselects it.",
       },
       "poly": {
         "label": "Polygon",
         "tooltip": "Draw a polygon to select map sheets",
+        "help_label": "Polygon select",
         "help": "Click to start drawing a polygon to select map sheets. To close the polygon either click at the starting point or double-click.",
       },
       "json": {
         "label": "GeoJSON",
         "tooltip": "Select map sheets using GeoJSON file",
+        "help_label": "GeoJSON select",
         "help": "Load GeoJSON to select overlapping map sheets. Use the Upload button or drag and drop GeoJSON file onto the map view. 'https://geojson.io' is an interactive editor for creating and adjusting GeoJSON data.",
         "open": "Upload a GeoJSON file",
         "open_compact": "Upload GeoJSON",
@@ -326,6 +330,7 @@ defineExpose({ doPopAlert })
       "label": "Inspect",
       "tooltip": "Click the map to display feature info",
       "disabled": "The selected dataset does not have feature info",
+      "help_label": "Inspecting",
       "help": "Click the map to display feature info. This displays attribute values for vector data and pixel values for raster data.",
       "zoom": {
         "title": "Zoom in to see data",
@@ -338,6 +343,7 @@ defineExpose({ doPopAlert })
     "move": {
       "label": "Liiku",
       "tooltip": "Liikuta karttanäkymää",
+      "help_label": "Liikkuminen",
       "help": "Napsauta ja vedä karttanäkymää liikuttaaksesi sitä. Zoomaa sisään ja ulos vierittämällä tai käyttämällä zoomauspainikkeita. Voit myös zoomata sisään kaksoisnapsautuksella ja ulos kun Shift on painettuna. Pidä Shift painettuna raahauksen aikana zoomataksesi alueelle.",
       "zoom": {
         "message": "Zoomaa sisään nähdäksesi datan esikatselun.",
@@ -352,16 +358,19 @@ defineExpose({ doPopAlert })
         "label": "Perusvalinta",
         "label_compact": "Perus",
         "tooltip": "Valitse karttalehtiä napsauttamalla tai raahaa suorakulmainen valinta",
+        "help_label": "Perusvalinta",
         "help": "Valitse karttalehtiä napsauttamalla tai raahaa suorakulmainen valinta. Napstauttamalla valittua karttalehteä poistat sen valinnasta.",
       },
       "poly": {
         "label": "Polygoni",
         "tooltip": "Valitse karttalehtiä monikulmiovalinnalla",
+        "help_label": "Polygonivalinta",
         "help": "Napsauta aloittaaksesi monikulmion piirtämisen karttalehtien valitsemiseksi. Sulje monikulmio joko napsauttamalla aloituspistettä tai kaksoisnapsauttamalla.",
       },
       "json": {
         "label": "GeoJSON",
         "tooltip": "Valitse karttalehtiä GeoJSON-tiedoston avulla",
+        "help_label": "GeoJSON-valinta",
         "help": "Valitse karttalehtiä GeoJSON-tiedoston avulla. Käytä Valitse-painiketta tai pudota GeoJSON-tiedostoja karttanäkymään. 'https://geojson.io' on interaktiivinen käyttöliittymä GeoJSON datan luomiseen ja muokkaamiseen.",
         "open": "Valitse GeoJSON-tiedosto",
         "open_compact": "Valitse GeoJSON",
@@ -374,6 +383,7 @@ defineExpose({ doPopAlert })
       "label": "Tarkastele",
       "tooltip": "Napsauta karttaa näyttääksesi kohdetietoja",
       "disabled": "Valitulla aineistolla ei ole kohdetietoja",
+      "help_label": "Tarkastelu",
       "help": "Napsauta karttaa näyttääksesi kohdetietoja. Tämä näyttää vektoriaineiston ominaisuustiedot ja rasteriaineiston pikseliarvot",
       "zoom": {
         "title": "Zoomaa sisään nähdäksesi datan",
