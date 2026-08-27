@@ -194,7 +194,13 @@ defineExpose({ doPopAlert })
     </c-tab-buttons>
     <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
     <c-tab-items slot="items">
-      <c-tab-item value="move"/>
+      <c-tab-item value="move">
+        <div class="zoom-warning" v-if="dataHidden && dataSource">
+          <c-alert :type="CAlertType.Info">
+            {{ t("move.zoom.message") }}
+          </c-alert>
+        </div>
+      </c-tab-item>
       <c-tab-item value="select">
         <c-tab-buttons v-model="selectMode"
                        v-control
@@ -256,7 +262,7 @@ defineExpose({ doPopAlert })
         </div>
       </c-tab-item>
       <c-tab-item value="inspect">
-        <div id="inspect-warning" v-if="dataHidden">
+        <div class="zoom-warning" v-if="dataHidden">
           <c-alert :type="CAlertType.Info">
             <span :class="{ pop: popAlert }">
               {{ t("inspect.zoom.message") }}
@@ -276,6 +282,9 @@ defineExpose({ doPopAlert })
       "label": "Move",
       "tooltip": "Pan the map view",
       "help": "Click and drag to move the map view. Zoom in and out by scrolling or using the zoom buttons. Alternatively, double-click to zoom in and double-click while holding Shift to zoom out. To zoom into an area, hold Shift while dragging.",
+      "zoom": {
+        "message": "Zoom in to see the data layer.",
+      },
     },
     "select": {
       "label": "Select map sheets",
@@ -321,6 +330,9 @@ defineExpose({ doPopAlert })
       "label": "Liiku",
       "tooltip": "Liikuta karttanäkymää",
       "help": "Napsauta ja vedä karttanäkymää liikuttaaksesi sitä. Zoomaa sisään ja ulos vierittämällä tai käyttämällä zoomauspainikkeita. Voit myös zoomata sisään kaksoisnapsautuksella ja ulos kun Shift on painettuna. Pidä Shift painettuna raahauksen aikana zoomataksesi alueelle.",
+      "zoom": {
+        "message": "Zoomaa sisään nähdäksesi datan esikatselun.",
+      },
     },
     "select": {
       "label": "Valitse karttalehtiä",
@@ -413,7 +425,7 @@ c-link#zoom {
   color: var(--c-tertiary-300);
 }
 
-#inspect-warning {
+.zoom-warning {
   background-color: white;
   border-radius: 10px;
 }
