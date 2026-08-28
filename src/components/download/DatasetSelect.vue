@@ -32,6 +32,10 @@ const selectedFormat = ref<string>('')
 const NOT_AVAILABLE = 'N/A'
 const optionValue = (value: string) => value || NOT_AVAILABLE
 
+// A dropdown holding a single option has nothing to choose from,
+// as does an empty one further down the cascade
+const hasNoChoice = (options: string[]) => options.length < 2
+
 // Reactive options for each dropdown,
 // based on the current selection from available datasets
 const producerOptions = computed(() =>
@@ -209,7 +213,7 @@ const datasetCount = computed(() => {
       v-control
       :placeholder="`${t('choose')} ${t('labels.data')}...`"
       :label="t('labels.data')"
-      :disabled="dataOptions.length < 1"
+      :disabled="hasNoChoice(dataOptions)"
       hide-details>
       <c-option
         v-for="dataset in dataOptions"
@@ -223,7 +227,7 @@ const datasetCount = computed(() => {
       v-model="selectedScale"
       v-control
       :label="t('labels.scale')"
-      :disabled="scaleOptions.length < 1"
+      :disabled="hasNoChoice(scaleOptions)"
       hide-details>
       <c-option
         v-for="scale in scaleOptions"
@@ -237,7 +241,7 @@ const datasetCount = computed(() => {
       v-model="selectedYear"
       v-control
       :label="t('labels.year')"
-      :disabled="yearOptions.length < 1"
+      :disabled="hasNoChoice(yearOptions)"
       hide-details>
       <c-option
         v-for="year in yearOptions"
@@ -251,7 +255,7 @@ const datasetCount = computed(() => {
       v-model="selectedFormat"
       v-control
       :label="t('labels.format')"
-      :disabled="formatOptions.length < 1"
+      :disabled="hasNoChoice(formatOptions)"
       hide-details>
       <c-option
         v-for="format in formatOptions"
@@ -318,6 +322,11 @@ c-select {
   --c-icon-button-text-text-color: var(--c-white);
   --c-icon-button-text-background-color-hover: var(--c-primary-600);
   --c-icon-button-text-disabled-text-color: transparent;
+
+  /* A disabled c-input colors both its label and its value text with
+     --c-tertiary-500 and dims the field to 75% opacity, leaving them too
+     faint to read. White carries through the dimming. */
+  --c-tertiary-500: var(--c-white);
 }
 
 .controls {
