@@ -26,6 +26,13 @@ const selectedScale = ref<string>('')
 const selectedYear = ref<string>('')
 const selectedFormat = ref<string>('')
 
+// Scale, year and format may be empty for some datasets. An empty value is
+// indistinguishable from "nothing selected" to c-select, so empty fields get
+// a stand-in value instead. Dataset fields are always compared in this same
+// mapped space, which also lets a literal 'N/A' field share the option.
+const NOT_AVAILABLE = 'N/A'
+const optionValue = (value: string) => value || NOT_AVAILABLE
+
 // Reactive options for each dropdown,
 // based on the current selection from available datasets
 const producerOptions = computed(() =>
@@ -53,7 +60,7 @@ const scaleOptions = computed(() =>
   datasets.value
     .filter((d) => d.org === selectedProducer.value)
     .filter((d) => d.name === selectedData.value)
-    .map((d) => d.scale)
+    .map((d) => optionValue(d.scale))
     .filter(onlyDistinct)
     .sort((a, b) => scaleToNumber(a) - scaleToNumber(b)),
 )
@@ -71,18 +78,18 @@ const yearOptions = computed(() =>
   datasets.value
     .filter((d) => d.org === selectedProducer.value)
     .filter((d) => d.name === selectedData.value)
-    .filter((d) => d.scale === selectedScale.value)
-    .map((d) => d.year)
+    .filter((d) => optionValue(d.scale) === selectedScale.value)
+    .map((d) => optionValue(d.year))
     .filter(onlyDistinct)
-    .sort((a, b) => dateToYear(b)! - dateToYear(a)!),
+    .sort((a, b) => (dateToYear(b) ?? 0) - (dateToYear(a) ?? 0)),
 )
 const formatOptions = computed(() =>
   datasets.value
     .filter((d) => d.org === selectedProducer.value)
     .filter((d) => d.name === selectedData.value)
-    .filter((d) => d.scale === selectedScale.value)
-    .filter((d) => d.year === selectedYear.value)
-    .map((d) => d.format)
+    .filter((d) => optionValue(d.scale) === selectedScale.value)
+    .filter((d) => optionValue(d.year) === selectedYear.value)
+    .map((d) => optionValue(d.format))
     .filter(onlyDistinct)
     .sort(),
 )
@@ -109,9 +116,9 @@ watchEffect(() => {
     (d) =>
       d.org === selectedProducer.value &&
     d.name === selectedData.value &&
-    d.scale === selectedScale.value &&
-    d.year === selectedYear.value &&
-    d.format === selectedFormat.value,
+    optionValue(d.scale) === selectedScale.value &&
+    optionValue(d.year) === selectedYear.value &&
+    optionValue(d.format) === selectedFormat.value,
   ) ?? null
   if (selectedDataset) {
     setCurrent(selectedDataset.data_id)
@@ -151,9 +158,9 @@ watch(datasets, () => {
   }
   selectedProducer.value = dataset.org
   selectedData.value = dataset.name
-  selectedScale.value = dataset.scale
-  selectedYear.value = dataset.year
-  selectedFormat.value = dataset.format
+  selectedScale.value = optionValue(dataset.scale)
+  selectedYear.value = optionValue(dataset.year)
+  selectedFormat.value = optionValue(dataset.format)
 }, { immediate: true })
 
 // Precomputed dataset count map to be displayed in producer dropdown,
