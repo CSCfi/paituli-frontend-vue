@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="site-header">
+  <header v-if="!route.meta.hideHeader" class="site-header">
     <c-menu id="nav-menu" :items="navItems" custom>
       <c-navigation-button />
     </c-menu>
@@ -59,16 +59,24 @@ onMounted(() => {
       <h3>{{ currentFlag }}</h3>
     </c-menu>
   </header>
-  <div class="page">
+  <div class="page" :class="{ headerless: route.meta.hideHeader }">
     <main>
       <RouterView />
     </main>
     <FooterItem v-if="!route.meta.hideFooter"/>
   </div>
-  <c-toasts ref="toasts" horizontal="center" vertical="top" />
+  <c-toasts
+    ref="toasts"
+    :class="{ headerless: route.meta.hideHeader }"
+    horizontal="center"
+    vertical="top" />
 </template>
 
 <style scoped>
+.headerless {
+  --site-header-height: 0px;
+}
+
 .page {
   min-height: 100vh;
   display: flex;
