@@ -34,6 +34,7 @@ export const i18n = createI18n({
         'privacy': 'Privacy',
         'cookies': 'Cookie Policy',
         'accessibility': 'Accessibility',
+        'preview': 'Preview',
         'notfound': 'Page not found',
       },
       'alt': {
@@ -65,6 +66,7 @@ export const i18n = createI18n({
         'privacy': 'Tietosuoja',
         'cookies': 'Evästeet',
         'accessibility': 'Saavutettavuus',
+        'preview': 'Esikatselu',
         'notfound': 'Sivua ei löytynyt',
       },
       'alt': {
