@@ -11,8 +11,10 @@ export interface PreviewSource {
   path: string
   // The single file that entry resolves to, relative to the geodata root
   file: string
-  // Absolute URL of that file in the Funet archive
+  // Absolute URL of that file in the Funet archive, for links shown to the user
   url: string
+  // Where a renderer reads the same file from, which differs in development
+  fetchUrl: string
   // Filename, or the last segment when the entry names a directory
   name: string
   // Dataset the file belongs to. Null when the metadata could not be resolved,
@@ -96,6 +98,10 @@ export function fileUrl(path: string): string {
   return URLS.HTTP_LINKS_BASE + path.replace(/^\/+/, '')
 }
 
+export function fileFetchUrl(path: string): string {
+  return URLS.GEODATA_FETCH_BASE + path.replace(/^\/+/, '')
+}
+
 // Whether to show the eye button for this index entry at all
 export function previewOffered(path: string, dataset: Dataset | null): boolean {
   const file = resolvePath(path, dataset)
@@ -122,6 +128,7 @@ export function buildSource(path: string, dataset: Dataset | null): PreviewSourc
     path,
     file,
     url: fileUrl(file),
+    fetchUrl: fileFetchUrl(file),
     name: fileName(file),
     dataset,
     directory: isDirectory(file),

@@ -51,6 +51,14 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
+        // The geodata archive allows the Paituli origins but not localhost, so
+        // in dev the preview reads files through here. Set as VITE_GEODATA_BASE
+        // in .env.development; other modes address the archive directly.
+        '/geodata': {
+          target: 'https://www.nic.funet.fi',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/geodata/, '/index/geodata'),
+        },
       },
     },
     // An alternative base path could be defined only on some modes,

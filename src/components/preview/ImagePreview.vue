@@ -64,7 +64,7 @@ function onError() {
     <img
       ref="image"
       v-show="!loading && !failed"
-      :src="source.url"
+      :src="source.fetchUrl"
       crossorigin="anonymous"
       :alt="source.name"
       :title="t(actualSize ? 'fit' : 'zoom')"
