@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory, type RouteLocation, type RouteRecordRaw } from 'vue-router'
 import LocalizedContentView from '@/views/LocalizedContentView.vue'
 import DownloadView from '@/views/DownloadView.vue'
+import PreviewView from '@/views/PreviewView.vue'
 import { i18n } from './modules/locale'
 import { watch } from 'vue'
 
 // `meta.nav: true` marks routes shown in the main navigation.
 // `meta.noindex: true` keeps a route out of search engine indexes.
+// `meta.hideHeader` / `meta.hideFooter` is used by download and preview views 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -57,6 +59,12 @@ const routes: RouteRecordRaw[] = [
     path: '/accessibility',
     name: 'Accessibility',
     component: LocalizedContentView,
+  },
+  {
+    path: '/preview',
+    name: 'Preview',
+    meta: { noindex: true, hideHeader: true, hideFooter: true },
+    component: PreviewView,
   },
   {
     path: '/:pathMatch(.*)*', // Matches all other routes for a 404 view
