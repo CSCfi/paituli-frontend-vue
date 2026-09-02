@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { CAlertType } from '@cscfi/csc-ui'
 import { mdiDownloadOutline } from '@mdi/js'
 
-import AppLink from '@/components/common/AppLink.vue'
-import { datasets, fetchMetadata, getById } from '@/modules/datasets'
-import { currentLocale } from '@/modules/locale'
-import { buildSource, needsDataset, rendererFor } from '@/modules/preview'
+import { currentDataset, datasets, fetchMetadata, getById } from '@/modules/datasets'
+import DownloadModal from '@/components/download/modals/DownloadModal.vue'
+import { buildSource, isPackageEntry, rendererFor } from '@/modules/preview'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -16,38 +15,44 @@ const route = useRoute()
 const dataId = computed(() => (route.query.data_id as string | undefined) ?? '')
 const path = computed(() => (route.query.path as string | undefined) ?? '')
 
-// Metadata only fills in the header, so it is tracked separately from the file
-// and never blocks rendering.
-const metadataLoading = ref(true)
+// Metadata only fills in the header, so it is tracked separately from the
+// file and blocks rendering only for the glob entries below. As its own tab the
+// preview starts with nothing in memory, but the same route reached in-app may
+// already have the datasets loaded.
+const metadataLoading = ref(!datasets.value.length)
 
 const dataset = computed(() => dataId.value ? getById(dataId.value) : null)
 const source = computed(() => buildSource(path.value, dataset.value))
 const renderer = computed(() => rendererFor(source.value))
 
-// Glob index entries only name a file once the dataset's format is known, so
-// those wait for the metadata rather than briefly claiming to be unsupported.
-const waiting = computed(() => metadataLoading.value && needsDataset(path.value))
+// A glob entry has no filename until the dataset's format is known, so it waits
+// for the metadata rather than briefly claiming to be unsupported.
+const waiting = computed(() => metadataLoading.value && isPackageEntry(path.value))
 
-async function loadMetadata() {
-  metadataLoading.value = true
+const downloadRef = ref()
+
+// Hands the index entry to the same download job the map uses, as stored and
+// wildcard intact, so a `NAME.*` entry is expanded by the backend into the
+// raster together with its sidecars rather than resolving to the one file we
+// happened to draw. The modal reads the dataset from the shared ref rather
+// than from a prop, so it is set here instead of on mount - the preview should
+// not be changing what the rest of the app thinks is selected just by being
+// looked at.
+function openDownload() {
+  if (!dataset.value) return
+  currentDataset.value = dataset.value
+  downloadRef.value?.open([path.value], [source.value.name], dataset.value.file_size)
+}
+
+onMounted(async () => {
+  if (!metadataLoading.value) return
   try {
     await fetchMetadata()
   } catch (error) {
     console.warn('Preview could not fetch dataset metadata:', error)
-  } finally {
-    metadataLoading.value = false
   }
-}
-
-onMounted(() => {
-  // As its own tab the preview starts with nothing in memory, but the same
-  // route reached in-app may already have the datasets loaded.
-  if (datasets.value.length) metadataLoading.value = false
-  else loadMetadata()
+  metadataLoading.value = false
 })
-
-// Dataset names and organisations come localized from the backend
-watch(currentLocale, loadMetadata)
 </script>
 
 <template>
@@ -62,21 +67,22 @@ watch(currentLocale, loadMetadata)
         <h4 :title="source.name">{{ source.name || t('no_file') }}</h4>
         <span v-if="dataset" class="subtitle">
           {{ dataset.name }} – {{ dataset.org }}
+          <span v-if="dataset.scale" class="detail">{{ dataset.scale }}</span>
+          <span v-if="dataset.year" class="detail">{{ dataset.year }}</span>
         </span>
         <span v-else-if="dataId && !metadataLoading" class="subtitle">
           {{ t('unknown_dataset', { id: dataId }) }}
         </span>
       </div>
-      <!-- Hidden while a glob entry has no concrete file, since the archive
-           URL would still carry the wildcard -->
-      <AppLink
-        v-if="path && !needsDataset(source.file)"
-        :to="source.url"
-        new-tab
-        :c-button="{ ghost: true }">
+      <!-- The download job is built from the dataset's fields, so without the
+           metadata there is nothing to offer -->
+      <c-button
+        v-if="path && dataset"
+        ghost
+        @click="openDownload()">
         <c-icon :path="mdiDownloadOutline" />
-        {{ t('original') }}
-      </AppLink>
+        {{ t('download') }}
+      </c-button>
     </header>
 
     <div class="preview-body">
@@ -86,6 +92,8 @@ watch(currentLocale, loadMetadata)
       <c-spinner v-else-if="waiting" size="50" />
       <component v-else :is="renderer" :source="source" />
     </div>
+
+    <DownloadModal ref="downloadRef" single-file />
   </div>
 </template>
 
@@ -93,13 +101,13 @@ watch(currentLocale, loadMetadata)
 {
   "en": {
     "no_file": "Preview",
-    "original": "Original file",
+    "download": "Download file",
     "missing_path": "This preview link is missing a file path.",
     "unknown_dataset": "Unknown dataset '{id}'",
   },
   "fi": {
     "no_file": "Esikatselu",
-    "original": "Alkuperäinen tiedosto",
+    "download": "Lataa tiedosto",
     "missing_path": "Esikatselulinkistä puuttuu tiedostopolku.",
     "unknown_dataset": "Tuntematon aineisto '{id}'",
   },
@@ -167,6 +175,14 @@ c-csc-logo,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Set off from the name and organisation, which run together as prose */
+.detail {
+  margin-left: 0.5em;
+  padding: 0 0.4em;
+  border-radius: 3px;
+  background: var(--c-tertiary-200);
 }
 
 .preview-body {
