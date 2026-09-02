@@ -8,7 +8,7 @@ import { currentDataset } from '@/modules/datasets'
 import { checkboxStates, selectedFeaturesArray, selectedOlFeatures, hoverFeature, unhoverFeature } from '@/modules/selection'
 import { CAlertType } from '@cscfi/csc-ui'
 import AppLink from '@/components/common/AppLink.vue'
-import { previewHref, previewOffered } from '@/modules/preview'
+import { previewBlocker, previewHref } from '@/modules/preview'
 import { vTooltip } from '@/directives/tooltip'
 import { useRouter } from 'vue-router'
 import type Feature from 'ol/Feature'
@@ -21,6 +21,10 @@ function previewUrl(feature: Feature) {
   // The index path is passed through unresolved; the preview repeats the same
   // resolution once it has the dataset, so its links stay stable.
   return router.resolve(previewHref(id, feature.get('path'))).href
+}
+
+function blocker(feature: Feature) {
+  return previewBlocker(feature.get('path'), currentDataset.value)
 }
 
 const licenseChecked = ref(true)
@@ -155,7 +159,7 @@ watch(selectedFeaturesArray, () => {
           <!-- The preview is a plain link so that it opens in its own tab, and
                keeps middle-clicking and bookmarking working. -->
           <a
-            v-if="currentDataset && previewOffered(feature.get('path'), currentDataset)"
+            v-if="currentDataset && !blocker(feature)"
             class="preview-link"
             :href="previewUrl(feature)"
             target="_blank"
@@ -281,10 +285,14 @@ label {
     display: flex;
     flex: none;
     align-items: center;
+    /* Fills the row like the label next to it, so both highlights are the
+       same height */
+    align-self: stretch;
     padding: 0 .25em;
     color: var(--c-white);
   }
   .preview-link:hover {
+    background: var(--c-primary-400);
     color: var(--c-accent-300);
   }
 }
