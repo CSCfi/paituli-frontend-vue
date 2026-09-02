@@ -8,7 +8,11 @@ import { APP_SETTINGS, URLS } from '@/shared/constants'
 import { sleep } from '@/shared/util'
 import { useToasts } from '@/composables/toasts';
 import { currentDataset } from '@/modules/datasets';
+import { isPackageEntry } from '@/modules/preview';
 import AppLink from '@/components/common/AppLink.vue';
+
+// Opened for a single index entry via the preview/ path
+const props = defineProps<{ singleFile?: boolean }>()
 
 const { addToast } = useToasts()
 const { t } = useI18n()
@@ -74,10 +78,21 @@ const open = (paths: string[], labels: string[], size: number) => {
   showModal.value = true
 }
 
+const packageDownload = computed(() => filePaths.value.some(isPackageEntry))
+
 const downloadDescription = computed(() => {
   const current = currentDataset.value
   if (!current) return 'none'
-  return `${current.org}, ${current.name}\n${current.scale}, ${current.year}, ${current.coord_sys}, ${current.format}`
+  const dataset = `${current.org}, ${current.name}`
+  // A single entry is named by its file; the rest of the dataset's details are
+  // on the page the modal opened over.
+  if (props.singleFile) {
+    const file = packageDownload.value
+      ? t('summary.package', { file: fileLabels.value[0] })
+      : fileLabels.value[0]
+    return `${dataset}\n${file}`
+  }
+  return `${dataset}\n${current.scale}, ${current.year}, ${current.coord_sys}, ${current.format}`
 })
 
 const validateForm = () => {
@@ -277,7 +292,7 @@ onBeforeUnmount(() =>
       <c-card-title>{{ t("title") }}</c-card-title>
       <c-card-content v-if="!started">
         <!-- Download type (zip / file list) option -->
-        <div>
+        <div v-if="!singleFile">
           <c-radio-group
             v-control
             :items="downloadTypeItems"
@@ -395,8 +410,9 @@ onBeforeUnmount(() =>
     "summary": {
       "header": "Download Summary",
       "size_warning": "Note: You can download selected data only as a file list, as the selection size exceeds the allowed ZIP file size limit of {size} MB.",
-      "info_zip": "Your download will be a ZIP file with and estimated size of {size} MB.",
+      "info_zip": "Your download will be a ZIP file with an estimated size of {size} MB.",
       "info_list": "Your download will be a text file, which contains the paths of all selected map sheets.",
+      "package": "{file} and its accompanying files",
     },
     "type": {
       "title": "Download type",
@@ -436,6 +452,7 @@ onBeforeUnmount(() =>
       "size_warning": "Huom: Voit ladata valitun datan vain tiedostolistana, koska valinnan koko ylittää sallitun ZIP-tiedoston kokorajan {size} MB.",
       "info_zip": "Latauksesi on ZIP-tiedosto, jonka arvioitu koko on {size} MB.",
       "info_list": "Latauksesi on tekstitiedosto, joka sisältää kaikkien valittujen karttalehtien polut.",
+      "package": "{file} ja siihen liittyvät oheistiedostot",
     },
     "type": {
       "title": "Latauksen tyyppi",
