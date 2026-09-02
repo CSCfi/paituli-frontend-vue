@@ -102,13 +102,25 @@ export function fileFetchUrl(path: string): string {
   return URLS.GEODATA_FETCH_BASE + path.replace(/^\/+/, '')
 }
 
-// Whether to show the eye button for this index entry at all
-export function previewOffered(path: string, dataset: Dataset | null): boolean {
+// Why an index entry cannot be previewed, or null when it can be. Reported in
+// the file list so that entries the preview cannot reach say so, rather than
+// silently offering nothing.
+export type PreviewBlocker = 'directory' | 'unresolved' | 'format'
+
+export function previewBlocker(
+  path: string,
+  dataset: Dataset | null): PreviewBlocker | null {
+
   const file = resolvePath(path, dataset)
-  return !isDirectory(file)
-    && !needsDataset(file)
-    && OFFERED.includes(fileExtension(file))
+  // Points at a whole folder rather than one file
+  if (isDirectory(file)) return 'directory'
+  // A `NAME.*` entry whose extension the dataset's format did not reveal
+  if (needsDataset(file)) return 'unresolved'
+  // A format with no renderer yet
+  if (!OFFERED.includes(fileExtension(file))) return 'format'
+  return null
 }
+
 
 export function rendererFor(source: PreviewSource): Component {
   if (source.directory || needsDataset(source.file)) return unsupportedPreview
