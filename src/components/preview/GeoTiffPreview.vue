@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CAlertType } from '@cscfi/csc-ui'
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
@@ -12,6 +12,8 @@ import TileLayer from 'ol/layer/WebGLTile'
 import GeoTIFF from 'ol/source/GeoTIFF'
 import ScaleLine from 'ol/control/ScaleLine'
 
+import PreviewProgress from './PreviewProgress.vue'
+import { useTransfer } from '@/composables/transfer'
 import { registerProjections } from '@/modules/projections'
 import type { PreviewSource } from '@/modules/preview'
 
@@ -21,6 +23,7 @@ import type { PreviewSource } from '@/modules/preview'
 const { source } = defineProps<{ source: PreviewSource }>()
 
 const { t } = useI18n()
+const transfer = useTransfer()
 
 // A WebGL tile layer packs four bands per texture and GPUs offer only a handful
 // of texture units, so files wider than this get one layer per band instead.
@@ -40,7 +43,6 @@ const MAX_CACHED_LAYERS = 16
 // prefetched bands arrive well inside this, so the indicator stays out of the
 // way instead of blinking on every step.
 const BUSY_DELAY = 300
-
 
 const container = ref<HTMLElement>()
 const loading = ref(true)
@@ -83,6 +85,15 @@ function updateBusy() {
 
 registerProjections()
 
+// Anything at all still going on, whichever stage it is at
+const active = computed(() =>
+  loading.value || busy.value || transfer.inFlight.value > 0)
+
+// Determinate only while the metadata is being read, which is what `loading`
+// marks. Anything after that gains a request at a time and has no total.
+const determinate = computed(() =>
+  loading.value && transfer.bytesExpected.value > 0)
+
 // A GeoTIFF that fails to load leaves its `getView()` promise unsettled for
 // good: OpenLayers logs the error, stores it and moves the source to an error
 // state instead of rejecting. Racing the two is what turns a CORS refusal or a
@@ -121,15 +132,21 @@ function teardown() {
 // Builds the layer for one band, or returns the cached one. Bands are only
 // requested individually for files too wide to upload whole, so `bands` is left
 // off otherwise and OpenLayers reads every band as RGB(A).
-function layerForBand(index: number): TileLayer {
+function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
   const cached = layers.get(index)
-  if (cached) return cached
+  if (cached) {
+    prebuilt?.dispose()
+    return cached
+  }
 
   const narrowed = bandCount.value > MAX_BANDS
-  const tiff = new GeoTIFF({
+  // Reusing the source that already read this file's metadata saves reading it
+  // again. That is most of the wait for a file whose directory sits at the very
+  // end, where finding it means seeking through the whole thing.
+  const tiff = prebuilt ?? new GeoTIFF({
     sources: [narrowed
-      ? { url: source.fetchUrl, bands: [index] }
-      : { url: source.fetchUrl }],
+      ? { url: source.fetchUrl, bands: [index], loader: transfer.loader }
+      : { url: source.fetchUrl, loader: transfer.loader }],
     // JPEG-compressed sheets store YCbCr rather than RGB
     convertToRGB: 'auto',
   })
@@ -168,7 +185,7 @@ function layerForBand(index: number): TileLayer {
 // window stay visible so that OpenLayers keeps fetching their tiles - only
 // `visible` gates that, not opacity - while everything but the chosen band is
 // drawn fully transparent.
-function showBand(index: number) {
+function showBand(index: number, prebuilt?: GeoTIFF) {
   const nearby = new Set([index])
   for (let step = 1; step <= PREFETCH; step++) {
     if (index - step >= 1) nearby.add(index - step)
@@ -176,7 +193,9 @@ function showBand(index: number) {
   }
 
   shown.value = index
-  for (const wanted of nearby) layerForBand(wanted)
+  for (const wanted of nearby) {
+    layerForBand(wanted, wanted === index ? prebuilt : undefined)
+  }
 
   pending = 0
   updateBusy()
@@ -189,16 +208,23 @@ function showBand(index: number) {
 async function load() {
   loading.value = true
   error.value = ''
+  transfer.reset()
   try {
     // The file's metadata is read first: its band count decides whether the
     // whole file can go to the GPU, and its projection and extent become the
     // view. Both are only knowable from the file.
-    const probe = new GeoTIFF({ sources: [{ url: source.fetchUrl }] })
+    const probe = new GeoTIFF({
+      sources: [{ url: source.fetchUrl, loader: transfer.loader }],
+    })
     viewOptions = await readView(probe)
     // `bandCount` is a runtime property of the source, which the WebGL tile
     // layer itself reads to size its textures.
     bandCount.value = (probe as unknown as { bandCount?: number }).bandCount ?? 1
-    probe.dispose()
+
+    // A wide file needs a source restricted to one band, so the probe is of no
+    // further use there; otherwise it becomes the first layer's source.
+    const narrowed = bandCount.value > MAX_BANDS
+    if (narrowed) probe.dispose()
 
     teardown()
     map = new OlMap({
@@ -206,7 +232,7 @@ async function load() {
       view: new View(viewOptions),
     })
     map.addControl(new ScaleLine())
-    showBand(selectedBand())
+    showBand(selectedBand(), narrowed ? undefined : probe)
     loading.value = false
   } catch (cause) {
     // Unknown projections, missing files and CORS refusals all land here, and
@@ -264,7 +290,14 @@ onUnmounted(teardown)
   <div class="geotiff-preview">
     <div ref="container" class="map" :class="{ hidden: loading || error }"></div>
 
-    <c-spinner v-if="loading" size="50" />
+    <!-- Kept up while tiles load too, which for a large file is the longest
+         part and used to happen behind no indicator at all -->
+    <PreviewProgress
+      v-if="active"
+      :bytes-read="transfer.bytesRead.value"
+      :bytes-expected="transfer.bytesExpected.value"
+      :determinate="determinate"
+      :pinned="!loading" />
     <c-alert v-else-if="error" :type="CAlertType.Error">
       {{ t('failed', { name: source.name }) }}
       <br />
@@ -274,7 +307,6 @@ onUnmounted(teardown)
     <!-- Only shown for files too wide for the GPU to take whole, where picking
          a band is the only way to see anything but the first one -->
     <div v-if="!loading && !error && bandCount > MAX_BANDS" class="bands">
-      <c-spinner v-if="busy" size="16" />
       <c-icon-button
         size="small"
         :disabled="shown <= 1"
@@ -347,12 +379,6 @@ onUnmounted(teardown)
   visibility: hidden;
 }
 
-/* Taken out of flow so that the map, which keeps its full width while merely
-   hidden, does not push these to one side */
-.geotiff-preview > c-spinner {
-  position: absolute;
-}
-
 c-alert {
   position: absolute;
   max-width: 600px;
@@ -393,18 +419,6 @@ c-icon-button {
   --c-icon-button-background-color-hover: var(--c-info-200);
   --c-icon-button-text-color-disabled: var(--c-tertiary-400);
   --c-icon-button-background-color-disabled: var(--c-white);
-}
-
-/* Outside the control and over the map, so that appearing and disappearing
-   never changes the control's width */
-.bands c-spinner {
-  position: absolute;
-  right: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-right: 0.6em;
-
-  --c-spinner-color: var(--c-white);
 }
 
 .total {

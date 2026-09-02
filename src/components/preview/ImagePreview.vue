@@ -1,76 +1,134 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CAlertType } from '@cscfi/csc-ui'
 
+import OlMap from 'ol/Map'
+import View from 'ol/View'
+import ImageLayer from 'ol/layer/Image'
+import ImageStatic from 'ol/source/ImageStatic'
+import Projection from 'ol/proj/Projection'
+import { getCenter } from 'ol/extent'
+
+import PreviewProgress from './PreviewProgress.vue'
+import { useTransfer } from '@/composables/transfer'
 import type { PreviewSource } from '@/modules/preview'
 
+// The image goes through OpenLayers rather than a plain <img> so that panning
+// and zooming work the same as for a GeoTIFF. It carries no georeferencing of
+// its own - a PNG's world file is a separate download - so the map works in
+// pixels, which is enough to look at a map sheet.
 const { source } = defineProps<{ source: PreviewSource }>()
 
 const { t } = useI18n()
+const transfer = useTransfer()
 
-const viewport = ref<HTMLElement>()
-const image = ref<HTMLImageElement>()
-
+const container = ref<HTMLElement>()
 const loading = ref(true)
-const failed = ref(false)
+const error = ref('')
 
-// The whole image is fitted by default; print-scale rasters are unreadable that
-// way, so a click switches to actual pixel size and scrolls instead.
-const actualSize = ref(false)
+let map: OlMap | undefined
+let objectUrl: string | undefined
 
-// Zooming keeps the clicked spot under the cursor, so that a corner of a map
-// sheet can be read by clicking it rather than by hunting for it afterwards.
-async function toggleZoom(event: MouseEvent) {
-  if (actualSize.value) {
-    actualSize.value = false
-    return
+// A whole file arrives in one request, so the percentage is exact here
+const active = computed(() => loading.value || transfer.inFlight.value > 0)
+
+function release() {
+  if (objectUrl) URL.revokeObjectURL(objectUrl)
+  objectUrl = undefined
+}
+
+function teardown() {
+  map?.setTarget(undefined)
+  map?.dispose()
+  map = undefined
+  release()
+}
+
+// The only way to learn a bitmap's dimensions is to decode it. Passing the same
+// blob URL to the layer afterwards reuses the browser's decoded copy rather
+// than paying for it twice.
+function measure(url: string) {
+  return new Promise<{ width: number, height: number }>((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve({
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+    })
+    image.onerror = () => reject(new Error('The file could not be decoded'))
+    image.src = url
+  })
+}
+
+async function load() {
+  loading.value = true
+  error.value = ''
+  transfer.reset()
+  try {
+    const blob = await transfer.fetchAll(source.fetchUrl)
+    teardown()
+    objectUrl = URL.createObjectURL(blob)
+
+    const { width, height } = await measure(objectUrl)
+    const extent = [0, 0, width, height]
+    const projection = new Projection({
+      code: 'preview-pixels',
+      units: 'pixels',
+      extent,
+    })
+
+    // Fitted from the container rather than through view.fit(), which needs the
+    // map to have been sized already.
+    const box = container.value
+    const resolution = Math.max(
+      width / (box?.clientWidth || width),
+      height / (box?.clientHeight || height),
+    )
+
+    map = new OlMap({
+      target: box,
+      layers: [
+        new ImageLayer({
+          source: new ImageStatic({ url: objectUrl, imageExtent: extent, projection }),
+        }),
+      ],
+      view: new View({
+        projection,
+        extent,
+        showFullExtent: true,
+        center: getCenter(extent),
+        resolution,
+      }),
+    })
+    loading.value = false
+  } catch (cause) {
+    console.error('Preview could not render image:', cause)
+    error.value = cause instanceof Error ? cause.message : String(cause)
+    loading.value = false
   }
-
-  const img = image.value
-  const box = viewport.value
-  if (!img || !box) return
-
-  // The point that was clicked, as a fraction of the fitted image
-  const fitted = img.getBoundingClientRect()
-  const fractionX = (event.clientX - fitted.left) / fitted.width
-  const fractionY = (event.clientY - fitted.top) / fitted.height
-
-  actualSize.value = true
-  await nextTick()
-
-  // Put that same point of the full-size image back under the cursor. Values
-  // out of range are clamped by the browser, which keeps edge clicks sane.
-  const view = box.getBoundingClientRect()
-  box.scrollLeft = fractionX * img.offsetWidth - (event.clientX - view.left)
-  box.scrollTop = fractionY * img.offsetHeight - (event.clientY - view.top)
 }
 
-function onError() {
-  loading.value = false
-  failed.value = true
-}
+onMounted(load)
+watch(() => source.fetchUrl, load)
+onUnmounted(teardown)
 </script>
 
 <template>
-  <div ref="viewport" class="image-preview" :class="{ scrollable: actualSize }">
-    <c-spinner v-if="loading" size="50" />
-    <c-alert v-if="failed" :type="CAlertType.Error">
+  <div class="image-preview">
+    <div ref="container" class="map" :class="{ hidden: loading || error }"></div>
+
+    <PreviewProgress
+      v-if="active"
+      :bytes-read="transfer.bytesRead.value"
+      :bytes-expected="transfer.bytesExpected.value"
+      determinate
+      :pinned="!loading" />
+
+    <c-alert v-else-if="error" :type="CAlertType.Error">
       {{ t('failed', { name: source.name }) }}
+      <br />
+      <code>{{ error }}</code>
     </c-alert>
-    <!-- An <img> needs no CORS header of its own, but requesting one keeps the
-         canvas untainted, so the same image stays usable by a canvas or WebGL
-         renderer. It relies on the archive allowing our origin. -->
-    <img
-      ref="image"
-      v-show="!loading && !failed"
-      :src="source.fetchUrl"
-      crossorigin="anonymous"
-      :alt="source.name"
-      :title="t(actualSize ? 'fit' : 'zoom')"
-      @load="loading = false"
-      @error="onError"
-      @click="toggleZoom" />
   </div>
 </template>
 
@@ -78,13 +136,9 @@ function onError() {
 {
   "en": {
     "failed": "Could not load {name}.",
-    "zoom": "Click to view at actual size",
-    "fit": "Click to fit the view",
   },
   "fi": {
     "failed": "Tiedostoa {name} ei voitu ladata.",
-    "zoom": "Napsauta nähdäksesi todellisessa koossa",
-    "fit": "Napsauta sovittaaksesi näkymään",
   },
 }
 </i18n>
@@ -94,34 +148,31 @@ function onError() {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+}
 
-  /* A neutral mid-tone backdrop, so that both light and dark rasters and any
-     transparent margins stay readable against it. */
+.map {
+  width: 100%;
+  height: 100%;
+
+  /* A neutral mid-tone, so that both light and dark rasters and any
+     transparent margins stay readable against it */
   background-color: var(--c-tertiary-300);
 }
 
-/* Block layout while scrolling: centring an overflowing flex item puts part of
-   it outside the scrollable area, where no scroll position can reach it. */
-.image-preview.scrollable {
-  display: block;
-  overflow: auto;
+.map.hidden {
+  visibility: hidden;
 }
 
-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  cursor: zoom-in;
+c-alert {
+  position: absolute;
+  max-width: 600px;
 }
 
-.scrollable img {
-  display: block;
-  max-width: none;
-  max-height: none;
-  margin: auto;
-  cursor: zoom-out;
+code {
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
 }
 </style>
