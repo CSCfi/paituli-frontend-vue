@@ -89,7 +89,7 @@ import { CAlertType } from '@cscfi/csc-ui';
       <c-list-item-title>
         25.7.2026
       </c-list-item-title>
-      Lisätty Tilastokeskuksen Paavo 2025.
+      Lisätty Tilastokeskuksen väestö kunnittain 2025, väestöruutuaineisto 2025, tieliikenneonnettomuudet 2024 ja Paavo 2025.
     </c-list-item> 
     <c-list-item>
       <c-list-item-title>
