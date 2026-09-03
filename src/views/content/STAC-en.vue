@@ -45,7 +45,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   </p>
   <ul>
     <li>
-      <AppLink to="https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en">STAC Browser </AppLink> is best for getting to know the contents of a STAC with web-browser. It does not require any installations. It	supports searching available datasets based on title and description. It also has item search by location and time. STAC Browser can be used to find collection ID and asset names for other tools.
+      <AppLink to="https://browser.moregeo.it/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en">STAC Browser </AppLink> is best for getting to know the contents of a STAC with web-browser. It does not require any installations. It	supports searching available datasets based on title and description. It also has item search by location and time. STAC Browser can be used to find collection ID and asset names for other tools.
     </li>
     <li>
       Python, R and Julia have libraries for searching STAC and easy downloading of data to specified data-cubes. These are best for more advanced analysis with data from STAC. These tools also support parallel computing, so handling bigger datasets works well. CSC has prepared <strong>example scripts</strong> for <AppLink to="https://www.github.com/csc-training/geocomputing/blob/master/python/STAC">Python</AppLink> and <AppLink to="https://www.github.com/csc-training/geocomputing/blob/master/R/STAC">R</AppLink>.
