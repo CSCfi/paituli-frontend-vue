@@ -14,7 +14,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
 
   <h2>Paituli STAC aineistot</h2>
   <p>
-    Paituli STAC sisältää täällä hetkellä ~175 rasteriaineistoa:
+    Paituli STAC sisältää täällä hetkellä ~190 rasteriaineistoa:
   </p>
   <ul>
     <li>
