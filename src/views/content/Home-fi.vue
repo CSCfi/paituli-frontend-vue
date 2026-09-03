@@ -72,7 +72,31 @@ import { CAlertType } from '@cscfi/csc-ui';
   </ul>
 
   <h2>Uutiset</h2>
-  <c-list>
+  <c-list>    
+    <c-list-item>
+      <c-list-item-title>
+        15.9.2026
+      </c-list-item-title>
+      Paitulin lataussivulle lisätty PNG, JPG and GeoTiff-aineistojen esikatselu jokaiselle tiedostolle.
+    </c-list-item>      
+    <c-list-item>
+      <c-list-item-title>
+        3.9.2026
+      </c-list-item-title>
+      Lisätty Ruokaviraston peltolohkorekisteri 2025 ja kasvulohkot 2025.
+    </c-list-item>    
+    <c-list-item>
+      <c-list-item-title>
+        25.7.2026
+      </c-list-item-title>
+      Lisätty Tilastokeskuksen Paavo 2025.
+    </c-list-item> 
+    <c-list-item>
+      <c-list-item-title>
+        25.8.2026
+      </c-list-item-title>
+      Lisätty Väylävirasto Digiroad 2025 ja Digiroad pysäkit 2025.
+    </c-list-item>     
     <c-list-item>
       <c-list-item-title>
         29.5.2026
@@ -112,12 +136,6 @@ import { CAlertType } from '@cscfi/csc-ui';
         18.12.2025
       </c-list-item-title>
       Lisätty Tilastokeskuksen kuntien avainluvut 2023 ja 2024.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>
-        25.7.2025
-      </c-list-item-title>
-      Lisätty Tilastokeskuksen väestö kunnittain 2024, väestöruutuaineisto 2024, tieliikenneonnettomuudet 2023 ja Paavo 2025.
     </c-list-item>
     <c-list-item>
       <c-list-item-title>
