@@ -14,7 +14,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
 
   <h2>Data collections</h2>
   <p>
-    Paituli STAC currently includes around 175 Finnish raster datasets:
+    Paituli STAC currently includes around 190 Finnish raster datasets:
   </p>
   <ul>
     <li>
@@ -29,10 +29,13 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
     <li>
       <AppLink to="https://pta.data.lit.fmi.fi/stac/root.json">12 datasets from FMI Tuulituhohaukka STAC catalog</AppLink>, including Sentinel-1, Sentinel-2 and Landsat mosaics and indices.
     </li>
+    <li>
+      <AppLink to="https://b2share.eudat.eu/communities/aquainfra/records?q=&f=resource_types%3Adataset&f=access_status%3Ametadata-only">5 datasets from AquaInfra project</AppLink>, including CORINE and EU-DEM for all Europe.
+    </li>    
   </ul>
   <c-alert :type="CAlertType.Info">
     <span>
-      The full list of Collections is available in <AppLink to="https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en">STAC Browser for Paituli STAC</AppLink>.
+      The full list of Collections is available in <AppLink to="https://browser.moregeo.it/external/paituli.csc.fi/geoserver/ogc/stac/v1/?.language=en">STAC Browser for Paituli STAC</AppLink>.
     </span>
   </c-alert>
 
