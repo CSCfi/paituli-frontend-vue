@@ -6,6 +6,9 @@ export const LAYER = {
 
 const _GS_BASE = import.meta.env.VITE_GEOSERVER_BASE
 
+const _STAC_BROWSER_BASE =
+  'https://browser.moregeo.it/external/paituli.csc.fi/geoserver/ogc/stac/v1'
+
 export const URLS = {
   METADATA_API: import.meta.env.VITE_METADATA_API,
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
@@ -38,7 +41,8 @@ export const URLS = {
 
   // STAC
   STAC_PAITULI_BASE: _GS_BASE + '/ogc/stac/v1',
-  STAC_BROWSER_BASE: 'https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1/collections',
+  STAC_BROWSER_ROOT: _STAC_BROWSER_BASE + '/?.language=en',
+  STAC_BROWSER_COLLECTIONS: _STAC_BROWSER_BASE + '/collections',
 
   // Etsin
   ETSIN_METADATA_BASE:

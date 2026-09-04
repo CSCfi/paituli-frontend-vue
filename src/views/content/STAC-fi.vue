@@ -35,7 +35,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   </ul>
   <c-alert :type="CAlertType.Info">
     <span>
-      Tarkka aineistolista löytyy <AppLink to="https://browser.moregeo.it/external/paituli.csc.fi/geoserver/ogc/stac/v1/?.language=en">STAC Browser Paituli STAC:lle -sivustolta</AppLink>.
+      Tarkka aineistolista löytyy <AppLink :to="URLS.STAC_BROWSER_ROOT">STAC Browser Paituli STAC:lle -sivustolta</AppLink>.
     </span>
   </c-alert>
 
@@ -45,7 +45,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   </p>
   <ul>
     <li>
-      <AppLink to="https://browser.moregeo.it/external/paituli.csc.fi/geoserver/ogc/stac/v1/?.language=en">STAC Browser </AppLink> sopii parhaiten STAC sisältöihin tutustumiseen verkkoselaimella. Se ei vaadi asennuksia koneelle. STAC Browser tukee aineistojen hakua otsikon ja kuvauksen mukaan. Lisäksi on mahdollinen datan haku sijainnin ja ajan mukaan. STAC Browseria voidaan käyttää kokoelman tunnisteen ja resurssien nimien hakuun muita työkaluja varten.
+      <AppLink :to="URLS.STAC_BROWSER_ROOT">STAC Browser </AppLink> sopii parhaiten STAC sisältöihin tutustumiseen verkkoselaimella. Se ei vaadi asennuksia koneelle. STAC Browser tukee aineistojen hakua otsikon ja kuvauksen mukaan. Lisäksi on mahdollinen datan haku sijainnin ja ajan mukaan. STAC Browseria voidaan käyttää kokoelman tunnisteen ja resurssien nimien hakuun muita työkaluja varten.
     </li>
     <li>
       Pythonille, R:lle ja Julialle on kirjastoja STAC-hakuun sekä datan helppoon lataamiseen määriteltyihin datakuutioihin. Nämä soveltuvat parhaiten edistyneempään analyysiin. Työkalut tukevat myös rinnakkaislaskentaa, joten suurten aineistojen käsittely toimii hyvin. CSC on laatinut <strong>esimerkkiskriptejä</strong> <AppLink to="https://www.github.com/csc-training/geocomputing/blob/master/python/STAC">Pythonille</AppLink> ja <AppLink to="https://www.github.com/csc-training/geocomputing/blob/master/R/STAC">R:lle</AppLink>.
