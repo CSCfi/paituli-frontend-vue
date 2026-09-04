@@ -87,16 +87,16 @@ import { CAlertType } from '@cscfi/csc-ui';
     </c-list-item>    
     <c-list-item>
       <c-list-item-title>
-        25.7.2026
-      </c-list-item-title>
-      Lisätty Tilastokeskuksen väestö kunnittain 2025, väestöruutuaineisto 2025, tieliikenneonnettomuudet 2024 ja Paavo 2025.
-    </c-list-item> 
-    <c-list-item>
-      <c-list-item-title>
         25.8.2026
       </c-list-item-title>
       Lisätty Väylävirasto Digiroad 2025 ja Digiroad pysäkit 2025.
     </c-list-item>     
+    <c-list-item>
+      <c-list-item-title>
+        25.7.2026
+      </c-list-item-title>
+      Lisätty Tilastokeskuksen väestö kunnittain 2025, väestöruutuaineisto 2025, tieliikenneonnettomuudet 2024 ja Paavo 2026.
+    </c-list-item> 
     <c-list-item>
       <c-list-item-title>
         29.5.2026
