@@ -73,7 +73,7 @@ const { t } = useI18n({ useScope: 'global' })
       <c-list-item-title>
         15.9.2026
       </c-list-item-title>
-      Paituli download page got a new feature, PNG, JPG and GeoTiff-datasets provide now preview for each file.
+      Paituli download page has a new feature: PNG, JPG and GeoTiff datasets now provide a preview for each file.
     </c-list-item>      
     <c-list-item>
       <c-list-item-title>

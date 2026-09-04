@@ -77,7 +77,7 @@ import { CAlertType } from '@cscfi/csc-ui';
       <c-list-item-title>
         15.9.2026
       </c-list-item-title>
-      Paitulin lataussivulle lisätty PNG, JPG and GeoTiff-aineistojen esikatselu jokaiselle tiedostolle.
+      Paitulin lataussivulle on lisätty PNG-, JPG- ja GeoTiff-aineistojen esikatselu jokaiselle tiedostolle.
     </c-list-item>      
     <c-list-item>
       <c-list-item-title>
