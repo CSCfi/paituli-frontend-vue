@@ -83,16 +83,16 @@ const { t } = useI18n({ useScope: 'global' })
     </c-list-item>    
     <c-list-item>
       <c-list-item-title>
-        25.7.2025
-      </c-list-item-title>
-      Statistics Finland: population grid data 2025, population by municipalities 2025, road accidents 2024 and Paavo 2026 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>
         25.8.2026
       </c-list-item-title>
       Finnish Transport Infrastructure Agency Digiroad 2025 and Digiroad stops 2025 added.
     </c-list-item>       
+    <c-list-item>
+      <c-list-item-title>
+        25.7.2026
+      </c-list-item-title>
+      Statistics Finland: population grid data 2025, population by municipalities 2025, road accidents 2024 and Paavo 2026 added.
+    </c-list-item>
     <c-list-item>
       <c-list-item-title>
         29.5.2026
