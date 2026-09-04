@@ -91,7 +91,7 @@ const trimmedText = computed(() => {
 }
 table.c-table .unavailable td
 {
-  color: var(--c-tertiary-300);
+  color: var(--c-tertiary-400);
 }
 table.c-table td {
   padding: .75em;
