@@ -135,7 +135,7 @@ const scaleText = computed(() => {
                     <AppLink
                       new-tab
                       :c-button="{ ghost: true }"
-                      :to="URLS.STAC_BROWSER_BASE + '/' + currentDataset.stac_id">
+                      :to="URLS.STAC_BROWSER_COLLECTIONS + '/' + currentDataset.stac_id">
                       {{ t("stac.link") }}
                     </AppLink>
                   </p>

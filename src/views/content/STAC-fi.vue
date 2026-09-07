@@ -14,7 +14,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
 
   <h2>Paituli STAC aineistot</h2>
   <p>
-    Paituli STAC sisältää täällä hetkellä ~175 rasteriaineistoa:
+    Paituli STAC sisältää täällä hetkellä ~190 rasteriaineistoa:
   </p>
   <ul>
     <li>
@@ -29,10 +29,13 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
     <li>
       <AppLink to="https://pta.data.lit.fmi.fi/stac/root.json">12 aineistoa Ilmatieteen laitoksen Tuulituhohaukka-STAC:ista</AppLink>, sisältäen mm. Sentinel-1-, Sentinel-2- ja Landsat-mosaiikkeja sekä indeksejä.
     </li>
+    <li>
+      <AppLink to="https://b2share.eudat.eu/communities/aquainfra/records?q=&f=resource_types%3Adataset&f=access_status%3Ametadata-only">5 aineistoa AquaInfra projektilta</AppLink>, sisältäen CORINE ja EU-DEM aineistot koko Euroopasta.
+    </li>     
   </ul>
   <c-alert :type="CAlertType.Info">
     <span>
-      Tarkka aineistolista löytyy <AppLink to="https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en">STAC Browser Paituli STAC:lle -sivustolta</AppLink>.
+      Tarkka aineistolista löytyy <AppLink :to="URLS.STAC_BROWSER_ROOT">STAC Browser Paituli STAC:lle -sivustolta</AppLink>.
     </span>
   </c-alert>
 
@@ -42,7 +45,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   </p>
   <ul>
     <li>
-      <AppLink to="https://radiantearth.github.io/stac-browser/#/external/paituli.csc.fi/geoserver/ogc/stac/v1?.language=en">STAC Browser </AppLink> sopii parhaiten STAC sisältöihin tutustumiseen verkkoselaimella. Se ei vaadi asennuksia koneelle. STAC Browser tukee aineistojen hakua otsikon ja kuvauksen mukaan. Lisäksi on mahdollinen datan haku sijainnin ja ajan mukaan. STAC Browseria voidaan käyttää kokoelman tunnisteen ja resurssien nimien hakuun muita työkaluja varten.
+      <AppLink :to="URLS.STAC_BROWSER_ROOT">STAC Browser </AppLink> sopii parhaiten STAC sisältöihin tutustumiseen verkkoselaimella. Se ei vaadi asennuksia koneelle. STAC Browser tukee aineistojen hakua otsikon ja kuvauksen mukaan. Lisäksi on mahdollinen datan haku sijainnin ja ajan mukaan. STAC Browseria voidaan käyttää kokoelman tunnisteen ja resurssien nimien hakuun muita työkaluja varten.
     </li>
     <li>
       Pythonille, R:lle ja Julialle on kirjastoja STAC-hakuun sekä datan helppoon lataamiseen määriteltyihin datakuutioihin. Nämä soveltuvat parhaiten edistyneempään analyysiin. Työkalut tukevat myös rinnakkaislaskentaa, joten suurten aineistojen käsittely toimii hyvin. CSC on laatinut <strong>esimerkkiskriptejä</strong> <AppLink to="https://www.github.com/csc-training/geocomputing/blob/master/python/STAC">Pythonille</AppLink> ja <AppLink to="https://www.github.com/csc-training/geocomputing/blob/master/R/STAC">R:lle</AppLink>.

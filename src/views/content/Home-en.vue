@@ -71,6 +71,31 @@ const { t } = useI18n({ useScope: 'global' })
   <c-list>
     <c-list-item>
       <c-list-item-title>
+        15.9.2026
+      </c-list-item-title>
+      Paituli download page has a new feature: PNG and GeoTiff datasets now provide a preview for each file.
+    </c-list-item>    
+    <c-list-item>
+      <c-list-item-title>
+        4.9.2026
+      </c-list-item-title>
+      Statistics Finland: population grid data 2025, population by municipalities 2025, road accidents 2024 and Paavo 2026 added.
+    </c-list-item>    
+    <c-list-item>
+      <c-list-item-title>
+        3.9.2026
+      </c-list-item-title>
+      Finnish Food Authority field parcel register 2025 and agricultural parcels 2025 added.
+    </c-list-item>    
+    <c-list-item>
+      <c-list-item-title>
+        25.8.2026
+      </c-list-item-title>
+      Finnish Transport Infrastructure Agency Digiroad 2025 and Digiroad stops 2025 added.
+    </c-list-item>       
+
+    <c-list-item>
+      <c-list-item-title>
         29.5.2026
       </c-list-item-title>
       <span>
@@ -108,12 +133,6 @@ const { t } = useI18n({ useScope: 'global' })
         18.12.2025
       </c-list-item-title>
       Statistics Finland: key figures for municipalities 2023 and 2024 added.
-    </c-list-item>
-    <c-list-item>
-      <c-list-item-title>
-        25.7.2025
-      </c-list-item-title>
-      Statistics Finland: population grid data 2024, population by municipalities 2024, road accidents 2023 and Paavo 2025 added.
     </c-list-item>
     <c-list-item>
       <c-list-item-title>
