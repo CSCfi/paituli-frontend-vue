@@ -13,7 +13,7 @@ import { mdiClose } from '@mdi/js'
 import type SelectInteraction from 'ol/interaction/Select'
 import type { FeatureLike } from 'ol/Feature'
 import { Fill, Stroke, Style, Text } from 'ol/style'
-import { always, noModifierKeys } from 'ol/events/condition'
+import { always, noModifierKeys, platformModifierKey } from 'ol/events/condition'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
 import { KeyboardZoom, KeyboardPan } from 'ol/interaction'
@@ -57,7 +57,7 @@ import {
   showLayer,
   toolbarMode
 } from '@/modules/controls'
-import { getMapInteraction } from '@/shared/util'
+import { getMapInteraction, keyTargetEditable } from '@/shared/util'
 
 const { addToast } = useToasts()
 const { t } = useI18n()
@@ -81,17 +81,18 @@ onMounted(async () => {
   olMapElement.addEventListener('drop', dragDropHandler)
   olMapElement.addEventListener('dragover', (e) => e.preventDefault())
 
-  // Stop keyboard zooming OL interaction (from intercepting +/- keystrokes)
+  // Keep the OL keyboard interactions off text inputs, so that typing +, - or
+  // arrow keys into e.g. the search bar doesn't zoom or pan the map
   const zoom = getMapInteraction(map, KeyboardZoom)
   if (zoom) map.removeInteraction(zoom)
+  map.addInteraction(new KeyboardZoom({
+    condition: (event) => !platformModifierKey(event) && !keyTargetEditable(event)
+  }))
 
-  // Stop OL view panning interaction from intercepting arrow keys while typing
   const kb = getMapInteraction(map, KeyboardPan)
   if (kb) map.removeInteraction(kb)
   map.addInteraction(new KeyboardPan({
-    condition: (event) =>
-      noModifierKeys(event) &&
-      !(document.activeElement?.matches('c-text-field'))
+    condition: (event) => noModifierKeys(event) && !keyTargetEditable(event)
   }))
 
   // Tweak some OL overlay styles which CSS cannot hit
