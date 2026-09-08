@@ -16,6 +16,8 @@ import { Fill, Stroke, Style, Text } from 'ol/style'
 import { always, noModifierKeys, platformModifierKey } from 'ol/events/condition'
 import { MapBrowserEvent } from 'ol'
 import { GeoJSON } from 'ol/format'
+import { GeometryCollection } from 'ol/geom'
+import type { Geometry } from 'ol/geom'
 import { KeyboardZoom, KeyboardPan } from 'ol/interaction'
 
 import { currentDataset, fetchMetadata } from '@/modules/datasets'
@@ -214,9 +216,19 @@ const loadGeoJSONFile = (file: File) => {
         JSON.parse(text.toString()),
         { featureProjection: mapView.value.getProjection() }
       )
-      for (const feature of features) {
-        selectSheetsByGeometry(feature.getGeometry()!, mapView.value)
-      }
+      const geometries = features
+        .map((feature) => feature.getGeometry())
+        .filter((geometry): geometry is Geometry => geometry !== undefined)
+      if (geometries.length == 0) throw Error(file.name + ' has no geometries')
+
+      // Multiple geometries are selected as a single collection, so that all
+      // of them get highlighted and fitted into the view together
+      selectSheetsByGeometry(
+        geometries.length == 1
+          ? geometries[0]
+          : new GeometryCollection(geometries),
+        mapView.value,
+      )
       addToast({
         type: CToastType.Success,
         title: t('toasts.geojson.loaded.title'),
