@@ -15,6 +15,11 @@ import ScaleLine from 'ol/control/ScaleLine'
 import PreviewProgress from './PreviewProgress.vue'
 import { useTransfer } from '@/composables/transfer'
 import { registerProjections } from '@/modules/projections'
+import {
+  readProfile,
+  UnreadableRaster,
+  type RasterProfile,
+} from '@/modules/rasterProfile'
 import type { PreviewSource } from '@/modules/preview'
 
 // Raw OpenLayers rather than vue3-openlayers here: the view has to come from
@@ -58,6 +63,9 @@ const entry = ref('1')
 
 let map: OlMap | undefined
 let viewOptions: ViewOptions | undefined
+// How the file has to be drawn to be recognisable, read before any source is
+// built because both the source and its layer are configured from it
+let profile: RasterProfile = {}
 
 // Band number to the layer rendering it, in insertion order so that the oldest
 // can be evicted first. OpenLayers' Map is imported as OlMap so that this is a
@@ -129,9 +137,30 @@ function teardown() {
   map = undefined
 }
 
-// Builds the layer for one band, or returns the cached one. Bands are only
-// requested individually for files too wide to upload whole, so `bands` is left
-// off otherwise and OpenLayers reads every band as RGB(A).
+// How a source over this file has to be configured, which the profile decides
+// as much as the file does. Bands are only requested individually for files too
+// wide to upload whole, so `bands` is left off otherwise and OpenLayers reads
+// every band as RGB(A).
+function sourceOptions(bands?: number[]) {
+  return {
+    sources: [{
+      url: source.fetchUrl,
+      loader: transfer.loader,
+      ...(bands ? { bands } : {}),
+      // Absent unless the file left OpenLayers nothing to scale from
+      ...(profile.min ? { min: profile.min, max: profile.max } : {}),
+    }],
+    // JPEG-compressed sheets store YCbCr rather than RGB
+    convertToRGB: 'auto' as const,
+    // A palette index has to reach the style as itself: scaled it would no
+    // longer name an entry, and blended between neighbours it would name a
+    // third colour rather than a shade of either.
+    normalize: !profile.palette,
+    interpolate: !profile.palette,
+  }
+}
+
+// Builds the layer for one band, or returns the cached one.
 function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
   const cached = layers.get(index)
   if (cached) {
@@ -143,13 +172,8 @@ function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
   // Reusing the source that already read this file's metadata saves reading it
   // again. That is most of the wait for a file whose directory sits at the very
   // end, where finding it means seeking through the whole thing.
-  const tiff = prebuilt ?? new GeoTIFF({
-    sources: [narrowed
-      ? { url: source.fetchUrl, bands: [index], loader: transfer.loader }
-      : { url: source.fetchUrl, loader: transfer.loader }],
-    // JPEG-compressed sheets store YCbCr rather than RGB
-    convertToRGB: 'auto',
-  })
+  const tiff = prebuilt
+    ?? new GeoTIFF(sourceOptions(narrowed ? [index] : undefined))
 
   // Only the band on show drives the busy indicator; prefetches stay quiet.
   tiff.on('tileloadstart', () => {
@@ -165,7 +189,14 @@ function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
   tiff.on('tileloadend', settled)
   tiff.on('tileloaderror', settled)
 
-  const layer = new TileLayer({ source: tiff, visible: false })
+  const layer = new TileLayer({
+    source: tiff,
+    visible: false,
+    // Band 1 holds the index into the file's own ColorMap
+    style: profile.palette
+      ? { color: ['palette', ['band', 1], profile.palette] }
+      : undefined,
+  })
   layers.set(index, layer)
   map?.addLayer(layer)
 
@@ -210,12 +241,25 @@ async function load() {
   error.value = ''
   transfer.reset()
   try {
-    // The file's metadata is read first: its band count decides whether the
+    // Read before the source, because the source is configured from it. A file
+    // we cannot profile is still worth showing on OpenLayers' own terms, so a
+    // failure here is not the preview's failure - unless it is the one that
+    // says nothing here can read the file's pixels at all.
+    const settled = transfer.open()
+    try {
+      profile = await readProfile(source.fetchUrl)
+    } catch (cause) {
+      if (cause instanceof UnreadableRaster) throw cause
+      console.warn('Preview could not profile GeoTIFF:', cause)
+      profile = {}
+    } finally {
+      settled()
+    }
+
+    // The file's metadata is read next: its band count decides whether the
     // whole file can go to the GPU, and its projection and extent become the
     // view. Both are only knowable from the file.
-    const probe = new GeoTIFF({
-      sources: [{ url: source.fetchUrl, loader: transfer.loader }],
-    })
+    const probe = new GeoTIFF(sourceOptions())
     viewOptions = await readView(probe)
     // `bandCount` is a runtime property of the source, which the WebGL tile
     // layer itself reads to size its textures.

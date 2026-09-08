@@ -44,6 +44,9 @@ export function useTransfer() {
     })
   }
 
+  // Marks a read as outstanding and hands back the way to close it. Exported
+  // for reads whose bytes cannot be counted - ones made by a library holding
+  // its own fetch - which should still keep the indicator up while they run.
   function open() {
     inFlight.value++
     return () => inFlight.value = Math.max(0, inFlight.value - 1)
@@ -90,6 +93,7 @@ export function useTransfer() {
     bytesExpected,
     inFlight,
     reset,
+    open,
     fetchTracked,
     fetchAll,
     loader,
