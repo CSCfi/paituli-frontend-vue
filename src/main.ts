@@ -12,6 +12,7 @@ import router from '@/routes'
 import { i18n } from '@/modules/locale'
 import { vTooltip } from '@/directives/tooltip'
 import { vHelp } from '@/directives/help'
+import { vDropdownFit } from '@/directives/dropdownFit'
 
 const app = createApp(App)
 app.use(router)
@@ -20,6 +21,7 @@ app.use(i18n)
 app.directive('control', vControl);
 app.directive('tooltip', vTooltip);
 app.directive('help', vHelp);
+app.directive('dropdown-fit', vDropdownFit);
 
 (async () => {
 
