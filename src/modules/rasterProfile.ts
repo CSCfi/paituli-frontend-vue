@@ -46,6 +46,10 @@ export interface RasterProfile {
   // wants it, with a hole for any band the sample said nothing about.
   min?: number[]
   max?: number[]
+  // Size of the smallest overview level in the file, which is what a zoomed
+  // out view has to be drawn from. On a file with no pyramid it is the
+  // full-resolution image, and drawing all of it is not always affordable.
+  overview?: { width: number, height: number }
 }
 
 // Overview levels are entries in the directory chain like any other, and so are
@@ -156,10 +160,17 @@ export async function readProfile(url: string): Promise<RasterProfile> {
       `No decoder for this file's compression (TIFF Compression ${compression})`)
   }
 
+  // Read for every file, because it decides how far the view may zoom out
+  // whether or not anything else here applies
+  const smallest = await coarsest(file)
+  const profile: RasterProfile = {
+    overview: { width: smallest.getWidth(), height: smallest.getHeight() },
+  }
+
   const photometric = image.fileDirectory.getValue('PhotometricInterpretation')
   if (photometric === PALETTE) {
     const map = await image.fileDirectory.loadValue('ColorMap')
-    if (map?.length) return { palette: paletteFrom(map) }
+    if (map?.length) return { ...profile, palette: paletteFrom(map) }
   }
 
   // Scaling a band backwards is the only way to tell OpenLayers that its low
@@ -169,12 +180,12 @@ export async function readProfile(url: string): Promise<RasterProfile> {
   // from us either.
   const inverted = photometric === WHITE_IS_ZERO
   if (!inverted) {
-    if (image.getBitsPerSample(0) === 8) return {}
+    if (image.getBitsPerSample(0) === 8) return profile
     const metadata = await image.getGDALMetadata(0)
-    if (metadata && STATISTICS.every((key) => key in metadata)) return {}
+    if (metadata && STATISTICS.every((key) => key in metadata)) return profile
   }
 
-  const bands = await sample(await coarsest(file))
+  const bands = await sample(smallest)
   const nodata = image.getGDALNoData()
   const min: number[] = []
   const max: number[] = []
@@ -189,5 +200,5 @@ export async function readProfile(url: string): Promise<RasterProfile> {
     max[band] = inverted ? low : high
     sampled = true
   }
-  return sampled ? { min, max } : {}
+  return sampled ? { ...profile, min, max } : profile
 }

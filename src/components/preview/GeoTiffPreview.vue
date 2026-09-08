@@ -49,6 +49,17 @@ const MAX_CACHED_LAYERS = 16
 // way instead of blinking on every step.
 const BUSY_DELAY = 300
 
+// Zoom levels past native resolution, for a closer look at a small file or at
+// one detail of a large one.
+const EXTRA_ZOOM_IN = 2
+
+// How many source pixels a single view may be drawn from. Zooming out is drawn
+// from the smallest overview level the file has, so on a file with no pyramid
+// at all it is drawn from the full-resolution image, and asking for the whole
+// of a 19200 x 9600 sheet means decoding every one of its 184 million pixels
+// before anything appears. Past this the view stops zooming out instead.
+const DECODE_BUDGET = 16_000_000
+
 const container = ref<HTMLElement>()
 const loading = ref(true)
 const busy = ref(false)
@@ -135,6 +146,57 @@ function teardown() {
   map?.setTarget(undefined)
   map?.dispose()
   map = undefined
+}
+
+// Opens the file whole and lets it be zoomed either way.
+//
+// A GeoTIFF's overview levels become the view's zoom levels, so a file with no
+// overview pyramid arrives with only the three OpenLayers pads its single level
+// out to, all within one step of native resolution. That opens a 19200 pixel
+// wide map sheet at one image pixel per screen pixel - about a twentieth of it,
+// with no way back out - and many of the MML sheets have no pyramid.
+function widenZoom(options: ViewOptions, element: HTMLElement): ViewOptions {
+  const { resolutions, extent } = options
+  if (!resolutions?.length || !extent) return options
+
+  const width = Math.max(element.clientWidth, 1)
+  const height = Math.max(element.clientHeight, 1)
+  // The resolution that puts the whole file on screen
+  const whole = Math.max((extent[2] - extent[0]) / width,
+    (extent[3] - extent[1]) / height)
+
+  // A narrowed source reads one band however many the file holds; anything
+  // else is decoded band by band, and the budget is spent that many times.
+  const samples = bandCount.value > MAX_BANDS
+    ? 1
+    : Math.max(1, bandCount.value)
+  const budget = DECODE_BUDGET / samples
+
+  // As far out as the whole file, unless drawing that much of it at once costs
+  // more than the budget allows.
+  let coarsest = whole
+  const overview = profile.overview
+  if (overview && overview.width * overview.height > budget) {
+    // One screen pixel covers resolution/level px of the level being drawn, so
+    // the budget caps how much coarser than that level the view may go.
+    const level = (extent[2] - extent[0]) / overview.width
+    coarsest = Math.min(whole, level * Math.sqrt(budget / (width * height)))
+  }
+
+  // Only the ends of the array bound the view, but it also maps zoom levels
+  // onto resolutions, so it is extended as the ladder it already is: whole
+  // steps up to the limit, then the limit itself. Levels past it are dropped,
+  // since there is nothing beyond the edge of the file to look at.
+  const widened = [...resolutions]
+  while (widened.length > 1 && widened[0] > coarsest) widened.shift()
+  while (widened[0] * 2 < coarsest) widened.unshift(widened[0] * 2)
+  if (widened[0] < coarsest) widened.unshift(coarsest)
+  for (let step = 0; step < EXTRA_ZOOM_IN; step++) {
+    widened.push(widened[widened.length - 1] / 2)
+  }
+
+  // Takes precedence over the zoom OpenLayers asked for
+  return { ...options, resolutions: widened, resolution: coarsest }
 }
 
 // How a source over this file has to be configured, which the profile decides
@@ -273,7 +335,9 @@ async function load() {
     teardown()
     map = new OlMap({
       target: container.value,
-      view: new View(viewOptions),
+      view: new View(container.value
+        ? widenZoom(viewOptions, container.value)
+        : viewOptions),
     })
     map.addControl(new ScaleLine())
     showBand(selectedBand(), narrowed ? undefined : probe)
