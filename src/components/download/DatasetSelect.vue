@@ -191,6 +191,7 @@ const datasetCount = computed(() => {
     <c-select
       v-model="selectedProducer"
       v-control
+      v-dropdown-fit
       :placeholder="`${t('choose')} ${t('labels.producer')}...`"
       :label="t('labels.producer')"
       :key="producerOptions"
@@ -199,7 +200,7 @@ const datasetCount = computed(() => {
         v-for="producer in producerOptions"
         :key="producer"
         v-bind="{ value: producer, name: producer }">
-        <c-row align="center" justify="space-between">
+        <c-row align="center" justify="space-between" nowrap>
           {{ producer }}
           <c-tag flat>
             {{ datasetCount[producer] }}
@@ -211,6 +212,7 @@ const datasetCount = computed(() => {
     <c-select
       v-model="selectedData"
       v-control
+      v-dropdown-fit
       :placeholder="`${t('choose')} ${t('labels.data')}...`"
       :label="t('labels.data')"
       :disabled="hasNoChoice(dataOptions)"
@@ -226,6 +228,7 @@ const datasetCount = computed(() => {
     <c-select
       v-model="selectedScale"
       v-control
+      v-dropdown-fit
       :label="t('labels.scale')"
       :disabled="hasNoChoice(scaleOptions)"
       hide-details>
@@ -240,6 +243,7 @@ const datasetCount = computed(() => {
     <c-select
       v-model="selectedYear"
       v-control
+      v-dropdown-fit
       :label="t('labels.year')"
       :disabled="hasNoChoice(yearOptions)"
       hide-details>
@@ -254,6 +258,7 @@ const datasetCount = computed(() => {
     <c-select
       v-model="selectedFormat"
       v-control
+      v-dropdown-fit
       :label="t('labels.format')"
       :disabled="hasNoChoice(formatOptions)"
       hide-details>
