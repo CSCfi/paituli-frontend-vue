@@ -145,6 +145,7 @@ const scaleText = computed(() => {
                         <ServicesModalRow
                           :label="t('endpoint')"
                           :show-open="true"
+                          :open-url="URLS.STAC_PAITULI_BASE + '?f=application%2Fjson'"
                           :text="URLS.STAC_PAITULI_BASE" />
                         <ServicesModalRow
                           :label="t('stac.collection')"
