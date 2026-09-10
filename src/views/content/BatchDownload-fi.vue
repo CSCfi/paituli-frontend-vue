@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
 import CodeBlock from '@/components/common/CodeBlock.vue';
+import CopyButton from '@/components/common/CopyButton.vue';
 
 import { APP_SETTINGS } from '@/shared/constants'
 
@@ -22,15 +23,24 @@ import { APP_SETTINGS } from '@/shared/constants'
   </ul>
 
   <p>Tiedostot ovat saatavilla kolmen rajapinnan yli:</p>
-  <ul>
+  <ul class="protocols">
     <li>
-      <strong>HTTPS</strong>: <AppLink to="https://www.nic.funet.fi/index/geodata/" >https://www.nic.funet.fi/index/geodata/</AppLink>
+      <div class="protocol">
+        <span><strong>HTTPS</strong>: <AppLink to="https://www.nic.funet.fi/index/geodata/" >https://www.nic.funet.fi/index/geodata/</AppLink></span>
+        <CopyButton text="https://www.nic.funet.fi/index/geodata/" />
+      </div>
     </li>
     <li>
-      <strong>FTP</strong>: ftp://ftp.funet.fi/pub/sci/geo/geodata/
+      <div class="protocol">
+        <span><strong>FTP</strong>: ftp://ftp.funet.fi/pub/sci/geo/geodata/</span>
+        <CopyButton text="ftp://ftp.funet.fi/pub/sci/geo/geodata/" />
+      </div>
     </li>
     <li>
-      <strong>rsync</strong>: rsync://rsync.nic.funet.fi/index/geodata/
+      <div class="protocol">
+        <span><strong>rsync</strong>: rsync://rsync.nic.funet.fi/index/geodata/</span>
+        <CopyButton text="rsync://rsync.nic.funet.fi/index/geodata/" />
+      </div>
     </li>
   </ul>
   <p>
@@ -263,3 +273,18 @@ import { APP_SETTINGS } from '@/shared/constants'
   </p>
 
 </template>
+
+<style scoped>
+/* Shrink the list to its widest row so every copy button lines up */
+.protocols {
+  width: fit-content;
+}
+.protocols .protocol {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.protocols .protocol c-button {
+  margin-left: 1em;
+}
+</style>

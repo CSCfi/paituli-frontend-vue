@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CodeBlock from '@/components/common/CodeBlock.vue';
+import CopyButton from '@/components/common/CopyButton.vue';
 import AppLink from '@/components/common/AppLink.vue';
 
 import { APP_SETTINGS } from '@/shared/constants'
@@ -26,15 +27,24 @@ const { t } = useI18n({ useScope: 'global' })
   </ul>
 
   <p>The files are available via three different protocols:</p>
-  <ul>
+  <ul class="protocols">
     <li>
-      <strong>HTTPS</strong>: <AppLink to="https://www.nic.funet.fi/index/geodata/">https://www.nic.funet.fi/index/geodata/</AppLink>
+      <div class="protocol">
+        <span><strong>HTTPS</strong>: <AppLink to="https://www.nic.funet.fi/index/geodata/">https://www.nic.funet.fi/index/geodata/</AppLink></span>
+        <CopyButton text="https://www.nic.funet.fi/index/geodata/" />
+      </div>
     </li>
     <li>
-      <strong>FTP</strong>: ftp://ftp.funet.fi/index/geodata/
+      <div class="protocol">
+        <span><strong>FTP</strong>: ftp://ftp.funet.fi/index/geodata/</span>
+        <CopyButton text="ftp://ftp.funet.fi/index/geodata/" />
+      </div>
     </li>
     <li>
-      <strong>rsync</strong>: rsync://rsync.nic.funet.fi/index/geodata/
+      <div class="protocol">
+        <span><strong>rsync</strong>: rsync://rsync.nic.funet.fi/index/geodata/</span>
+        <CopyButton text="rsync://rsync.nic.funet.fi/index/geodata/" />
+      </div>
     </li>
   </ul>
   <p>
@@ -248,3 +258,18 @@ const { t } = useI18n({ useScope: 'global' })
     If you notice any problems or know a better way for downloading on Windows, please inform CSC
   </p>
 </template>
+
+<style scoped>
+/* Shrink the list to its widest row so every copy button lines up */
+.protocols {
+  width: fit-content;
+}
+.protocols .protocol {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.protocols .protocol c-button {
+  margin-left: 1em;
+}
+</style>
