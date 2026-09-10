@@ -65,6 +65,9 @@ const loading = ref(true)
 const busy = ref(false)
 const error = ref('')
 const bandCount = ref(0)
+// Whether the file is too wide for the GPU to take whole, which decides both
+// how a source over it is built and whether there is a band to step to.
+const narrowed = computed(() => bandCount.value > MAX_BANDS)
 // The band actually being drawn, and what the field shows while it is edited.
 // The field only takes effect on Enter or on leaving it, so that typing "366"
 // does not render bands 3 and 36 on the way.
@@ -167,9 +170,7 @@ function widenZoom(options: ViewOptions, element: HTMLElement): ViewOptions {
 
   // A narrowed source reads one band however many the file holds; anything
   // else is decoded band by band, and the budget is spent that many times.
-  const samples = bandCount.value > MAX_BANDS
-    ? 1
-    : Math.max(1, bandCount.value)
+  const samples = narrowed.value ? 1 : Math.max(1, bandCount.value)
   const budget = DECODE_BUDGET / samples
 
   // As far out as the whole file, unless drawing that much of it at once costs
@@ -230,12 +231,11 @@ function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
     return cached
   }
 
-  const narrowed = bandCount.value > MAX_BANDS
   // Reusing the source that already read this file's metadata saves reading it
   // again. That is most of the wait for a file whose directory sits at the very
   // end, where finding it means seeking through the whole thing.
   const tiff = prebuilt
-    ?? new GeoTIFF(sourceOptions(narrowed ? [index] : undefined))
+    ?? new GeoTIFF(sourceOptions(narrowed.value ? [index] : undefined))
 
   // Only the band on show drives the busy indicator; prefetches stay quiet.
   tiff.on('tileloadstart', () => {
@@ -280,9 +280,14 @@ function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
 // drawn fully transparent.
 function showBand(index: number, prebuilt?: GeoTIFF) {
   const nearby = new Set([index])
-  for (let step = 1; step <= PREFETCH; step++) {
-    if (index - step >= 1) nearby.add(index - step)
-    if (index + step <= bandCount.value) nearby.add(index + step)
+  // Only a file read band by band has a neighbour worth holding. On one read
+  // whole, every band is already in the layer on screen, and a second source
+  // over it would fetch and decode the same tiles again underneath.
+  if (narrowed.value) {
+    for (let step = 1; step <= PREFETCH; step++) {
+      if (index - step >= 1) nearby.add(index - step)
+      if (index + step <= bandCount.value) nearby.add(index + step)
+    }
   }
 
   shown.value = index
@@ -329,8 +334,7 @@ async function load() {
 
     // A wide file needs a source restricted to one band, so the probe is of no
     // further use there; otherwise it becomes the first layer's source.
-    const narrowed = bandCount.value > MAX_BANDS
-    if (narrowed) probe.dispose()
+    if (narrowed.value) probe.dispose()
 
     teardown()
     map = new OlMap({
@@ -340,7 +344,7 @@ async function load() {
         : viewOptions),
     })
     map.addControl(new ScaleLine())
-    showBand(selectedBand(), narrowed ? undefined : probe)
+    showBand(selectedBand(), narrowed.value ? undefined : probe)
     loading.value = false
   } catch (cause) {
     // Unknown projections, missing files and CORS refusals all land here, and
@@ -414,7 +418,7 @@ onUnmounted(teardown)
 
     <!-- Only shown for files too wide for the GPU to take whole, where picking
          a band is the only way to see anything but the first one -->
-    <div v-if="!loading && !error && bandCount > MAX_BANDS" class="bands">
+    <div v-if="!loading && !error && narrowed" class="bands">
       <c-icon-button
         size="small"
         :disabled="shown <= 1"
