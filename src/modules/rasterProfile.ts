@@ -25,7 +25,7 @@ const STATISTICS = ['STATISTICS_MINIMUM', 'STATISTICS_MAXIMUM'] as const
 // TIFF Compression values geotiff.js registers a decoder for: raw, LZW, JPEG,
 // Deflate in both flavours, PackBits, LERC, Zstd and web image codecs. Its own
 // registry is not reachable through the package's exports, so the list is
-// repeated here rather than a file being left to fail one tile at a time.
+// repeated here.
 const DECODABLE = new Set([1, 5, 7, 8, 32773, 32946, 34887, 50000, 50001])
 
 // A file whose pixels no bundled decoder can read. Separate from every other
@@ -35,8 +35,7 @@ export class UnreadableRaster extends Error {}
 
 export type Rgba = [number, number, number, number]
 
-// What a file does not say about itself but a renderer needs anyway. Both
-// halves are absent for the files that need neither.
+// What a file does not say about itself but a renderer needs anyway.
 export interface RasterProfile {
   // The file's ColorMap as RGBA entries, for a `palette` style expression.
   // Present only for colour-mapped files.
@@ -46,9 +45,8 @@ export interface RasterProfile {
   // wants it, with a hole for any band the sample said nothing about.
   min?: number[]
   max?: number[]
-  // Size of the smallest overview level in the file, which is what a zoomed
-  // out view has to be drawn from. On a file with no pyramid it is the
-  // full-resolution image, and drawing all of it is not always affordable.
+  // Size of the smallest overview level, which is what a zoomed out view has
+  // to be drawn from - the full-resolution image on a file with no pyramid.
   overview?: { width: number, height: number }
 }
 
@@ -137,19 +135,13 @@ function rangeOf(values: ArrayLike<number>, nodata: number | null) {
   return min <= max ? { min, max } : undefined
 }
 
-// Reads the two things a GeoTIFF leaves OpenLayers unable to work out for
-// itself.
+// Reads what a GeoTIFF leaves OpenLayers unable to work out for itself.
 //
-// A colour-mapped file is drawn from its palette. OpenLayers only reaches for
-// geotiff.js' RGB conversion on files with three samples per pixel, so a
-// palette file - one sample, colours in a ColorMap - falls through to a raw
-// read and its indices are drawn as if they were intensities.
-//
-// Everything else is scaled from the range it actually covers. OpenLayers
-// scales a band from the statistics GDAL wrote into the file, and where there
-// are none, from the whole range of the sample type: a 16 bit signed height
-// model spanning a few hundred metres then lands in the bottom hundredth of
-// -32768..32767, and a float32 one in a rounding error of 1.2e-38..3.4e38.
+// OpenLayers only reaches for RGB conversion at three samples per pixel, so a
+// palette file's indices are drawn as intensities unless its ColorMap is
+// passed in. And with no GDAL statistics it scales a band from the whole range
+// of its sample type, so a 16 bit height model spanning a few hundred metres
+// lands in the bottom hundredth of -32768..32767.
 export async function readProfile(url: string): Promise<RasterProfile> {
   const file = await fromUrl(url)
   const image = await file.getImage(0)
@@ -174,12 +166,11 @@ export async function readProfile(url: string): Promise<RasterProfile> {
   }
 
   // Scaling a band backwards is the only way to tell OpenLayers that its low
-  // end is the white one, so such a file needs a range even when it would
-  // otherwise be left alone: 8 bit samples already fill the range OpenLayers
-  // assumes for them, and a file carrying its own statistics needs nothing
-  // from us either.
+  // end is the white one, so such a file needs a range even where one would
+  // otherwise be left alone.
   const inverted = photometric === WHITE_IS_ZERO
   if (!inverted) {
+    // 8 bit samples already fill the range OpenLayers assumes for them
     if (image.getBitsPerSample(0) === 8) return profile
     const metadata = await image.getGDALMetadata(0)
     if (metadata && STATISTICS.every((key) => key in metadata)) return profile

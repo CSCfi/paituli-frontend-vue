@@ -71,11 +71,10 @@ function isDirectory(path: string): boolean {
   return path.endsWith('/') || fileExtension(path) === ''
 }
 
-// Index entries are download specifications rather than plain file locators:
-// besides a filename they can name a directory, or a `NAME.*` glob standing for
-// a raster together with its sidecars (K3R.png, K3R.pgw, K3R.prj). A glob
-// resolves to the one file whose extension matches the dataset's format, which
-// is why previewing a glob entry needs the dataset metadata.
+// Index entries are download specifications rather than plain file locators: a
+// `NAME.*` glob stands for a raster together with its sidecars (K3R.png,
+// K3R.pgw, K3R.prj) and resolves to the one whose extension the dataset's
+// format names.
 export function needsDataset(path: string): boolean {
   return path.includes('*')
 }
@@ -98,11 +97,9 @@ export function previewBlocker(
   dataset: Dataset | null): PreviewBlocker | null {
 
   const file = resolvePath(path, dataset)
-  // Points at a whole folder rather than one file
   if (isDirectory(file)) return 'directory'
   // A `NAME.*` entry whose extension the dataset's format did not reveal
   if (needsDataset(file)) return 'unresolved'
-  // A format with no renderer yet
   if (!(fileExtension(file) in RENDERERS)) return 'format'
   return null
 }

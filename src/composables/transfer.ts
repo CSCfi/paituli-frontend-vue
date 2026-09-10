@@ -52,9 +52,7 @@ export function useTransfer() {
     return () => inFlight.value = Math.max(0, inFlight.value - 1)
   }
 
-  // A whole file at once. Unlike a ranged read this has a real total: the file
-  // arrives entire, so its Content-Length is a finish line rather than a
-  // running tally, and a percentage built on it is exact.
+  // A whole file at once, so its Content-Length is a real total
   async function fetchAll(url: string): Promise<Blob> {
     const settled = open()
     try {

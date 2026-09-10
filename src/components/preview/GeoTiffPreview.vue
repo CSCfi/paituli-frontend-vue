@@ -88,8 +88,7 @@ const pending = ref(0)
 const active = computed(() =>
   loading.value || pending.value > 0 || transfer.inFlight.value > 0)
 
-// Determinate only while the metadata is being read, which is what `loading`
-// marks. Anything after that gains a request at a time and has no total.
+// Only the metadata read has a total, and `loading` is what marks it
 const determinate = computed(() =>
   loading.value && transfer.bytesExpected.value > 0)
 
@@ -126,13 +125,11 @@ function teardown() {
   map = undefined
 }
 
-// Opens the file whole and lets it be zoomed either way.
-//
-// A GeoTIFF's overview levels become the view's zoom levels, so a file with no
-// overview pyramid arrives with only the three OpenLayers pads its single level
-// out to, all within one step of native resolution. That opens a 19200 pixel
-// wide map sheet at one image pixel per screen pixel - about a twentieth of it,
-// with no way back out - and many of the MML sheets have no pyramid.
+// Opens the file whole and lets it be zoomed either way. A GeoTIFF's overview
+// levels become the view's zoom levels, so a file with no pyramid arrives with
+// only the three OpenLayers pads its single level out to, all within one step
+// of native resolution - which opens a 19200 pixel wide sheet at a twentieth of
+// itself, with no way back out.
 function widenZoom(options: ViewOptions, element: HTMLElement): ViewOptions {
   const { resolutions, extent } = options
   if (!resolutions?.length || !extent) return options
@@ -160,9 +157,7 @@ function widenZoom(options: ViewOptions, element: HTMLElement): ViewOptions {
   }
 
   // Only the ends of the array bound the view, but it also maps zoom levels
-  // onto resolutions, so it is extended as the ladder it already is: whole
-  // steps up to the limit, then the limit itself. Levels past it are dropped,
-  // since there is nothing beyond the edge of the file to look at.
+  // onto resolutions, so it is extended as the ladder it already is.
   const widened = [...resolutions]
   while (widened.length > 1 && widened[0] > coarsest) widened.shift()
   while (widened[0] * 2 < coarsest) widened.unshift(widened[0] * 2)
@@ -175,10 +170,9 @@ function widenZoom(options: ViewOptions, element: HTMLElement): ViewOptions {
   return { ...options, resolutions: widened, resolution: coarsest }
 }
 
-// How a source over this file has to be configured, which the profile decides
-// as much as the file does. Bands are only requested individually for files too
-// wide to upload whole, so `bands` is left off otherwise and OpenLayers reads
-// every band as RGB(A).
+// The profile decides as much of this as the file does. Bands are only
+// requested individually for files too wide to upload whole, so `bands` is left
+// off otherwise and OpenLayers reads every band as RGB(A).
 function sourceOptions(bands?: number[]) {
   return {
     sources: [{
@@ -207,8 +201,7 @@ function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
   }
 
   // Reusing the source that already read this file's metadata saves reading it
-  // again. That is most of the wait for a file whose directory sits at the very
-  // end, where finding it means seeking through the whole thing.
+  // again, which for some files is most of the wait.
   const tiff = prebuilt
     ?? new GeoTIFF(sourceOptions(narrowed.value ? [index] : undefined))
 
@@ -249,8 +242,7 @@ function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
 
 // Shows one band and keeps its neighbours loading behind it. Layers in the
 // window stay visible so that OpenLayers keeps fetching their tiles - only
-// `visible` gates that, not opacity - while everything but the chosen band is
-// drawn fully transparent.
+// `visible` gates that, not opacity.
 function showBand(index: number, prebuilt?: GeoTIFF) {
   const nearby = new Set([index])
   // Only a file read band by band has a neighbour worth holding. On one read
@@ -282,10 +274,8 @@ async function load() {
   pending.value = 0
   transfer.reset()
   try {
-    // Read before the source, because the source is configured from it. A file
-    // we cannot profile is still worth showing on OpenLayers' own terms, so a
-    // failure here is not the preview's failure - unless it is the one that
-    // says nothing here can read the file's pixels at all.
+    // Read before the source, which is configured from it. A file we cannot
+    // profile is still worth drawing on OpenLayers' own terms.
     const settled = transfer.open()
     try {
       profile = await readProfile(source.fetchUrl)
@@ -297,9 +287,8 @@ async function load() {
       settled()
     }
 
-    // The file's metadata is read next: its band count decides whether the
-    // whole file can go to the GPU, and its projection and extent become the
-    // view. Both are only knowable from the file.
+    // Read next for the band count, which decides whether the whole file can
+    // go to the GPU, and for the projection and extent that become the view.
     const probe = new GeoTIFF(sourceOptions())
     viewOptions = await readView(probe)
     // `bandCount` is a runtime property of the source, which the WebGL tile
@@ -370,8 +359,7 @@ onUnmounted(teardown)
   <div class="geotiff-preview">
     <div ref="container" class="map" :class="{ hidden: loading || error }"></div>
 
-    <!-- Kept up while tiles load too, which for a large file is the longest
-         part and used to happen behind no indicator at all -->
+    <!-- Kept up while tiles load too, the longest part for a large file -->
     <PreviewProgress
       v-if="active"
       :bytes-read="transfer.bytesRead.value"
@@ -384,8 +372,6 @@ onUnmounted(teardown)
       <code>{{ error }}</code>
     </c-alert>
 
-    <!-- Only shown for files too wide for the GPU to take whole, where picking
-         a band is the only way to see anything but the first one -->
     <div v-if="!loading && !error && narrowed" class="bands">
       <c-icon-button
         size="small"
@@ -398,8 +384,7 @@ onUnmounted(teardown)
       <span>{{ t('band') }}</span>
       <!-- A plain text field: type="number" brings native spin buttons that
            live in the component's shadow root, out of reach of our styles, and
-           the stepper buttons replace them. Anything unparseable is discarded
-           on commit anyway. -->
+           the stepper buttons replace them. -->
       <c-text-field
         v-model="entry"
         type="text"

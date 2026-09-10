@@ -27,9 +27,7 @@ const percent = computed(() => determinate && bytesExpected
   ? Math.min(100, Math.round((bytesRead / bytesExpected) * 100))
   : 0)
 
-// The total is shown whether or not the bar is determinate. It keeps growing
-// during a ranged read, which is why the bar stops claiming a percentage then,
-// but the size of the read in progress is still worth having.
+// Worth showing even without a total to measure it against
 const label = computed(() => {
   if (!bytesRead) return t('connecting')
   const read = size(bytesRead)

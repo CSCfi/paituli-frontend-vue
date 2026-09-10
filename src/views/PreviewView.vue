@@ -15,21 +15,21 @@ const route = useRoute()
 const dataId = computed(() => (route.query.data_id as string | undefined) ?? '')
 const path = computed(() => (route.query.path as string | undefined) ?? '')
 
-// Metadata only fills in the header, so it is tracked separately from the file
-// and never blocks rendering.
+// Metadata only fills in the header, so it is tracked separately from the
+// file and blocks rendering only for the glob entries below. As its own tab the
+// preview starts with nothing in memory, but the same route reached in-app may
+// already have the datasets loaded.
 const metadataLoading = ref(!datasets.value.length)
 
 const dataset = computed(() => dataId.value ? getById(dataId.value) : null)
 const source = computed(() => buildSource(path.value, dataset.value))
 const renderer = computed(() => rendererFor(source.value))
 
-// Glob index entries only name a file once the dataset's format is known, so
-// those wait for the metadata rather than briefly claiming to be unsupported.
+// A glob entry has no filename until the dataset's format is known, so it waits
+// for the metadata rather than briefly claiming to be unsupported.
 const waiting = computed(() => metadataLoading.value && needsDataset(path.value))
 
 onMounted(async () => {
-  // As its own tab the preview starts with nothing in memory, but the same
-  // route reached in-app may already have the datasets loaded.
   if (!metadataLoading.value) return
   try {
     await fetchMetadata()
