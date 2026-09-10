@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
 import { URLS } from '@/shared/constants'
+import CopyButton from '@/components/common/CopyButton.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 import { useI18n } from 'vue-i18n';
 
@@ -38,22 +39,42 @@ const { t } = useI18n({ useScope: 'global' })
         <tr>
           <td><b>WMS</b>, Web Map Service</td>
           <td>Map image for viewing</td>
-          <td>{{ URLS.WMS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WMS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.WMS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>WMTS</b>, Web Map Tile Service</td>
           <td>Map image tile for viewing</td>
-          <td>{{ URLS.WMTS_PAITULI_BASE_GWC }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WMTS_PAITULI_BASE_GWC }}</span>
+              <CopyButton :text="URLS.WMTS_PAITULI_BASE_GWC" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>WFS</b>, Web Feature Service</td>
           <td>Vector data</td>
-          <td>{{ URLS.WFS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WFS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.WFS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>WCS</b>, Web Coverage Service</td>
           <td>Raster data</td>
-          <td>{{ URLS.WCS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WCS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.WCS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -77,22 +98,42 @@ const { t } = useI18n({ useScope: 'global' })
         <tr>
           <td><b>Maps</b>, similar to WMS</td>
           <td>Map image for viewing</td>
-          <td>{{ URLS.OGC_MAPS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_MAPS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_MAPS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>Tiles</b>, similar to WMTS</td>
           <td>Map image tile for viewing</td>
-          <td>{{ URLS.OGC_TILES_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_TILES_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_TILES_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>Features</b>, similar to WFS</td>
           <td>Vector data</td>
-          <td>{{ URLS.OGC_FEATURES_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_FEATURES_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_FEATURES_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>Coverages</b>, similar to WCS</td>
           <td>Raster data</td>
-          <td>{{ URLS.OGC_COVERAGES_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_COVERAGES_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_COVERAGES_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -129,3 +170,11 @@ const { t } = useI18n({ useScope: 'global' })
   </ul>
 
 </template>
+
+<style scoped>
+.endpoint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>

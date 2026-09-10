@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
 import { URLS } from '@/shared/constants'
+import CopyButton from '@/components/common/CopyButton.vue';
 import { CAlertType } from '@cscfi/csc-ui';
 
 </script>
@@ -38,22 +39,42 @@ import { CAlertType } from '@cscfi/csc-ui';
         <tr>
           <td><b>WMS</b>, Web Map Service</td>
           <td>Karttakuva visualisointiin</td>
-          <td>{{ URLS.WMS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WMS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.WMS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>WMTS</b>, Web Map Tile Service</td>
           <td>Karttakuvan tiili visualisointiin</td>
-          <td>{{ URLS.WMTS_PAITULI_BASE_GWC }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WMTS_PAITULI_BASE_GWC }}</span>
+              <CopyButton :text="URLS.WMTS_PAITULI_BASE_GWC" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>WFS</b>, Web Feature Service</td>
           <td>Vektoriaineisto</td>
-          <td>{{ URLS.WFS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WFS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.WFS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>WCS</b>, Web Coverage Service</td>
           <td>Rasteriaineisto</td>
-          <td>{{ URLS.WCS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.WCS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.WCS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -77,22 +98,42 @@ import { CAlertType } from '@cscfi/csc-ui';
         <tr>
           <td><b>Maps</b>, hieman kuin WMS</td>
           <td>Karttakuva visualisointiin</td>
-          <td>{{ URLS.OGC_MAPS_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_MAPS_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_MAPS_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>Tiles</b>, hieman kuin WMTS</td>
           <td>Karttakuvan tiili visualisointiin</td>
-          <td>{{ URLS.OGC_TILES_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_TILES_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_TILES_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>Features</b>, hieman kuin WFS</td>
           <td>Vektoriaineisto</td>
-          <td>{{ URLS.OGC_FEATURES_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_FEATURES_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_FEATURES_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
         <tr>
           <td><b>Coverages</b>, hieman kuin WCS</td>
           <td>Rasteriaineisto</td>
-          <td>{{ URLS.OGC_COVERAGES_PAITULI_BASE }}</td>
+          <td>
+            <div class="endpoint">
+              <span>{{ URLS.OGC_COVERAGES_PAITULI_BASE }}</span>
+              <CopyButton :text="URLS.OGC_COVERAGES_PAITULI_BASE" />
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -132,3 +173,11 @@ import { CAlertType } from '@cscfi/csc-ui';
   </ul>
 
 </template>
+
+<style scoped>
+.endpoint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>

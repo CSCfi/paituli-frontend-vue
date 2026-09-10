@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import AppLink from '@/components/common/AppLink.vue';
 import { URLS } from '@/shared/constants'
-import { copyToClipboard } from '@/shared/util';
+import CopyButton from '@/components/common/CopyButton.vue';
 import { CAlertType } from '@cscfi/csc-ui';
-import { mdiClipboardMultipleOutline } from '@mdi/js'
 </script>
 
 <template>
@@ -66,9 +65,7 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   <p>
     <span>
       Paituli STAC API endpoint is: <code>{{ URLS.STAC_PAITULI_BASE }}</code>
-      <c-button ghost @click="copyToClipboard(URLS.STAC_PAITULI_BASE)" size="small">
-        Copy <c-icon :path="mdiClipboardMultipleOutline" size="18" />
-      </c-button>
+      <CopyButton :text="URLS.STAC_PAITULI_BASE" />
     </span>
   </p>
 
@@ -106,10 +103,3 @@ import { mdiClipboardMultipleOutline } from '@mdi/js'
   </p>
 
 </template>
-
-<style scoped>
-
-c-button {
-  margin-left: 1em;
-}
-</style>
