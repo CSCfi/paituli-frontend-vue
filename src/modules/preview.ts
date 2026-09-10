@@ -46,12 +46,6 @@ const RENDERERS: Record<string, Component> = {
   tiff: geoTiffPreview,
 }
 
-// Extensions the file list offers an eye button for. Kept separate from
-// RENDERERS so that a format whose renderer is still a placeholder resolves to
-// a helpful page when its URL is opened directly, without advertising a
-// preview that cannot draw anything yet.
-const OFFERED: string[] = ['png', 'jpg', 'jpeg', 'tif', 'tiff']
-
 // Dataset formats are prose, so match on the substrings that distinguish the
 // ones we can name a file extension for.
 const FORMAT_EXTENSIONS: [string, string][] = [
@@ -61,7 +55,7 @@ const FORMAT_EXTENSIONS: [string, string][] = [
   ['LAZ', 'laz'],
 ]
 
-export function fileName(path: string): string {
+function fileName(path: string): string {
   const segments = path.replace(/\/+$/, '').split('/')
   return segments[segments.length - 1] ?? path
 }
@@ -73,7 +67,7 @@ export function fileExtension(path: string): string {
 }
 
 // Directory entries carry a trailing slash, and never an extension
-export function isDirectory(path: string): boolean {
+function isDirectory(path: string): boolean {
   return path.endsWith('/') || fileExtension(path) === ''
 }
 
@@ -94,18 +88,10 @@ export function resolvePath(path: string, dataset: Dataset | null): string {
   return extension ? path.replace(/\*$/, extension) : path
 }
 
-export function fileUrl(path: string): string {
-  return URLS.HTTP_LINKS_BASE + path.replace(/^\/+/, '')
-}
-
-export function fileFetchUrl(path: string): string {
-  return URLS.GEODATA_FETCH_BASE + path.replace(/^\/+/, '')
-}
-
 // Why an index entry cannot be previewed, or null when it can be. Reported in
 // the file list so that entries the preview cannot reach say so, rather than
 // silently offering nothing.
-export type PreviewBlocker = 'directory' | 'unresolved' | 'format'
+type PreviewBlocker = 'directory' | 'unresolved' | 'format'
 
 export function previewBlocker(
   path: string,
@@ -117,7 +103,7 @@ export function previewBlocker(
   // A `NAME.*` entry whose extension the dataset's format did not reveal
   if (needsDataset(file)) return 'unresolved'
   // A format with no renderer yet
-  if (!OFFERED.includes(fileExtension(file))) return 'format'
+  if (!(fileExtension(file) in RENDERERS)) return 'format'
   return null
 }
 
@@ -136,11 +122,12 @@ export function previewHref(dataId: string, path: string): string {
 
 export function buildSource(path: string, dataset: Dataset | null): PreviewSource {
   const file = resolvePath(path, dataset)
+  const relative = file.replace(/^\/+/, '')
   return {
     path,
     file,
-    url: fileUrl(file),
-    fetchUrl: fileFetchUrl(file),
+    url: URLS.HTTP_LINKS_BASE + relative,
+    fetchUrl: URLS.GEODATA_FETCH_BASE + relative,
     name: fileName(file),
     dataset,
     directory: isDirectory(file),

@@ -21,15 +21,10 @@ for (const zone of [32, 33, 34, 35, 36]) {
     `+proj=utm +zone=${zone} +datum=WGS84 +units=m +no_defs`
 }
 
-let registered = false
-
-// Teaches OpenLayers the projections above. Safe to call more than once, and
-// called from the preview renderers so that proj4 stays out of the main bundle.
-export function registerProjections() {
-  if (registered) return
-  for (const [code, definition] of Object.entries(DEFINITIONS)) {
-    proj4.defs(code, definition)
-  }
-  register(proj4)
-  registered = true
+// Importing this module teaches OpenLayers the projections above. Only the
+// GeoTIFF renderer imports it, and that is itself loaded on demand, so proj4
+// stays out of the main bundle.
+for (const [code, definition] of Object.entries(DEFINITIONS)) {
+  proj4.defs(code, definition)
 }
+register(proj4)

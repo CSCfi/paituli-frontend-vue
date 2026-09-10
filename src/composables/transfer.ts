@@ -52,31 +52,26 @@ export function useTransfer() {
     return () => inFlight.value = Math.max(0, inFlight.value - 1)
   }
 
-  // A counted fetch whose body is still a stream, for callers that consume it
-  // as one - deserializing FlatGeoBuf features, say, rather than waiting for a
-  // whole file.
-  async function fetchTracked(url: string, init?: RequestInit): Promise<Response> {
+  // A whole file at once. Unlike a ranged read this has a real total: the file
+  // arrives entire, so its Content-Length is a finish line rather than a
+  // running tally, and a percentage built on it is exact.
+  async function fetchAll(url: string): Promise<Blob> {
     const settled = open()
     try {
-      const response = await fetch(url, init)
+      const response = await fetch(url)
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
-      return track(response, settled)
+      return track(response, settled).blob()
     } catch (cause) {
+      // A stream that fails part way never reaches the flush above, so this is
+      // still the only place the read is closed.
       settled()
       throw cause
     }
   }
 
-  // A whole file at once. Unlike a ranged read this has a real total: the file
-  // arrives entire, so its Content-Length is a finish line rather than a
-  // running tally, and a percentage built on it is exact.
-  async function fetchAll(url: string): Promise<Blob> {
-    return (await fetchTracked(url)).blob()
-  }
-
   // The shape a GeoTIFF source wants for its `loader`, which routes every range
-  // request geotiff.js makes through the counter above. Errors are left to the
-  // caller, so a failed range read is not turned into a rejection here.
+  // request geotiff.js makes through the counter above. A non-ok status is
+  // passed through rather than raised, for geotiff.js to interpret itself.
   function loader(url: string, headers: HeadersInit, signal: AbortSignal) {
     const settled = open()
     return fetch(url, { headers, signal }).then(
@@ -94,7 +89,6 @@ export function useTransfer() {
     inFlight,
     reset,
     open,
-    fetchTracked,
     fetchAll,
     loader,
   }

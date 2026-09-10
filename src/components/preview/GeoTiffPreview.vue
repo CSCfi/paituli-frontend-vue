@@ -14,7 +14,7 @@ import ScaleLine from 'ol/control/ScaleLine'
 
 import PreviewProgress from './PreviewProgress.vue'
 import { useTransfer } from '@/composables/transfer'
-import { registerProjections } from '@/modules/projections'
+import '@/modules/projections'
 import {
   readProfile,
   UnreadableRaster,
@@ -104,8 +104,6 @@ function updateBusy() {
   busyTimer = undefined
   busy.value = false
 }
-
-registerProjections()
 
 // Anything at all still going on, whichever stage it is at
 const active = computed(() =>

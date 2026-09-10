@@ -189,7 +189,6 @@ export async function readProfile(url: string): Promise<RasterProfile> {
   const nodata = image.getGDALNoData()
   const min: number[] = []
   const max: number[] = []
-  let sampled = false
   for (let band = 0; band < bands.length; band++) {
     const range = rangeOf(bands[band], nodata)
     if (!range) continue
@@ -198,7 +197,6 @@ export async function readProfile(url: string): Promise<RasterProfile> {
     const high = range.max > range.min ? range.max : range.min + 1
     min[band] = inverted ? high : low
     max[band] = inverted ? low : high
-    sampled = true
   }
-  return sampled ? { ...profile, min, max } : profile
+  return min.length ? { ...profile, min, max } : profile
 }
