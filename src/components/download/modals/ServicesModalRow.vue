@@ -9,6 +9,7 @@ const { t } = useI18n()
 interface Props {
   label: string
   text: string | number
+  openUrl?: string
   showCopy?: boolean
   showOpen?: boolean
   unavailable?: boolean
@@ -25,6 +26,10 @@ const props = withDefaults(defineProps<Props>(), {
 function trimUrl(text: string) {
   return text.replace(/^https?:/, '')
 }
+
+// The open button may target a different address than the one shown and
+// copied, e.g. an endpoint that needs a format parameter to open in a browser
+const openHref = computed(() => props.openUrl ?? props.text.toString())
 
 const trimmedText = computed(() => {
   const text = props.text?.toString()
@@ -43,7 +48,7 @@ const trimmedText = computed(() => {
         <app-link
           v-if="showOpen && !unavailable"
           new-tab
-          :to="(props.text as string)"
+          :to="openHref"
           :c-button="{ ghost: true, size: 'small' }">
           <!-- href should be naturally untrimmed -->
           {{ t('open') }}
