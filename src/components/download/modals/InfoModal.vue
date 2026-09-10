@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { mdiClipboardMultipleOutline, mdiFileDownloadOutline } from '@mdi/js';
+import { mdiFileDownloadOutline } from '@mdi/js';
 import { currentDataset } from '@/modules/datasets';
 import { URLS } from '@/shared/constants';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { copyToClipboard } from '@/shared/util';
 import type { MetadataParse } from '@/shared/types'
 import { CAlertType } from '@cscfi/csc-ui'
 import { fetchEtsinMetadata } from '@/modules/etsin'
 import AppLink from '@/components/common/AppLink.vue';
+import CopyButton from '@/components/common/CopyButton.vue';
 
 const { t } = useI18n()
 
@@ -65,13 +65,7 @@ async function loadMetadata() {
               new-tab>
               {{ etsinLink }}
             </app-link>
-            <c-button
-              ghost
-              @click="copyToClipboard(etsinLink)"
-              size="small">
-              {{ t('copy') }}
-              <c-icon :path="mdiClipboardMultipleOutline" size="18" />
-            </c-button>
+            <CopyButton :text="etsinLink" :label="t('copy')" />
           </div>
         </div>
 

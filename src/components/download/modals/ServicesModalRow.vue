@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { copyToClipboard } from '@/shared/util';
-import { mdiClipboardMultipleOutline } from '@mdi/js'
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AppLink from '@/components/common/AppLink.vue';
+import CopyButton from '@/components/common/CopyButton.vue';
 
 const { t } = useI18n()
 
@@ -49,14 +48,9 @@ const trimmedText = computed(() => {
           <!-- href should be naturally untrimmed -->
           {{ t('open') }}
         </app-link>
-        <c-button
+        <CopyButton
           v-if="showCopy && !unavailable"
-          ghost
-          size="small"
-          @click="copyToClipboard(trimmedText)">
-          {{ t('copy') }}
-          <c-icon :path="mdiClipboardMultipleOutline" size="18" />
-        </c-button>
+          :text="trimmedText" />
       </div>
     </td>
   </tr>
@@ -65,12 +59,10 @@ const trimmedText = computed(() => {
 <i18n>
 {
   "en": {
-    "copy": "Copy",
     "open": "Open",
     "not_available": "Not available",
   },
   "fi": {
-    "copy": "Kopioi",
     "open": "Avaa",
     "not_available": "Ei saatavilla",
   },
@@ -78,16 +70,10 @@ const trimmedText = computed(() => {
 </i18n>
 
 <style scoped>
-.c-button--ghost {
-  c-icon {
-    --c-icon-color: var(--c-primary-600);
-  }
-}
 .buttons {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 0.5rem;
 }
 table.c-table .unavailable td
 {
