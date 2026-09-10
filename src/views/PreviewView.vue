@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { CAlertType } from '@cscfi/csc-ui'
@@ -7,7 +7,6 @@ import { mdiDownloadOutline } from '@mdi/js'
 
 import AppLink from '@/components/common/AppLink.vue'
 import { datasets, fetchMetadata, getById } from '@/modules/datasets'
-import { currentLocale } from '@/modules/locale'
 import { buildSource, needsDataset, rendererFor } from '@/modules/preview'
 
 const { t } = useI18n()
@@ -18,7 +17,7 @@ const path = computed(() => (route.query.path as string | undefined) ?? '')
 
 // Metadata only fills in the header, so it is tracked separately from the file
 // and never blocks rendering.
-const metadataLoading = ref(true)
+const metadataLoading = ref(!datasets.value.length)
 
 const dataset = computed(() => dataId.value ? getById(dataId.value) : null)
 const source = computed(() => buildSource(path.value, dataset.value))
@@ -28,26 +27,17 @@ const renderer = computed(() => rendererFor(source.value))
 // those wait for the metadata rather than briefly claiming to be unsupported.
 const waiting = computed(() => metadataLoading.value && needsDataset(path.value))
 
-async function loadMetadata() {
-  metadataLoading.value = true
+onMounted(async () => {
+  // As its own tab the preview starts with nothing in memory, but the same
+  // route reached in-app may already have the datasets loaded.
+  if (!metadataLoading.value) return
   try {
     await fetchMetadata()
   } catch (error) {
     console.warn('Preview could not fetch dataset metadata:', error)
-  } finally {
-    metadataLoading.value = false
   }
-}
-
-onMounted(() => {
-  // As its own tab the preview starts with nothing in memory, but the same
-  // route reached in-app may already have the datasets loaded.
-  if (datasets.value.length) metadataLoading.value = false
-  else loadMetadata()
+  metadataLoading.value = false
 })
-
-// Dataset names and organisations come localized from the backend
-watch(currentLocale, loadMetadata)
 </script>
 
 <template>

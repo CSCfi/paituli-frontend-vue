@@ -44,11 +44,6 @@ const PREFETCH = 2
 // the prefetch window, whose layers are never evicted.
 const MAX_CACHED_LAYERS = 16
 
-// How long a band may take to appear before it is worth saying so. Cached and
-// prefetched bands arrive well inside this, so the indicator stays out of the
-// way instead of blinking on every step.
-const BUSY_DELAY = 300
-
 // Zoom levels past native resolution, for a closer look at a small file or at
 // one detail of a large one.
 const EXTRA_ZOOM_IN = 2
@@ -62,7 +57,6 @@ const DECODE_BUDGET = 16_000_000
 
 const container = ref<HTMLElement>()
 const loading = ref(true)
-const busy = ref(false)
 const error = ref('')
 const bandCount = ref(0)
 // Whether the file is too wide for the GPU to take whole, which decides both
@@ -71,7 +65,6 @@ const narrowed = computed(() => bandCount.value > MAX_BANDS)
 // The band actually being drawn, and what the field shows while it is edited.
 // The field only takes effect on Enter or on leaving it, so that typing "366"
 // does not render bands 3 and 36 on the way.
-const band = ref(1)
 const shown = ref(1)
 const entry = ref('1')
 
@@ -86,28 +79,14 @@ let profile: RasterProfile = {}
 // plain JS Map and not, silently, a second map instance.
 const layers = new Map<number, TileLayer>()
 
-// Tiles in flight on the band being shown, which is what `busy` reflects once
-// they have been outstanding for BUSY_DELAY
-let pending = 0
-let busyTimer: ReturnType<typeof setTimeout> | undefined
+// Tiles in flight on the band being shown
+const pending = ref(0)
 
-function updateBusy() {
-  if (pending > 0) {
-    if (busy.value || busyTimer) return
-    busyTimer = setTimeout(() => {
-      busyTimer = undefined
-      busy.value = pending > 0
-    }, BUSY_DELAY)
-    return
-  }
-  clearTimeout(busyTimer)
-  busyTimer = undefined
-  busy.value = false
-}
-
-// Anything at all still going on, whichever stage it is at
+// Anything at all still going on, whichever stage it is at. Tiles are counted
+// separately from bytes because a tile served from the file's own block cache
+// is decoded without a request being made at all.
 const active = computed(() =>
-  loading.value || busy.value || transfer.inFlight.value > 0)
+  loading.value || pending.value > 0 || transfer.inFlight.value > 0)
 
 // Determinate only while the metadata is being read, which is what `loading`
 // marks. Anything after that gains a request at a time and has no total.
@@ -141,8 +120,6 @@ function disposeLayer(index: number) {
 }
 
 function teardown() {
-  clearTimeout(busyTimer)
-  busyTimer = undefined
   for (const index of [...layers.keys()]) disposeLayer(index)
   map?.setTarget(undefined)
   map?.dispose()
@@ -235,16 +212,14 @@ function layerForBand(index: number, prebuilt?: GeoTIFF): TileLayer {
   const tiff = prebuilt
     ?? new GeoTIFF(sourceOptions(narrowed.value ? [index] : undefined))
 
-  // Only the band on show drives the busy indicator; prefetches stay quiet.
+  // Only the band on show drives the indicator; prefetches stay quiet.
   tiff.on('tileloadstart', () => {
     if (index !== shown.value) return
-    pending++
-    updateBusy()
+    pending.value++
   })
   const settled = () => {
     if (index !== shown.value) return
-    pending = Math.max(0, pending - 1)
-    updateBusy()
+    pending.value = Math.max(0, pending.value - 1)
   }
   tiff.on('tileloadend', settled)
   tiff.on('tileloaderror', settled)
@@ -289,12 +264,12 @@ function showBand(index: number, prebuilt?: GeoTIFF) {
   }
 
   shown.value = index
+  entry.value = String(index)
   for (const wanted of nearby) {
     layerForBand(wanted, wanted === index ? prebuilt : undefined)
   }
 
-  pending = 0
-  updateBusy()
+  pending.value = 0
   for (const [current, layer] of layers) {
     layer.setVisible(nearby.has(current))
     layer.setOpacity(current === index ? 1 : 0)
@@ -304,6 +279,7 @@ function showBand(index: number, prebuilt?: GeoTIFF) {
 async function load() {
   loading.value = true
   error.value = ''
+  pending.value = 0
   transfer.reset()
   try {
     // Read before the source, because the source is configured from it. A file
@@ -342,7 +318,7 @@ async function load() {
         : viewOptions),
     })
     map.addControl(new ScaleLine())
-    showBand(selectedBand(), narrowed.value ? undefined : probe)
+    showBand(clamp(shown.value), narrowed.value ? undefined : probe)
     loading.value = false
   } catch (cause) {
     // Unknown projections, missing files and CORS refusals all land here, and
@@ -357,41 +333,35 @@ function clamp(value: number) {
   return Math.min(Math.max(1, Math.round(value)), bandCount.value || 1)
 }
 
-// Moves one band at a time from the one on screen, rather than from whatever
-// half-typed value the input holds
-function step(delta: number) {
-  band.value = clamp(shown.value + delta)
+// Every way of choosing a band goes through here. The guard belongs on this
+// side rather than on the template's v-if, because a focusout can fire while a
+// file switch is already removing the controls.
+function go(value: number) {
+  if (loading.value || error.value) return
+  const index = clamp(value)
+  if (index === shown.value) entry.value = String(index)
+  else showBand(index)
 }
 
-// Brings a whole number into range rather than refusing it. Everything else -
-// a decimal, an emptied field, or text - leaves the band where it was.
+// Steps from the band on screen, rather than from whatever half-typed value the
+// field holds
+function step(delta: number) {
+  go(shown.value + delta)
+}
+
+// Brings a whole number into range rather than refusing it. Anything else - a
+// decimal, an emptied field, text - leaves the band where it was.
 function commit() {
   const typed = Number(entry.value)
-  band.value = entry.value.trim() && Number.isInteger(typed)
-    ? clamp(typed)
-    : shown.value
-  entry.value = String(band.value)
+  if (entry.value.trim() && Number.isInteger(typed)) go(typed)
+  else entry.value = String(shown.value)
 }
-
-// Keeps the band inside the range of whichever file is loaded, which can shrink
-// when a different one is previewed
-function selectedBand() {
-  return Number.isFinite(band.value) ? clamp(band.value) : 1
-}
-
-// Stepping, clamping and switching files all move the band, and the field
-// follows
-watch(shown, (current) => entry.value = String(current))
 
 onMounted(load)
 
 // A new file has to be read from scratch; a new band only swaps which of the
 // already built layers is opaque, so the map stays on screen throughout.
 watch(() => source.fetchUrl, load)
-watch(band, () => {
-  if (loading.value || error.value) return
-  showBand(selectedBand())
-})
 
 onUnmounted(teardown)
 </script>
