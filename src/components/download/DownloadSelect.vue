@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { mdiDownload } from '@mdi/js'
+import { mdiDownload, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
 import DownloadModal from './modals/DownloadModal.vue'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n'
@@ -8,8 +8,42 @@ import { currentDataset } from '@/modules/datasets'
 import { checkboxStates, selectedFeaturesArray, selectedOlFeatures, hoverFeature, unhoverFeature } from '@/modules/selection'
 import { CAlertType } from '@cscfi/csc-ui'
 import AppLink from '@/components/common/AppLink.vue'
+import {
+  fileExtension,
+  previewBlocker,
+  previewHref,
+  resolvePath,
+} from '@/modules/preview'
+import { vTooltip } from '@/directives/tooltip'
+import { useRouter } from 'vue-router'
+import type Feature from 'ol/Feature'
 
 const { t } = useI18n()
+const router = useRouter()
+
+function previewUrl(feature: Feature) {
+  const id = currentDataset.value!.data_id
+  // The index path is passed through unresolved; the preview repeats the same
+  // resolution once it has the dataset, so its links stay stable.
+  return router.resolve(previewHref(id, feature.get('path'))).href
+}
+
+function blocker(feature: Feature) {
+  return previewBlocker(feature.get('path'), currentDataset.value)
+}
+
+// Names what stands between an index entry and its preview. Deliberately
+// specific: the point is to make problematic datasets easy to spot.
+function blockedReason(feature: Feature) {
+  const path: string = feature.get('path')
+  const reason = blocker(feature)
+  if (!reason) return ''
+  return t(`blocked.${reason}`, {
+    path,
+    format: currentDataset.value?.format ?? '',
+    extension: fileExtension(resolvePath(path, currentDataset.value)),
+  })
+}
 
 const licenseChecked = ref(true)
 const licenseUrl = computed(() => currentDataset.value?.license_url)
@@ -140,6 +174,28 @@ watch(selectedFeaturesArray, () => {
               {{ feature.get('label') }}
             </span>
           </label>
+          <!-- The preview is a plain link so that it opens in its own tab, and
+               keeps middle-clicking and bookmarking working. -->
+          <a
+            v-if="currentDataset && !blocker(feature)"
+            class="preview-link"
+            :href="previewUrl(feature)"
+            target="_blank"
+            rel="noopener"
+            :aria-label="t('preview')"
+            v-tooltip="t('preview')">
+            <c-icon :path="mdiEyeOutline" size="18" />
+          </a>
+          <!-- Entries the preview cannot reach still show a marker, so that the
+               reason is one hover away instead of invisible -->
+          <span
+            v-else-if="currentDataset"
+            class="preview-link blocked"
+            role="img"
+            :aria-label="blockedReason(feature)"
+            v-tooltip="blockedReason(feature)">
+            <c-icon :path="mdiEyeOffOutline" size="18" />
+          </span>
         </div>
       </div>
     </div>
@@ -160,6 +216,12 @@ watch(selectedFeaturesArray, () => {
     "documents": "Documents",
     "files": "Files",
     "license": "License",
+    "preview": "Preview file in a new tab",
+    "blocked": {
+      "directory": "No preview: this map sheet is a whole folder rather than a single file ({path})",
+      "unresolved": "No preview: the wildcard in {path} could not be resolved from the dataset format '{format}'",
+      "format": "No preview for .{extension} files yet",
+    },
   },
   "fi": {
     "size": "Lataa ({size} MB)",
@@ -171,6 +233,12 @@ watch(selectedFeaturesArray, () => {
     "documents": "Asiakirjat",
     "files": "Tiedostot",
     "license": "Käyttöehdot",
+    "preview": "Esikatsele tiedostoa uudessa välilehdessä",
+    "blocked": {
+      "directory": "Ei esikatselua: tämä karttalehti on kokonainen kansio yksittäisen tiedoston sijaan ({path})",
+      "unresolved": "Ei esikatselua: polun {path} jokerimerkkiä ei voitu selvittää aineiston formaatista '{format}'",
+      "format": "Tiedostomuodolle .{extension} ei ole vielä esikatselua",
+    },
   },
 }
 </i18n>
@@ -228,10 +296,14 @@ label {
 }
 
 .files {
+  display: flex;
+  align-items: center;
+
   label {
     display: flex;
     align-items: center;
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
     cursor: pointer;
   }
   label:hover {
@@ -246,6 +318,20 @@ label {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .preview-link {
+    display: flex;
+    flex: none;
+    align-items: center;
+    padding: 0 .25em;
+    color: var(--c-white);
+  }
+  .preview-link:hover {
+    color: var(--c-accent-300);
+  }
+  .preview-link.blocked {
+    color: var(--c-tertiary-500);
+    cursor: help;
   }
 }
 

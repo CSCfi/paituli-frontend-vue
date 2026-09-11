@@ -5,13 +5,19 @@ export const LAYER = {
 } as const
 
 const _GS_BASE = import.meta.env.VITE_GEOSERVER_BASE
+const _GEODATA_BASE = 'https://www.nic.funet.fi/index/geodata/'
 
 export const URLS = {
   METADATA_API: import.meta.env.VITE_METADATA_API,
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
 
   // Links tab
-  HTTP_LINKS_BASE: 'https://www.nic.funet.fi/index/geodata/',
+  HTTP_LINKS_BASE: _GEODATA_BASE,
+
+  // Where the browser reads archive files from, as opposed to linking to them.
+  // The archive allows the Paituli origins but not localhost, so development
+  // overrides this with a Vite proxy path (see VITE_GEODATA_BASE).
+  GEODATA_FETCH_BASE: import.meta.env.VITE_GEODATA_BASE || _GEODATA_BASE,
   FTP_LINKS_BASE: 'ftp://ftp.funet.fi/index/geodata/',
   RSYNC_LINKS_BASE: 'rsync://rsync.nic.funet.fi/index/geodata/',
 
