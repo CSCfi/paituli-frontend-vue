@@ -13,7 +13,7 @@ export const URLS = {
   // Links tab
   HTTP_LINKS_BASE: 'https://www.nic.funet.fi/index/geodata/',
   FTP_LINKS_BASE: 'ftp://ftp.funet.fi/index/geodata/',
-  RSYNC_LINKS_BASE: 'rsync://rsync.nic.funet.fi/ftp/index/geodata/',
+  RSYNC_LINKS_BASE: 'rsync://rsync.nic.funet.fi/index/geodata/',
 
   // Location search
   NOMINATIM_API:
