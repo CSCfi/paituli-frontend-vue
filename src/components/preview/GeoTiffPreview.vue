@@ -58,10 +58,15 @@ const DECODE_BUDGET = 16_000_000
 const container = ref<HTMLElement>()
 const loading = ref(true)
 const error = ref('')
+// How many bands the file itself holds, which is what the controls step
+// through and what a narrowed source asks for by number.
 const bandCount = ref(0)
+// What the GPU is asked to carry, which is one more whenever OpenLayers adds
+// an alpha band to mask nodata. Only the texture limit cares about that one.
+const textureBands = ref(0)
 // Whether the file is too wide for the GPU to take whole, which decides both
 // how a source over it is built and whether there is a band to step to.
-const narrowed = computed(() => bandCount.value > MAX_BANDS)
+const narrowed = computed(() => textureBands.value > MAX_BANDS)
 // The band actually being drawn, and what the field shows while it is edited.
 // The field only takes effect on Enter or on leaving it, so that typing "366"
 // does not render bands 3 and 36 on the way.
@@ -292,8 +297,10 @@ async function load() {
     const probe = new GeoTIFF(sourceOptions())
     viewOptions = await readView(probe)
     // `bandCount` is a runtime property of the source, which the WebGL tile
-    // layer itself reads to size its textures.
-    bandCount.value = (probe as unknown as { bandCount?: number }).bandCount ?? 1
+    // layer itself reads to size its textures. It counts the alpha band too,
+    // so the file's own count is preferred wherever a band is named.
+    textureBands.value = (probe as unknown as { bandCount?: number }).bandCount ?? 1
+    bandCount.value = profile.samples ?? textureBands.value
 
     // A wide file needs a source restricted to one band, so the probe is of no
     // further use there; otherwise it becomes the first layer's source.

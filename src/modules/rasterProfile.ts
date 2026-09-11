@@ -48,6 +48,10 @@ export interface RasterProfile {
   // Size of the smallest overview level, which is what a zoomed out view has
   // to be drawn from - the full-resolution image on a file with no pyramid.
   overview?: { width: number, height: number }
+  // How many bands the file holds. OpenLayers reports one more than this
+  // whenever it adds an alpha band of its own to mask nodata, and that band is
+  // a mask rather than another day or wavelength to look at.
+  samples?: number
 }
 
 // Overview levels are entries in the directory chain like any other, and so are
@@ -165,6 +169,7 @@ export async function readProfile(url: string): Promise<RasterProfile> {
   const smallest = await coarsest(file)
   const profile: RasterProfile = {
     overview: { width: smallest.getWidth(), height: smallest.getHeight() },
+    samples: image.getSamplesPerPixel(),
   }
 
   const photometric = image.fileDirectory.getValue('PhotometricInterpretation')
