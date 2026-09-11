@@ -122,13 +122,21 @@ function sample(image: GeoTIFFImage) {
 }
 
 function rangeOf(values: ArrayLike<number>, nodata: number | null) {
+  // GDAL records nodata as text, and a float32 raster's sentinel does not
+  // survive the trip back: the double parsed from "-3.4e+38" is not the double
+  // a Float32Array hands back for the float32 the file actually stores, so
+  // comparing the two never matches and the sentinel is taken for data. One
+  // such value is enough to stretch a band of temperatures into a flat white
+  // silhouette. Narrowing it to float32 as well catches the value at whichever
+  // width it was written.
+  const narrowed = nodata === null ? null : Math.fround(nodata)
   let min = Infinity
   let max = -Infinity
   for (let index = 0; index < values.length; index++) {
     const value = values[index]
     // Skips NaN, which is what a nodata value often is in a float raster
     if (!Number.isFinite(value)) continue
-    if (nodata !== null && value === nodata) continue
+    if (value === nodata || value === narrowed) continue
     if (value < min) min = value
     if (value > max) max = value
   }
