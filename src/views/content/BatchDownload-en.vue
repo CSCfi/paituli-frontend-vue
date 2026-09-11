@@ -3,7 +3,7 @@ import CodeBlock from '@/components/common/CodeBlock.vue';
 import CopyButton from '@/components/common/CopyButton.vue';
 import AppLink from '@/components/common/AppLink.vue';
 
-import { APP_SETTINGS } from '@/shared/constants'
+import { APP_SETTINGS, URLS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'global' })
@@ -30,20 +30,20 @@ const { t } = useI18n({ useScope: 'global' })
   <ul class="protocols">
     <li>
       <div class="protocol">
-        <span><strong>HTTPS</strong>: <AppLink to="https://www.nic.funet.fi/index/geodata/">https://www.nic.funet.fi/index/geodata/</AppLink></span>
-        <CopyButton text="https://www.nic.funet.fi/index/geodata/" />
+        <span><strong>HTTPS</strong>: <AppLink :to="URLS.HTTP_LINKS_BASE">{{ URLS.HTTP_LINKS_BASE }}</AppLink></span>
+        <CopyButton :text="URLS.HTTP_LINKS_BASE" />
       </div>
     </li>
     <li>
       <div class="protocol">
-        <span><strong>FTP</strong>: ftp://ftp.funet.fi/index/geodata/</span>
-        <CopyButton text="ftp://ftp.funet.fi/index/geodata/" />
+        <span><strong>FTP</strong>: {{ URLS.FTP_LINKS_BASE }}</span>
+        <CopyButton :text="URLS.FTP_LINKS_BASE" />
       </div>
     </li>
     <li>
       <div class="protocol">
-        <span><strong>rsync</strong>: rsync://rsync.nic.funet.fi/index/geodata/</span>
-        <CopyButton text="rsync://rsync.nic.funet.fi/index/geodata/" />
+        <span><strong>rsync</strong>: {{ URLS.RSYNC_LINKS_BASE }}</span>
+        <CopyButton :text="URLS.RSYNC_LINKS_BASE" />
       </div>
     </li>
   </ul>
@@ -154,7 +154,7 @@ const { t } = useI18n({ useScope: 'global' })
   <p>For rsync, remove from the beginning of each row 'http://www.nic.funet.fi/index/' in the file list.</p>
   <CodeBlock
     :content="`rsync -a --files-from=<span style='color:yellow;'>file_list.txt</span>\
-    rsync://rsync.nic.funet.fi/ftp/index/geodata <span style='color:cyan;'>local_folder_to_save/</span>`"
+    ${URLS.RSYNC_LINKS_BASE} <span style='color:cyan;'>local_folder_to_save/</span>`"
   />
 
   <h2>Download a dataset or a folder</h2>
@@ -198,7 +198,7 @@ const { t } = useI18n({ useScope: 'global' })
 
   <h3>rsync</h3>
   <CodeBlock
-    :content="`rsync -a <span style='color:yellow;'>rsync://rsync.nic.funet.fi/ftp/index/geodata/mml/hallintorajat_milj_tk/2017/</span> <span style='color:cyan;'>local_folder_to_save/</span>`"
+    :content="`rsync -a <span style='color:yellow;'>${URLS.RSYNC_LINKS_BASE}mml/hallintorajat_milj_tk/2017/</span> <span style='color:cyan;'>local_folder_to_save/</span>`"
   />
   <ul>
     <li>
@@ -215,12 +215,12 @@ const { t } = useI18n({ useScope: 'global' })
   </p>
   <CodeBlock
     :content="`wget -r -l inf -N -np -nH -x -c --cut-dirs=4 \\
-      <span style='color:yellow;'>ftp://ftp.funet.fi/index/geodata/mml/hallintorajat_milj_tk/2017/</span> \\
+      <span style='color:yellow;'>${URLS.FTP_LINKS_BASE}mml/hallintorajat_milj_tk/2017/</span> \\
       -P <span style='color:cyan;'>local_folder_to_save/</span>`"
   />
   <CodeBlock
     :content="`wget -r -l inf -N -np -nH -x -c --cut-dirs=4 \\
-      <span style='color:yellow;'>https://www.nic.funet.fi/index/geodata/mml/hallintorajat_milj_tk/2017/</span> \\
+      <span style='color:yellow;'>${URLS.HTTP_LINKS_BASE}mml/hallintorajat_milj_tk/2017/</span> \\
       -P <span style='color:cyan;'>local_folder_to_save/</span>`"
   />
 
