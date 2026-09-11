@@ -309,9 +309,17 @@ async function load() {
     teardown()
     map = new OlMap({
       target: container.value,
-      view: new View(container.value
-        ? widenZoom(viewOptions, container.value)
-        : viewOptions),
+      view: new View({
+        ...(container.value
+          ? widenZoom(viewOptions, container.value)
+          : viewOptions),
+        // Without this the file's own extent pins the view whenever the window
+        // is a different shape from the raster: OpenLayers will not let the
+        // viewport exceed the extent in either dimension, so a tall narrow
+        // grid in a wide window cannot be panned - it springs straight back -
+        // and cannot be zoomed out far enough to show itself whole.
+        showFullExtent: true,
+      }),
     })
     map.addControl(new ScaleLine())
     showBand(clamp(shown.value), narrowed.value ? undefined : probe)
