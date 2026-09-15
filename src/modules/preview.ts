@@ -11,9 +11,7 @@ export interface PreviewSource {
   path: string
   // The single file that entry resolves to, relative to the geodata root
   file: string
-  // Absolute URL of that file in the Funet archive, for links shown to the user
-  url: string
-  // Where a renderer reads the same file from, which differs in development
+  // Where a renderer reads the file from, which differs in development
   fetchUrl: string
   // Filename, or the last segment when the entry names a directory
   name: string
@@ -119,12 +117,10 @@ export function previewHref(dataId: string, path: string): string {
 
 export function buildSource(path: string, dataset: Dataset | null): PreviewSource {
   const file = resolvePath(path, dataset)
-  const relative = file.replace(/^\/+/, '')
   return {
     path,
     file,
-    url: URLS.HTTP_LINKS_BASE + relative,
-    fetchUrl: URLS.GEODATA_FETCH_BASE + relative,
+    fetchUrl: URLS.GEODATA_FETCH_BASE + file.replace(/^\/+/, ''),
     name: fileName(file),
     dataset,
     directory: isDirectory(file),

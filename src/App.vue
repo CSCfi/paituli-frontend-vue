@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n'
 
-import { initToasts } from '@/composables/toasts';
+import { CToastType } from '@cscfi/csc-ui';
+
+import { addToast, initToasts } from '@/composables/toasts';
+import { metadataError } from '@/modules/datasets';
+import { indexError } from '@/modules/layers';
 import FooterItem from '@/components/common/FooterItem.vue';
 import BuildInfo from '@/components/common/BuildInfo.vue';
 import { APP_SETTINGS } from '@/shared/constants';
@@ -32,6 +36,19 @@ const toasts = ref<HTMLCToastsElement | null>(null)
 onMounted(() => {
   initToasts(toasts.value)
 })
+
+// The dataset and layer modules do not care about user notifications,
+// but leave us an error field we can track if something goes wrong on any call site.
+const reportFetchFailure = (title: string) => (error: string) => {
+  if (!error) return
+  addToast({
+    type: CToastType.Error,
+    title: t(title),
+    message: t('toasts.fetching.please_refresh', { error }),
+  })
+}
+watch(metadataError, reportFetchFailure('toasts.fetching.metadata_failed'))
+watch(indexError, reportFetchFailure('toasts.fetching.index_failed'))
 
 </script>
 

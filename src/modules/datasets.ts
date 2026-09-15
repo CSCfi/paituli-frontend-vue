@@ -6,10 +6,27 @@ import { currentLocale } from '@/modules/locale'
 
 // Fetches datasets for the current locale from the backend.
 // This metadata is used to fetch actual layer data in other modules.
-export async function fetchMetadata() {
+async function fetchMetadata() {
   const response = await fetch(`${URLS.METADATA_API}/${currentLocale.value}`)
   if (!response.ok) throw new Error(`HTTP code ${response.status}`)
   datasets.value = await response.json()
+}
+
+// Why the last fetch failed, or empty when it did not.
+// This is tracked by the app to display error messages to the user.
+export const metadataError = ref('')
+
+// Returns whether the metadata arrived and records the above failure, if any.
+export async function loadMetadata(): Promise<boolean> {
+  try {
+    await fetchMetadata()
+    metadataError.value = ''
+    return true
+  } catch (error) {
+    console.warn('Could not fetch dataset metadata:', error)
+    metadataError.value = String(error)
+    return false
+  }
 }
 
 // Global state for fetched datasets and the selected one
