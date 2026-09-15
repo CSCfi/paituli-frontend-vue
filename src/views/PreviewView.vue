@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { CAlertType } from '@cscfi/csc-ui'
 import { mdiDownloadOutline } from '@mdi/js'
 
-import { currentDataset, datasets, fetchMetadata, getById } from '@/modules/datasets'
+import { currentDataset, datasets, getById, loadMetadata } from '@/modules/datasets'
 import DownloadModal from '@/components/download/modals/DownloadModal.vue'
 import { buildSource, isPackageEntry, rendererFor } from '@/modules/preview'
 
@@ -46,11 +46,7 @@ function openDownload() {
 
 onMounted(async () => {
   if (!metadataLoading.value) return
-  try {
-    await fetchMetadata()
-  } catch (error) {
-    console.warn('Preview could not fetch dataset metadata:', error)
-  }
+  await loadMetadata()
   metadataLoading.value = false
 })
 </script>

@@ -20,7 +20,7 @@ import { GeometryCollection } from 'ol/geom'
 import type { Geometry } from 'ol/geom'
 import { KeyboardZoom, KeyboardPan } from 'ol/interaction'
 
-import { currentDataset, fetchMetadata } from '@/modules/datasets'
+import { currentDataset, loadMetadata } from '@/modules/datasets'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useToasts } from '@/composables/toasts'
 import { currentLocale } from '@/modules/locale'
@@ -70,7 +70,7 @@ const mapView = computed(() => olMapRef.value!.map.getView())
 
 onMounted(async () => {
   // Fetch datasets on mount
-  fetchDatasets()
+  loadMetadata()
 
   const map = olMapRef.value!.map as Map
   const olMapElement = map.getTargetElement()
@@ -104,7 +104,7 @@ onMounted(async () => {
 
 // Fetch datasets again if locale changes, due to the
 // endpoint returning different descriptions for each locale
-watch(currentLocale, async () => fetchDatasets())
+watch(currentLocale, async () => loadMetadata())
 
 // Update index layer whenever the current dataset changes,
 // and automatically select map sheets if we have only one
@@ -115,30 +115,8 @@ watch(currentDataset, async (dataset) => {
   closePopup()
 
   if (!dataset) return
-  try {
-    await loadIndexLayer(dataset.data_id)
-    if (autoSelectSheets.value) selectAll()
-  } catch (exc) {
-    addToast({
-      type: CToastType.Error,
-      title: t('toasts.fetching.index_failed'),
-      message: t('toasts.fetching.please_refresh', { error: exc })
-    })
-  }
+  if (await loadIndexLayer(dataset.data_id) && autoSelectSheets.value) selectAll()
 })
-
-// Fetches dataset metadata from the backend
-async function fetchDatasets() {
-  try {
-    await fetchMetadata()
-  } catch (exc) {
-    addToast({
-      type: CToastType.Error,
-      title: t('toasts.fetching.metadata_failed'),
-      message: t('toasts.fetching.please_refresh', { error: exc }),
-    })
-  }
-}
 
 // A popup for displaying feature information
 const featureInfoPos = ref([0,0])
@@ -394,11 +372,6 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   "en": {
     "feature": "Feature info",
     "toasts": {
-      "fetching": {
-        "index_failed": "Failed to load map sheets",
-        "metadata_failed": "Failed to load datasets",
-        "please_refresh": "Refresh the page to retry. If the problem persists, please contact CSC. Cause: {error}",
-      },
       "geojson": {
         "loaded": {
           "title": "Selection by GeoJSON",
@@ -415,11 +388,6 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
   "fi": {
     "feature": "Kohteen tiedot",
     "toasts": {
-      "fetching": {
-        "index_failed": "Karttalehtien noutaminen epäonnistui",
-        "metadata_failed": "Aineistojen noutaminen epäonnistui",
-        "please_refresh": "Päivitä sivu yrittääksesi uudelleen. Jos ongelma jatkuu, ota yhteyttä CSC:hen. Syy: {error}",
-      },
       "geojson": {
         "loaded": {
           "title": "Valinta GeoJSON:lla",
