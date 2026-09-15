@@ -17,6 +17,11 @@ export const i18n = createI18n({
       'contact': 'Contact',
       'toasts': {
         'default_title': 'Notice',
+        'fetching': {
+          'index_failed': 'Failed to load map sheets',
+          'metadata_failed': 'Failed to load datasets',
+          'please_refresh': 'Refresh the page to retry. If the problem persists, please contact CSC. Cause: {error}',
+        },
       },
       'help': {
         'default': 'Click something for help!',
@@ -49,6 +54,11 @@ export const i18n = createI18n({
       'contact': 'Ota yhteyttä',
       'toasts': {
         'default_title': 'Huomautus',
+        'fetching': {
+          'index_failed': 'Karttalehtien noutaminen epäonnistui',
+          'metadata_failed': 'Aineistojen noutaminen epäonnistui',
+          'please_refresh': 'Päivitä sivu yrittääksesi uudelleen. Jos ongelma jatkuu, ota yhteyttä CSC:hen. Syy: {error}',
+        },
       },
       'help': {
         'default': 'Napsauta jotain saadaksesi siitä apua!',

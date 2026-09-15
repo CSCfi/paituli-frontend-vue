@@ -106,7 +106,12 @@ export const dataHidden = computed(() =>
   mapViewResolution.value > dataLayerMaxResolution.value)
 
 // Fetches index data for provided dataset and replaces index layer
-export async function loadIndexLayer(data_id: string) {
+// Why the last index load failed, or empty when it did not. 
+// This is tracked by the app to display error messages to the user.
+export const indexError = ref('')
+
+// Returns whether the sheets arrived, for callers that act on them.
+export async function loadIndexLayer(data_id: string): Promise<boolean> {
 
   const format = new GeoJSON()
   const source = new VectorSource({ format: format })
@@ -117,11 +122,19 @@ export async function loadIndexLayer(data_id: string) {
     .replace('!value!', data_id) +
     '&outputFormat=application/flatgeobuf'
 
-  const response = await fetch(fetch_url)
-  if (!response.ok || response.body == null) throw new Error(`HTTP error ${response.status}`)
+  try {
+    const response = await fetch(fetch_url)
+    if (!response.ok || response.body == null) throw new Error(`HTTP error ${response.status}`)
 
-  const geojson = FGBGeoJson.deserialize(response.body)
-  for await (const feature of geojson) source.addFeatures(format.readFeatures(feature))
+    const geojson = FGBGeoJson.deserialize(response.body)
+    for await (const feature of geojson) source.addFeatures(format.readFeatures(feature))
+    indexError.value = ''
+    return true
+  } catch (error) {
+    console.warn('Could not load the index layer:', error)
+    indexError.value = String(error)
+    return false
+  }
 }
 
 // A vector source for highlights
