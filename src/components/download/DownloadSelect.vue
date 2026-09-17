@@ -4,7 +4,7 @@ import { mdiDownload, mdiEyeOutline } from '@mdi/js'
 import DownloadModal from './modals/DownloadModal.vue'
 import { APP_SETTINGS } from '@/shared/constants'
 import { useI18n } from 'vue-i18n'
-import { currentDataset } from '@/modules/datasets'
+import { currentDataset, licensePath } from '@/modules/datasets'
 import { checkboxStates, selectedFeaturesArray, selectedOlFeatures, hoverFeature, unhoverFeature } from '@/modules/selection'
 import { CAlertType } from '@cscfi/csc-ui'
 import AppLink from '@/components/common/AppLink.vue'
@@ -35,15 +35,10 @@ const filePaths = computed(() => {
     .filter((f) => checkboxStates.value[f.get('label')])
     .map((f) => f.get('path'));
   if (licenseUrl.value && licenseChecked.value) {
-    paths.push(cutLicenseURL(licenseUrl.value))
+    paths.push(licensePath(licenseUrl.value))
   }
   return paths;
 })
-
-function cutLicenseURL(url: string): string {
-  if (!url) return ''
-  return url.split('geodata/')[1] || url
-}
 
 const fileLabels = computed(() => {
   const labels: string[] = selectedFeaturesArray.value

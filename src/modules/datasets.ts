@@ -43,6 +43,11 @@ export function setCurrent(id: string) {
 export function clearCurrent() {
   currentDataset.value = null
 }
+// The license file sits in the archive next to the data it covers, so a
+// download job takes it by the same relative path as any other file.
+export function licensePath(url: string): string {
+  return url.split('geodata/')[1] || url
+}
 export function hasRasterData(dataset: Dataset): boolean {
   const formats = ['TIFF', 'PNG']
   return formats.some(f => dataset.format.toUpperCase().includes(f))

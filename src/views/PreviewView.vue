@@ -5,7 +5,13 @@ import { useI18n } from 'vue-i18n'
 import { CAlertType } from '@cscfi/csc-ui'
 import { mdiDownloadOutline } from '@mdi/js'
 
-import { currentDataset, datasets, getById, loadMetadata } from '@/modules/datasets'
+import {
+  currentDataset,
+  datasets,
+  getById,
+  licensePath,
+  loadMetadata,
+} from '@/modules/datasets'
 import DownloadModal from '@/components/download/modals/DownloadModal.vue'
 import { buildSource, isPackageEntry, rendererFor } from '@/modules/preview'
 
@@ -41,7 +47,15 @@ const downloadRef = ref()
 function openDownload() {
   if (!dataset.value) return
   currentDataset.value = dataset.value
-  downloadRef.value?.open([path.value], [source.value.name], dataset.value.file_size)
+  const paths = [path.value]
+  const labels = [source.value.name]
+  // The download view offers the license as a checkbox; here it's included always if any 
+  const license = dataset.value.license_url
+  if (license) {
+    paths.push(licensePath(license))
+    labels.push(license)
+  }
+  downloadRef.value?.open(paths, labels, dataset.value.file_size)
 }
 
 onMounted(async () => {
