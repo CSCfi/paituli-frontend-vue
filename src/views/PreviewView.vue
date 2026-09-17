@@ -74,7 +74,7 @@ function openDownload() {
   currentDataset.value = dataset.value
   const paths = [path.value]
   const labels = [source.value.name]
-  // The download view offers the license as a checkbox; here it's included always if any 
+  // The download view offers the license as a checkbox; here it's included always if any
   const license = dataset.value.license_url
   if (license) {
     paths.push(licensePath(license))
@@ -233,6 +233,14 @@ c-csc-logo,
 /* The filename matters more than the brand once room runs short */
 @media (max-width: 600px) {
   c-csc-logo {
+    display: none;
+  }
+}
+
+/* The download button takes too much space on mobile, so it's the first
+   item to hide, since we mainly support downloads on desktop. */
+@media (max-width: 768px) {
+  .preview-bar c-button {
     display: none;
   }
 }
