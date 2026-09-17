@@ -77,6 +77,29 @@ export function isPackageEntry(path: string): boolean {
   return path.includes('*')
 }
 
+// Where a renderer reads a file from, which differs in development
+export function fetchUrl(file: string): string {
+  return URLS.GEODATA_FETCH_BASE + file.replace(/^\/+/, '')
+}
+
+// A refused request is as good as a miss here: the renderer goes on to ask for
+// the file itself, and reports the failure with the status it gets.
+const exists = (file: string) =>
+  fetch(fetchUrl(file), { method: 'HEAD' }).then((response) => response.ok, () => false)
+
+// Only the archive knows how it spells an extension. A glob entry does not say
+// whether its files are .TIF or .tif. Both spellings are asked for at once.
+export async function locateFile(file: string): Promise<string> {
+  const dot = file.lastIndexOf('.')
+  if (dot < 0) return file
+  const variants = [file, file.slice(0, dot + 1) + file.slice(dot + 1).toUpperCase()]
+  if (variants[1] === variants[0]) return file
+  const found = await Promise.all(variants.map(exists))
+  // A file that is under neither name is reported missing by whatever tries to
+  // read it, which has the status to report it with.
+  return variants[found.findIndex(Boolean)] ?? file
+}
+
 export function resolvePath(path: string, dataset: Dataset | null): string {
   if (!isPackageEntry(path)) return path
   const format = dataset?.format.toUpperCase() ?? ''
@@ -115,12 +138,16 @@ export function previewHref(dataId: string, path: string): string {
   return `/preview?${query}`
 }
 
-export function buildSource(path: string, dataset: Dataset | null): PreviewSource {
-  const file = resolvePath(path, dataset)
+export function buildSource(
+  path: string,
+  dataset: Dataset | null,
+  // The name the archive answered to, where it has been asked for one
+  file = resolvePath(path, dataset)): PreviewSource {
+
   return {
     path,
     file,
-    fetchUrl: URLS.GEODATA_FETCH_BASE + file.replace(/^\/+/, ''),
+    fetchUrl: fetchUrl(file),
     name: fileName(file),
     dataset,
     directory: isDirectory(file),

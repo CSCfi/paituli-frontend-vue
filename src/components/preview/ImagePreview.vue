@@ -67,10 +67,15 @@ async function sidecar(url: string, extension: string) {
 }
 
 async function readSidecars(url: string) {
-  const world = WORLD_FILE[url.split('.').pop()?.toLowerCase() ?? '']
+  const extension = url.split('.').pop() ?? ''
+  const world = WORLD_FILE[extension.toLowerCase()]
+  // The archive spells a file's sidecars the way it spells the file itself:
+  // K3R.png keeps K3R.pgw, and 31N_DEM2.TIF keeps 31N_DEM2.TFW.
+  const spelt = (name: string) =>
+    extension === extension.toUpperCase() ? name.toUpperCase() : name
   const [placement, wkt] = await Promise.all([
-    world ? sidecar(url, world) : undefined,
-    sidecar(url, 'prj'),
+    world ? sidecar(url, spelt(world)) : undefined,
+    sidecar(url, spelt('prj')),
   ])
   return { placement, wkt }
 }
