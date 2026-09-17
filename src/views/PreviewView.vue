@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { CAlertType } from '@cscfi/csc-ui'
@@ -13,7 +13,13 @@ import {
   loadMetadata,
 } from '@/modules/datasets'
 import DownloadModal from '@/components/download/modals/DownloadModal.vue'
-import { buildSource, isPackageEntry, rendererFor } from '@/modules/preview'
+import {
+  buildSource,
+  isPackageEntry,
+  locateFile,
+  rendererFor,
+  resolvePath,
+} from '@/modules/preview'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -28,12 +34,31 @@ const path = computed(() => (route.query.path as string | undefined) ?? '')
 const metadataLoading = ref(!datasets.value.length)
 
 const dataset = computed(() => dataId.value ? getById(dataId.value) : null)
-const source = computed(() => buildSource(path.value, dataset.value))
+const located = ref('')
+const locating = ref(false)
+
+const source = computed(() =>
+  buildSource(path.value, dataset.value, located.value || undefined))
 const renderer = computed(() => rendererFor(source.value))
 
 // A glob entry has no filename until the dataset's format is known, so it waits
 // for the metadata rather than briefly claiming to be unsupported.
-const waiting = computed(() => metadataLoading.value && isPackageEntry(path.value))
+const waiting = computed(() =>
+  (metadataLoading.value && isPackageEntry(path.value)) || locating.value)
+
+watch([path, dataset], async ([entry, current]) => {
+  located.value = ''
+  locating.value = false
+  const file = resolvePath(entry, current)
+  // Nothing to look for until the format has named an extension
+  if (!isPackageEntry(entry) || isPackageEntry(file)) return
+  locating.value = true
+  const found = await locateFile(file)
+  // A second file may have been asked for while this one was being looked up
+  if (path.value !== entry) return
+  located.value = found
+  locating.value = false
+}, { immediate: true })
 
 const downloadRef = ref()
 
