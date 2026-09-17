@@ -13,6 +13,11 @@ const _STAC_BROWSER_BASE =
 export const URLS = {
   METADATA_API: import.meta.env.VITE_METADATA_API,
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
+  BUILD_INFO_API: import.meta.env.VITE_BUILD_INFO_API,
+
+  // Build info of the frontend deployment, written next to index.html by the
+  // install playbook in the same shape the backend serves above.
+  BUILD_INFO_FILE: `${import.meta.env.BASE_URL}build-info.json`,
 
   // Links tab
   HTTP_LINKS_BASE: _GEODATA_BASE,
@@ -81,9 +86,10 @@ export const APP_SETTINGS = {
   BUILD_TIME: __BUILD_TIME__,
 
   MATOMO_TAG: import.meta.env.VITE_MATOMO_TAG,
-  GIT_BRANCH: __GIT_BRANCH__,
+
   ENV_EMOJI: ({
     development: '🛠️',
     test: '🔍',
+    production: '🚀',
   } as Record<string, string>)[import.meta.env.MODE] ?? '',
 }
