@@ -80,19 +80,24 @@ const open = (paths: string[], labels: string[], size: number) => {
 
 const packageDownload = computed(() => filePaths.value.some(isPackageEntry))
 
-const downloadDescription = computed(() => {
+const listed = (...parts: (string | undefined)[]) =>
+  parts.filter(Boolean).join(', ')
+
+const descriptionLines = computed(() => {
   const current = currentDataset.value
-  if (!current) return 'none'
-  const dataset = `${current.org}, ${current.name}`
+  if (!current) return ['none']
+  const dataset = listed(current.org, current.name)
   // A single entry is named by its file; the rest of the dataset's details are
   // on the page the modal opened over.
   if (props.singleFile) {
     const file = packageDownload.value
       ? t('summary.package', { file: fileLabels.value[0] })
       : fileLabels.value[0]
-    return `${dataset}\n${file}`
+    return [dataset, file]
   }
-  return `${dataset}\n${current.scale}, ${current.year}, ${current.coord_sys}, ${current.format}`
+  const details =
+    listed(current.scale, current.year, current.coord_sys, current.format)
+  return [dataset, details].filter(Boolean)
 })
 
 const validateForm = () => {
@@ -318,7 +323,7 @@ onBeforeUnmount(() =>
             {{ t("summary.header") }}
           </div>
           <div>
-            <p>{{ downloadDescription }}</p>
+            <p v-for="(line, index) in descriptionLines" :key="index">{{ line }}</p>
             <div class="zip-size-warning" v-if="zipDownloadDisabled">
               {{ t("summary.size_warning", { size: APP_SETTINGS.MAX_ZIP_SIZE }) }}
             </div>
@@ -359,7 +364,7 @@ onBeforeUnmount(() =>
             {{ t("started.message") }}
           </c-alert>
           <h4>{{ t("started.citing_header") }}</h4>
-          <p v-if="currentDataset?.meta">
+          <p v-if="currentDataset?.meta" class="citation">
             {{ t("started.citing") }}
             <app-link :to="etsinLink" new-tab>{{ etsinLink }}</app-link>
           </p>
@@ -518,8 +523,11 @@ c-progress-bar {
   }
 }
 c-alert p {
-  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   margin: 0 0 .5em 0;
+}
+.citation {
+  overflow-wrap: anywhere;
 }
 #group-header {
   font-weight: bold;
