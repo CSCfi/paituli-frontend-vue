@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch } from 'vue'
+import { ref, computed, watchEffect, watch, nextTick } from 'vue'
 
 import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
@@ -128,9 +128,12 @@ watchEffect(() => {
   }
 })
 
+let loadingById = false
+
 // When selected dataset changes, force year to the first index
 // to prevent matching years carrying over to the new selection
 watch(selectedData, () => {
+  if (loadingById) return // Don't clobber fields set when loading by id
   selectedYear.value = yearOptions.value[0] ?? ''
 })
 
@@ -159,11 +162,14 @@ watch(datasets, () => {
     }
     return
   }
+  loadingById = true // This guards from triggering the watcher(s)
   selectedProducer.value = dataset.org
   selectedData.value = dataset.name
   selectedScale.value = optionValue(dataset.scale)
   selectedYear.value = optionValue(dataset.year)
   selectedFormat.value = optionValue(dataset.format)
+  // The cascade watchers must run fully before we drop the guard 
+  nextTick(() => { loadingById = false })
 }, { immediate: true })
 
 // Precomputed dataset count map to be displayed in producer dropdown,
