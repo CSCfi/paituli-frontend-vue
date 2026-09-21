@@ -13,6 +13,8 @@ const _STAC_BROWSER_BASE =
 export const URLS = {
   METADATA_API: import.meta.env.VITE_METADATA_API,
   DOWNLOAD_API: import.meta.env.VITE_DOWNLOAD_API,
+  BUILD_INFO_API: import.meta.env.VITE_BUILD_INFO_API,
+  BUILD_INFO_FILE: `${import.meta.env.BASE_URL}build-info.json`,
 
   // Links tab
   HTTP_LINKS_BASE: _GEODATA_BASE,
@@ -77,13 +79,21 @@ export const APP_SETTINGS = {
   MAP_ZOOM_STEP: 0.65,
   APP_NAME: 'Paituli',
   MAX_ZIP_SIZE: 3000, // MB
-  SHOW_BUILD_INFO: import.meta.env.VITE_SHOW_BUILD_INFO === 'true',
+  SHOW_BUILD_INFO: import.meta.env.VITE_SHOW_BUILD_INFO
+    ? import.meta.env.VITE_SHOW_BUILD_INFO === 'true'
+    : undefined,
+
+  IS_DEV: import.meta.env.DEV,
+  IS_PRODUCTION: import.meta.env.MODE === 'production',
   BUILD_TIME: __BUILD_TIME__,
+  BUILD_BRANCH: __BUILD_BRANCH__,
+  BUILD_COMMIT: __BUILD_COMMIT__,
 
   MATOMO_TAG: import.meta.env.VITE_MATOMO_TAG,
-  GIT_BRANCH: __GIT_BRANCH__,
+
   ENV_EMOJI: ({
     development: '🛠️',
     test: '🔍',
+    production: '🚀',
   } as Record<string, string>)[import.meta.env.MODE] ?? '',
 }
