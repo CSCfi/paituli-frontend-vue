@@ -27,13 +27,18 @@ Don't make formatting-only edits — reindentation, reflowing tags or arguments 
 
 Vite automatically loads `.env.[mode]` based on the build mode. All three files (`.env.development`, `.env.test`, `.env.production`) are present in the repo. `VITE_`-prefixed variables are exposed in client-side code via `import.meta.env`; most are centralised in `src/shared/constants.ts`.
 
+The app header shows build information about both the frontend and backend. This information is written by an install playbook as JSON.
+Frontend's `build-info.json` is put into the web root next to `index.html` and backend serves its own at `VITE_BUILD_INFO_API`
+A local `public/build-info.json` (gitignored) gives the dev server the same file.
+
 - `VITE_GEOSERVER_BASE` — GeoServer base URL (used for WMS/WMTS/WFS/OGC endpoints)
 - `VITE_METADATA_API` — dataset metadata API endpoint
 - `VITE_DOWNLOAD_API` — download job API endpoint
 - `VITE_ETSIN_BASE` — Etsin research data catalog base URL
 - `VITE_MATOMO_TAG` — Matomo analytics environment tag (`DEV`/`TEST`/`PRODUCTION`)
 - `VITE_BASE_PATH` — optional base path override
-- `VITE_SHOW_BUILD_INFO` — `true` shows an envt badge and an "updated hh:mm:ss ago" build timestamp in the app header
+- `VITE_BUILD_INFO_API` — backend endpoint reporting its branch, commit and build time
+- `VITE_SHOW_BUILD_INFO` — forces the header build badges on (`true`) or off (`false`)
 
 ## Architecture
 

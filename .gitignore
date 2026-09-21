@@ -32,3 +32,6 @@ coverage
 *.iml
 
 .vscode
+
+# Deployment info, written by the install playbook
+public/build-info.json

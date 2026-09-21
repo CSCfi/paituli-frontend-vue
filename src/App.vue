@@ -9,7 +9,6 @@ import { metadataError } from '@/modules/datasets';
 import { indexError } from '@/modules/layers';
 import FooterItem from '@/components/common/FooterItem.vue';
 import BuildInfo from '@/components/common/BuildInfo.vue';
-import { APP_SETTINGS } from '@/shared/constants';
 import { currentFlag, languageItems } from '@/modules/locale';
 import { useRoute, useRouter } from 'vue-router';
 import { navLinks } from '@/routes';
@@ -71,7 +70,7 @@ watch(indexError, reportFetchFailure('toasts.fetching.index_failed'))
         >{{ pageLabel(link.name) }}</RouterLink>
       </nav>
     </div>
-    <BuildInfo v-if="APP_SETTINGS.SHOW_BUILD_INFO" />
+    <BuildInfo />
     <c-menu id="languages" :items="languageItems">
       <h3>{{ currentFlag }}</h3>
     </c-menu>
