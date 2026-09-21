@@ -9,7 +9,6 @@ import { metadataError } from '@/modules/datasets';
 import { indexError } from '@/modules/layers';
 import FooterItem from '@/components/common/FooterItem.vue';
 import BuildInfo from '@/components/common/BuildInfo.vue';
-import { APP_SETTINGS } from '@/shared/constants';
 import { currentFlag, languageItems } from '@/modules/locale';
 import { useRoute, useRouter } from 'vue-router';
 import { navLinks } from '@/routes';
@@ -61,17 +60,15 @@ watch(indexError, reportFetchFailure('toasts.fetching.index_failed'))
     <RouterLink to="/">
       <h2>Paituli</h2>
     </RouterLink>
-    <div class="header-content">
-      <nav>
-        <RouterLink
-          v-for="link in navLinks"
-          :key="link.path"
-          :id="link.name.toLowerCase()"
-          :to="link.path"
-        >{{ pageLabel(link.name) }}</RouterLink>
-      </nav>
-    </div>
-    <BuildInfo v-if="APP_SETTINGS.SHOW_BUILD_INFO" />
+    <nav>
+      <RouterLink
+        v-for="link in navLinks"
+        :key="link.path"
+        :id="link.name.toLowerCase()"
+        :to="link.path"
+      >{{ pageLabel(link.name) }}</RouterLink>
+    </nav>
+    <BuildInfo />
     <c-menu id="languages" :items="languageItems">
       <h3>{{ currentFlag }}</h3>
     </c-menu>
@@ -137,15 +134,21 @@ a h2 {
   color: var(--c-text-system);
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.16);
 
-  nav {
-    margin: 0 auto;
-    * {
-      margin-right: 15px;
-      padding: 5px 10px;
-    }
-  }
   h2 {
     margin: 5px;
+  }
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex: 1 1 auto;
+  font-weight: bold;
+
+  a {
+    padding: 5px 10px;
+    white-space: nowrap;
   }
 }
 
@@ -156,21 +159,13 @@ a h2 {
   }
 }
 
-.header-content {
-  display: flex;
-  flex: auto;
-  gap: 30px;
-  align-items: center;
-  font-weight: bold;
-}
-
 #nav-menu {
   display: none;
 }
 
 @media (max-width: 1150px) {
-  .site-header nav * {
-    margin: 0;
+  nav {
+    gap: 0;
   }
 }
 @media (max-width: 1050px) {
@@ -179,7 +174,7 @@ a h2 {
   }
 }
 @media (max-width: 900px) {
-  .header-content {
+  nav {
     display: none;
   }
   #nav-menu {
