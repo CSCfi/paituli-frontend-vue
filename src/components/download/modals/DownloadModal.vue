@@ -171,28 +171,39 @@ const submit = async () => {
 
     // Periodically poll job status until it completes, which also keeps the
     // job alive on the backend. E.g. leaving the page thus cancels the job.
-    let silentRetries = 10
+    const maxFailedPolls = 20 // We give up if too many polls fail for any reason.
+    let failedPolls = 0
     while (!cancel.value) {
       const request = await fetch(URLS.DOWNLOAD_API + '/status/' + job.ID, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
+      }).catch((e) => {
+        console.warn('Download status poll failed: ', e)
+        return null
       })
-      if (!request.ok) {
-        // Again the backend should always return OK here - network error?
+      if (request?.status == 404) {
+        // The backend no longer knows the job, e.g. after a backend restart
+        toastErrorMessage = t('toasts.stopped')
+        throw Error(`Job ${job.ID} not found`)
+      }
+      if (!request?.ok) {
+        // A network error, or the backend failing to reply OK.
         // Let's just silently try again, unless we hit our retry limit.
-        if (--silentRetries == 0)
-        {
-          addToast({
-            type: CToastType.Warning, progress: true,
-            message: t('toasts.network_error') + t('toasts.please_retry'),
-          }, toasts.value)
+        if (++failedPolls == maxFailedPolls) {
+          toastErrorMessage = t('toasts.connection_lost')
+          throw Error(`Status poll failed ${failedPolls} times in a row`)
         }
         await sleep(1000)
         continue
       }
+      failedPolls = 0
 
       // Job progressing okay? If yes, update progress
       job = await request.json()
+      if (job.cancelled) {
+        toastErrorMessage = t('toasts.stopped')
+        throw Error(`Job ${job.ID} was cancelled by the download service`)
+      }
       assertJob(job, t('toasts.something_wrong'))
       progress.value = Math.ceil(job.progress * 100)
       progressLabel.value = t('progress.processing')
@@ -437,6 +448,8 @@ onBeforeUnmount(() =>
     "toasts": {
       "network_error": "Failed to contact download service. Check your internet connection. ",
       "something_wrong": "Something went wrong while processing your download. ",
+      "stopped": "Preparing your download was interrupted. Please try again. ",
+      "connection_lost": "Lost connection to the download service. Please check your internet connection and try again. ",
       "please_retry": "If the problem persists, please contact CSC.",
     },
     "note": "Preparing your download may take a moment. Please wait on this page until the download has started.",
@@ -477,6 +490,8 @@ onBeforeUnmount(() =>
     "toasts": {
       "network_error": "Yhteydenotto latauspalveluun epäonnistui. Tarkista internet-yhteytesi. ",
       "something_wrong": "Jotain meni pieleen latauksen käsittelyn aikana. ",
+      "stopped": "Latauksen valmistelu keskeytyi. Yritä uudelleen. ",
+      "connection_lost": "Yhteys latauspalveluun katkesi. Tarkista internet-yhteytesi ja yritä uudelleen. ",
       "please_retry": "Jos ongelma jatkuu, ota yhteyttä CSC:hen",
     },
     "note": "Latauksen valmistelu voi kestää hetken. Odotathan tällä sivulla, kunnes lataus on alkanut.",
