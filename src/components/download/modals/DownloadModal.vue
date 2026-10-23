@@ -164,15 +164,15 @@ const submit = async () => {
       }
     }
 
-    // Started successfully? If yes, now we have the job's ID
+    // Created successfully? If yes, now we have the job's ID
     let job: JobResponse = await response.json()
     assertJob(job, job.message)
-    console.log('Download service has started job ' + job.ID)
+    console.log('Download service has created job ' + job.ID)
 
-    // Periodically poll job status until it completes
+    // Periodically poll job status until it completes, which also keeps the
+    // job alive on the backend. E.g. leaving the page thus cancels the job.
     let silentRetries = 10
-    do {
-      await sleep(1000)
+    while (!cancel.value) {
       const request = await fetch(URLS.DOWNLOAD_API + '/status/' + job.ID, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -187,7 +187,8 @@ const submit = async () => {
             message: t('toasts.network_error') + t('toasts.please_retry'),
           }, toasts.value)
         }
-        continue;
+        await sleep(1000)
+        continue
       }
 
       // Job progressing okay? If yes, update progress
@@ -195,8 +196,9 @@ const submit = async () => {
       assertJob(job, t('toasts.something_wrong'))
       progress.value = Math.ceil(job.progress * 100)
       progressLabel.value = t('progress.processing')
+      if (job.progress >= 1.0) break
+      await sleep(1000)
     }
-    while (job.progress < 1.0 && !cancel.value)
 
     if (cancel.value) {
       fetch(URLS.DOWNLOAD_API + '/cancel/' + job.ID, {
