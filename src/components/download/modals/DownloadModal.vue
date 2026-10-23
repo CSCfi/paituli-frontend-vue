@@ -173,28 +173,41 @@ const submit = async () => {
     // Poll job status every second until it completes. The backend cancels a
     // job whose status goes unpolled for 15 seconds, including a job that is
     // waiting at 0 % for its turn, so the polling keeps the job alive.
-    let silentRetries = 10
+    // Failed polls are retried for about 20 seconds, which covers any outage
+    // short enough for the job to survive.
+    const maxFailedPolls = 20
+    let failedPolls = 0
     while (!cancel.value) {
       const request = await fetch(URLS.DOWNLOAD_API + '/status/' + job.ID, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
+      }).catch((e) => {
+        console.warn('Download status poll failed: ', e)
+        return null
       })
-      if (!request.ok) {
-        // Again the backend should always return OK here - network error?
+      if (request?.status == 404) {
+        // The backend no longer knows the job, e.g. after a backend restart
+        toastErrorMessage = t('toasts.stopped')
+        throw Error(`Job ${job.ID} not found`)
+      }
+      if (!request?.ok) {
+        // A network error, or the backend failing to reply OK.
         // Let's just silently try again, unless we hit our retry limit.
-        if (--silentRetries == 0)
-        {
-          addToast({
-            type: CToastType.Warning, progress: true,
-            message: t('toasts.network_error') + t('toasts.please_retry'),
-          }, toasts.value)
+        if (++failedPolls == maxFailedPolls) {
+          toastErrorMessage = t('toasts.network_error') + t('toasts.stopped')
+          throw Error(`Status poll failed ${failedPolls} times in a row`)
         }
         await sleep(1000)
         continue
       }
+      failedPolls = 0
 
       // Job progressing okay? If yes, update progress
       job = await request.json()
+      if (job.cancelled) {
+        toastErrorMessage = t('toasts.stopped')
+        throw Error(`Job ${job.ID} was cancelled by the download service`)
+      }
       assertJob(job, t('toasts.something_wrong'))
       progress.value = Math.ceil(job.progress * 100)
       progressLabel.value = t('progress.processing')
@@ -439,6 +452,7 @@ onBeforeUnmount(() =>
     "toasts": {
       "network_error": "Failed to contact download service. Check your internet connection. ",
       "something_wrong": "Something went wrong while processing your download. ",
+      "stopped": "Your download was stopped before it was ready. Please start it again. ",
       "please_retry": "If the problem persists, please contact CSC.",
     },
     "note": "Preparing your download may take a moment. Please wait on this page until the download has started.",
@@ -479,6 +493,7 @@ onBeforeUnmount(() =>
     "toasts": {
       "network_error": "Yhteydenotto latauspalveluun epäonnistui. Tarkista internet-yhteytesi. ",
       "something_wrong": "Jotain meni pieleen latauksen käsittelyn aikana. ",
+      "stopped": "Lataus keskeytyi ennen kuin se valmistui. Aloita lataus uudelleen. ",
       "please_retry": "Jos ongelma jatkuu, ota yhteyttä CSC:hen",
     },
     "note": "Latauksen valmistelu voi kestää hetken. Odotathan tällä sivulla, kunnes lataus on alkanut.",
