@@ -141,6 +141,7 @@ const submit = async () => {
   fetching.value = true
   progress.value = 0
   progressLabel.value = t('progress.starting')
+  const submittedAt = Date.now()
 
   let toastErrorMessage = ''
   try {
@@ -206,7 +207,14 @@ const submit = async () => {
       }
       assertJob(job, t('toasts.something_wrong'))
       progress.value = Math.ceil(job.progress * 100)
-      progressLabel.value = t('progress.processing')
+      // Queued jobs or large files can make a job look like it's stuck at 0%,
+      // so we change to a different "please wait" label after 10 seconds.
+      if (progress.value > 0) {
+        progressLabel.value = t('progress.processing')
+      }
+      else if (Date.now() - submittedAt >= 10000) {
+        progressLabel.value = t('progress.waiting')
+      }
       if (job.progress >= 1.0) break
       await sleep(1000)
     }
@@ -455,7 +463,8 @@ onBeforeUnmount(() =>
     "note": "Preparing your download may take a moment. Please wait on this page until the download has started.",
     "progress": {
       "starting": "Starting...",
-      "processing": "Creating your ZIP file...",
+      "waiting": "Starting... This can take a while when the service is busy.",
+      "processing": "Creating your download...",
       "failed": "Failed!",
     },
     "started": {
@@ -492,12 +501,13 @@ onBeforeUnmount(() =>
       "something_wrong": "Jotain meni pieleen latauksen käsittelyn aikana. ",
       "stopped": "Latauksen valmistelu keskeytyi. Yritä uudelleen. ",
       "connection_lost": "Yhteys latauspalveluun katkesi. Tarkista internet-yhteytesi ja yritä uudelleen. ",
-      "please_retry": "Jos ongelma jatkuu, ota yhteyttä CSC:hen",
+      "please_retry": "Jos ongelma jatkuu, ota yhteyttä CSC:hen.",
     },
     "note": "Latauksen valmistelu voi kestää hetken. Odotathan tällä sivulla, kunnes lataus on alkanut.",
     "progress": {
       "starting": "Käynnistetään...",
-      "processing": "ZIP-tiedostoasi luodaan...",
+      "waiting": "Käynnistymässä... Tämä voi kestää hetken, kun palvelu on ruuhkainen.",
+      "processing": "Latausta valmistellaan...",
       "failed": "Epäonnistui!",
     },
     "started": {
