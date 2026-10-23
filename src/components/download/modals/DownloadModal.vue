@@ -35,11 +35,16 @@ const downloadSize = ref<number>(0)
 
 const fetching = ref(false)
 const processing = ref(false)
-const cancel = ref(false)
 const progress = ref(0)
 const progressLabel = ref('')
 const downloadError = ref(false)
 const started = ref(false)
+
+// Each submit polls its job in a run of its own. Cancelling, reopening or
+// unmounting the modal ends the current run, and an ended run stops polling
+// without touching the modal's state.
+let currentRun = 0
+const endRun = () => { currentRun++ }
 
 // Large files can sit at 0 % for a long while, which reads as a stuck download.
 // Show the progress-agnostic bar until the job reports actual progress.
@@ -72,9 +77,10 @@ const open = (paths: string[], labels: string[], size: number) => {
   fileLabels.value = labels
   downloadSize.value = size
 
+  endRun()
   started.value = false
   processing.value = false
-  cancel.value = false
+  fetching.value = false
   showModal.value = true
 }
 
@@ -137,6 +143,9 @@ const submit = async () => {
     format: current.format,
   }
 
+  const run = ++currentRun
+  const isCurrent = () => run == currentRun
+
   processing.value = true
   fetching.value = true
   progress.value = 0
@@ -178,7 +187,7 @@ const submit = async () => {
     // short enough for the job to survive.
     const maxFailedPolls = 20
     let failedPolls = 0
-    while (!cancel.value) {
+    while (isCurrent()) {
       const request = await fetch(URLS.DOWNLOAD_API + '/status/' + job.ID, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -205,6 +214,8 @@ const submit = async () => {
 
       // Job progressing okay? If yes, update progress
       job = await request.json()
+      // The run may have ended while the poll was in flight
+      if (!isCurrent()) break
       if (job.cancelled) {
         toastErrorMessage = t('toasts.stopped')
         throw Error(`Job ${job.ID} was cancelled by the download service`)
@@ -223,7 +234,7 @@ const submit = async () => {
       await sleep(1000)
     }
 
-    if (cancel.value) {
+    if (!isCurrent()) {
       fetch(URLS.DOWNLOAD_API + '/cancel/' + job.ID, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -239,6 +250,7 @@ const submit = async () => {
     }
 
   } catch (e) {
+    if (!isCurrent()) return
     downloadError.value = true
     // Caught error details should go to the log,
     // while toasts communicate the failed download to the user
@@ -252,7 +264,7 @@ const submit = async () => {
       message: toastErrorMessage + t('toasts.please_retry')
     }, toasts.value)
   } finally {
-    fetching.value = false
+    if (isCurrent()) fetching.value = false
   }
 }
 
@@ -308,8 +320,10 @@ function onKeydown(e: KeyboardEvent) {
 }
 onMounted(() =>
   document.addEventListener('keydown', onKeydown, true))
-onBeforeUnmount(() =>
-  document.removeEventListener('keydown', onKeydown, true))
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', onKeydown, true)
+  endRun()
+})
 
 </script>
 
@@ -401,7 +415,7 @@ onBeforeUnmount(() =>
           ? 'space-between'
           : 'end'">
         <c-button
-          @click="cancel = true; showModal = false"
+          @click="endRun(); showModal = false"
           :outlined="!started">
           {{ t(started ? "close" : "cancel") }}
         </c-button>
