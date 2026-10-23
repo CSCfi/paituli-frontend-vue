@@ -36,4 +36,5 @@ export interface JobResponse {
   ID: string,
   progress: number,
   error: string,
+  cancelled: boolean,
 }
