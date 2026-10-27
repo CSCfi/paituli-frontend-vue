@@ -3,8 +3,11 @@ import { computed, ref, shallowRef } from 'vue'
 import { geojson as FGBGeoJson } from 'flatgeobuf'
 
 import { GeoJSON } from 'ol/format'
-import { TileWMS, WMTS } from 'ol/source'
+import { TileWMS, WMTS, XYZ } from 'ol/source'
+import { ATTRIBUTION as OSM_ATTRIBUTION } from 'ol/source/OSM'
+import type UrlTile from 'ol/source/UrlTile'
 import VectorSource from 'ol/source/Vector'
+import VectorTileSource from 'ol/source/VectorTile'
 import WMTSTileGrid from 'ol/tilegrid/WMTS'
 import { getWidth, type Extent } from 'ol/extent'
 import { get as getProjection, type ProjectionLike } from 'ol/proj'
@@ -19,14 +22,70 @@ import type { ImageTile, Tile } from 'ol'
 import { currentLocale } from './locale'
 import { mapViewResolution } from './controls'
 
-// Background map source
-export const osmSource = new TileWMS({
+// Background map sources, in order of preference.
+// If the current one keeps failing, we switch to the next one.
+// All of them render OSM data, which needs a visible credit.
+const terrestrisSource = new TileWMS({
   url: 'https://ows.terrestris.de/osm/service?',
   params: {
     LAYERS: 'OSM-WMS',
     VERSION: '1.1.0',
   },
+  attributions: OSM_ATTRIBUTION,
+  attributionsCollapsible: false,
 })
+
+// OpenFreeMap serves vector tiles, so its style also sets up this source.
+// See OpenFreeMapLayer.vue
+export const openFreeMapSource = new VectorTileSource({
+  state: 'loading',
+  attributions: '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> ' +
+    '<a href="https://www.openmaptiles.org/" target="_blank">© OpenMapTiles</a> ' +
+    'Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+  attributionsCollapsible: false,
+})
+
+const openTopoMapSource = new XYZ({
+  url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
+  maxZoom: 17,
+  attributions: 'Map data: © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> ' +
+    'contributors, SRTM | Map style: © <a href="https://opentopomap.org" target="_blank">OpenTopoMap</a> (CC-BY-SA)',
+  attributionsCollapsible: false,
+})
+
+// After maxFailedTiles failed tiles, we switch away from the provider. OpenFreeMap's
+// tiles are 512px, each covering four 256px raster tiles, so it gets a quarter of the limit.
+const backgroundProviders: { name: string, source: UrlTile, maxFailedTiles: number }[] = [
+  { name: 'Terrestris', source: terrestrisSource, maxFailedTiles: 16 },
+  { name: 'OpenFreeMap', source: openFreeMapSource, maxFailedTiles: 4 },
+  { name: 'OpenTopoMap', source: openTopoMapSource, maxFailedTiles: 16 },
+]
+const backgroundIndex = ref(0)
+export const backgroundSource = computed(() => backgroundProviders[backgroundIndex.value].source)
+export const backgroundFallback = computed(() => backgroundIndex.value > 0)
+
+// Whether every background provider has failed
+export const allBackgroundsFailed = ref(false)
+
+// Switches from a failing background source to the next one, if there is one
+export function fallBackFrom(source: UrlTile, reason: string) {
+  const index = backgroundProviders.findIndex((provider) => provider.source == source)
+  if (index != backgroundIndex.value) return
+  if (index + 1 == backgroundProviders.length) {
+    console.warn(`${reason}, and no fallback provider is left`)
+    allBackgroundsFailed.value = true
+    return
+  }
+  console.warn(`${reason}, switching to ${backgroundProviders[index + 1].name} as a fallback provider`)
+  backgroundIndex.value = index + 1
+}
+
+for (const { name, source, maxFailedTiles } of backgroundProviders) {
+  let failedTiles = 0
+  source.on('tileloaderror', () => {
+    if (++failedTiles == maxFailedTiles) fallBackFrom(source, `${name} background tiles keep failing`)
+  })
+}
 
 // Mapsheet source
 export const indexSource = shallowRef<VectorSource | null>(null)

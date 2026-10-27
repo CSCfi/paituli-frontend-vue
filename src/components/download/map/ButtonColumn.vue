@@ -7,6 +7,7 @@ import { APP_SETTINGS } from '@/shared/constants';
 import { computed, ref } from 'vue';
 import LayersMenu from './LayersMenu.vue';
 import { currentDataset } from '@/modules/datasets';
+import { backgroundFallback } from '@/modules/layers';
 import { i18n } from '@/modules/locale';
 import AppLink from '@/components/common/AppLink.vue';
 
@@ -91,8 +92,8 @@ document.addEventListener('pointerdown', closeHandler)
             <strong>{{ t('attributions.header') }}</strong>
             <div>
               © <AppLink to="https://www.openstreetmap.org/copyright">OpenStreetMap</AppLink>
-              contributors, © Natural Earth Data, © GEBCO Bathymetric Compilation Group 2019,
-              © <AppLink to="https://terrestris.de/en/products/free-osm-wms/">Terrestris</AppLink>
+              contributors<template v-if="!backgroundFallback">, © Natural Earth Data, © GEBCO Bathymetric Compilation Group 2019,
+              © <AppLink to="https://terrestris.de/en/products/free-osm-wms/">Terrestris</AppLink></template>
             </div>
           </c-card-content>
           <c-card-actions justify="end">

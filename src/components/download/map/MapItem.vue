@@ -28,11 +28,14 @@ import { currentLocale } from '@/modules/locale'
 import SearchBar from './SearchBar.vue'
 import ToolBar from './ToolBar.vue'
 import ButtonColumn from './ButtonColumn.vue'
+import OpenFreeMapLayer from './OpenFreeMapLayer.vue'
 import HelpBox from '../help/HelpBox.vue'
 
 import {
   indexSource,
-  osmSource,
+  allBackgroundsFailed,
+  backgroundSource,
+  openFreeMapSource,
   dataSource,
   dataLayerMaxResolution,
   municipalitiesSource,
@@ -227,6 +230,12 @@ const loadGeoJSONFile = (file: File) => {
 // Set the file load callback for file load dialog use
 fileSelectedCallback.value = loadGeoJSONFile
 
+// Tell the user once every background provider has failed
+watch(allBackgroundsFailed, () => addToast({
+  type: CToastType.Error,
+  message: t('toasts.background_error'),
+}))
+
 const indexStyle = (feature: FeatureLike) => {
   // Note: If we define this outside of the component file,
   // the style prop is undefined during patch (??)
@@ -290,8 +299,16 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
     <!--Layers-->
 
+    <!-- A fallback background is mounted last, so z-index keeps it at the bottom -->
+    <OpenFreeMapLayer
+      v-if="backgroundSource == openFreeMapSource"
+      :z-index="-1"
+      :visible="showLayer.background.value"
+    />
     <OlTileLayer
-      :source="osmSource"
+      v-else
+      :source="backgroundSource"
+      :z-index="-1"
       :visible="showLayer.background.value"
     />
     <OlVectorLayer
@@ -338,7 +355,8 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
       :stop-click="true"
     />
     <OlOverviewMapControl :collapsed="true">
-      <OlTileLayer :source="osmSource" />
+      <OpenFreeMapLayer v-if="backgroundSource == openFreeMapSource" />
+      <OlTileLayer v-else :source="backgroundSource" />
     </OlOverviewMapControl>
 
 
@@ -383,6 +401,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
         },
       },
       "feature_error": "Failed to load feature info. If the problem persists, please contact CSC.",
+      "background_error": "The background map is failing to load, please check again later.",
     },
   },
   "fi": {
@@ -399,6 +418,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
         },
       },
       "feature_error": "Kohteen tietojen lataaminen epäonnistui. Jos ongelma jatkuu, ota yhteyttä CSC:hen.",
+      "background_error": "Taustakartan lataaminen epäonnistuu, yritä myöhemmin uudelleen.",
     },
   },
 }
