@@ -4,6 +4,7 @@ import { geojson as FGBGeoJson } from 'flatgeobuf'
 
 import { GeoJSON } from 'ol/format'
 import { OSM, TileWMS, WMTS } from 'ol/source'
+import { ATTRIBUTION as OSM_ATTRIBUTION } from 'ol/source/OSM'
 import VectorSource from 'ol/source/Vector'
 import WMTSTileGrid from 'ol/tilegrid/WMTS'
 import { getWidth, type Extent } from 'ol/extent'
@@ -27,6 +28,8 @@ const terrestrisSource = new TileWMS({
     LAYERS: 'OSM-WMS',
     VERSION: '1.1.0',
   },
+  attributions: OSM_ATTRIBUTION,
+  attributionsCollapsible: false,
 })
 export const backgroundFallback = ref(false)
 export const backgroundSource = computed(() =>
