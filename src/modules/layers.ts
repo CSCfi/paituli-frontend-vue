@@ -3,7 +3,7 @@ import { computed, ref, shallowRef } from 'vue'
 import { geojson as FGBGeoJson } from 'flatgeobuf'
 
 import { GeoJSON } from 'ol/format'
-import { TileWMS, WMTS } from 'ol/source'
+import { OSM, TileWMS, WMTS } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import WMTSTileGrid from 'ol/tilegrid/WMTS'
 import { getWidth, type Extent } from 'ol/extent'
@@ -19,13 +19,25 @@ import type { ImageTile, Tile } from 'ol'
 import { currentLocale } from './locale'
 import { mapViewResolution } from './controls'
 
-// Background map source
-export const osmSource = new TileWMS({
+// The default background map source.
+// If enough tiles fail to load, we switch to OSM fallback source.
+const terrestrisSource = new TileWMS({
   url: 'https://ows.terrestris.de/osm/service?',
   params: {
     LAYERS: 'OSM-WMS',
     VERSION: '1.1.0',
   },
+})
+export const backgroundFallback = ref(false)
+export const backgroundSource = computed(() =>
+  backgroundFallback.value ? new OSM() : terrestrisSource)
+
+let failedTiles = 0
+terrestrisSource.on('tileloaderror', () => {
+  if (++failedTiles == 16) {
+    console.warn('Background tiles keep failing, switching to a fallback provider')
+    backgroundFallback.value = true
+  }
 })
 
 // Mapsheet source

@@ -32,7 +32,7 @@ import HelpBox from '../help/HelpBox.vue'
 
 import {
   indexSource,
-  osmSource,
+  backgroundSource,
   dataSource,
   dataLayerMaxResolution,
   municipalitiesSource,
@@ -291,7 +291,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
     <!--Layers-->
 
     <OlTileLayer
-      :source="osmSource"
+      :source="backgroundSource"
       :visible="showLayer.background.value"
     />
     <OlVectorLayer
@@ -338,7 +338,7 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
       :stop-click="true"
     />
     <OlOverviewMapControl :collapsed="true">
-      <OlTileLayer :source="osmSource" />
+      <OlTileLayer :source="backgroundSource" />
     </OlOverviewMapControl>
 
 
