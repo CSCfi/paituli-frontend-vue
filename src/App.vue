@@ -43,7 +43,7 @@ const reportFetchFailure = (title: string) => (error: string) => {
   addToast({
     type: CToastType.Error,
     title: t(title),
-    message: t('toasts.fetching.please_refresh', { error }),
+    message: t('toasts.fetching.please_refresh'),
   })
 }
 watch(metadataError, reportFetchFailure('toasts.fetching.metadata_failed'))
