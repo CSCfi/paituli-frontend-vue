@@ -71,6 +71,18 @@ export default defineConfig(({ mode, command }) => {
     },
     // An alternative base path could be defined only on some modes,
     // if we want to host e.g. a test version under paitulihost.fi/v4/...
-    base: env.VITE_BASE_PATH || undefined
+    base: env.VITE_BASE_PATH || undefined,
+    build: {
+      rollupOptions: {
+        output: {
+          // The design system loads each component's code on its first use.
+          // The toast is bundled with its container, which every page renders,
+          // so a toast reporting a lost connection needs nothing from the network.
+          manualChunks: (id) => {
+            if (/@cscfi\/csc-ui\/dist\/esm\/c-toasts?\.entry\.js$/.test(id)) return 'c-toasts'
+          },
+        },
+      },
+    },
   }
 })
