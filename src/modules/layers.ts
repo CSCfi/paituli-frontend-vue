@@ -44,6 +44,8 @@ export const openFreeMapSource = new VectorTileSource({
     'Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
   attributionsCollapsible: false,
 })
+// One of the OpenFreeMap styles: bright, positron or fiord
+export const openFreeMapStyle = ref('bright')
 
 const openTopoMapSource = new XYZ({
   url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
@@ -55,29 +57,36 @@ const openTopoMapSource = new XYZ({
 
 // After maxFailedTiles failed tiles, we switch away from the provider. OpenFreeMap's
 // tiles are 512px, each covering four 256px raster tiles, so it gets a quarter of the limit.
-const backgroundProviders: { name: string, source: UrlTile, maxFailedTiles: number }[] = [
+export const backgroundProviders: { name: string, source: UrlTile, maxFailedTiles: number }[] = [
   { name: 'Terrestris', source: terrestrisSource, maxFailedTiles: 16 },
   { name: 'OpenFreeMap', source: openFreeMapSource, maxFailedTiles: 4 },
   { name: 'OpenTopoMap', source: openTopoMapSource, maxFailedTiles: 16 },
 ]
-const backgroundIndex = ref(0)
+export const backgroundIndex = ref(0)
 export const backgroundSource = computed(() => backgroundProviders[backgroundIndex.value].source)
-export const backgroundFallback = computed(() => backgroundIndex.value > 0)
+
+// Indices of the providers that have failed, which can no longer be selected
+export const unavailableBackgrounds = ref(new Set<number>())
 
 // Whether every background provider has failed
 export const allBackgroundsFailed = ref(false)
 
-// Switches from a failing background source to the next one, if there is one
+// Marks a failing background source unavailable. If it is the current one, switches
+// to the next available one below it, wrapping around to the top.
 export function fallBackFrom(source: UrlTile, reason: string) {
   const index = backgroundProviders.findIndex((provider) => provider.source == source)
+  unavailableBackgrounds.value.add(index)
   if (index != backgroundIndex.value) return
-  if (index + 1 == backgroundProviders.length) {
-    console.warn(`${reason}, and no fallback provider is left`)
-    allBackgroundsFailed.value = true
+
+  const count = backgroundProviders.length
+  for (let next = index + 1; next < index + count; next++) {
+    if (unavailableBackgrounds.value.has(next % count)) continue
+    console.warn(`${reason}, switching to ${backgroundProviders[next % count].name} as a fallback provider`)
+    backgroundIndex.value = next % count
     return
   }
-  console.warn(`${reason}, switching to ${backgroundProviders[index + 1].name} as a fallback provider`)
-  backgroundIndex.value = index + 1
+  console.warn(`${reason}, and no fallback provider is left`)
+  allBackgroundsFailed.value = true
 }
 
 for (const { name, source, maxFailedTiles } of backgroundProviders) {
