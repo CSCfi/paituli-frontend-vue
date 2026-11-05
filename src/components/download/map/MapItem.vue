@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CToastType } from '@cscfi/csc-ui'
 
@@ -230,6 +230,14 @@ const loadGeoJSONFile = (file: File) => {
 // Set the file load callback for file load dialog use
 fileSelectedCallback.value = loadGeoJSONFile
 
+// The background the map shows. Switching to OpenFreeMap waits for the background
+// menu to animate (.2s), as drawing the first vector tiles would otherwise stall it.
+const shownBackground = shallowRef(backgroundSource.value)
+watch(backgroundSource, (source) => {
+  if (source != openFreeMapSource) shownBackground.value = source
+  else setTimeout(() => shownBackground.value = backgroundSource.value, 250)
+})
+
 // Tell the user once every background provider has failed
 watch(allBackgroundsFailed, () => addToast({
   type: CToastType.Error,
@@ -299,15 +307,15 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
 
     <!--Layers-->
 
-    <!-- A fallback background is mounted last, so z-index keeps it at the bottom -->
+    <!-- A background switched to later is mounted last, so z-index keeps it at the bottom -->
     <OpenFreeMapLayer
-      v-if="backgroundSource == openFreeMapSource"
+      v-if="shownBackground == openFreeMapSource"
       :z-index="-1"
       :visible="showLayer.background.value"
     />
     <OlTileLayer
       v-else
-      :source="backgroundSource"
+      :source="shownBackground"
       :z-index="-1"
       :visible="showLayer.background.value"
     />
@@ -355,8 +363,8 @@ watch(selectInteraction, () => selectInteraction.value?.select.setActive(false))
       :stop-click="true"
     />
     <OlOverviewMapControl :collapsed="true">
-      <OpenFreeMapLayer v-if="backgroundSource == openFreeMapSource" />
-      <OlTileLayer v-else :source="backgroundSource" />
+      <OpenFreeMapLayer v-if="shownBackground == openFreeMapSource" />
+      <OlTileLayer v-else :source="shownBackground" />
     </OlOverviewMapControl>
 
 
