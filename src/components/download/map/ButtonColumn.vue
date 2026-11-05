@@ -1,25 +1,20 @@
 <script setup lang="ts">
-import { mdiClose, mdiCopyright, mdiLayersTripleOutline, mdiMinusBox, mdiPlusBox } from '@mdi/js'
+import { mdiEarthBox, mdiLayersTripleOutline, mdiMinusBox, mdiPlusBox } from '@mdi/js'
 import { useI18n } from 'vue-i18n';
 
 import type Map from 'ol/Map.js'
 import { APP_SETTINGS } from '@/shared/constants';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import MenuButton from './MenuButton.vue';
+import BackgroundMenu from './BackgroundMenu.vue';
 import LayersMenu from './LayersMenu.vue';
 import { currentDataset } from '@/modules/datasets';
-import { backgroundFallback } from '@/modules/layers';
 import { i18n } from '@/modules/locale';
-import AppLink from '@/components/common/AppLink.vue';
 
 const { t } = useI18n()
 
 const props = defineProps<{ map: Map }>()
 const mapView = computed(() => props.map.getView())
-
-const showAttribs = ref(false)
-const menuVisible = ref(false)
-const menuEl = ref<HTMLElement | null>(null)
-const buttonEl = ref<HTMLElement | null>(null)
 
 function zoom(amount: number) {
   mapView.value.animate({
@@ -37,15 +32,6 @@ function resetZoom() {
 
 // Reset zoom now to ensure nice initial zoom
 resetZoom();
-
-// Close menu when clicking outside of it
-function closeHandler(e: PointerEvent) {
-  const path = e.composedPath()
-  if (!menuEl.value || !buttonEl.value) return
-  if (path.includes(menuEl.value) || path.includes(buttonEl.value)) return
-  menuVisible.value = false
-}
-document.addEventListener('pointerdown', closeHandler)
 
 </script>
 
@@ -73,50 +59,12 @@ document.addEventListener('pointerdown', closeHandler)
         <img :src="'finland.png'" :alt="i18n.global.t('alt.finland')" />
       </button>
     </div>
-    <div class="attributions">
-      <button
-        type="button"
-        @click="showAttribs = true"
-        v-tooltip="t('attributions.tooltip')">
-        <c-icon :path="mdiCopyright" size="27px" />
-      </button>
-      <c-modal v-model="showAttribs"
-               v-control
-               dismissable
-               disable-backdrop-blur>
-        <c-card>
-          <c-card-title>
-            {{ t('attributions.title') }}
-          </c-card-title>
-          <c-card-content>
-            <strong>{{ t('attributions.header') }}</strong>
-            <div>
-              © <AppLink to="https://www.openstreetmap.org/copyright">OpenStreetMap</AppLink>
-              contributors<template v-if="!backgroundFallback">, © Natural Earth Data, © GEBCO Bathymetric Compilation Group 2019,
-              © <AppLink to="https://terrestris.de/en/products/free-osm-wms/">Terrestris</AppLink></template>
-            </div>
-          </c-card-content>
-          <c-card-actions justify="end">
-            <c-button @click="showAttribs = false">{{ t('close') }}</c-button>
-          </c-card-actions>
-        </c-card>
-      </c-modal>
-    </div>
-    <div v-if="currentDataset" class="layers">
-      <button
-        type="button"
-        ref="buttonEl"
-        @click="menuVisible = !menuVisible"
-        :class="{ close: menuVisible }"
-        :key="`${menuVisible}`"
-        v-tooltip="t(menuVisible ? 'close' : 'layers')">
-        <c-icon v-if="menuVisible" :path="mdiClose" size="27px" />
-        <c-icon v-else :path="mdiLayersTripleOutline" size="27px" />
-      </button>
-      <div v-if="menuVisible" ref="menuEl" class="layer-menu">
-        <LayersMenu />
-      </div>
-    </div>
+    <MenuButton :icon="mdiEarthBox" :tooltip="t('background')">
+      <BackgroundMenu />
+    </MenuButton>
+    <MenuButton v-if="currentDataset" :icon="mdiLayersTripleOutline" :tooltip="t('layers')">
+      <LayersMenu />
+    </MenuButton>
   </div>
 
 </template>
@@ -127,25 +75,15 @@ document.addEventListener('pointerdown', closeHandler)
     "zoom-in": "Zoom in",
     "zoom-out": "Zoom out",
     "zoom-reset": "Zoom to Finland",
-    "attributions": {
-      "tooltip": "Attributions",
-      "title": "Attributions",
-      "header": "Background map",
-    },
+    "background": "Select background map",
     "layers": "Select visible layers",
-    "close": "Close",
   },
   "fi": {
     "zoom-in": "Zoomaa sisään",
     "zoom-out": "Zoomaa ulos",
     "zoom-reset": "Näytä koko Suomi",
-    "attributions": {
-      "tooltip": "Tekijänoikeudet",
-      "title": "Tekijänoikeudet",
-      "header": "Taustakartta",
-    },
+    "background": "Valitse taustakartta",
     "layers": "Valitse näkyvät karttatasot",
-    "close": "Sulje",
   },
 }
 </i18n>
@@ -188,30 +126,6 @@ button {
   z-index: -1;
 }
 
-.layers {
-
-  .layer-menu {
-    position: absolute;
-    width: 15em;
-    right: 0;
-    padding: 1em;
-    z-index: -1;
-
-    border-radius: 1em;
-    border-top-right-radius: .3rem;
-    color: var(--c-primary-100);
-    background-color: var(--c-primary-700);
-  }
-
-  button.close {
-    background-color: var(--c-primary-800);
-
-    c-icon {
-      color: var(--c-primary-100)
-    }
-  }
-}
-
 .map-reset {
   width: 100%;
   padding: .2em;
@@ -222,19 +136,6 @@ button {
     height: 100%;
     object-fit: cover;
   }
-}
-
-.layers,
-.attributions {
-  c-icon {
-    color: var(--c-primary-600);
-    padding: .15em;
-  }
-}
-
-c-button {
-    --c-button-background-color: var(--c-info-600);
-    --c-button-background-color-hover: var(--c-info-400);
 }
 
 </style>
