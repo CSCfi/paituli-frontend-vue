@@ -26,7 +26,7 @@ import { CAlertType } from '@cscfi/csc-ui';
       <AppLink to="https://vm0160.kaj.pouta.csc.fi/geocubes/datasets/">Geoportti geocubes</AppLink>, paljon erilaisia rasteriaineistoja. Kaikki aineistot laskettu samaan pikselijakoon, saatavilla eri mittakaavoissa.
     </li>
     <li>
-      <AppLink to="https://pta.data.lit.fmi.fi/stac/root.json">12 aineistoa Ilmatieteen laitoksen Tuulituhohaukka-STAC:ista</AppLink>, sisältäen mm. Sentinel-1-, Sentinel-2- ja Landsat-mosaiikkeja sekä indeksejä.
+      <AppLink to="https://pta.data.lit.fmi.fi/stac/root.json">12 aineistoa Ilmatieteen laitoksen Tuulituhohaukka-STAC:ista</AppLink>, sisältäen mm. Sentinel-1-, Sentinel-2- ja Landsat-mosaiikkeja sekä indeksejä. IL on lopettanut uusien mosaiikkien tuottamisen kesällä 2026.
     </li>
     <li>
       <AppLink to="https://b2share.eudat.eu/communities/aquainfra/records?q=&f=resource_types%3Adataset&f=access_status%3Ametadata-only">5 aineistoa AquaInfra projektilta</AppLink>, sisältäen CORINE ja EU-DEM aineistot koko Euroopasta.

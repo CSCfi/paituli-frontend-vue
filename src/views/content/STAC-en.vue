@@ -26,7 +26,7 @@ import { CAlertType } from '@cscfi/csc-ui';
       Around <AppLink to="https://vm0160.kaj.pouta.csc.fi/geocubes/datasets/">40 Geoportti geocube datasets</AppLink>, all recalculated to common grid at several different resolutions.
     </li>
     <li>
-      <AppLink to="https://pta.data.lit.fmi.fi/stac/root.json">12 datasets from FMI Tuulituhohaukka STAC catalog</AppLink>, including Sentinel-1, Sentinel-2 and Landsat mosaics and indices.
+      <AppLink to="https://pta.data.lit.fmi.fi/stac/root.json">12 datasets from FMI Tuulituhohaukka STAC catalog</AppLink>, including Sentinel-1, Sentinel-2 and Landsat mosaics and indices. FMI has stopped producing new Sentinel mosaics from summer 2026.
     </li>
     <li>
       <AppLink to="https://b2share.eudat.eu/communities/aquainfra/records?q=&f=resource_types%3Adataset&f=access_status%3Ametadata-only">5 datasets from AquaInfra project</AppLink>, including CORINE and EU-DEM for all Europe.
